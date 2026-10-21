@@ -10,9 +10,14 @@ vi.mock('remotion', async (importOriginal) => ({
 }));
 vi.mock('@remotion/media-utils', () => ({
   useWindowedAudioData: () => ({audioData: {loaded: true}, dataOffsetInSeconds: 0}),
+  getWaveformPortion: ({numberOfSamples, outputRange}: {numberOfSamples: number; outputRange: string}) =>
+    Array.from({length: numberOfSamples}, (_, index) => ({
+      index,
+      amplitude: outputRange === 'minus-one-to-one'
+        ? Math.sin(index / 3 + clock.frame / 4) * 0.6
+        : Math.abs(Math.sin(index / 3 + clock.frame / 4)) * 0.6,
+    })),
   visualizeAudio: () => Array.from({length: 64}, (_, index) => (clock.frame + index % 8) / 100),
-  visualizeAudioWaveform: ({numberOfSamples}: {numberOfSamples: number}) =>
-    Array.from({length: numberOfSamples}, (_, index) => Math.sin(index / 3 + clock.frame / 4) * 0.6),
   createSmoothSvgPath: ({points}: {points: Array<{x: number; y: number}>}) =>
     points.map((point, index) => `${index ? 'L' : 'M'}${point.x},${point.y}`).join(' '),
 }));
@@ -35,7 +40,7 @@ describe('audio-driven components', () => {
   it('renders two halves of the mirrored spectrum', () => {
     clock.frame = 20;
     const markup = renderToStaticMarkup(<MirroredSpectrum src="/demo.wav" />);
-    expect((markup.match(/<rect /g) ?? []).length).toBe(96);
+    expect((markup.match(/data-audio-bar="true"/g) ?? []).length).toBe(65);
   });
 
   it('keeps custom-width bar geometry valid', () => {

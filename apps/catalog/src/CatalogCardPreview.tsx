@@ -58,6 +58,10 @@ export const CatalogCardPreview = forwardRef<CatalogCardPreviewHandle, CatalogCa
     else stop();
   }, [active, start, stop]);
 
+  const isAudioPreview = inputProps.id === 'oscilloscope' || inputProps.id === 'spectrum' || inputProps.id === 'voice';
+  const compositionWidth = isAudioPreview ? 900 : 640;
+  const compositionHeight = isAudioPreview ? 300 : 260;
+
   return <div className="card-player" aria-hidden="true">
     <Player
       key={`${inputProps.id}-${inputProps.src}`}
@@ -66,8 +70,8 @@ export const CatalogCardPreview = forwardRef<CatalogCardPreviewHandle, CatalogCa
       inputProps={inputProps}
       durationInFrames={durationInFrames}
       fps={fps}
-      compositionWidth={640}
-      compositionHeight={260}
+      compositionWidth={compositionWidth}
+      compositionHeight={compositionHeight}
       controls={false}
       clickToPlay={false}
       autoPlay={false}

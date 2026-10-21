@@ -1,4 +1,10 @@
-import {createSmoothSvgPath, useWindowedAudioData, visualizeAudio, visualizeAudioWaveform} from '@remotion/media-utils';
+import {
+  createSmoothSvgPath,
+  getWaveformPortion,
+  useWindowedAudioData,
+  visualizeAudio,
+} from '@remotion/media-utils';
+import {useId} from 'react';
 import {useCurrentFrame, useVideoConfig} from 'remotion';
 
 export type AudioVisualizerProps = {
@@ -9,95 +15,271 @@ export type AudioVisualizerProps = {
   height?: number;
 };
 
-const MIN_BAR_WIDTH = 1;
-const AUDIO_BAR_GAP = 5;
+const AUDIO_WINDOW_IN_SECONDS = 10;
+const DEFAULT_DURATION_IN_FRAMES = 180;
+const DEFAULT_WAVEFORM_SAMPLES = 64;
+const DEFAULT_SPECTRUM_BARS = 65;
+const MIN_BAR_WIDTH = 2;
+const MAX_BAR_GAP = 8;
 
-const getBarLayout = (availableWidth: number, requestedBars: number) => {
-  const safeWidth = Math.max(MIN_BAR_WIDTH, availableWidth);
-  const barCount = Math.max(
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+const getSafeSize = (value: number | undefined, fallback: number) =>
+  Math.max(1, Number.isFinite(value) ? value! : fallback);
+
+const getBarLayout = (availableWidth: number, requestedBars: number, requestedGap = MAX_BAR_GAP) => {
+  const safeWidth = getSafeSize(availableWidth, 1);
+  const gapLimit = clamp(requestedGap, 0, MAX_BAR_GAP);
+  const maximumBars = Math.max(
     1,
-    Math.min(requestedBars, Math.floor((safeWidth + AUDIO_BAR_GAP) / (MIN_BAR_WIDTH + AUDIO_BAR_GAP))),
+    Math.floor((safeWidth + gapLimit) / (MIN_BAR_WIDTH + gapLimit)),
   );
+  const barCount = Math.max(1, Math.min(requestedBars, maximumBars));
+  const gap = barCount > 1
+    ? Math.min(gapLimit, Math.max(0, (safeWidth - MIN_BAR_WIDTH * barCount) / (barCount - 1)))
+    : 0;
   const barWidth = Math.max(
     MIN_BAR_WIDTH,
-    (safeWidth - AUDIO_BAR_GAP * (barCount - 1)) / barCount,
+    (safeWidth - gap * (barCount - 1)) / barCount,
   );
-  return {barCount, barWidth};
+  return {barCount, barWidth, gap};
 };
 
-const useAudioWindow = (src: string) => {
+const useAudioWindow = (src: string, frameOverride?: number) => {
   const frame = useCurrentFrame();
-  const {fps} = useVideoConfig();
-  const {audioData, dataOffsetInSeconds} = useWindowedAudioData({src, frame, fps, windowInSeconds: 4});
-  return {frame, fps, audioData, dataOffsetInSeconds};
-};
-
-/** A smooth, signed waveform centered on a quiet reference line. */
-export const Oscilloscope = ({src, color = '#b29aff', width = 1000, height = 320}: AudioVisualizerProps) => {
-  const {frame, fps, audioData, dataOffsetInSeconds} = useAudioWindow(src);
-  if (!audioData) return null;
-  const svgWidth = Math.max(1, width);
-  const svgHeight = Math.max(1, height);
-  const waveform = visualizeAudioWaveform({
-    audioData, frame, fps, dataOffsetInSeconds, numberOfSamples: 128, windowInSeconds: 0.28,
+  const {fps, durationInFrames = DEFAULT_DURATION_IN_FRAMES} = useVideoConfig();
+  const {audioData, dataOffsetInSeconds} = useWindowedAudioData({
+    src,
+    frame: frameOverride ?? frame,
+    fps,
+    windowInSeconds: AUDIO_WINDOW_IN_SECONDS,
   });
-  const path = createSmoothSvgPath({points: waveform.map((amplitude, index) => ({
-    x: index * svgWidth / Math.max(1, waveform.length - 1),
-    y: svgHeight / 2 - amplitude * svgHeight * 0.4,
-  }))});
-  return <svg role="img" aria-label="随音频变化的示波曲线" width={svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{maxWidth: '100%', overflow: 'visible'}}>
-    <line x1="0" y1={svgHeight / 2} x2={svgWidth} y2={svgHeight / 2} stroke={color} strokeOpacity="0.16" strokeWidth="2" />
-    <path d={path} fill="none" stroke={color} strokeOpacity="0.2" strokeWidth="22" strokeLinecap="round" />
-    <path d={path} fill="none" stroke={color} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>;
+  return {
+    frame,
+    fps,
+    durationInFrames,
+    durationInSeconds: Math.max(1 / fps, durationInFrames / fps),
+    audioData,
+    dataOffsetInSeconds,
+  };
 };
 
-/** Frequency bands reflected across a central axis. */
-export const MirroredSpectrum = ({src, color = '#8ee5d2', width = 1000, height = 360}: AudioVisualizerProps) => {
-  const {frame, fps, audioData, dataOffsetInSeconds} = useAudioWindow(src);
-  if (!audioData) return null;
-  const svgWidth = Math.max(1, width);
-  const svgHeight = Math.max(1, height);
-  const rawBands = visualizeAudio({audioData, frame, fps, dataOffsetInSeconds, numberOfSamples: 64, optimizeFor: 'speed'}).slice(0, 48);
-  const {barCount, barWidth} = getBarLayout(svgWidth, rawBands.length);
-  const bands = rawBands.slice(0, barCount);
-  const half = svgHeight / 2;
-  const availableBarHeight = Math.max(1, half - 8);
-  return <svg role="img" aria-label="随音频变化的镜像频谱" width={svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{maxWidth: '100%', overflow: 'visible'}}>
-    {bands.map((level, index) => {
-      const safeLevel = Math.max(0, level);
-      const barHeight = Math.max(1, Math.min(availableBarHeight, Math.sqrt(safeLevel) * availableBarHeight * 1.5));
-      const segmentHeight = Math.max(1, barHeight - 2);
-      const x = index * (barWidth + AUDIO_BAR_GAP);
-      return <g key={index} fill={color} opacity={0.55 + level * 0.45}>
-        <rect x={x} y={half - barHeight} width={barWidth} height={segmentHeight} rx={barWidth / 2} />
-        <rect x={x} y={half + 2} width={barWidth} height={segmentHeight} rx={barWidth / 2} opacity="0.48" />
-      </g>;
-    })}
-    <line x1="0" y1={half} x2={svgWidth} y2={half} stroke={color} strokeOpacity="0.35" strokeWidth="2" />
-  </svg>;
+const getWaveform = ({
+  audioData,
+  dataOffsetInSeconds,
+  startTimeInSeconds,
+  durationInSeconds,
+  numberOfSamples,
+  outputRange,
+  normalize = false,
+}: {
+  audioData: Parameters<typeof getWaveformPortion>[0]['audioData'] | null | undefined;
+  dataOffsetInSeconds: number | undefined;
+  startTimeInSeconds: number;
+  durationInSeconds: number;
+  numberOfSamples: number;
+  outputRange: 'zero-to-one' | 'minus-one-to-one';
+  normalize?: boolean;
+}) => {
+  if (!audioData) return [];
+  return getWaveformPortion({
+    audioData,
+    dataOffsetInSeconds,
+    durationInSeconds,
+    numberOfSamples,
+    outputRange,
+    startTimeInSeconds,
+    normalize,
+  }).map((sample) => sample.amplitude);
 };
 
-/** A compact message-like audiogram for voice clips. */
-export const VoiceNote = ({src, color = '#ffc685', width = 900, height = 250}: AudioVisualizerProps) => {
+/** A smooth, signed waveform matching Remotion's transparent oscilloscope element. */
+export const Oscilloscope = ({
+  src,
+  color = '#2563eb',
+  width = 900,
+  height = 300,
+}: AudioVisualizerProps) => {
   const {frame, fps, audioData, dataOffsetInSeconds} = useAudioWindow(src);
-  if (!audioData) return null;
-  const svgWidth = Math.max(1, width);
-  const svgHeight = Math.max(1, height);
-  const waveform = visualizeAudioWaveform({
-    audioData, frame, fps, dataOffsetInSeconds, numberOfSamples: 64, windowInSeconds: 2.2,
+  const svgWidth = getSafeSize(width, 900);
+  const svgHeight = getSafeSize(height, 300);
+  const lineWidth = clamp(svgWidth / 150, 1, 6);
+  const waveform = getWaveform({
+    audioData,
+    dataOffsetInSeconds,
+    durationInSeconds: 0.35,
+    numberOfSamples: DEFAULT_WAVEFORM_SAMPLES,
+    outputRange: 'minus-one-to-one',
+    startTimeInSeconds: frame / fps - 0.35 / 2,
   });
-  const bars = waveform.map((value) => Math.max(7, Math.abs(value) * 126));
-  const controlCenter = Math.min(86, Math.max(18, svgWidth * 0.18));
-  const controlRadius = Math.min(48, Math.max(10, svgWidth * 0.12));
-  const waveformStart = Math.min(155, controlCenter + controlRadius + Math.min(21, svgWidth * 0.05));
-  const rightPadding = Math.min(45, Math.max(8, svgWidth * 0.06));
-  const {barCount, barWidth} = getBarLayout(svgWidth - waveformStart - rightPadding, bars.length);
-  const visibleBars = bars.slice(0, barCount).map((barHeight) => Math.min(Math.max(7, svgHeight * 0.7), barHeight));
-  return <svg role="img" aria-label="随音频变化的语音条" width={svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{maxWidth: '100%'}}>
-    <rect x="1" y="1" width={Math.max(1, svgWidth - 2)} height={Math.max(1, svgHeight - 2)} rx="38" fill="#23212e" stroke="#4a425b" strokeWidth="2" />
-    <circle cx={controlCenter} cy={svgHeight / 2} r={controlRadius} fill={color} />
-    <path d={`M ${controlCenter - 11} ${svgHeight / 2 - controlRadius * 0.44} L ${controlCenter - 11} ${svgHeight / 2 + controlRadius * 0.44} L ${controlCenter + controlRadius * 0.52} ${svgHeight / 2} Z`} fill="#201a24" />
-    {visibleBars.map((barHeight, index) => <rect key={index} x={waveformStart + index * (barWidth + AUDIO_BAR_GAP)} y={(svgHeight - barHeight) / 2} width={barWidth} height={barHeight} rx={barWidth / 2} fill={color} opacity={index < visibleBars.length / 2 ? 0.96 : 0.46} />)}
-  </svg>;
+  const horizontalStart = lineWidth * 2;
+  const horizontalEnd = Math.max(horizontalStart, svgWidth - lineWidth * 4);
+  const path = waveform.length > 0
+    ? createSmoothSvgPath({
+        points: waveform.map((value, index) => ({
+          x: horizontalStart + (index / Math.max(1, waveform.length - 1)) * (horizontalEnd - horizontalStart),
+          y: svgHeight / 2 + value * (svgHeight / 2) * 2,
+        })),
+      })
+    : null;
+
+  return (
+    <svg
+      role="img"
+      aria-label="随音频变化的示波曲线"
+      width={svgWidth}
+      height={svgHeight}
+      viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+      style={{display: 'block', maxWidth: '100%', overflow: 'hidden'}}
+    >
+      <line
+        x1={horizontalStart}
+        y1={svgHeight / 2}
+        x2={horizontalEnd}
+        y2={svgHeight / 2}
+        stroke={color}
+        strokeOpacity="0.18"
+        strokeWidth="1"
+      />
+      {path ? (
+        <path
+          d={path}
+          fill="none"
+          stroke={color}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={lineWidth}
+        />
+      ) : null}
+    </svg>
+  );
+};
+
+/** Frequency bands mirrored around the center, matching the official flex layout. */
+export const MirroredSpectrum = ({
+  src,
+  color = '#2563eb',
+  width = 900,
+  height = 300,
+}: AudioVisualizerProps) => {
+  const {frame, fps, audioData, dataOffsetInSeconds} = useAudioWindow(src);
+  const svgWidth = getSafeSize(width, 900);
+  const svgHeight = getSafeSize(height, 300);
+  const {barCount, gap} = getBarLayout(svgWidth, DEFAULT_SPECTRUM_BARS);
+  const numberOfFrequencies = Math.ceil(barCount / 2);
+  const frequencyData = audioData
+    ? visualizeAudio({
+        audioData,
+        dataOffsetInSeconds,
+        fps,
+        frame,
+        numberOfSamples: 256,
+        optimizeFor: 'speed',
+      })
+    : [];
+  const subset = frequencyData.slice(0, numberOfFrequencies);
+  const frequenciesToDisplay = [
+    ...subset.slice(barCount % 2).reverse(),
+    ...subset,
+  ].slice(0, barCount);
+
+  return (
+    <div
+      role="img"
+      aria-label="随音频变化的镜像频谱"
+      style={{
+        alignItems: 'center',
+        boxSizing: 'border-box',
+        display: 'flex',
+        gap,
+        height: svgHeight,
+        maxWidth: '100%',
+        overflow: 'hidden',
+        width: svgWidth,
+      }}
+    >
+      {frequenciesToDisplay.map((value, index) => (
+        <div
+          key={index}
+          data-audio-bar="true"
+          style={{
+            backgroundColor: color,
+            borderRadius: 999,
+            flex: 1,
+            height: Math.max(4, Math.min(svgHeight, svgHeight * Math.sqrt(Math.max(0, value)) * 1.5)),
+            minWidth: MIN_BAR_WIDTH,
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+/** A static waveform with a played/unplayed progress gradient, matching Voice Note. */
+export const VoiceNote = ({
+  src,
+  color = '#2563eb',
+  width = 900,
+  height = 300,
+}: AudioVisualizerProps) => {
+  const gradientId = `remotions-waveform-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
+  const {frame, durationInFrames, durationInSeconds, audioData, dataOffsetInSeconds} = useAudioWindow(src, 0);
+  const svgWidth = getSafeSize(width, 900);
+  const svgHeight = getSafeSize(height, 300);
+  const {barCount, barWidth, gap} = getBarLayout(Math.max(1, svgWidth - 16), DEFAULT_WAVEFORM_SAMPLES, 5);
+  const waveform = getWaveform({
+    audioData,
+    dataOffsetInSeconds,
+    durationInSeconds,
+    numberOfSamples: barCount,
+    outputRange: 'zero-to-one',
+    startTimeInSeconds: 0,
+    normalize: true,
+  });
+  const progress = clamp(frame / Math.max(1, durationInFrames - 1), 0, 1);
+  const unplayedColor = '#cbd5e1';
+  const maxBarHeight = svgHeight * 0.7;
+
+  return (
+    <svg
+      role="img"
+      aria-label="随音频变化的语音波形"
+      width={svgWidth}
+      height={svgHeight}
+      viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+      style={{display: 'block', maxWidth: '100%', overflow: 'hidden'}}
+    >
+      <defs>
+        <linearGradient
+          id={gradientId}
+          x1="0"
+          x2={Math.max(1, svgWidth - 8)}
+          y1="0"
+          y2="0"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop offset="0%" stopColor={color} />
+          <stop offset={`${progress * 100}%`} stopColor={color} />
+          <stop offset={`${progress * 100}%`} stopColor={unplayedColor} />
+          <stop offset="100%" stopColor={unplayedColor} />
+        </linearGradient>
+      </defs>
+      {waveform.map((value, index) => {
+        const barHeight = Math.max(10, Math.min(maxBarHeight, Math.sqrt(Math.max(0, value)) * maxBarHeight));
+        const x = 8 + index * (barWidth + gap);
+        return (
+          <rect
+            key={index}
+            data-audio-bar="true"
+            fill={`url(#${gradientId})`}
+            height={barHeight}
+            rx={Math.min(barWidth / 2, barHeight / 2)}
+            width={barWidth}
+            x={x}
+            y={(svgHeight - barHeight) / 2}
+          />
+        );
+      })}
+    </svg>
+  );
 };
