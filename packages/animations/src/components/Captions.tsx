@@ -63,6 +63,17 @@ const estimateTextWidth = (text: string, fontSize: number, latinWidthRatio: numb
     return width + fontSize * latinWidthRatio;
   }, 0) + Math.max(0, Array.from(text).length - 1) * CAPTION_LETTER_SPACING;
 
+const estimateCaptionInkHeight = (text: string, fontSize: number) => {
+  const ratios = Array.from(text).map((character) => {
+    if (character === '一' || character === '—' || character === '–' || character === '-') return 0.26;
+    if (character === '~' || character === '～') return 0.38;
+    if (character.trim() === '') return 0.3;
+    if (/^[\u2e80-\u9fff\uf900-\ufaff]$/u.test(character)) return 0.92;
+    return 0.72;
+  });
+  return Math.max(fontSize * 0.2, fontSize * Math.max(0.2, ...ratios));
+};
+
 const fitFontSize = (text: string, desiredSize: number, maxWidth: number, glyphWidthRatio: number) =>
   Math.max(1, Math.min(desiredSize, maxWidth / Math.max(1, estimateTextWidth(text, desiredSize, glyphWidthRatio)) * desiredSize));
 
@@ -80,7 +91,7 @@ const bubbleRadius = (amplitude: number, index: number, phase: number) =>
 const buildBubblePath = (x: number, y: number, width: number, height: number, amplitude: number, phase: number) => {
   const safeWidth = Math.max(1, width);
   const safeHeight = Math.max(1, height);
-  const safeAmplitude = Math.max(1, Math.min(amplitude, safeWidth / 4, safeHeight / 2));
+  const safeAmplitude = Math.max(1, Math.min(amplitude, safeWidth / 4, safeHeight * 0.38));
   // Fewer, wider lobes keep the silhouette cloud-like instead of turning it
   // into a thin wavy border when the preview card is scaled down.
   const horizontalSegments = Math.max(4, Math.min(9, Math.ceil(safeWidth / Math.max(34, safeAmplitude * 4))));
@@ -175,7 +186,10 @@ export const RoundedCaptions = ({
   const bubblePhase = frame / Math.max(1, fps) * 1.6;
   const activeTextWidth = Math.max(1, ...lines.map((line) => estimateTextWidth(line, fittedFontSize, 0.72)));
   const bubbleWidth = Math.min(textAreaWidth, Math.max(1, activeTextWidth + CAPTION_BUBBLE_PADDING_X * 2));
-  const bubbleHeight = Math.max(1, lines.length * lineHeight + CAPTION_BUBBLE_PADDING_Y * 2);
+  const lineInkHeights = lines.map((line) => estimateCaptionInkHeight(line, fittedFontSize));
+  const bubbleHeight = lines.length === 1
+    ? lineInkHeights[0] + CAPTION_BUBBLE_PADDING_Y * 2
+    : lines.length * lineHeight + CAPTION_BUBBLE_PADDING_Y * 2;
   const bubbleX = (dimensions.width - bubbleWidth) / 2;
   const bubbleY = dimensions.height * 0.68 - fittedFontSize * CAPTION_BUBBLE_VERTICAL_SHIFT - bubbleHeight / 2;
   const bubblePath = buildBubblePath(bubbleX, bubbleY, bubbleWidth, bubbleHeight, CAPTION_BUBBLE_AMPLITUDE, bubblePhase);
@@ -217,7 +231,7 @@ export const MovingPillCaptions = ({
   const fittedFontSize = fitFontSize(layoutText, fontSize, maxTextWidth, 0.7);
   const activeTextWidth = Math.min(maxTextWidth, Math.max(1, estimateTextWidth(text, fittedFontSize, 0.7)));
   const bubbleWidth = Math.min(dimensions.width * 0.86, activeTextWidth + CAPTION_BUBBLE_PADDING_X * 2);
-  const bubbleHeight = fittedFontSize + CAPTION_BUBBLE_PADDING_Y * 2;
+  const bubbleHeight = estimateCaptionInkHeight(text, fittedFontSize) + CAPTION_BUBBLE_PADDING_Y * 2;
   const bubbleX = (dimensions.width - bubbleWidth) / 2 + slide;
   const bubbleY = dimensions.height * 0.7 - fittedFontSize * CAPTION_BUBBLE_VERTICAL_SHIFT - bubbleHeight / 2;
   const bubblePhase = frame / Math.max(1, fps) * 1.6;
