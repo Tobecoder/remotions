@@ -45,10 +45,10 @@ describe('caption components', () => {
     ];
     const rounded = renderToStaticMarkup(<RoundedCaptions captions={longCaptions} width={240} height={120} />);
     const pill = renderToStaticMarkup(<MovingPillCaptions captions={longCaptions} width={240} height={120} />);
-    expect(rounded).toContain('data-caption-shape="glyph-bubble"');
-    expect(pill).toContain('data-caption-shape="glyph-bubble"');
-    expect(rounded).toContain('stroke-linejoin="round"');
-    expect(pill).toContain('stroke-linejoin="round"');
+    expect(rounded).toContain('data-caption-shape="bubble-background"');
+    expect(pill).toContain('data-caption-shape="bubble-background"');
+    expect(rounded).not.toContain('data-caption-shape="glyph-bubble"');
+    expect(pill).not.toContain('data-caption-shape="glyph-bubble"');
     expect(rounded).not.toMatch(/NaN|Infinity/);
     expect(pill).not.toMatch(/NaN|Infinity/);
   });
