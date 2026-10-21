@@ -47,19 +47,17 @@ describe('caption components', () => {
     const pill = renderToStaticMarkup(<MovingPillCaptions captions={longCaptions} width={240} height={120} />);
     expect(rounded).toContain('data-caption-shape="bubble-background"');
     expect(pill).toContain('data-caption-shape="bubble-background"');
-    expect(rounded).toMatch(/data-caption-shape="bubble-background"[^>]*fill="none"/);
-    expect(pill).toMatch(/data-caption-shape="bubble-background"[^>]*fill="none"/);
-    expect(rounded).toContain('stroke-width="8"');
-    expect(pill).toContain('stroke-width="8"');
-    expect(rounded).toContain('stroke-linejoin="round"');
-    expect(pill).toContain('stroke-linejoin="round"');
+    expect(rounded).toContain('data-caption-shape="bubble-interior"');
+    expect(pill).toContain('data-caption-shape="bubble-interior"');
+    expect(rounded).not.toContain('stroke-width="8"');
+    expect(pill).not.toContain('stroke-width="8"');
     expect(rounded).not.toContain('data-caption-shape="glyph-bubble"');
     expect(pill).not.toContain('data-caption-shape="glyph-bubble"');
     expect(rounded).not.toMatch(/NaN|Infinity/);
     expect(pill).not.toMatch(/NaN|Infinity/);
   });
 
-  it('draws the bubble outline around the active glyphs', () => {
+  it('draws a filled bubble edge around the active caption', () => {
     const changingCaptions: Caption[] = [
       {text: '短句', startMs: 0, endMs: 900, timestampMs: 450, confidence: null},
       {text: '这是一段更长的字幕', startMs: 900, endMs: 1800, timestampMs: 1350, confidence: null},
@@ -68,10 +66,10 @@ describe('caption components', () => {
     const shortMarkup = renderToStaticMarkup(<RoundedCaptions captions={changingCaptions} width={240} height={120} />);
     clock.frame = 35;
     const longMarkup = renderToStaticMarkup(<RoundedCaptions captions={changingCaptions} width={240} height={120} />);
-    expect(shortMarkup).toMatch(/data-caption-shape="bubble-background"[^>]*>短句<\/text>/);
-    expect(longMarkup).toMatch(/data-caption-shape="bubble-background"[^>]*>这是一段更长的字幕<\/text>/);
-    expect(shortMarkup).not.toContain('<path data-caption-shape="bubble-background"');
-    expect(longMarkup).not.toContain('<path data-caption-shape="bubble-background"');
+    const firstBubbleX = (markup: string) => Number(markup.match(/data-caption-shape="bubble-background" d="M ([0-9.-]+)/)?.[1]);
+    expect(firstBubbleX(shortMarkup)).toBeGreaterThan(firstBubbleX(longMarkup));
+    expect(shortMarkup).toContain('data-caption-shape="bubble-interior"');
+    expect(longMarkup).toContain('data-caption-shape="bubble-interior"');
   });
 
   it('fits long character captions instead of stacking glyphs', () => {
