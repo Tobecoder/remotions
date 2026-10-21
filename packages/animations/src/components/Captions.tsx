@@ -69,9 +69,6 @@ const fitFontSize = (text: string, desiredSize: number, maxWidth: number, glyphW
 const longestCaptionLine = (captions: Caption[], maxChars: number) =>
   captions.reduce((longest, caption) => splitCaption(caption.text, maxChars).reduce((currentLongest, line) => line.length > currentLongest.length ? line : currentLongest, longest), '');
 
-const longestCaptionLength = (captions: Caption[]) =>
-  Math.max(1, ...captions.map((caption) => Array.from(caption.text.trim()).length));
-
 const bubbleRadius = (amplitude: number, index: number, phase: number) =>
   amplitude * (0.68 + 0.24 * Math.sin(index * 1.81 + phase) + 0.14 * Math.cos(index * 0.73 - phase));
 
@@ -166,12 +163,12 @@ export const RoundedCaptions = ({
   const fittedFontSize = fitFontSize(layoutLine, fontSize, textAreaWidth, 0.72);
   const lineHeight = fittedFontSize * 1.18;
   const bubblePhase = frame / Math.max(1, fps) * 1.6;
-  const layoutLines = splitCaption(layoutLine, 18);
-  const bubbleWidth = Math.min(textAreaWidth, Math.max(fittedFontSize * 4, estimateTextWidth(layoutLine, fittedFontSize, 0.72) + fittedFontSize * 1.25));
-  const bubbleHeight = Math.max(fittedFontSize * 1.55, layoutLines.length * lineHeight + fittedFontSize * 0.62);
+  const activeTextWidth = Math.max(1, ...lines.map((line) => estimateTextWidth(line, fittedFontSize, 0.72)));
+  const bubbleWidth = Math.min(textAreaWidth, Math.max(fittedFontSize * 2.6, activeTextWidth + fittedFontSize * 0.9));
+  const bubbleHeight = Math.max(fittedFontSize * 1.42, lines.length * lineHeight + fittedFontSize * 0.38);
   const bubbleX = (dimensions.width - bubbleWidth) / 2;
   const bubbleY = dimensions.height * 0.68 - bubbleHeight / 2;
-  const bubbleAmplitude = Math.max(2, Math.min(bubbleWidth, bubbleHeight) * 0.16);
+  const bubbleAmplitude = Math.max(1.5, Math.min(bubbleWidth, bubbleHeight) * 0.09);
   const bubblePath = buildBubblePath(bubbleX, bubbleY, bubbleWidth, bubbleHeight, bubbleAmplitude, bubblePhase);
 
   return <svg role="img" aria-label="气泡字幕动画" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
@@ -209,14 +206,14 @@ export const MovingPillCaptions = ({
   const maxTextWidth = dimensions.width * 0.66;
   const layoutText = captions.reduce((longest, item) => item.text.trim().length > longest.length ? item.text.trim() : longest, '');
   const fittedFontSize = fitFontSize(layoutText, fontSize, maxTextWidth, 0.7);
-  const naturalTextWidth = Math.min(maxTextWidth, estimateTextWidth(layoutText, fittedFontSize, 0.7));
-  const horizontalPadding = fittedFontSize * 0.85;
-  const pillWidth = Math.min(dimensions.width * 0.86, Math.max(fittedFontSize * 4, naturalTextWidth + horizontalPadding * 2));
+  const activeTextWidth = Math.min(maxTextWidth, estimateTextWidth(text, fittedFontSize, 0.7));
+  const horizontalPadding = fittedFontSize * 0.62;
+  const pillWidth = Math.min(dimensions.width * 0.86, Math.max(fittedFontSize * 2.6, activeTextWidth + horizontalPadding * 2));
   const pillX = (dimensions.width - pillWidth) / 2 + slide;
   const textX = pillX + pillWidth / 2;
-  const pillHeight = fittedFontSize * 1.65;
+  const pillHeight = fittedFontSize * 1.45;
   const bubblePhase = frame / Math.max(1, fps) * 1.6;
-  const bubbleAmplitude = Math.max(2, Math.min(pillWidth, pillHeight) * 0.17);
+  const bubbleAmplitude = Math.max(1.5, Math.min(pillWidth, pillHeight) * 0.1);
   const bubblePath = buildBubblePath(pillX, dimensions.height * 0.7 - pillHeight / 2, pillWidth, pillHeight, bubbleAmplitude, bubblePhase);
 
   return <svg role="img" aria-label="移动气泡字幕动画" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
@@ -248,12 +245,13 @@ export const PoppingWordCaptions = ({
   const opacity = caption ? getCaptionOpacity(caption, timeMs) : 0;
   const chars = Array.from(captionText(caption));
   const visibleChars = Math.max(1, chars.length);
-  const layoutCharCount = longestCaptionLength(captions);
+  const layoutText = captions.reduce((longest, item) => item.text.trim().length > longest.length ? item.text.trim() : longest, '');
   const maxWidth = dimensions.width * 0.88;
-  const fittedFontSize = Math.max(1, Math.min(fontSize, maxWidth / (layoutCharCount * 0.84 + Math.max(0, layoutCharCount - 1) * 0.12)));
-  const gap = fittedFontSize * 0.12;
-  const totalWidth = Math.min(maxWidth, layoutCharCount * fittedFontSize * 0.84 + Math.max(0, layoutCharCount - 1) * gap);
-  const startX = (dimensions.width - totalWidth) / 2;
+  const fittedFontSize = fitFontSize(layoutText, fontSize, maxWidth, 0.84);
+  const gap = CAPTION_LETTER_SPACING;
+  const activeCharWidths = chars.map((character) => estimateTextWidth(character, fittedFontSize, 0.84));
+  const activeWidth = Math.min(maxWidth, activeCharWidths.reduce((total, characterWidth) => total + characterWidth, 0) + Math.max(0, visibleChars - 1) * gap);
+  const activeStartX = (dimensions.width - activeWidth) / 2;
   const baseY = dimensions.height * 0.7;
 
   return <svg role="img" aria-label="弹出单词字幕动画" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
@@ -263,7 +261,8 @@ export const PoppingWordCaptions = ({
         const localProgress = clamp((progress * (chars.length + 2) - index) / 1.5);
         const scale = 0.72 + localProgress * 0.28;
         const y = baseY + (1 - localProgress) * fittedFontSize * 0.62;
-        const x = visibleChars === 1 ? dimensions.width / 2 : startX + index * (totalWidth / (visibleChars - 1));
+        const previousWidth = activeCharWidths.slice(0, index).reduce((total, characterWidth) => total + characterWidth + gap, 0);
+        const x = activeStartX + previousWidth + activeCharWidths[index] / 2;
         return <g key={`${character}-${index}`} transform={`translate(${x} ${y}) scale(${scale})`}>
           <circle r={fittedFontSize * 0.62} fill={index % 2 === 0 ? secondaryColor : '#ffffff'} opacity={index % 2 === 0 ? 0.18 : 0.7} />
           <text textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fittedFontSize}>{character}</text>
@@ -293,10 +292,9 @@ export const WordHighlightCaptions = ({
   const opacity = caption ? getCaptionOpacity(caption, timeMs) : 0;
   const chars = Array.from(captionText(caption));
   const lines = splitCaption(captionText(caption), 18);
-  const longestLineLength = Math.max(1, ...captions.flatMap((item) => splitCaption(item.text, 18).map((line) => Array.from(line).length)));
+  const longestLine = captions.flatMap((item) => splitCaption(item.text, 18)).reduce((longest, line) => line.length > longest.length ? line : longest, '');
   const maxLineWidth = dimensions.width * 0.9;
-  const fittedFontSize = Math.max(1, Math.min(fontSize, maxLineWidth / (longestLineLength * 0.76 + Math.max(0, longestLineLength - 1) * 0.12)));
-  const layoutLineWidth = Math.min(maxLineWidth, longestLineLength * fittedFontSize * 0.76 + Math.max(0, longestLineLength - 1) * fittedFontSize * 0.12);
+  const fittedFontSize = fitFontSize(longestLine, fontSize, maxLineWidth, 0.76);
   const lineHeight = fittedFontSize * 1.2;
   const startY = dimensions.height * 0.7 - (lines.length - 1) * lineHeight / 2;
   const highlightIndex = chars.length === 0 ? -1 : Math.min(chars.length - 1, Math.floor(progress * chars.length));
@@ -312,11 +310,14 @@ export const WordHighlightCaptions = ({
     <g opacity={opacity} style={{...commonStyle(fontFamily)}}>
       {lineEntries.map(({line, offset}, lineIndex) => {
         const lineChars = Array.from(line);
-        const startX = (dimensions.width - layoutLineWidth) / 2;
+        const characterWidths = lineChars.map((character) => estimateTextWidth(character, fittedFontSize, 0.76));
+        const lineWidth = Math.min(maxLineWidth, characterWidths.reduce((total, characterWidth) => total + characterWidth, 0) + Math.max(0, lineChars.length - 1) * CAPTION_LETTER_SPACING);
+        const startX = (dimensions.width - lineWidth) / 2;
         return <g key={lineIndex}>
           {lineChars.map((character, index) => {
             const globalIndex = offset + index;
-            const x = lineChars.length === 1 ? dimensions.width / 2 : startX + index * (layoutLineWidth / (lineChars.length - 1));
+            const previousWidth = characterWidths.slice(0, index).reduce((total, characterWidth) => total + characterWidth + CAPTION_LETTER_SPACING, 0);
+            const x = startX + previousWidth + characterWidths[index] / 2;
             return <text key={`${character}-${globalIndex}`} x={x} y={startY + lineIndex * lineHeight} textAnchor="middle" dominantBaseline="middle" fill={globalIndex <= highlightIndex ? secondaryColor : color} fontSize={fittedFontSize}>{character}</text>;
           })}
         </g>;

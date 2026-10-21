@@ -53,6 +53,19 @@ describe('caption components', () => {
     expect(pill).not.toMatch(/NaN|Infinity/);
   });
 
+  it('keeps the bubble edge close to the active caption', () => {
+    const changingCaptions: Caption[] = [
+      {text: '短句', startMs: 0, endMs: 900, timestampMs: 450, confidence: null},
+      {text: '这是一段更长的字幕', startMs: 900, endMs: 1800, timestampMs: 1350, confidence: null},
+    ];
+    const firstBubbleX = (markup: string) => Number(markup.match(/data-caption-shape="bubble-background" d="M ([0-9.-]+)/)?.[1]);
+    clock.frame = 5;
+    const shortMarkup = renderToStaticMarkup(<RoundedCaptions captions={changingCaptions} width={240} height={120} />);
+    clock.frame = 35;
+    const longMarkup = renderToStaticMarkup(<RoundedCaptions captions={changingCaptions} width={240} height={120} />);
+    expect(firstBubbleX(shortMarkup)).toBeGreaterThan(firstBubbleX(longMarkup));
+  });
+
   it('fits long character captions instead of stacking glyphs', () => {
     const longCaptions: Caption[] = [
       {text: '一二三四五六七八九十甲乙丙丁戊己庚辛壬癸', startMs: 0, endMs: 1200, timestampMs: 600, confidence: null},
