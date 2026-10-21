@@ -54,12 +54,14 @@ const splitCaption = (text: string, maxChars: number) => {
 
 const captionText = (caption: Caption | null) => caption?.text.trim() ?? '';
 
+const CAPTION_LETTER_SPACING = 0.9;
+
 const estimateTextWidth = (text: string, fontSize: number, latinWidthRatio: number) =>
   Array.from(text).reduce((width, character) => {
     if (/^[\u2e80-\u9fff\uf900-\ufaff]$/u.test(character)) return width + fontSize;
     if (character.trim() === '') return width + fontSize * 0.35;
     return width + fontSize * latinWidthRatio;
-  }, 0);
+  }, 0) + Math.max(0, Array.from(text).length - 1) * CAPTION_LETTER_SPACING;
 
 const fitFontSize = (text: string, desiredSize: number, maxWidth: number, glyphWidthRatio: number) =>
   Math.max(1, Math.min(desiredSize, maxWidth / Math.max(1, estimateTextWidth(text, desiredSize, glyphWidthRatio)) * desiredSize));
@@ -67,7 +69,7 @@ const fitFontSize = (text: string, desiredSize: number, maxWidth: number, glyphW
 const commonStyle = (fontFamily: string) => ({
   fontFamily,
   fontWeight: 700,
-  letterSpacing: 0.9,
+  letterSpacing: `${CAPTION_LETTER_SPACING}px`,
 });
 
 /** A clean, centered caption line with a subtle shadow. */
@@ -87,13 +89,14 @@ export const BasicCaptions = ({
   const caption = getCaptionAtTime(captions, (frame / Math.max(1, fps)) * 1000);
   const opacity = caption ? getCaptionOpacity(caption, (frame / Math.max(1, fps)) * 1000) : 0;
   const lines = splitCaption(captionText(caption), 20);
-  const lineHeight = fontSize * 1.16;
+  const fittedFontSize = fitFontSize(lines.reduce((longest, line) => line.length > longest.length ? line : longest, ''), fontSize, dimensions.width * 0.86, 0.72);
+  const lineHeight = fittedFontSize * 1.16;
   const centerY = dimensions.height * 0.7;
 
   return <svg role="img" aria-label="基础字幕动画" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
     <g opacity={opacity} style={{...commonStyle(fontFamily)}}>
-      {lines.map((line, index) => <text key={index} x={dimensions.width / 2} y={centerY + (index - (lines.length - 1) / 2) * lineHeight} textAnchor="middle" dominantBaseline="middle" fill={color} stroke={secondaryColor} strokeWidth={Math.max(1, fontSize * 0.06)} paintOrder="stroke" fontSize={fontSize}>{line}</text>)}
+      {lines.map((line, index) => <text key={index} x={dimensions.width / 2} y={centerY + (index - (lines.length - 1) / 2) * lineHeight} textAnchor="middle" dominantBaseline="middle" fill={color} stroke={secondaryColor} strokeWidth={Math.max(1, fittedFontSize * 0.06)} paintOrder="stroke" fontSize={fittedFontSize}>{line}</text>)}
     </g>
   </svg>;
 };
@@ -198,9 +201,11 @@ export const PoppingWordCaptions = ({
   const progress = caption ? getCaptionProgress(caption, timeMs) : 0;
   const opacity = caption ? getCaptionOpacity(caption, timeMs) : 0;
   const chars = Array.from(captionText(caption));
-  const visibleChars = chars.length || 1;
-  const gap = fontSize * 0.12;
-  const totalWidth = Math.min(dimensions.width * 0.88, visibleChars * fontSize * 0.84 + Math.max(0, visibleChars - 1) * gap);
+  const visibleChars = Math.max(1, chars.length);
+  const maxWidth = dimensions.width * 0.88;
+  const fittedFontSize = Math.max(1, Math.min(fontSize, maxWidth / (visibleChars * 0.84 + Math.max(0, visibleChars - 1) * 0.12)));
+  const gap = fittedFontSize * 0.12;
+  const totalWidth = Math.min(maxWidth, visibleChars * fittedFontSize * 0.84 + Math.max(0, visibleChars - 1) * gap);
   const startX = (dimensions.width - totalWidth) / 2;
   const baseY = dimensions.height * 0.7;
 
@@ -210,11 +215,11 @@ export const PoppingWordCaptions = ({
       {chars.map((character, index) => {
         const localProgress = clamp((progress * (chars.length + 2) - index) / 1.5);
         const scale = 0.72 + localProgress * 0.28;
-        const y = baseY + (1 - localProgress) * fontSize * 0.62;
-        const x = startX + index * (totalWidth / Math.max(1, chars.length - 1));
+        const y = baseY + (1 - localProgress) * fittedFontSize * 0.62;
+        const x = visibleChars === 1 ? dimensions.width / 2 : startX + index * (totalWidth / (visibleChars - 1));
         return <g key={`${character}-${index}`} transform={`translate(${x} ${y}) scale(${scale})`}>
-          <circle r={fontSize * 0.68} fill={index % 2 === 0 ? secondaryColor : '#ffffff'} opacity={index % 2 === 0 ? 0.18 : 0.7} />
-          <text textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fontSize}>{character}</text>
+          <circle r={fittedFontSize * 0.62} fill={index % 2 === 0 ? secondaryColor : '#ffffff'} opacity={index % 2 === 0 ? 0.18 : 0.7} />
+          <text textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fittedFontSize}>{character}</text>
         </g>;
       })}
     </g>
@@ -241,7 +246,10 @@ export const WordHighlightCaptions = ({
   const opacity = caption ? getCaptionOpacity(caption, timeMs) : 0;
   const chars = Array.from(captionText(caption));
   const lines = splitCaption(captionText(caption), 18);
-  const lineHeight = fontSize * 1.2;
+  const longestLineLength = Math.max(1, ...lines.map((line) => Array.from(line).length));
+  const maxLineWidth = dimensions.width * 0.9;
+  const fittedFontSize = Math.max(1, Math.min(fontSize, maxLineWidth / (longestLineLength * 0.76 + Math.max(0, longestLineLength - 1) * 0.12)));
+  const lineHeight = fittedFontSize * 1.2;
   const startY = dimensions.height * 0.7 - (lines.length - 1) * lineHeight / 2;
   const highlightIndex = chars.length === 0 ? -1 : Math.min(chars.length - 1, Math.floor(progress * chars.length));
   let charOffset = 0;
@@ -256,12 +264,13 @@ export const WordHighlightCaptions = ({
     <g opacity={opacity} style={{...commonStyle(fontFamily)}}>
       {lineEntries.map(({line, offset}, lineIndex) => {
         const lineChars = Array.from(line);
-        const lineWidth = Math.min(dimensions.width * 0.9, lineChars.length * fontSize * 0.76);
+        const lineWidth = lineChars.length * fittedFontSize * 0.76 + Math.max(0, lineChars.length - 1) * fittedFontSize * 0.12;
         const startX = (dimensions.width - lineWidth) / 2;
         return <g key={lineIndex}>
           {lineChars.map((character, index) => {
             const globalIndex = offset + index;
-            return <text key={`${character}-${globalIndex}`} x={startX + index * (lineWidth / Math.max(1, lineChars.length - 1))} y={startY + lineIndex * lineHeight} textAnchor="middle" dominantBaseline="middle" fill={globalIndex <= highlightIndex ? secondaryColor : color} fontSize={fontSize}>{character}</text>;
+            const x = lineChars.length === 1 ? dimensions.width / 2 : startX + index * (lineWidth / (lineChars.length - 1));
+            return <text key={`${character}-${globalIndex}`} x={x} y={startY + lineIndex * lineHeight} textAnchor="middle" dominantBaseline="middle" fill={globalIndex <= highlightIndex ? secondaryColor : color} fontSize={fittedFontSize}>{character}</text>;
           })}
         </g>;
       })}

@@ -52,4 +52,16 @@ describe('caption components', () => {
     expect(rounded).not.toMatch(/NaN|Infinity/);
     expect(pill).not.toMatch(/NaN|Infinity/);
   });
+
+  it('fits long character captions instead of stacking glyphs', () => {
+    const longCaptions: Caption[] = [
+      {text: '一二三四五六七八九十甲乙丙丁戊己庚辛壬癸', startMs: 0, endMs: 1200, timestampMs: 600, confidence: null},
+    ];
+    const popping = renderToStaticMarkup(<PoppingWordCaptions captions={longCaptions} width={240} height={120} />);
+    const highlight = renderToStaticMarkup(<WordHighlightCaptions captions={longCaptions} width={240} height={120} />);
+    const maxFontSize = (markup: string) => Math.max(...Array.from(markup.matchAll(/font-size="([0-9.]+)"/g), (match) => Number(match[1])));
+    expect(maxFontSize(popping)).toBeLessThan(62);
+    expect(maxFontSize(highlight)).toBeLessThan(62);
+    expect(highlight).toContain('letter-spacing:0.9px');
+  });
 });
