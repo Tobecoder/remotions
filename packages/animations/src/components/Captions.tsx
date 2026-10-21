@@ -99,7 +99,10 @@ const buildBubblePath = (x: number, y: number, width: number, height: number, am
   for (let index = 0; index < horizontalSegments; index += 1) {
     const start = x + safeWidth - (safeWidth * index) / horizontalSegments;
     const end = x + safeWidth - (safeWidth * (index + 1)) / horizontalSegments;
-    path += ` Q ${(start + end) / 2} ${y + safeHeight + bubbleRadius(safeAmplitude, horizontalSegments + verticalSegments + index, phase + 0.8)} ${end} ${y + safeHeight}`;
+    // Mirror the top edge's lobe sizes so the filled cloud has a stable,
+    // balanced silhouette instead of visibly different top and bottom waves.
+    const mirroredIndex = horizontalSegments - 1 - index;
+    path += ` Q ${(start + end) / 2} ${y + safeHeight + bubbleRadius(safeAmplitude, mirroredIndex, phase)} ${end} ${y + safeHeight}`;
   }
   for (let index = 0; index < verticalSegments; index += 1) {
     const start = y + safeHeight - (safeHeight * index) / verticalSegments;
