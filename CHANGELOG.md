@@ -6,7 +6,7 @@
 - Add a Chinese preview page with local audio selection, six-second playback and copyable Remotion examples.
 - Generate an original demo WAV and archive the former general-purpose effects and their historical tests.
 - Validate ten new tests, type checks, package builds and production catalog build.
-- Rename the public app from `playground` to `catalog`, add extensible category tabs, and play silent Remotion card previews on hover.
+- Rename the public app to `catalog`, add extensible category tabs, and play silent Remotion card previews on hover.
 
 ## Unreleased — V0.1 hardening (2026-10-21)
 

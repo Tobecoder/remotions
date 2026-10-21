@@ -1,6 +1,7 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import type {CSSProperties} from 'react';
 import {CatalogCardPreview} from './CatalogCardPreview';
+import type {CatalogCardPreviewHandle} from './CatalogCardPreview';
 import {catalog, categories, demoAudioSrc, previewDurationInFrames, snippetFor} from './catalog';
 import type {CategoryId, DemoId} from './catalog';
 import {CatalogPlayer} from './CatalogPlayer';
@@ -14,6 +15,7 @@ export const App = () => {
   const [hovered, setHovered] = useState<DemoId | null>(null);
   const [uploaded, setUploaded] = useState<UploadedAudio | null>(null);
   const [notice, setNotice] = useState('');
+  const previewRefs = useRef<Partial<Record<DemoId, CatalogCardPreviewHandle | null>>>({});
   const category = categories.find((item) => item.id === selectedCategory) ?? categories[0];
   const categoryItems = catalog.filter((item) => item.category === selectedCategory);
   const active = categoryItems.find((item) => item.id === selected) ?? categoryItems[0];
@@ -88,8 +90,8 @@ export const App = () => {
           })}
         </div>
         <div id="catalog-panel" role="tabpanel" aria-label={`${category.name}组件`}>
-          {categoryItems.length > 0 ? <div className="catalog-grid">{categoryItems.map((item) => <button key={item.id} type="button" className={selected === item.id ? 'motion-card selected' : 'motion-card'} style={{'--card-accent': item.color} as CSSProperties} aria-pressed={selected === item.id} aria-label={`预览${item.name}`} onMouseEnter={() => setHovered(item.id)} onMouseLeave={() => setHovered(null)} onFocus={() => setHovered(item.id)} onBlur={() => setHovered(null)} onClick={() => {setSelected(item.id); document.getElementById('preview')?.scrollIntoView({behavior: 'smooth', block: 'start'});}}>
-            <div className={`mini-art mini-${item.id}`}><CatalogCardPreview inputProps={{id: item.id, src}} active={hovered === item.id} /></div>
+          {categoryItems.length > 0 ? <div className="catalog-grid">{categoryItems.map((item) => <button key={item.id} type="button" className={selected === item.id ? 'motion-card selected' : 'motion-card'} style={{'--card-accent': item.color} as CSSProperties} aria-pressed={selected === item.id} aria-label={`预览${item.name}`} onPointerEnter={(event) => {setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onPointerLeave={() => {setHovered(null); previewRefs.current[item.id]?.stop();}} onFocus={(event) => {setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onBlur={() => {setHovered(null); previewRefs.current[item.id]?.stop();}} onClick={() => {setSelected(item.id); document.getElementById('preview')?.scrollIntoView({behavior: 'smooth', block: 'start'});}}>
+            <div className={`mini-art mini-${item.id}`}><CatalogCardPreview ref={(handle) => {previewRefs.current[item.id] = handle;}} inputProps={{id: item.id, src}} active={hovered === item.id} /></div>
             <div className="motion-card-info"><div><span className="card-index">{item.tag} / {category.name}</span><strong>{item.name}</strong><span className="motion-description">{item.description}</span></div><span className="card-arrow">↗</span></div>
             <div className="motion-card-foot">{item.useCase}</div>
           </button>)}</div> : <div className="empty-category"><span className="empty-mark">✦</span><strong>{category.name}正在准备中</strong><p>{category.description}。分类已经预留，下一批组件会直接出现在这里。</p></div>}

@@ -1,4 +1,5 @@
-import {useEffect, useRef} from 'react';
+import {forwardRef, useCallback, useEffect, useImperativeHandle, useRef} from 'react';
+import type {SyntheticEvent} from 'react';
 import {Player} from '@remotion/player';
 import type {PlayerRef} from '@remotion/player';
 import {AudioCardComposition} from './catalog';
@@ -9,24 +10,53 @@ type CatalogCardPreviewProps = {
   active: boolean;
 };
 
+export type CatalogCardPreviewHandle = {
+  start: (event?: SyntheticEvent) => void;
+  stop: () => void;
+};
+
 const fps = 30;
 const durationInFrames = 180;
 
 /** A silent inline Remotion preview. The full player is where the shared audio is heard. */
-export const CatalogCardPreview = ({inputProps, active}: CatalogCardPreviewProps) => {
+export const CatalogCardPreview = forwardRef<CatalogCardPreviewHandle, CatalogCardPreviewProps>(({inputProps, active}, ref) => {
   const playerRef = useRef<PlayerRef>(null);
+  const animationFrameRef = useRef<number | null>(null);
 
-  useEffect(() => {
+  const stop = useCallback(() => {
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
     const player = playerRef.current;
     if (!player) return;
-    if (active) {
-      player.seekTo(0);
-      void player.play();
-      return;
-    }
     player.pause();
     player.seekTo(0);
-  }, [active]);
+  }, []);
+
+  const start = useCallback((event?: SyntheticEvent) => {
+    void event;
+    stop();
+    const player = playerRef.current;
+    if (!player) return;
+    player.seekTo(0);
+    const startedAt = performance.now();
+    const tick = (now: number) => {
+      const currentPlayer = playerRef.current;
+      if (!currentPlayer) return;
+      const nextFrame = Math.floor(((now - startedAt) / 1000) * fps) % durationInFrames;
+      currentPlayer.seekTo(nextFrame);
+      animationFrameRef.current = requestAnimationFrame(tick);
+    };
+    animationFrameRef.current = requestAnimationFrame(tick);
+  }, [stop]);
+
+  useImperativeHandle(ref, () => ({start, stop}), [start, stop]);
+
+  useEffect(() => {
+    if (active) start();
+    else stop();
+  }, [active, start, stop]);
 
   return <div className="card-player" aria-hidden="true">
     <Player
@@ -40,9 +70,12 @@ export const CatalogCardPreview = ({inputProps, active}: CatalogCardPreviewProps
       compositionHeight={260}
       controls={false}
       clickToPlay={false}
+      autoPlay={false}
       loop
       style={{width: '100%', height: '100%'}}
     />
     {!active && <span className="card-hover-hint">悬浮查看动效</span>}
   </div>;
-};
+});
+
+CatalogCardPreview.displayName = 'CatalogCardPreview';
