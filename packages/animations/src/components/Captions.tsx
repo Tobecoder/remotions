@@ -69,40 +69,7 @@ const fitFontSize = (text: string, desiredSize: number, maxWidth: number, glyphW
 const longestCaptionLine = (captions: Caption[], maxChars: number) =>
   captions.reduce((longest, caption) => splitCaption(caption.text, maxChars).reduce((currentLongest, line) => line.length > currentLongest.length ? line : currentLongest, longest), '');
 
-const bubbleRadius = (amplitude: number, index: number, phase: number) =>
-  amplitude * (0.68 + 0.24 * Math.sin(index * 1.81 + phase) + 0.14 * Math.cos(index * 0.73 - phase));
-
-const buildBubblePath = (x: number, y: number, width: number, height: number, amplitude: number, phase: number) => {
-  const safeWidth = Math.max(1, width);
-  const safeHeight = Math.max(1, height);
-  const safeAmplitude = Math.max(1, Math.min(amplitude, safeWidth / 4, safeHeight / 2));
-  const horizontalSegments = Math.max(3, Math.min(18, Math.ceil(safeWidth / Math.max(10, safeAmplitude * 2.6))));
-  const verticalSegments = Math.max(2, Math.min(8, Math.ceil(safeHeight / Math.max(10, safeAmplitude * 2.4))));
-  let path = `M ${x} ${y}`;
-
-  for (let index = 0; index < horizontalSegments; index += 1) {
-    const start = x + (safeWidth * index) / horizontalSegments;
-    const end = x + (safeWidth * (index + 1)) / horizontalSegments;
-    path += ` Q ${(start + end) / 2} ${y - bubbleRadius(safeAmplitude, index, phase)} ${end} ${y}`;
-  }
-  for (let index = 0; index < verticalSegments; index += 1) {
-    const start = y + (safeHeight * index) / verticalSegments;
-    const end = y + (safeHeight * (index + 1)) / verticalSegments;
-    path += ` Q ${x + safeWidth + bubbleRadius(safeAmplitude, horizontalSegments + index, phase + 0.4)} ${(start + end) / 2} ${x + safeWidth} ${end}`;
-  }
-  for (let index = 0; index < horizontalSegments; index += 1) {
-    const start = x + safeWidth - (safeWidth * index) / horizontalSegments;
-    const end = x + safeWidth - (safeWidth * (index + 1)) / horizontalSegments;
-    path += ` Q ${(start + end) / 2} ${y + safeHeight + bubbleRadius(safeAmplitude, horizontalSegments + verticalSegments + index, phase + 0.8)} ${end} ${y + safeHeight}`;
-  }
-  for (let index = 0; index < verticalSegments; index += 1) {
-    const start = y + safeHeight - (safeHeight * index) / verticalSegments;
-    const end = y + safeHeight - (safeHeight * (index + 1)) / verticalSegments;
-    path += ` Q ${x - bubbleRadius(safeAmplitude, horizontalSegments * 2 + verticalSegments + index, phase + 1.2)} ${(start + end) / 2} ${x} ${end}`;
-  }
-
-  return `${path} Z`;
-};
+const CAPTION_BUBBLE_EDGE = 4;
 
 const commonStyle = (fontFamily: string) => ({
   fontFamily,
@@ -162,22 +129,16 @@ export const RoundedCaptions = ({
   const layoutLine = longestCaptionLine(captions, 18);
   const fittedFontSize = fitFontSize(layoutLine, fontSize, textAreaWidth, 0.72);
   const lineHeight = fittedFontSize * 1.18;
-  const bubblePhase = frame / Math.max(1, fps) * 1.6;
-  const activeTextWidth = Math.max(1, ...lines.map((line) => estimateTextWidth(line, fittedFontSize, 0.72)));
-  const bubbleWidth = Math.min(textAreaWidth, Math.max(fittedFontSize * 2.1, activeTextWidth + fittedFontSize * 0.22));
-  const bubbleHeight = Math.max(fittedFontSize * 1.34, lines.length * lineHeight + fittedFontSize * 0.26);
-  const bubbleX = (dimensions.width - bubbleWidth) / 2;
-  const bubbleY = dimensions.height * 0.68 - bubbleHeight / 2;
-  const bubbleAmplitude = Math.max(1.25, Math.min(bubbleWidth, bubbleHeight) * 0.05);
-  const bubblePath = buildBubblePath(bubbleX, bubbleY, bubbleWidth, bubbleHeight, bubbleAmplitude, bubblePhase);
 
   return <svg role="img" aria-label="气泡字幕动画" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
     <g opacity={opacity} style={{...commonStyle(fontFamily)}}>
-      <path data-caption-shape="bubble-background" d={bubblePath} fill={secondaryColor} opacity="0.16" />
       {lines.map((line, index) => {
         const y = dimensions.height * 0.68 + (index - (lines.length - 1) / 2) * lineHeight;
-        return <text key={index} x={dimensions.width / 2} y={y} textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fittedFontSize}>{line}</text>;
+        return <g key={index}>
+          <text data-caption-shape="bubble-background" x={dimensions.width / 2} y={y} textAnchor="middle" dominantBaseline="middle" fill="none" stroke={secondaryColor} strokeWidth={CAPTION_BUBBLE_EDGE * 2} strokeLinecap="round" strokeLinejoin="round" opacity="0.24" fontSize={fittedFontSize}>{line}</text>
+          <text x={dimensions.width / 2} y={y} textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fittedFontSize}>{line}</text>
+        </g>;
       })}
     </g>
   </svg>;
@@ -206,20 +167,12 @@ export const MovingPillCaptions = ({
   const maxTextWidth = dimensions.width * 0.66;
   const layoutText = captions.reduce((longest, item) => item.text.trim().length > longest.length ? item.text.trim() : longest, '');
   const fittedFontSize = fitFontSize(layoutText, fontSize, maxTextWidth, 0.7);
-  const activeTextWidth = Math.min(maxTextWidth, estimateTextWidth(text, fittedFontSize, 0.7));
-  const horizontalPadding = fittedFontSize * 0.08;
-  const pillWidth = Math.min(dimensions.width * 0.86, Math.max(fittedFontSize * 2.1, activeTextWidth + horizontalPadding * 2));
-  const pillX = (dimensions.width - pillWidth) / 2 + slide;
-  const textX = pillX + pillWidth / 2;
-  const pillHeight = fittedFontSize * 1.28;
-  const bubblePhase = frame / Math.max(1, fps) * 1.6;
-  const bubbleAmplitude = Math.max(1.25, Math.min(pillWidth, pillHeight) * 0.05);
-  const bubblePath = buildBubblePath(pillX, dimensions.height * 0.7 - pillHeight / 2, pillWidth, pillHeight, bubbleAmplitude, bubblePhase);
+  const textX = dimensions.width / 2 + slide;
 
   return <svg role="img" aria-label="移动气泡字幕动画" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
     <g opacity={opacity} style={{...commonStyle(fontFamily)}}>
-      <path data-caption-shape="bubble-background" d={bubblePath} fill={secondaryColor} opacity="0.18" />
+      <text data-caption-shape="bubble-background" x={textX} y={dimensions.height * 0.7} textAnchor="middle" dominantBaseline="middle" fill="none" stroke={secondaryColor} strokeWidth={CAPTION_BUBBLE_EDGE * 2} strokeLinecap="round" strokeLinejoin="round" opacity="0.24" fontSize={fittedFontSize}>{text}</text>
       <text x={textX} y={dimensions.height * 0.7} textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fittedFontSize}>{text}</text>
     </g>
   </svg>;
