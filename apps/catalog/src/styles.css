@@ -11,3 +11,4 @@
 .empty-category{min-height:280px;display:flex;flex-direction:column;justify-content:center;align-items:center;box-sizing:border-box}
 .hero p{max-width:none;white-space:nowrap}
 @media(max-width:900px){.hero p{white-space:normal}}
+@media(min-width:901px){.hero .eyebrow{font-size:22px}.hero-stats{font-size:26px;gap:76px}.hero-stats span{gap:16px}.hero-stats strong{font-size:44px}}
