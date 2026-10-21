@@ -8,23 +8,30 @@ describe('animation catalog', () => {
   it('contains the initial audio and background components', () => {
     expect(catalog.map((item) => item.componentName)).toEqual([
       'Oscilloscope', 'MirroredSpectrum', 'VoiceNote',
+      'BasicCaptions', 'RoundedCaptions', 'MovingPillCaptions', 'PoppingWordCaptions', 'WordHighlightCaptions',
       'LiquidContours', 'MovingWaves', 'MovingZigzags', 'NotebookPaper', 'PaperTexture', 'RotatingStarburst',
       'PulseRings', 'ParticleField', 'ShimmerSweep',
     ]);
     expect(catalog.filter((item) => item.category === 'audio')).toHaveLength(3);
+    expect(catalog.filter((item) => item.category === 'captions')).toHaveLength(5);
     expect(catalog.filter((item) => item.category === 'backgrounds')).toHaveLength(6);
     expect(catalog.filter((item) => item.category === 'effects')).toHaveLength(3);
   });
 
   it('keeps future categories separate from the active catalog entries', () => {
     expect(categories.map((item) => item.id)).toEqual(['audio', 'captions', 'backgrounds', 'effects', 'layouts']);
-    expect(categories.filter((item) => item.status === 'coming-soon')).toHaveLength(2);
+    expect(categories.filter((item) => item.status === 'coming-soon')).toHaveLength(1);
     expect(categories.every((item) => item.name && item.description)).toBe(true);
   });
 
   it.each(catalog)('$name provides a valid copy-ready TSX snippet', ({id, componentName}) => {
     const snippet = snippetFor(id);
-    if (catalog.find((item) => item.id === id)?.category !== 'audio') {
+    const category = catalog.find((item) => item.id === id)?.category;
+    if (category === 'captions') {
+      expect(snippet).toContain(`<${componentName} captions={captions} color=`);
+      expect(snippet).toContain("import type {Caption} from '@remotion/captions';");
+      expect(snippet).not.toContain('<Audio src={src} />');
+    } else if (category !== 'audio') {
       expect(snippet).toContain(`<${componentName} color=`);
       expect(snippet).not.toContain('<Audio src={src} />');
     } else {

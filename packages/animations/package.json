@@ -30,11 +30,13 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "peerDependencies": {
+    "@remotion/captions": "^4.0.0",
     "@remotion/media-utils": "^4.0.0",
     "react": ">=18",
     "remotion": "^4.0.0"
   },
   "devDependencies": {
+    "@remotion/captions": "^4.0.536",
     "@remotion/media-utils": "4.0.536",
     "react": "^19.0.0",
     "remotion": "4.0.536"

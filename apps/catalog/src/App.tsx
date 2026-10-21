@@ -2,7 +2,7 @@ import {useRef, useState} from 'react';
 import type {CSSProperties} from 'react';
 import {CatalogCardPreview} from './CatalogCardPreview';
 import type {CatalogCardPreviewHandle} from './CatalogCardPreview';
-import {catalog, categories, demoAudioSrc} from './catalog';
+import {catalog, categories, demoAudioSrc, demoCaptions} from './catalog';
 import type {CategoryId, DemoId} from './catalog';
 import './styles.css';
 
@@ -35,7 +35,7 @@ export const App = () => {
       <section className="hero">
         <div className="eyebrow"><span className="live-dot" /> REMOTION 动效素材库</div>
         <h1>让素材<span>随时可用</span></h1>
-        <p>把可复用的 Remotion 组件按类别收进一个持续扩展的库。现在从音频动画、背景特效和视觉效果开始，悬浮卡片即可看到逐帧动效。</p>
+        <p>把可复用的 Remotion 组件按类别收进一个持续扩展的库。现在从音频动画、字幕动画、背景特效和视觉效果开始，悬浮卡片即可看到逐帧动效。</p>
         <div className="hero-actions"><a className="button-primary" href="#library">探索素材库 ↗</a></div>
         <div className="hero-stats"><span><strong>{String(categories.length).padStart(2, '0')}</strong> 个分类骨架</span><span><strong>{String(catalog.length).padStart(2, '0')}</strong> 个已开放组件</span><span><strong>30 FPS</strong> 逐帧预览</span></div>
       </section>
@@ -53,7 +53,7 @@ export const App = () => {
         </div>
         <div id="catalog-panel" role="tabpanel" aria-label={`${category.name}组件`}>
           {categoryItems.length > 0 ? <div className="catalog-grid">{categoryItems.map((item) => <button key={item.id} type="button" className={selected === item.id ? 'motion-card selected' : 'motion-card'} style={{'--card-accent': item.color} as CSSProperties} aria-pressed={selected === item.id} aria-label={`预览${item.name}`} onPointerDown={(event) => {lastPointerType.current = event.pointerType; if (event.pointerType !== 'touch') return; if (hovered === item.id) {setHovered(null); previewRefs.current[item.id]?.stop();} else {setHovered(item.id); previewRefs.current[item.id]?.start(event);}}} onPointerUp={() => {lastPointerType.current = null;}} onPointerEnter={(event) => {if (event.pointerType === 'touch') return; setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onPointerLeave={(event) => {if (event.pointerType === 'touch') return; setHovered(null); previewRefs.current[item.id]?.stop();}} onFocus={(event) => {if (lastPointerType.current === 'touch') return; setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onBlur={() => {setHovered(null); previewRefs.current[item.id]?.stop();}} onClick={() => setSelected(item.id)}>
-            <div className={`mini-art mini-${item.id}`}><CatalogCardPreview ref={(handle) => {previewRefs.current[item.id] = handle;}} inputProps={{id: item.id, src}} active={hovered === item.id} /></div>
+            <div className={`mini-art mini-${item.id}`}><CatalogCardPreview ref={(handle) => {previewRefs.current[item.id] = handle;}} inputProps={{id: item.id, src, captions: demoCaptions}} active={hovered === item.id} /></div>
             <div className="motion-card-info"><div className="motion-card-copy"><div className="motion-card-title"><strong>{item.name}</strong><span className="motion-card-use-case">{item.useCase}</span></div><span className="motion-description">{item.description}</span></div></div>
           </button>)}</div> : <div className="empty-category"><span className="empty-mark">✦</span><strong>{category.name}正在整理中，后续组件会继续加入。</strong></div>}
         </div>
