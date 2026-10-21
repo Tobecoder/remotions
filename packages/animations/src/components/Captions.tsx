@@ -54,6 +54,11 @@ const splitCaption = (text: string, maxChars: number) => {
 
 const captionText = (caption: Caption | null) => caption?.text.trim() ?? '';
 
+const characterCount = (text: string) => Math.max(1, Array.from(text).length);
+
+const fitFontSize = (text: string, desiredSize: number, maxWidth: number, glyphWidthRatio: number) =>
+  Math.max(1, Math.min(desiredSize, maxWidth / (characterCount(text) * glyphWidthRatio)));
+
 const commonStyle = (fontFamily: string) => ({
   fontFamily,
   fontWeight: 700,
@@ -106,9 +111,11 @@ export const RoundedCaptions = ({
   const caption = getCaptionAtTime(captions, timeMs);
   const opacity = caption ? getCaptionOpacity(caption, timeMs) : 0;
   const lines = splitCaption(captionText(caption), 18);
-  const lineHeight = fontSize * 1.18;
-  const boxHeight = Math.max(fontSize * 1.55, lines.length * lineHeight + fontSize * 0.62);
-  const boxWidth = Math.min(dimensions.width * 0.88, Math.max(fontSize * 4, Math.max(...lines.map((line) => line.length)) * fontSize * 0.72 + fontSize * 1.5));
+  const textAreaWidth = dimensions.width * 0.76;
+  const fittedFontSize = fitFontSize(lines.reduce((longest, line) => line.length > longest.length ? line : longest, ''), fontSize, textAreaWidth, 0.72);
+  const lineHeight = fittedFontSize * 1.18;
+  const boxHeight = Math.max(fittedFontSize * 1.55, lines.length * lineHeight + fittedFontSize * 0.62);
+  const boxWidth = Math.min(dimensions.width * 0.88, Math.max(fittedFontSize * 4, Math.max(...lines.map((line) => Array.from(line).length)) * fittedFontSize * 0.72 + fittedFontSize * 1.5));
   const boxX = (dimensions.width - boxWidth) / 2;
   const boxY = dimensions.height * 0.68 - boxHeight / 2;
 
@@ -117,7 +124,7 @@ export const RoundedCaptions = ({
     <g opacity={opacity} style={{...commonStyle(fontFamily)}}>
       <rect x={boxX} y={boxY} width={boxWidth} height={boxHeight} rx={boxHeight / 2} fill={secondaryColor} opacity="0.16" />
       <rect x={boxX + 2} y={boxY + 2} width={Math.max(1, boxWidth - 4)} height={Math.max(1, boxHeight - 4)} rx={Math.max(1, boxHeight / 2 - 2)} fill="#ffffff" stroke={secondaryColor} strokeWidth={Math.max(2, fontSize * 0.035)} />
-      {lines.map((line, index) => <text key={index} x={dimensions.width / 2} y={dimensions.height * 0.68 + (index - (lines.length - 1) / 2) * lineHeight} textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fontSize}>{line}</text>)}
+      {lines.map((line, index) => <text key={index} x={dimensions.width / 2} y={dimensions.height * 0.68 + (index - (lines.length - 1) / 2) * lineHeight} textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fittedFontSize} textLength={Math.min(textAreaWidth, Math.max(1, Array.from(line).length * fittedFontSize * 0.72))} lengthAdjust="spacingAndGlyphs">{line}</text>)}
     </g>
   </svg>;
 };
@@ -142,17 +149,24 @@ export const MovingPillCaptions = ({
   const opacity = caption ? getCaptionOpacity(caption, timeMs) : 0;
   const slide = interpolate(Math.min(1, progress / 0.22), [0, 1], [dimensions.width * 0.13, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const text = captionText(caption);
-  const pillWidth = Math.min(dimensions.width * 0.86, Math.max(fontSize * 4, text.length * fontSize * 0.7 + fontSize * 1.7));
-  const pillHeight = fontSize * 1.65;
+  const maxTextWidth = dimensions.width * 0.66;
+  const fittedFontSize = fitFontSize(text, fontSize, maxTextWidth, 0.7);
+  const naturalTextWidth = characterCount(text) * fittedFontSize * 0.7;
+  const iconSpace = fittedFontSize * 0.95;
+  const horizontalPadding = fittedFontSize * 0.65;
+  const pillWidth = Math.min(dimensions.width * 0.86, Math.max(fittedFontSize * 4, naturalTextWidth + iconSpace + horizontalPadding * 2));
+  const pillHeight = fittedFontSize * 1.65;
   const pillX = (dimensions.width - pillWidth) / 2 + slide;
   const pillY = dimensions.height * 0.7 - pillHeight / 2;
+  const textAreaWidth = Math.max(1, pillWidth - iconSpace - horizontalPadding * 2);
+  const textX = pillX + iconSpace + horizontalPadding + textAreaWidth / 2;
 
   return <svg role="img" aria-label="移动胶囊字幕动画" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
     <g opacity={opacity} style={{...commonStyle(fontFamily)}}>
       <rect x={pillX} y={pillY} width={pillWidth} height={pillHeight} rx={pillHeight / 2} fill={secondaryColor} />
-      <circle cx={pillX + pillHeight * 0.52} cy={dimensions.height * 0.7} r={pillHeight * 0.18} fill="#ffffff" opacity="0.78" />
-      <text x={pillX + pillWidth / 2 + pillHeight * 0.08} y={dimensions.height * 0.7} textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fontSize}>{text}</text>
+      <circle cx={pillX + iconSpace * 0.52} cy={dimensions.height * 0.7} r={pillHeight * 0.18} fill="#ffffff" opacity="0.78" />
+      <text x={textX} y={dimensions.height * 0.7} textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fittedFontSize} textLength={Math.min(textAreaWidth, naturalTextWidth)} lengthAdjust="spacingAndGlyphs">{text}</text>
     </g>
   </svg>;
 };

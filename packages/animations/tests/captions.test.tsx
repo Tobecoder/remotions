@@ -38,4 +38,14 @@ describe('caption components', () => {
     expect(markup).toContain('height="1"');
     expect(markup).not.toMatch(/NaN|Infinity/);
   });
+
+  it('constrains long captions inside narrow rounded and pill previews', () => {
+    const longCaptions: Caption[] = [
+      {text: '这是一段很长的字幕需要留在卡片内部', startMs: 0, endMs: 1200, timestampMs: 600, confidence: null},
+    ];
+    const rounded = renderToStaticMarkup(<RoundedCaptions captions={longCaptions} width={240} height={120} />);
+    const pill = renderToStaticMarkup(<MovingPillCaptions captions={longCaptions} width={240} height={120} />);
+    expect(rounded).toContain('lengthAdjust="spacingAndGlyphs"');
+    expect(pill).toContain('lengthAdjust="spacingAndGlyphs"');
+  });
 });
