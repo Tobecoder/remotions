@@ -72,6 +72,7 @@ const longestCaptionLine = (captions: Caption[], maxChars: number) =>
 const CAPTION_BUBBLE_PADDING_X = 4;
 const CAPTION_BUBBLE_PADDING_Y = 3;
 const CAPTION_BUBBLE_AMPLITUDE = 10;
+const CAPTION_BUBBLE_VERTICAL_SHIFT = 0.18;
 
 const bubbleRadius = (amplitude: number, index: number, phase: number) =>
   amplitude * (0.68 + 0.24 * Math.sin(index * 1.81 + phase) + 0.14 * Math.cos(index * 0.73 - phase));
@@ -176,7 +177,7 @@ export const RoundedCaptions = ({
   const bubbleWidth = Math.min(textAreaWidth, Math.max(1, activeTextWidth + CAPTION_BUBBLE_PADDING_X * 2));
   const bubbleHeight = Math.max(1, lines.length * lineHeight + CAPTION_BUBBLE_PADDING_Y * 2);
   const bubbleX = (dimensions.width - bubbleWidth) / 2;
-  const bubbleY = dimensions.height * 0.68 - bubbleHeight / 2;
+  const bubbleY = dimensions.height * 0.68 - fittedFontSize * CAPTION_BUBBLE_VERTICAL_SHIFT - bubbleHeight / 2;
   const bubblePath = buildBubblePath(bubbleX, bubbleY, bubbleWidth, bubbleHeight, CAPTION_BUBBLE_AMPLITUDE, bubblePhase);
 
   return <svg role="img" aria-label="气泡字幕动画" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
@@ -218,7 +219,7 @@ export const MovingPillCaptions = ({
   const bubbleWidth = Math.min(dimensions.width * 0.86, activeTextWidth + CAPTION_BUBBLE_PADDING_X * 2);
   const bubbleHeight = fittedFontSize + CAPTION_BUBBLE_PADDING_Y * 2;
   const bubbleX = (dimensions.width - bubbleWidth) / 2 + slide;
-  const bubbleY = dimensions.height * 0.7 - bubbleHeight / 2;
+  const bubbleY = dimensions.height * 0.7 - fittedFontSize * CAPTION_BUBBLE_VERTICAL_SHIFT - bubbleHeight / 2;
   const bubblePhase = frame / Math.max(1, fps) * 1.6;
   const bubblePath = buildBubblePath(bubbleX, bubbleY, bubbleWidth, bubbleHeight, CAPTION_BUBBLE_AMPLITUDE, bubblePhase);
   const textX = dimensions.width / 2 + slide;
