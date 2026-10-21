@@ -162,7 +162,6 @@ export const MovingPillCaptions = ({
   const iconSpace = fittedFontSize * 0.95;
   const horizontalPadding = fittedFontSize * 0.65;
   const pillWidth = Math.min(dimensions.width * 0.86, Math.max(fittedFontSize * 4, naturalTextWidth + iconSpace + horizontalPadding * 2));
-  const pillHeight = fittedFontSize * 1.65;
   const pillX = (dimensions.width - pillWidth) / 2 + slide;
   const textAreaWidth = Math.max(1, pillWidth - iconSpace - horizontalPadding * 2);
   const textX = pillX + iconSpace + horizontalPadding + textAreaWidth / 2;
@@ -173,7 +172,6 @@ export const MovingPillCaptions = ({
   return <svg role="img" aria-label="移动气泡字幕动画" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
     <g opacity={opacity} style={{...commonStyle(fontFamily)}}>
-      <circle cx={pillX + iconSpace * 0.52} cy={dimensions.height * 0.7} r={pillHeight * 0.18} fill="#ffffff" opacity="0.78" />
       <g data-caption-shape="glyph-bubble">
         <text x={textX} y={dimensions.height * 0.7} textAnchor="middle" dominantBaseline="middle" fill={color} stroke={secondaryColor} strokeWidth={edgeStrokeWidth} strokeLinecap="round" strokeLinejoin="round" paintOrder="stroke" fontSize={fittedFontSize}>{text}</text>
       </g>
