@@ -67,7 +67,7 @@ const fitFontSize = (text: string, desiredSize: number, maxWidth: number, glyphW
 const commonStyle = (fontFamily: string) => ({
   fontFamily,
   fontWeight: 700,
-  letterSpacing: 0.3,
+  letterSpacing: 0.9,
 });
 
 /** A clean, centered caption line with a subtle shadow. */
