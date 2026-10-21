@@ -29,6 +29,8 @@ const getPhase = (frame: number, fps: number, speed: number) => interpolate(
   {extrapolateLeft: 'extend', extrapolateRight: 'extend'},
 );
 
+const fract = (value: number) => value - Math.floor(value);
+
 type Point = readonly [number, number];
 
 const midpoint = (a: Point, b: Point): Point => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
@@ -417,6 +419,96 @@ export const MovingZigzags = ({
         opacity="0.94"
       />;
     })}
+  </svg>;
+};
+
+/** A softly drifting notebook grid for tutorials, notes, and explainer scenes. */
+export const NotebookPaper = ({
+  width = 1920,
+  height = 1080,
+  color = '#8db8da',
+  secondaryColor = color,
+  backgroundColor = '#fbfdff',
+  speed = 1,
+}: BackgroundProps) => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const dimensions = getDimensions(width, height);
+  const phase = getPhase(frame, fps, speed);
+  const gridSize = Math.max(22, Math.min(48, dimensions.width * 0.045));
+  const offsetX = Math.sin(phase * 0.6) * gridSize * 0.08;
+  const offsetY = (phase / (Math.PI * 2)) * gridSize;
+  const columns = Math.ceil(dimensions.width / gridSize) + 3;
+  const rows = Math.ceil(dimensions.height / gridSize) + 3;
+  const marginX = Math.max(28, dimensions.width * 0.12);
+
+  return <svg role="img" aria-label="笔记网格纸张背景" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
+    <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
+    <g transform={`translate(${offsetX} ${-offsetY})`} stroke={color} strokeWidth="1" opacity="0.22">
+      {Array.from({length: columns}, (_, index) => {
+        const x = index * gridSize;
+        return <line key={`column-${index}`} x1={x} y1="0" x2={x} y2={dimensions.height + gridSize * 2} />;
+      })}
+      {Array.from({length: rows}, (_, index) => {
+        const y = index * gridSize;
+        return <line key={`row-${index}`} x1="0" y1={y} x2={dimensions.width} y2={y} />;
+      })}
+    </g>
+    <line x1={marginX} y1="0" x2={marginX} y2={dimensions.height} stroke={secondaryColor} strokeWidth={Math.max(1, dimensions.width * 0.002)} opacity="0.28" />
+    <rect x={marginX + 1} y="0" width={Math.max(1, dimensions.width * 0.006)} height={dimensions.height} fill={secondaryColor} opacity="0.035" />
+  </svg>;
+};
+
+/** A quiet, procedural paper grain with a slowly shifting seed. */
+export const PaperTexture = ({
+  width = 1920,
+  height = 1080,
+  color = '#9eb8cf',
+  secondaryColor = '#d3b58d',
+  backgroundColor = '#fbfaf6',
+  speed = 1,
+}: BackgroundProps) => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const dimensions = getDimensions(width, height);
+  const phase = getPhase(frame, fps, speed);
+  const grainCount = Math.max(36, Math.min(112, Math.round((dimensions.width * dimensions.height) / 5200)));
+  const grain = Array.from({length: grainCount}, (_, index) => {
+    const seed = index + 1;
+    const baseX = fract(Math.sin(seed * 19.13) * 31741.37);
+    const baseY = fract(Math.sin(seed * 31.71 + 8.2) * 19281.91);
+    const drift = phase * 0.11 + seed * 0.37;
+    const x = fract(baseX + Math.sin(drift) * 0.008) * dimensions.width;
+    const y = fract(baseY + Math.cos(drift * 0.83) * 0.006) * dimensions.height;
+    const length = Math.max(1.5, Math.min(dimensions.width, dimensions.height) * (0.008 + (seed % 4) * 0.003));
+    const radius = Math.max(0.8, Math.min(dimensions.width, dimensions.height) * (0.0025 + (seed % 3) * 0.001));
+    const opacity = 0.1 + (seed % 5) * 0.022;
+    return {index, x, y, length, radius, opacity};
+  });
+
+  return <svg role="img" aria-label="纸张纹理背景" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
+    <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
+    <g strokeLinecap="round">
+      {grain.map((item) => <line
+        key={item.index}
+        x1={item.x}
+        y1={item.y}
+        x2={item.x + item.length}
+        y2={item.y + Math.sin(item.index * 0.8 + phase) * item.length * 0.42}
+        stroke={item.index % 5 === 0 ? secondaryColor : color}
+        strokeWidth={Math.max(0.8, item.length * 0.22)}
+        opacity={item.opacity}
+      />)}
+      {grain.filter((item) => item.index % 2 === 0).map((item) => <circle
+        key={`grain-dot-${item.index}`}
+        cx={item.x}
+        cy={item.y}
+        r={item.radius}
+        fill={item.index % 5 === 0 ? secondaryColor : color}
+        opacity={item.opacity * 0.7}
+      />)}
+    </g>
+    <rect width={dimensions.width} height={dimensions.height} fill={color} opacity="0.018" />
   </svg>;
 };
 

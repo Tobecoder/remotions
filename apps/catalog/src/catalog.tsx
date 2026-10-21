@@ -1,7 +1,7 @@
-import {LiquidContours, MirroredSpectrum, MovingWaves, MovingZigzags, Oscilloscope, ParticleField, PulseRings, RotatingStarburst, ShimmerSweep, VoiceNote} from '@remotions/animations';
+import {LiquidContours, MirroredSpectrum, MovingWaves, MovingZigzags, NotebookPaper, Oscilloscope, PaperTexture, ParticleField, PulseRings, RotatingStarburst, ShimmerSweep, VoiceNote} from '@remotions/animations';
 import {staticFile} from 'remotion';
 
-export type DemoId = 'oscilloscope' | 'spectrum' | 'voice' | 'liquid-contours' | 'moving-waves' | 'moving-zigzags' | 'rotating-starburst' | 'pulse-rings' | 'particle-field' | 'shimmer-sweep';
+export type DemoId = 'oscilloscope' | 'spectrum' | 'voice' | 'liquid-contours' | 'moving-waves' | 'moving-zigzags' | 'notebook-paper' | 'paper-texture' | 'rotating-starburst' | 'pulse-rings' | 'particle-field' | 'shimmer-sweep';
 export type CategoryId = 'audio' | 'captions' | 'backgrounds' | 'effects' | 'layouts';
 export type CatalogCategory = {
   id: CategoryId;
@@ -36,7 +36,9 @@ export const catalog: Demo[] = [
   {id: 'liquid-contours', category: 'backgrounds', name: '液态轮廓', componentName: 'LiquidContours', description: '双色轮廓带缓慢流动，铺出柔和氛围', useCase: '品牌背景 · 氛围铺底', color: '#70b7e8', tag: '01'},
   {id: 'moving-waves', category: 'backgrounds', name: '流动波浪', componentName: 'MovingWaves', description: '多层波浪持续向上流动，适合循环使用', useCase: '音乐视频 · 开场铺底', color: '#70b7e8', tag: '02'},
   {id: 'moving-zigzags', category: 'backgrounds', name: '折线流动', componentName: 'MovingZigzags', description: '重复折线向上漂移，增加画面的节奏和方向感', useCase: '科技背景 · 节奏铺底', color: '#70b7e8', tag: '03'},
-  {id: 'rotating-starburst', category: 'backgrounds', name: '旋转星芒', componentName: 'RotatingStarburst', description: '放射光束缓慢旋转，制造能量聚焦', useCase: '片头转场 · 重点强调', color: '#70b7e8', tag: '04'},
+  {id: 'notebook-paper', category: 'backgrounds', name: '笔记网格', componentName: 'NotebookPaper', description: '蓝色网格和侧边线组成轻量纸张背景', useCase: '教程画面 · 知识卡片', color: '#8db8da', tag: '04'},
+  {id: 'paper-texture', category: 'backgrounds', name: '纸张纹理', componentName: 'PaperTexture', description: '细微颗粒缓慢变化，给画面增加纸张触感', useCase: '手绘内容 · 氛围铺底', color: '#9eb8cf', tag: '05'},
+  {id: 'rotating-starburst', category: 'backgrounds', name: '旋转星芒', componentName: 'RotatingStarburst', description: '放射光束缓慢旋转，制造能量聚焦', useCase: '片头转场 · 重点强调', color: '#70b7e8', tag: '06'},
   {id: 'pulse-rings', category: 'effects', name: '光环脉冲', componentName: 'PulseRings', description: '同心光环从中心扩散，制造清晰的节奏焦点', useCase: '片头强调 · Logo 出场', color: '#409eff', tag: '01'},
   {id: 'particle-field', category: 'effects', name: '粒子漂移', componentName: 'ParticleField', description: '细小粒子缓慢漂移，给画面增加空间层次', useCase: '科技背景 · 氛围过渡', color: '#409eff', tag: '02'},
   {id: 'shimmer-sweep', category: 'effects', name: '光泽扫过', componentName: 'ShimmerSweep', description: '高光沿斜线扫过网格，适合标题或卡片强调', useCase: '标题强调 · 产品展示', color: '#409eff', tag: '03'},
@@ -60,6 +62,8 @@ export const AudioCardComposition = ({id, src}: PreviewProps) => {
       {id === 'liquid-contours' && <LiquidContours color={active.color} secondaryColor={active.color} backgroundColor="#dff0ff" width={640} height={260} />}
       {id === 'moving-waves' && <MovingWaves color={active.color} secondaryColor={active.color} backgroundColor="#dff0ff" width={640} height={260} />}
       {id === 'moving-zigzags' && <MovingZigzags color={active.color} secondaryColor={active.color} backgroundColor="#dff0ff" width={640} height={260} />}
+      {id === 'notebook-paper' && <NotebookPaper color={active.color} secondaryColor="#8b5cf6" backgroundColor="#fbfdff" width={640} height={260} />}
+      {id === 'paper-texture' && <PaperTexture color={active.color} secondaryColor="#d3b58d" backgroundColor="#fbfaf6" width={640} height={260} />}
       {id === 'rotating-starburst' && <RotatingStarburst color={active.color} secondaryColor={active.color} backgroundColor="#dff0ff" width={640} height={260} />}
       {id === 'pulse-rings' && <PulseRings color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f4f8ff" width={640} height={260} />}
       {id === 'particle-field' && <ParticleField color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f8fbff" width={640} height={260} />}

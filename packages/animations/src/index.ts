@@ -1,4 +1,4 @@
-export {LiquidContours, MovingWaves, MovingZigzags, RotatingStarburst} from './components/Backgrounds';
+export {LiquidContours, MovingWaves, MovingZigzags, NotebookPaper, PaperTexture, RotatingStarburst} from './components/Backgrounds';
 export type {BackgroundProps} from './components/Backgrounds';
 export {Oscilloscope, MirroredSpectrum, VoiceNote} from './components/AudioVisualizers';
 export type {AudioVisualizerProps} from './components/AudioVisualizers';

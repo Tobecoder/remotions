@@ -1,6 +1,6 @@
 # Remotions ✦
 
-面向 Remotion 的开源动效素材库。当前开放音频动画、背景特效和视觉效果分类，包含十个可复用组件：**示波曲线、镜像频谱、语音波形、液态轮廓、流动波浪、折线流动、旋转星芒、光环脉冲、粒子漂移、光泽扫过**；字幕和版式转场分类已预留。原有 11 个通用动效已从公开组件入口和网站移除，历史实现保存在 [`archive/v0.1-legacy`](archive/v0.1-legacy/README.md)。
+面向 Remotion 的开源动效素材库。当前开放音频动画、背景特效和视觉效果分类，包含十二个可复用组件：**示波曲线、镜像频谱、语音波形、液态轮廓、流动波浪、折线流动、笔记网格、纸张纹理、旋转星芒、光环脉冲、粒子漂移、光泽扫过**；字幕和版式转场分类已预留。原有 11 个通用动效已从公开组件入口和网站移除，历史实现保存在 [`archive/v0.1-legacy`](archive/v0.1-legacy/README.md)。
 
 ## 本地运行
 
@@ -50,7 +50,7 @@ export const IntroScene = () => <PulseRings color="#409eff" width={1920} height=
 
 ## 工程结构
 
-- `packages/animations/`：十个可复用的音频动画、背景特效和视觉效果组件，构建 ESM、CJS 和类型声明。
+- `packages/animations/`：十二个可复用的音频动画、背景特效和视觉效果组件，构建 ESM、CJS 和类型声明。
 - `apps/catalog/`：中文素材库、卡片内 Remotion 动效预览、原创 WAV 示例音频。
 - `scripts/generate-demo-audio.mjs`：可重复生成示例音频；不依赖第三方音效素材。
 - `examples/AudioComposition.tsx`：在 Remotion Composition 中引用音频动画的示例。
