@@ -1,6 +1,5 @@
-import {Audio} from '@remotion/media';
 import {MirroredSpectrum, Oscilloscope, VoiceNote} from '@remotions/animations';
-import {staticFile, useVideoConfig} from 'remotion';
+import {staticFile} from 'remotion';
 
 export type DemoId = 'oscilloscope' | 'spectrum' | 'voice';
 export type CategoryId = 'audio' | 'captions' | 'backgrounds' | 'effects' | 'layouts';
@@ -37,28 +36,9 @@ export const catalog: Demo[] = [
 ];
 
 export type PreviewProps = {id: DemoId; src: string};
-export const previewDurationInFrames = 180;
 export const demoAudioSrc = staticFile('demo-audio.wav');
 
-/** The same frame-based composition is used by the site Player and Remotion renders. */
-export const PreviewComposition = ({id, src}: PreviewProps) => {
-  const {fps} = useVideoConfig();
-  const active = catalog.find((item) => item.id === id) ?? catalog[0];
-  return <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: 'radial-gradient(circle at 50% 42%, #242031 0%, #12121d 52%, #0a0b12 100%)', color: '#f8f6ff', fontFamily: '"PingFang SC", "Microsoft YaHei", system-ui, sans-serif'}}>
-    <Audio src={src} volume={0.6} premountFor={fps} />
-    <div style={{position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(#ffffff09 1px, transparent 1px), linear-gradient(90deg, #ffffff09 1px, transparent 1px)', backgroundSize: '64px 64px', maskImage: 'linear-gradient(transparent, #000 25%, #000 75%, transparent)'}} />
-    <div style={{position: 'absolute', top: 48, left: 58, display: 'flex', alignItems: 'center', gap: 16, color: active.color, fontSize: 19, fontWeight: 800, letterSpacing: 4}}><span style={{width: 11, height: 11, borderRadius: '50%', background: active.color, boxShadow: `0 0 25px ${active.color}`}} /> REMOTIONS / AUDIO</div>
-    <div style={{position: 'absolute', inset: '125px 75px 135px', display: 'grid', placeItems: 'center'}}>
-      {id === 'oscilloscope' && <Oscilloscope src={src} color={active.color} />}
-      {id === 'spectrum' && <MirroredSpectrum src={src} color={active.color} />}
-      {id === 'voice' && <VoiceNote src={src} color={active.color} />}
-    </div>
-    <div style={{position: 'absolute', bottom: 42, left: 58, fontSize: 31, fontWeight: 800}}>{active.name}</div>
-    <div style={{position: 'absolute', bottom: 48, right: 58, fontSize: 15, color: '#a09aaf', letterSpacing: 2}}>声音驱动每一帧 ↗</div>
-  </div>;
-};
-
-/** A quiet, compact composition for the library cards. The card plays the visual timeline on hover; sound stays in the full preview. */
+/** A quiet, compact composition for the library cards. The card plays the visual timeline on hover. */
 export const AudioCardComposition = ({id, src}: PreviewProps) => {
   const active = catalog.find((item) => item.id === id) ?? catalog[0];
   return <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: 'radial-gradient(circle at 50% 45%, #302a43 0%, #171624 62%, #0d0e16 100%)', color: '#f8f6ff', fontFamily: 'system-ui, sans-serif'}}>

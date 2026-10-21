@@ -10,7 +10,6 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@remotion/media": "4.0.536",
     "@remotion/media-utils": "4.0.536",
     "@remotion/player": "4.0.536",
     "@remotions/animations": "0.1.0",

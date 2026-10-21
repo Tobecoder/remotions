@@ -11,7 +11,7 @@ npm ci
 npm run dev
 ```
 
-打开终端显示的本地地址（默认 `http://localhost:3000`）。网页按分类展示组件；悬浮音频卡片会在卡片内部播放静音画面，完整预览才播放声音。你也可以选择本地音频查看前 6 秒，以及复制 Remotion 示例代码。本地文件以浏览器对象 URL 预览，不上传到服务器。
+打开终端显示的本地地址（默认 `http://localhost:3000`）。网页按分类展示组件；悬浮音频卡片会在卡片内部播放静音画面，直接查看音频驱动的波形和频谱。
 
 ## 在 Remotion 中使用
 
@@ -35,7 +35,7 @@ export const Scene = () => <>
 ## 工程结构
 
 - `packages/animations/`：三个可复用的音频动画组件，构建 ESM、CJS 和类型声明。
-- `apps/catalog/`：中文素材库、Remotion Player、原创 WAV 示例音频。
+- `apps/catalog/`：中文素材库、卡片内 Remotion 动效预览、原创 WAV 示例音频。
 - `scripts/generate-demo-audio.mjs`：可重复生成示例音频；不依赖第三方音效素材。
 - `examples/AudioComposition.tsx`：在 Remotion Composition 中引用音频动画的示例。
 - `archive/v0.1-legacy/`：以前的通用动效与历史验证文档，不参与当前构建。

@@ -3,7 +3,7 @@
 ## Unreleased — Audio animation foundation (2026-10-21)
 
 - Replace the public eleven-effect gallery with three real-audio-driven animations: Oscilloscope, MirroredSpectrum and VoiceNote.
-- Add a Chinese preview page with local audio selection, six-second playback and copyable Remotion examples.
+- Add a Chinese audio animation catalog with categorized cards and in-card Remotion previews.
 - Generate an original demo WAV and archive the former general-purpose effects and their historical tests.
 - Validate ten new tests, type checks, package builds and production catalog build.
 - Rename the public app to `catalog`, add extensible category tabs, and play silent Remotion card previews on hover.

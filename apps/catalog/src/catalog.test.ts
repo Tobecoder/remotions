@@ -2,13 +2,12 @@ import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {describe, expect, it} from 'vitest';
 import ts from 'typescript';
-import {catalog, categories, previewDurationInFrames, snippetFor} from './catalog';
+import {catalog, categories, snippetFor} from './catalog';
 
 describe('audio animation catalog', () => {
   it('contains only the three audio-reactive components', () => {
     expect(catalog.map((item) => item.componentName)).toEqual(['Oscilloscope', 'MirroredSpectrum', 'VoiceNote']);
     expect(catalog.every((item) => item.category === 'audio')).toBe(true);
-    expect(previewDurationInFrames).toBe(180);
   });
 
   it('keeps future categories separate from the active catalog entries', () => {
