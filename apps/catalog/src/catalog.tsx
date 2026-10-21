@@ -46,8 +46,8 @@ export const AudioCardComposition = ({id, src}: PreviewProps) => {
   const active = catalog.find((item) => item.id === id) ?? catalog[0];
   const isBackground = active.category === 'backgrounds';
   const isAudio = active.category === 'audio';
-  return <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: isBackground ? '#dff0ff' : isAudio ? '#f8fafc' : 'radial-gradient(circle at 50% 45%, #302a43 0%, #171624 62%, #0d0e16 100%)', color: isAudio ? '#0f172a' : '#f8f6ff', fontFamily: 'system-ui, sans-serif'}}>
-    {!isBackground && !isAudio && <div style={{position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(#ffffff0b 1px, transparent 0), linear-gradient(90deg, #ffffff0b 1px, transparent 0)', backgroundSize: '32px 32px', maskImage: 'linear-gradient(transparent, #000 28%, #000 72%, transparent)'}} />}
+  return <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: isBackground ? '#eaf5ff' : isAudio ? '#f8fafc' : 'linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%)', color: '#303133', fontFamily: 'system-ui, sans-serif'}}>
+    {!isBackground && !isAudio && <div style={{position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(#409eff18 1px, transparent 0), linear-gradient(90deg, #409eff18 1px, transparent 0)', backgroundSize: '32px 32px', maskImage: 'linear-gradient(transparent, #000 28%, #000 72%, transparent)'}} />}
     <div style={{position: 'absolute', inset: isBackground || isAudio ? 0 : '32px 24px 28px', display: isBackground || isAudio ? 'block' : 'grid', placeItems: 'center'}}>
       {id === 'oscilloscope' && <Oscilloscope src={src} color={active.color} width={900} height={300} />}
       {id === 'spectrum' && <MirroredSpectrum src={src} color={active.color} width={900} height={300} />}
