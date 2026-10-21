@@ -92,6 +92,26 @@ const getWaveBandPath = (
   return `M ${[...top, ...bottom].map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(' L ')} Z`;
 };
 
+const getZigzagBandPath = (
+  width: number,
+  baseline: number,
+  amplitude: number,
+  thickness: number,
+  phase: number,
+  cycles: number,
+) => {
+  const points = Math.max(5, cycles * 2 + 1);
+  const top = Array.from({length: points}, (_, index) => {
+    const progress = index / (points - 1);
+    const x = -width * 0.1 + progress * width * 1.2;
+    const corner = index % 2 === 0 ? -amplitude : amplitude;
+    const breathing = Math.sin(progress * Math.PI * 2 * 1.4 + phase) * amplitude * 0.14;
+    return [x, baseline + corner + breathing] as const;
+  });
+  const bottom = [...top].reverse().map(([x, y], index) => [x, y + thickness + Math.sin(index * 0.7 + phase) * amplitude * 0.08] as const);
+  return `M ${[...top, ...bottom].map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(' L ')} Z`;
+};
+
 // The reference element uses a procedural contour field instead of a handful
 // of hand-drawn ribbons. Keeping the shader local makes the component usable
 // without requiring the full @remotion/effects package in consumer projects.
@@ -362,6 +382,39 @@ export const MovingWaves = ({
         d={getWaveBandPath(dimensions.width, baseline, amplitude, thickness, phase * 0.22 + index * 0.18, 5.4)}
         fill={index % 4 === 0 ? secondaryColor : color}
         opacity="0.98"
+      />;
+    })}
+  </svg>;
+};
+
+/** A seamless zigzag background that drifts upward in repeating bands. */
+export const MovingZigzags = ({
+  width = 1920,
+  height = 1080,
+  color = '#70b7e8',
+  secondaryColor = color,
+  backgroundColor = '#dff0ff',
+  speed = 1,
+}: BackgroundProps) => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const dimensions = getDimensions(width, height);
+  const phase = getPhase(frame, fps, speed);
+  const spacing = Math.max(24, dimensions.height * 0.12);
+  const thickness = Math.max(8, dimensions.height * 0.055);
+  const amplitude = spacing * 0.36;
+  const drift = (phase / (Math.PI * 2)) * spacing * 2;
+  const bandCount = Math.ceil(dimensions.height / spacing) + 4;
+
+  return <svg role="img" aria-label="向上流动的折线背景" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
+    <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
+    {Array.from({length: bandCount}, (_, index) => {
+      const baseline = index * spacing - drift - spacing;
+      return <path
+        key={index}
+        d={getZigzagBandPath(dimensions.width, baseline, amplitude, thickness, phase * 0.2 + index * 0.22, 8)}
+        fill={index % 4 === 0 ? secondaryColor : color}
+        opacity="0.94"
       />;
     })}
   </svg>;

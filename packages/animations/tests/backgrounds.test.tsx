@@ -1,6 +1,6 @@
 import {renderToStaticMarkup} from 'react-dom/server';
 import {describe, expect, it, vi} from 'vitest';
-import {LiquidContours, MovingWaves, RotatingStarburst} from '../src';
+import {LiquidContours, MovingWaves, MovingZigzags, RotatingStarburst} from '../src';
 
 const clock = vi.hoisted(() => ({frame: 0}));
 vi.mock('remotion', async (importOriginal) => ({
@@ -13,6 +13,7 @@ describe('background components', () => {
   it.each([
     ['LiquidContours', <LiquidContours width={640} height={360} />],
     ['MovingWaves', <MovingWaves width={640} height={360} />],
+    ['MovingZigzags', <MovingZigzags width={640} height={360} />],
     ['RotatingStarburst', <RotatingStarburst width={640} height={360} />],
   ])('%s changes with the current frame without invalid SVG values', (_, component) => {
     clock.frame = 0;

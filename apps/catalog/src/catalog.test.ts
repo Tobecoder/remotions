@@ -8,11 +8,11 @@ describe('animation catalog', () => {
   it('contains the initial audio and background components', () => {
     expect(catalog.map((item) => item.componentName)).toEqual([
       'Oscilloscope', 'MirroredSpectrum', 'VoiceNote',
-      'LiquidContours', 'MovingWaves', 'RotatingStarburst',
+      'LiquidContours', 'MovingWaves', 'MovingZigzags', 'RotatingStarburst',
       'PulseRings', 'ParticleField', 'ShimmerSweep',
     ]);
     expect(catalog.filter((item) => item.category === 'audio')).toHaveLength(3);
-    expect(catalog.filter((item) => item.category === 'backgrounds')).toHaveLength(3);
+    expect(catalog.filter((item) => item.category === 'backgrounds')).toHaveLength(4);
     expect(catalog.filter((item) => item.category === 'effects')).toHaveLength(3);
   });
 

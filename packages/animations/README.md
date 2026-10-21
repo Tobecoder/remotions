@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Nine reusable Remotion components: the audio-reactive `Oscilloscope`, `MirroredSpectrum`, and `VoiceNote`; the background effects `LiquidContours`, `MovingWaves`, and `RotatingStarburst`; and the visual effects `PulseRings`, `ParticleField`, and `ShimmerSweep`. Audio components accept an audio `src`, optional `color`, `width`, and `height`; add `<Audio src={src} />` separately when sound should play. Background and visual effects accept optional `color`, `secondaryColor`, `backgroundColor`, `speed`, `width`, and `height`.
+Ten reusable Remotion components: the audio-reactive `Oscilloscope`, `MirroredSpectrum`, and `VoiceNote`; the background effects `LiquidContours`, `MovingWaves`, `MovingZigzags`, and `RotatingStarburst`; and the visual effects `PulseRings`, `ParticleField`, and `ShimmerSweep`. Audio components accept an audio `src`, optional `color`, `width`, and `height`; add `<Audio src={src} />` separately when sound should play. Background and visual effects accept optional `color`, `secondaryColor`, `backgroundColor`, `speed`, `width`, and `height`.
 
 ```tsx
 import {Audio} from '@remotion/media';
