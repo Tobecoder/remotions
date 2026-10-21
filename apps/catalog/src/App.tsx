@@ -10,6 +10,7 @@ export const App = () => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('audio');
   const [selected, setSelected] = useState<DemoId>('oscilloscope');
   const [hovered, setHovered] = useState<DemoId | null>(null);
+  const lastPointerType = useRef<string | null>(null);
   const previewRefs = useRef<Partial<Record<DemoId, CatalogCardPreviewHandle | null>>>({});
   const category = categories.find((item) => item.id === selectedCategory) ?? categories[0];
   const categoryItems = catalog.filter((item) => item.category === selectedCategory);
@@ -51,7 +52,7 @@ export const App = () => {
           })}
         </div>
         <div id="catalog-panel" role="tabpanel" aria-label={`${category.name}组件`}>
-          {categoryItems.length > 0 ? <div className="catalog-grid">{categoryItems.map((item) => <button key={item.id} type="button" className={selected === item.id ? 'motion-card selected' : 'motion-card'} style={{'--card-accent': item.color} as CSSProperties} aria-pressed={selected === item.id} aria-label={`预览${item.name}`} onPointerEnter={(event) => {setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onPointerLeave={() => {setHovered(null); previewRefs.current[item.id]?.stop();}} onFocus={(event) => {setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onBlur={() => {setHovered(null); previewRefs.current[item.id]?.stop();}} onClick={() => setSelected(item.id)}>
+          {categoryItems.length > 0 ? <div className="catalog-grid">{categoryItems.map((item) => <button key={item.id} type="button" className={selected === item.id ? 'motion-card selected' : 'motion-card'} style={{'--card-accent': item.color} as CSSProperties} aria-pressed={selected === item.id} aria-label={`预览${item.name}`} onPointerDown={(event) => {lastPointerType.current = event.pointerType; if (event.pointerType !== 'touch') return; if (hovered === item.id) {setHovered(null); previewRefs.current[item.id]?.stop();} else {setHovered(item.id); previewRefs.current[item.id]?.start(event);}}} onPointerUp={() => {lastPointerType.current = null;}} onPointerEnter={(event) => {if (event.pointerType === 'touch') return; setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onPointerLeave={(event) => {if (event.pointerType === 'touch') return; setHovered(null); previewRefs.current[item.id]?.stop();}} onFocus={(event) => {if (lastPointerType.current === 'touch') return; setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onBlur={() => {setHovered(null); previewRefs.current[item.id]?.stop();}} onClick={() => setSelected(item.id)}>
             <div className={`mini-art mini-${item.id}`}><CatalogCardPreview ref={(handle) => {previewRefs.current[item.id] = handle;}} inputProps={{id: item.id, src}} active={hovered === item.id} /></div>
             <div className="motion-card-info"><div className="motion-card-copy"><div className="motion-card-title"><strong>{item.name}</strong><span className="motion-card-use-case">{item.useCase}</span></div><span className="motion-description">{item.description}</span></div></div>
           </button>)}</div> : <div className="empty-category"><span className="empty-mark">✦</span><strong>{category.name}正在整理中，后续组件会继续加入。</strong></div>}

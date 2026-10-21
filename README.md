@@ -30,7 +30,7 @@ export const Scene = () => <>
 </>;
 ```
 
-`Oscilloscope`、`MirroredSpectrum`、`VoiceNote` 都接受 `src`、`color`、`width`、`height`。组件只根据当前帧与解码后的音频计算画面；声音播放由宿主 Composition 的 `<Audio>` 控制。支持浏览器与 Remotion 可解码的音频格式；远程文件须允许跨域读取。长音频通过 `useWindowedAudioData()` 分段读取，而不是把整段原始音频一直放在内存中。
+`Oscilloscope`、`MirroredSpectrum`、`VoiceNote` 都接受 `src`、`color`、`width`、`height`。组件只根据当前帧与解码后的音频计算画面；声音播放由宿主 Composition 的 `<Audio>` 控制。当前分析路径使用 `useWindowedAudioData()`，因此 `src` 应为 WAV 文件（本地 `staticFile()`、对象 URL 或允许跨域读取的远程 WAV）；MP3、AAC 等格式请先转换为 WAV。长音频通过窗口化读取，而不是把整段原始音频一直放在内存中。
 
 ## 工程结构
 

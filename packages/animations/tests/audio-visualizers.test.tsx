@@ -37,4 +37,13 @@ describe('audio-driven components', () => {
     const markup = renderToStaticMarkup(<MirroredSpectrum src="/demo.wav" />);
     expect((markup.match(/<rect /g) ?? []).length).toBe(96);
   });
+
+  it('keeps custom-width bar geometry valid', () => {
+    const spectrum = renderToStaticMarkup(<MirroredSpectrum src="/demo.wav" width={80} height={120} />);
+    const voice = renderToStaticMarkup(<VoiceNote src="/demo.wav" width={400} height={140} />);
+    expect(spectrum).not.toMatch(/(?:width|height)="-(?:\d|\.)/);
+    expect(voice).not.toMatch(/(?:width|height)="-(?:\d|\.)/);
+    expect(spectrum).not.toMatch(/NaN|Infinity/);
+    expect(voice).not.toMatch(/NaN|Infinity/);
+  });
 });
