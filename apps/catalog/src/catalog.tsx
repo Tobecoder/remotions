@@ -53,12 +53,13 @@ export const catalog: Demo[] = [
 export type PreviewProps = {id: DemoId; src: string; captions?: Caption[]};
 export const demoAudioSrc = staticFile('demo-audio.wav');
 export const demoCaptions: Caption[] = [
-  {text: '让素材', startMs: 0, endMs: 900, timestampMs: 450, confidence: null},
-  {text: ' 随时可用', startMs: 900, endMs: 1800, timestampMs: 1350, confidence: null},
-  {text: '按类别收进库里', startMs: 1800, endMs: 3000, timestampMs: 2400, confidence: null},
-  {text: '悬浮就能看到动效', startMs: 3000, endMs: 4300, timestampMs: 3650, confidence: null},
-  {text: '现在开始做字幕', startMs: 4300, endMs: 5400, timestampMs: 4850, confidence: null},
-  {text: '继续扩展', startMs: 5400, endMs: 6000, timestampMs: 5700, confidence: null},
+  // Keep narrow glyphs in the default demo so caption bubbles stay regression-visible.
+  {text: '一', startMs: 0, endMs: 1000, timestampMs: 500, confidence: null},
+  {text: '~', startMs: 1000, endMs: 2000, timestampMs: 1500, confidence: null},
+  {text: '让素材', startMs: 2000, endMs: 2900, timestampMs: 2450, confidence: null},
+  {text: '随时可用', startMs: 2900, endMs: 3800, timestampMs: 3350, confidence: null},
+  {text: '按类别收进库里', startMs: 3800, endMs: 5000, timestampMs: 4400, confidence: null},
+  {text: '继续扩展', startMs: 5000, endMs: 6000, timestampMs: 5500, confidence: null},
 ];
 
 /** A quiet, compact composition for the library cards. The card plays the visual timeline on hover. */
