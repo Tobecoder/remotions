@@ -4,22 +4,31 @@ import {describe, expect, it} from 'vitest';
 import ts from 'typescript';
 import {catalog, categories, snippetFor} from './catalog';
 
-describe('audio animation catalog', () => {
-  it('contains only the three audio-reactive components', () => {
-    expect(catalog.map((item) => item.componentName)).toEqual(['Oscilloscope', 'MirroredSpectrum', 'VoiceNote']);
-    expect(catalog.every((item) => item.category === 'audio')).toBe(true);
+describe('animation catalog', () => {
+  it('contains the initial audio and background components', () => {
+    expect(catalog.map((item) => item.componentName)).toEqual([
+      'Oscilloscope', 'MirroredSpectrum', 'VoiceNote',
+      'LiquidContours', 'MovingWaves', 'RotatingStarburst',
+    ]);
+    expect(catalog.filter((item) => item.category === 'audio')).toHaveLength(3);
+    expect(catalog.filter((item) => item.category === 'backgrounds')).toHaveLength(3);
   });
 
   it('keeps future categories separate from the active catalog entries', () => {
     expect(categories.map((item) => item.id)).toEqual(['audio', 'captions', 'backgrounds', 'effects', 'layouts']);
-    expect(categories.filter((item) => item.status === 'coming-soon')).toHaveLength(4);
+    expect(categories.filter((item) => item.status === 'coming-soon')).toHaveLength(3);
     expect(categories.every((item) => item.name && item.description)).toBe(true);
   });
 
-  it.each(catalog)('$name provides valid TSX wired to one audio source', ({id, componentName}) => {
+  it.each(catalog)('$name provides a valid copy-ready TSX snippet', ({id, componentName}) => {
     const snippet = snippetFor(id);
-    expect(snippet).toContain(`<${componentName} src={src}`);
-    expect(snippet).toContain('<Audio src={src} />');
+    if (id === 'liquid-contours' || id === 'moving-waves' || id === 'rotating-starburst') {
+      expect(snippet).toContain(`<${componentName} color=`);
+      expect(snippet).not.toContain('<Audio src={src} />');
+    } else {
+      expect(snippet).toContain(`<${componentName} src={src}`);
+      expect(snippet).toContain('<Audio src={src} />');
+    }
     const result = ts.transpileModule(snippet, {fileName: 'snippet.tsx', reportDiagnostics: true, compilerOptions: {jsx: ts.JsxEmit.ReactJSX, module: ts.ModuleKind.ESNext}});
     expect(result.diagnostics?.filter((item) => item.category === ts.DiagnosticCategory.Error)).toEqual([]);
   });
