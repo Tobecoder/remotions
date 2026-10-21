@@ -18,7 +18,7 @@ export type CatalogCardPreviewHandle = {
 const fps = 30;
 const durationInFrames = 180;
 
-/** A silent inline Remotion preview. The full player is where the shared audio is heard. */
+/** A silent inline Remotion preview for browsing the catalog cards. */
 export const CatalogCardPreview = forwardRef<CatalogCardPreviewHandle, CatalogCardPreviewProps>(({inputProps, active}, ref) => {
   const playerRef = useRef<PlayerRef>(null);
   const animationFrameRef = useRef<number | null>(null);

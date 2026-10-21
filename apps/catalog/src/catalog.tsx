@@ -48,7 +48,6 @@ export const AudioCardComposition = ({id, src}: PreviewProps) => {
       {id === 'spectrum' && <MirroredSpectrum src={src} color={active.color} width={620} height={190} />}
       {id === 'voice' && <VoiceNote src={src} color={active.color} width={620} height={175} />}
     </div>
-    <div style={{position: 'absolute', left: 18, bottom: 13, color: active.color, fontSize: 11, fontWeight: 800, letterSpacing: 2}}>悬浮播放 · {active.name}</div>
   </div>;
 };
 
