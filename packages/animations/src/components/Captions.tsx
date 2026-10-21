@@ -69,10 +69,9 @@ const fitFontSize = (text: string, desiredSize: number, maxWidth: number, glyphW
 const longestCaptionLine = (captions: Caption[], maxChars: number) =>
   captions.reduce((longest, caption) => splitCaption(caption.text, maxChars).reduce((currentLongest, line) => line.length > currentLongest.length ? line : currentLongest, longest), '');
 
-const CAPTION_BUBBLE_PADDING_X = 6;
-const CAPTION_BUBBLE_PADDING_Y = 4;
-const CAPTION_BUBBLE_INSET = 3;
-const CAPTION_BUBBLE_AMPLITUDE = 5;
+const CAPTION_BUBBLE_PADDING_X = 4;
+const CAPTION_BUBBLE_PADDING_Y = 3;
+const CAPTION_BUBBLE_AMPLITUDE = 10;
 
 const bubbleRadius = (amplitude: number, index: number, phase: number) =>
   amplitude * (0.68 + 0.24 * Math.sin(index * 1.81 + phase) + 0.14 * Math.cos(index * 0.73 - phase));
@@ -81,8 +80,10 @@ const buildBubblePath = (x: number, y: number, width: number, height: number, am
   const safeWidth = Math.max(1, width);
   const safeHeight = Math.max(1, height);
   const safeAmplitude = Math.max(1, Math.min(amplitude, safeWidth / 4, safeHeight / 2));
-  const horizontalSegments = Math.max(3, Math.min(18, Math.ceil(safeWidth / Math.max(10, safeAmplitude * 2.6))));
-  const verticalSegments = Math.max(2, Math.min(8, Math.ceil(safeHeight / Math.max(10, safeAmplitude * 2.4))));
+  // Fewer, wider lobes keep the silhouette cloud-like instead of turning it
+  // into a thin wavy border when the preview card is scaled down.
+  const horizontalSegments = Math.max(4, Math.min(9, Math.ceil(safeWidth / Math.max(34, safeAmplitude * 4))));
+  const verticalSegments = Math.max(2, Math.min(3, Math.ceil(safeHeight / Math.max(24, safeAmplitude * 2.8))));
   let path = `M ${x} ${y}`;
 
   for (let index = 0; index < horizontalSegments; index += 1) {
@@ -173,14 +174,12 @@ export const RoundedCaptions = ({
   const bubbleHeight = Math.max(1, lines.length * lineHeight + CAPTION_BUBBLE_PADDING_Y * 2);
   const bubbleX = (dimensions.width - bubbleWidth) / 2;
   const bubbleY = dimensions.height * 0.68 - bubbleHeight / 2;
-  const outerBubblePath = buildBubblePath(bubbleX, bubbleY, bubbleWidth, bubbleHeight, CAPTION_BUBBLE_AMPLITUDE, bubblePhase);
-  const innerBubblePath = buildBubblePath(bubbleX + CAPTION_BUBBLE_INSET, bubbleY + CAPTION_BUBBLE_INSET, Math.max(1, bubbleWidth - CAPTION_BUBBLE_INSET * 2), Math.max(1, bubbleHeight - CAPTION_BUBBLE_INSET * 2), CAPTION_BUBBLE_AMPLITUDE * 0.72, bubblePhase + 0.2);
+  const bubblePath = buildBubblePath(bubbleX, bubbleY, bubbleWidth, bubbleHeight, CAPTION_BUBBLE_AMPLITUDE, bubblePhase);
 
   return <svg role="img" aria-label="气泡字幕动画" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
     <g opacity={opacity} style={{...commonStyle(fontFamily)}}>
-      <path data-caption-shape="bubble-background" d={outerBubblePath} fill={secondaryColor} opacity="0.18" />
-      <path data-caption-shape="bubble-interior" d={innerBubblePath} fill={backgroundColor} />
+      <path data-caption-shape="bubble-background" d={bubblePath} fill={secondaryColor} opacity="0.24" />
       {lines.map((line, index) => {
         const y = dimensions.height * 0.68 + (index - (lines.length - 1) / 2) * lineHeight;
         return <text key={index} x={dimensions.width / 2} y={y} textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fittedFontSize}>{line}</text>;
@@ -218,15 +217,13 @@ export const MovingPillCaptions = ({
   const bubbleX = (dimensions.width - bubbleWidth) / 2 + slide;
   const bubbleY = dimensions.height * 0.7 - bubbleHeight / 2;
   const bubblePhase = frame / Math.max(1, fps) * 1.6;
-  const outerBubblePath = buildBubblePath(bubbleX, bubbleY, bubbleWidth, bubbleHeight, CAPTION_BUBBLE_AMPLITUDE, bubblePhase);
-  const innerBubblePath = buildBubblePath(bubbleX + CAPTION_BUBBLE_INSET, bubbleY + CAPTION_BUBBLE_INSET, Math.max(1, bubbleWidth - CAPTION_BUBBLE_INSET * 2), Math.max(1, bubbleHeight - CAPTION_BUBBLE_INSET * 2), CAPTION_BUBBLE_AMPLITUDE * 0.72, bubblePhase + 0.2);
+  const bubblePath = buildBubblePath(bubbleX, bubbleY, bubbleWidth, bubbleHeight, CAPTION_BUBBLE_AMPLITUDE, bubblePhase);
   const textX = dimensions.width / 2 + slide;
 
   return <svg role="img" aria-label="移动气泡字幕动画" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
     <g opacity={opacity} style={{...commonStyle(fontFamily)}}>
-      <path data-caption-shape="bubble-background" d={outerBubblePath} fill={secondaryColor} opacity="0.2" />
-      <path data-caption-shape="bubble-interior" d={innerBubblePath} fill={backgroundColor} />
+      <path data-caption-shape="bubble-background" d={bubblePath} fill={secondaryColor} />
       <text x={textX} y={dimensions.height * 0.7} textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fittedFontSize}>{text}</text>
     </g>
   </svg>;

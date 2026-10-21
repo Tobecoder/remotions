@@ -47,8 +47,8 @@ describe('caption components', () => {
     const pill = renderToStaticMarkup(<MovingPillCaptions captions={longCaptions} width={240} height={120} />);
     expect(rounded).toContain('data-caption-shape="bubble-background"');
     expect(pill).toContain('data-caption-shape="bubble-background"');
-    expect(rounded).toContain('data-caption-shape="bubble-interior"');
-    expect(pill).toContain('data-caption-shape="bubble-interior"');
+    expect(rounded).not.toContain('data-caption-shape="bubble-interior"');
+    expect(pill).not.toContain('data-caption-shape="bubble-interior"');
     expect(rounded).not.toContain('stroke-width="8"');
     expect(pill).not.toContain('stroke-width="8"');
     expect(rounded).not.toContain('data-caption-shape="glyph-bubble"');
@@ -68,8 +68,8 @@ describe('caption components', () => {
     const longMarkup = renderToStaticMarkup(<RoundedCaptions captions={changingCaptions} width={240} height={120} />);
     const firstBubbleX = (markup: string) => Number(markup.match(/data-caption-shape="bubble-background" d="M ([0-9.-]+)/)?.[1]);
     expect(firstBubbleX(shortMarkup)).toBeGreaterThan(firstBubbleX(longMarkup));
-    expect(shortMarkup).toContain('data-caption-shape="bubble-interior"');
-    expect(longMarkup).toContain('data-caption-shape="bubble-interior"');
+    expect(shortMarkup).not.toContain('data-caption-shape="bubble-interior"');
+    expect(longMarkup).not.toContain('data-caption-shape="bubble-interior"');
   });
 
   it('fits long character captions instead of stacking glyphs', () => {
