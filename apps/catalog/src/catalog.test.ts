@@ -9,20 +9,22 @@ describe('animation catalog', () => {
     expect(catalog.map((item) => item.componentName)).toEqual([
       'Oscilloscope', 'MirroredSpectrum', 'VoiceNote',
       'LiquidContours', 'MovingWaves', 'RotatingStarburst',
+      'PulseRings', 'ParticleField', 'ShimmerSweep',
     ]);
     expect(catalog.filter((item) => item.category === 'audio')).toHaveLength(3);
     expect(catalog.filter((item) => item.category === 'backgrounds')).toHaveLength(3);
+    expect(catalog.filter((item) => item.category === 'effects')).toHaveLength(3);
   });
 
   it('keeps future categories separate from the active catalog entries', () => {
     expect(categories.map((item) => item.id)).toEqual(['audio', 'captions', 'backgrounds', 'effects', 'layouts']);
-    expect(categories.filter((item) => item.status === 'coming-soon')).toHaveLength(3);
+    expect(categories.filter((item) => item.status === 'coming-soon')).toHaveLength(2);
     expect(categories.every((item) => item.name && item.description)).toBe(true);
   });
 
   it.each(catalog)('$name provides a valid copy-ready TSX snippet', ({id, componentName}) => {
     const snippet = snippetFor(id);
-    if (id === 'liquid-contours' || id === 'moving-waves' || id === 'rotating-starburst') {
+    if (catalog.find((item) => item.id === id)?.category !== 'audio') {
       expect(snippet).toContain(`<${componentName} color=`);
       expect(snippet).not.toContain('<Audio src={src} />');
     } else {

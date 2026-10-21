@@ -241,7 +241,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, .upload-button:focus
 @media (max-width: 900px) {
   .app { padding: 0 30px; }
   .catalog-grid { gap: 12px; }
-  .mini-art { height: 160px; }
+  .mini-art { height: auto; }
   .mini-oscilloscope, .mini-spectrum, .mini-voice { height: auto; aspect-ratio: 3 / 1; }
   .section-heading h2 { font-size: 36px; }
 }
@@ -275,7 +275,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, .upload-button:focus
   .section-heading h2 { font-size: 30px; }
   .section-heading > p { display: none; }
   .catalog-grid { grid-template-columns: 1fr; }
-  .mini-art { height: 175px; }
+  .mini-art { height: auto; }
   .mini-oscilloscope, .mini-spectrum, .mini-voice { height: auto; aspect-ratio: 3 / 1; }
   .audio-source-row, .usage-row { align-items: stretch; flex-direction: column; }
   .audio-source-row small { display: block; margin: 6px 0 0 18px; }
