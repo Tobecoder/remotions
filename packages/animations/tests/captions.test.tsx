@@ -45,6 +45,8 @@ describe('caption components', () => {
     ];
     const rounded = renderToStaticMarkup(<RoundedCaptions captions={longCaptions} width={240} height={120} />);
     const pill = renderToStaticMarkup(<MovingPillCaptions captions={longCaptions} width={240} height={120} />);
+    expect(rounded).toContain('data-caption-shape="bubble"');
+    expect(pill).toContain('data-caption-shape="bubble"');
     expect(rounded).toContain('lengthAdjust="spacingAndGlyphs"');
     expect(pill).toContain('lengthAdjust="spacingAndGlyphs"');
   });
