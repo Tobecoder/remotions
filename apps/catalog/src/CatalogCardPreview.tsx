@@ -74,7 +74,6 @@ export const CatalogCardPreview = forwardRef<CatalogCardPreviewHandle, CatalogCa
       loop
       style={{width: '100%', height: '100%'}}
     />
-    {!active && <span className="card-hover-hint">悬浮查看动效</span>}
   </div>;
 });
 
