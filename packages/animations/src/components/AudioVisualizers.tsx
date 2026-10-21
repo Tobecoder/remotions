@@ -93,6 +93,29 @@ const getWaveform = ({
   }).map((sample) => sample.amplitude);
 };
 
+/**
+ * Give a static voice-note waveform a little of the irregularity of speech.
+ * The source envelope remains the main signal; the small deterministic texture
+ * keeps repeated tones from turning into a visibly repeated picket fence.
+ */
+const getOrganicVoiceWaveform = (waveform: number[]) => {
+  if (waveform.length < 2) return waveform;
+
+  return waveform.map((sample, index) => {
+    const previous = waveform[index - 1] ?? sample;
+    const next = waveform[index + 1] ?? sample;
+    const localAverage = (previous + sample + next) / 3;
+    const localChange = Math.abs(next - previous);
+    const hash = Math.sin((index + 1) * 12.9898 + 78.233) * 43758.5453;
+    const texture = hash - Math.floor(hash);
+    const phrase = 0.22 + 0.78 * (0.5 + 0.5 * Math.sin(index * 0.26 + Math.sin(index * 0.09) * 1.6));
+    const articulation = 0.72 + 0.28 * (0.5 + 0.5 * Math.sin(index * 1.17 + texture * 2.5));
+    const contour = clamp(localAverage * 0.48 + sample * 0.22 + localChange * 1.1 + 0.04, 0, 1);
+    const voiceShape = contour * 0.62 + phrase * 0.38;
+    return clamp(voiceShape * (0.8 + texture * 0.36) * articulation, 0, 1);
+  });
+};
+
 /** A smooth, signed waveform matching Remotion's transparent oscilloscope element. */
 export const Oscilloscope = ({
   src,
@@ -227,7 +250,7 @@ export const VoiceNote = ({
   const svgWidth = getSafeSize(width, 900);
   const svgHeight = getSafeSize(height, 300);
   const {barCount, barWidth, gap} = getBarLayout(Math.max(1, svgWidth - 16), DEFAULT_WAVEFORM_SAMPLES, 5);
-  const waveform = getWaveform({
+  const waveform = getOrganicVoiceWaveform(getWaveform({
     audioData,
     dataOffsetInSeconds,
     durationInSeconds,
@@ -235,7 +258,7 @@ export const VoiceNote = ({
     outputRange: 'zero-to-one',
     startTimeInSeconds: 0,
     normalize: true,
-  });
+  }));
   const progress = clamp(frame / Math.max(1, durationInFrames - 1), 0, 1);
   const unplayedColor = '#cbd5e1';
   const maxBarHeight = svgHeight * 0.7;
@@ -265,7 +288,7 @@ export const VoiceNote = ({
         </linearGradient>
       </defs>
       {waveform.map((value, index) => {
-        const barHeight = Math.max(10, Math.min(maxBarHeight, Math.sqrt(Math.max(0, value)) * maxBarHeight));
+        const barHeight = Math.max(8, Math.min(maxBarHeight, Math.pow(Math.max(0, value), 1.35) * maxBarHeight));
         const x = 8 + index * (barWidth + gap);
         return (
           <rect
