@@ -84,24 +84,17 @@ const buildBubblePath = (x: number, y: number, width: number, height: number, am
   // into a thin wavy border when the preview card is scaled down.
   const horizontalSegments = Math.max(4, Math.min(9, Math.ceil(safeWidth / Math.max(34, safeAmplitude * 4))));
   const verticalSegments = Math.max(2, Math.min(3, Math.ceil(safeHeight / Math.max(24, safeAmplitude * 2.8))));
-  // The cloud is intentionally a little narrower at the top and fuller at
-  // the bottom, so it reads as a soft filled speech cloud instead of a box.
-  const topInset = Math.min(safeWidth * 0.08, safeAmplitude);
-  const topLeft = x + topInset;
-  const topRight = x + safeWidth - topInset;
-  let path = `M ${topLeft} ${y}`;
+  let path = `M ${x} ${y}`;
 
   for (let index = 0; index < horizontalSegments; index += 1) {
-    const start = topLeft + ((topRight - topLeft) * index) / horizontalSegments;
-    const end = topLeft + ((topRight - topLeft) * (index + 1)) / horizontalSegments;
+    const start = x + (safeWidth * index) / horizontalSegments;
+    const end = x + (safeWidth * (index + 1)) / horizontalSegments;
     path += ` Q ${(start + end) / 2} ${y - bubbleRadius(safeAmplitude, index, phase)} ${end} ${y}`;
   }
   for (let index = 0; index < verticalSegments; index += 1) {
     const start = y + (safeHeight * index) / verticalSegments;
     const end = y + (safeHeight * (index + 1)) / verticalSegments;
-    const startX = topRight + (topInset * index) / verticalSegments;
-    const endX = topRight + (topInset * (index + 1)) / verticalSegments;
-    path += ` Q ${Math.max(startX, endX) + bubbleRadius(safeAmplitude, horizontalSegments + index, phase + 0.4)} ${(start + end) / 2} ${endX} ${end}`;
+    path += ` Q ${x + safeWidth + bubbleRadius(safeAmplitude, horizontalSegments + index, phase + 0.4)} ${(start + end) / 2} ${x + safeWidth} ${end}`;
   }
   for (let index = 0; index < horizontalSegments; index += 1) {
     const start = x + safeWidth - (safeWidth * index) / horizontalSegments;
@@ -114,9 +107,7 @@ const buildBubblePath = (x: number, y: number, width: number, height: number, am
   for (let index = 0; index < verticalSegments; index += 1) {
     const start = y + safeHeight - (safeHeight * index) / verticalSegments;
     const end = y + safeHeight - (safeHeight * (index + 1)) / verticalSegments;
-    const startX = x + (topInset * index) / verticalSegments;
-    const endX = x + (topInset * (index + 1)) / verticalSegments;
-    path += ` Q ${Math.min(startX, endX) - bubbleRadius(safeAmplitude, horizontalSegments * 2 + verticalSegments + index, phase + 1.2)} ${(start + end) / 2} ${endX} ${end}`;
+    path += ` Q ${x - bubbleRadius(safeAmplitude, horizontalSegments * 2 + verticalSegments + index, phase + 1.2)} ${(start + end) / 2} ${x} ${end}`;
   }
 
   return `${path} Z`;
