@@ -10,7 +10,6 @@ export const App = () => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('audio');
   const [selected, setSelected] = useState<DemoId>('oscilloscope');
   const [hovered, setHovered] = useState<DemoId | null>(null);
-  const [notice, setNotice] = useState('');
   const previewRefs = useRef<Partial<Record<DemoId, CatalogCardPreviewHandle | null>>>({});
   const category = categories.find((item) => item.id === selectedCategory) ?? categories[0];
   const categoryItems = catalog.filter((item) => item.category === selectedCategory);
@@ -19,10 +18,6 @@ export const App = () => {
   const chooseCategory = (next: CategoryId) => {
     const nextCategory = categories.find((item) => item.id === next);
     if (!nextCategory) return;
-    if (nextCategory.status === 'coming-soon') {
-      setNotice(`${nextCategory.name}正在整理中，先收藏这个分类，后续组件会继续加入。`);
-      return;
-    }
     const first = catalog.find((item) => item.category === next);
     setSelectedCategory(next);
     setHovered(null);
@@ -50,7 +45,7 @@ export const App = () => {
           {categories.map((item) => {
             const count = catalog.filter((demo) => demo.category === item.id).length;
             const isSelected = item.id === selectedCategory;
-            return <button key={item.id} type="button" role="tab" aria-selected={isSelected} aria-controls="catalog-panel" aria-disabled={item.status === 'coming-soon'} className={`category-tab${isSelected ? ' active' : ''}${item.status === 'coming-soon' ? ' upcoming' : ''}`} onClick={() => chooseCategory(item.id)}>
+            return <button key={item.id} type="button" role="tab" aria-selected={isSelected} aria-controls="catalog-panel" className={`category-tab${isSelected ? ' active' : ''}${item.status === 'coming-soon' ? ' upcoming' : ''}`} onClick={() => chooseCategory(item.id)}>
               <span>{item.name}</span><small>{item.status === 'active' ? `${count} 个组件` : '即将上线'}</small>
             </button>;
           })}
@@ -60,9 +55,8 @@ export const App = () => {
             <div className={`mini-art mini-${item.id}`}><CatalogCardPreview ref={(handle) => {previewRefs.current[item.id] = handle;}} inputProps={{id: item.id, src}} active={hovered === item.id} /></div>
             <div className="motion-card-info"><div><span className="card-index">{item.tag} / {category.name}</span><strong>{item.name}</strong><span className="motion-description">{item.description}</span></div><span className="card-arrow">↗</span></div>
             <div className="motion-card-foot">{item.useCase}</div>
-          </button>)}</div> : <div className="empty-category"><span className="empty-mark">✦</span><strong>{category.name}正在准备中</strong><p>{category.description}。分类已经预留，下一批组件会直接出现在这里。</p></div>}
+          </button>)}</div> : <div className="empty-category"><span className="empty-mark">✦</span><strong>{category.name}正在整理中，后续组件会继续加入。</strong></div>}
         </div>
-        {notice && <p className="notice" role="status">{notice}</p>}
       </section>
     </main>
     <footer className="footer"><span>✦ remotions / library</span><span>把动效收进可复用的分类。</span><span>MIT 开源许可</span></footer>
