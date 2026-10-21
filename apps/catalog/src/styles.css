@@ -12,3 +12,5 @@
 .hero p{max-width:none;white-space:nowrap}
 @media(max-width:900px){.hero p{white-space:normal}}
 @media(min-width:901px){.hero .eyebrow,.overline{font-size:22px}.hero-stats{font-size:26px;gap:76px}.hero-stats span{gap:16px}.hero-stats strong{font-size:44px}}
+.motion-description{font-size:16px}
+.motion-card-foot{font-size:14px}
