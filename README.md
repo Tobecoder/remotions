@@ -1,6 +1,6 @@
 # Remotions ✦
 
-**Frame-driven motion components for Remotion.** An open-source collection of reusable effects, with a visual playground and copy-ready React examples.
+**Frame-driven motion components for Remotion.** An open-source collection of reusable effects, with a browsable component gallery, animation previews and React usage examples.
 
 > **Version 0.1.0 — initial component library.** Not yet published to npm. Compatible with Remotion 4.x; always align `remotion` and `@remotion/player` to matching exact versions in applications. Both are pinned to `4.0.536` in this workspace per Remotion guidance.
 
@@ -13,7 +13,7 @@ npm ci
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to browse and customize animations. The library package is built first and loaded by the playground.
+Open [http://localhost:3000](http://localhost:3000) to browse components and preview animations. The library package is built first and loaded by the playground.
 
 Other commands:
 
@@ -90,11 +90,11 @@ remotions/
 - Animation components expect Remotion's rendering context.
 - Typewriter and WaveText use `Intl.Segmenter` for grapheme-aware text animation (with a code-point fallback on older browsers). For absolutely identical output across browsers and render machines, use matching runtime versions and fonts.
 - Per-frame PNG / video render snapshots and visual regression tests are not yet included.
-- The playground's animation snippets are minimal examples, not complete videos. Preview loops include enough frames for staggered typography and configurable delay.
+- The website previews effects with fixed example settings. Library consumers can still customize animation props in their own compositions. Preview loops include enough frames for staggered typography.
 
 ## Roadmap
 
-- **0.1:** 11 frame-driven effects, interactive preview, configurable delay, replay, source snippets, tests and CI. This repository contains the implementation; see [the V0.1 plan](docs/V0.1-PLAN.md) and [contributor guide](CONTRIBUTING.md).
+- **0.1:** 11 frame-driven effects, searchable component gallery, looping previews, tests and CI. This repository contains the implementation; see [the V0.1 plan](docs/V0.1-PLAN.md) and [contributor guide](CONTRIBUTING.md).
 - **0.2:** Docs site, examples by use case, accessibility reviews, polished presets and visual regressions.
 - **0.3:** Prop schema / registry, CLI install, templates and publish workflow.
 
@@ -102,12 +102,12 @@ remotions/
 
 MIT, see [LICENSE](./LICENSE).
 
-## Playground controls
+## Browser preview
 
-Select an effect from the collection, modify its text, animation duration, delay and accent color, and replay it. The player automatically extends the loop for staggered text animations. The **Copy code** action generates a minimal JSX example including the current timing controls; snippets assume the `@remotions/animations` package is accessible in your project.
+Select an effect from the gallery or use the category filters and search to find one. The selected animation plays in a looping preview with standard playback controls. The webpage does not expose development/debug panels, code snippets or animation parameter editors. Animations remain configurable when used as React components in a Remotion project.
 
 ## Verification and limitations
 
-`npm run check` passes on Windows with Node 24.15.0 and npm 11.12.1: 48 Vitest tests, full TypeScript checking (including tests and examples), library ESM/CJS declaration builds, and the production playground build. Package contents and both module import modes were checked. Browser smoke checks covered search, component selection, timing controls, replay and snippet copying. See [the verification record](docs/VERIFICATION.md) for evidence and limits.
+`npm run check` passes on Windows with Node 24.15.0 and npm 11.12.1: 48 Vitest tests, full TypeScript checking (including tests and examples), library ESM/CJS declaration builds, and the production playground build. Package contents and both module import modes were checked. Earlier browser smoke checks covered the original editor controls; the simplified gallery/preview still needs a new browser smoke check. See [the verification record](docs/VERIFICATION.md) for evidence and limits.
 
 CI uses the committed lockfile with `npm ci` and checks Node 22 and 24. The production playground currently has one Vite bundle-size advisory; per-frame video rendering and automated visual regressions remain future work. This PR does not publish the npm package or deploy the playground.
