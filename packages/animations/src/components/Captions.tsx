@@ -72,7 +72,7 @@ const longestCaptionLine = (captions: Caption[], maxChars: number) =>
 const CAPTION_BUBBLE_PADDING_X = 4;
 const CAPTION_BUBBLE_PADDING_Y = 3;
 const CAPTION_BUBBLE_AMPLITUDE = 10;
-const CAPTION_BUBBLE_VERTICAL_SHIFT = 0.18;
+const CAPTION_BUBBLE_VERTICAL_SHIFT = 0.08;
 
 const bubbleRadius = (amplitude: number, index: number, phase: number) =>
   amplitude * (0.68 + 0.24 * Math.sin(index * 1.81 + phase) + 0.14 * Math.cos(index * 0.73 - phase));
