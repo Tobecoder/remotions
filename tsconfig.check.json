@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["packages/animations/src", "packages/animations/tests", "apps/playground/src", "apps/playground/vite.config.ts", "examples"],
+  "include": ["packages/animations/src", "packages/animations/tests", "apps/catalog/src", "apps/catalog/vite.config.ts", "examples"],
   "compilerOptions": {
-    "types": ["vite/client"]
+    "types": ["vite/client", "node"]
   }
 }

@@ -1,31 +1,7 @@
-# Verification status — 2026-10-21
+# Remotion 素材库验证记录 — 2026-10-21
 
-## Source and environment
-
-Imported `remotions-v0.1-r2.zip` into `Tobecoder/remotions` on `feat/remotions-v0.1`.
-Local validation: Windows, Node 24.15.0, npm 11.12.1, Remotion and Player 4.0.536.
-
-## Completed
-
-- Dependency installation succeeded; the npm workspace lockfile is committed for CI and clean installs.
-- `npm run check` passed: 48 Vitest tests (32 library tests, 16 playground tests), semantic TypeScript checks, ESM/CJS bundles and declarations, and the Vite production build.
-- Component tests cover all 11 effects, delayed and completed states, out-of-order frame determinism, Unicode graphemes, word spacing, clamped progress values and springs at 24/30/60 fps. Only frame/config hooks are mocked; spring calculations use Remotion itself.
-- Snippets for all 11 effects parse as TSX with quoted, multiline and Unicode input and preserve timing controls.
-- `npm pack --dry-run -w @remotions/animations` passed. The package contains both JavaScript formats, the corresponding `.d.ts` / `.d.cts` declarations, README, manifest and MIT license.
-- Both ESM import and CommonJS require expose all 11 components plus the Unicode helper.
-- Live browser checks at `http://localhost:3000` confirmed search filtering, switching effects, frame-driven progress playback, duration/delay/text controls, replay and successful code copying.
-
-## Fixes found during verification
-
-- Leading whitespace no longer consumes an invisible word-stagger slot in WordReveal.
-- WaveText preview duration counts grapheme clusters, matching the actual component instead of counting emoji code points separately.
-- Conditional package exports select the correct declaration format for ESM and CommonJS consumers.
-- Root type checking includes library, tests and examples as well as the playground.
-- CI uses `npm ci`, read-only repository permissions and Node 22/24 jobs.
-
-## Limits
-
-- The production playground emits a Vite advisory about a JavaScript chunk above 500 kB (approximately 594 kB before gzip). It does not fail the build.
-- Local browser smoke testing is not an automated visual regression suite. A separate mobile viewport pass and per-frame PNG/MP4 rendering were not performed.
-- GitHub Actions results must be read from the PR; local success does not establish that remote jobs passed.
-- No npm publication, release tag, merge or public deployment is included.
+- `npm run check`：10 个测试通过；根项目语义类型检查、组件库 ESM/CJS 与类型声明、Vite 生产构建通过。
+- 示例 WAV 由 `scripts/generate-demo-audio.mjs` 生成，为 48 kHz、单声道、6 秒的原创信号；测试检查文件结构与不同片段的能量变化。
+- 在本地浏览器确认分类标签、四个“即将上线”分类和三种音频组件均能显示；卡片焦点/悬浮时的内嵌 Remotion 时间线帧值持续变化，完整播放器可试听声音；站内没有旧动效入口。
+- 组件测试以模拟的音频分析结果验证帧变化和 SVG 结构。浏览器预览使用真实 WAV 与 Remotion 音频解码；未完成 MP4 导出或跨浏览器验收。
+- 生产构建有一个超过 500 kB 的 Vite 体积提示，构建仍成功。组件库尚未发布到 npm，网站也未部署。

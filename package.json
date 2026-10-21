@@ -8,14 +8,15 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "npm run build:lib && npm run dev -w @remotions/playground",
+    "dev": "npm run build:lib && npm run dev -w @remotions/catalog",
     "build:lib": "npm run build -w @remotions/animations",
-    "build": "npm run build:lib && npm run build -w @remotions/playground",
-    "test": "npm run build:lib && npm run test -w @remotions/animations && npm run test -w @remotions/playground",
+    "build": "npm run build:lib && npm run build -w @remotions/catalog",
+    "test": "npm run build:lib && npm run test -w @remotions/animations && npm run test -w @remotions/catalog",
     "typecheck": "npm run build:lib && tsc -p tsconfig.check.json",
     "check": "npm run test && npm run typecheck && npm run build"
   },
   "devDependencies": {
+    "@types/node": "26.6.5",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.4.0",

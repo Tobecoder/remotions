@@ -11,17 +11,15 @@ Thanks for helping improve the library.
 
 ## Adding a component
 
-1. Create a new `packages/animations/src/components/MyEffect.tsx` with typed props.
-2. Use `useCurrentFrame()` and `useVideoConfig()` to calculate all animation state; do not animate using CSS transitions or timers.
+1. Create a new audio-reactive component in `packages/animations/src/components/` with typed props, including an audio `src`.
+2. Use `useCurrentFrame()` and `useVideoConfig()` with `@remotion/media-utils` to calculate animation state from real audio; do not substitute CSS transitions, timers, or random waveform data.
 3. Export both component and props through `packages/animations/src/index.ts`.
-4. Add a catalog entry and render branch to `apps/playground/src/catalog.tsx`.
-5. Add a corresponding copy-ready TSX snippet to `snippetFor`.
-6. Update the README table and add tests for pure animation math when applicable.
+4. Add a catalog entry, preview branch and copy-ready TSX snippet in `apps/catalog/src/catalog.tsx`.
+5. Update the README and add focused tests for rendering and audio data handling.
 
 ## Code review checklist
 
-- Animation starts and ends reliably at expected frames.
-- Respects nonzero `delayInFrames` and custom `durationInFrames`.
-- Does not depend on render order, wall clock, browser random or async requests.
-- Props have defaults and predictable units.
-- Public props are documented; preview works at different FPS values.
+- Visualization changes with the audio data at the current frame.
+- The visual and audible track use the same source and remain aligned after seeking.
+- Props have defaults and predictable units; public props are documented.
+- Long audio is windowed, and preview behavior is checked with a real fixture.

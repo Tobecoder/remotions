@@ -1,113 +1,47 @@
 # Remotions ✦
 
-**Frame-driven motion components for Remotion.** An open-source collection of reusable effects, with a browsable component gallery, animation previews and React usage examples.
+面向 Remotion 的开源动效素材库。当前开放音频动画分类，包含三种由真实音频数据驱动的组件：**示波曲线、镜像频谱、语音波形**；字幕、背景、视觉效果和版式转场分类已预留。原有 11 个通用动效已从公开组件入口和网站移除，历史实现保存在 [`archive/v0.1-legacy`](archive/v0.1-legacy/README.md)。
 
-> **Version 0.1.0 — initial component library.** Not yet published to npm. Compatible with Remotion 4.x; always align `remotion` and `@remotion/player` to matching exact versions in applications. Both are pinned to `4.0.536` in this workspace per Remotion guidance.
+## 本地运行
 
-## Quick start
-
-Requirements: Node.js 20+ and npm 10+.
+需要 Node.js 20+ 和 npm 10+。
 
 ```bash
 npm ci
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to browse components and preview animations. The library package is built first and loaded by the playground.
+打开终端显示的本地地址（默认 `http://localhost:3000`）。网页按分类展示组件；悬浮音频卡片会在卡片内部播放静音画面，完整预览才播放声音。你也可以选择本地音频查看前 6 秒，以及复制 Remotion 示例代码。本地文件以浏览器对象 URL 预览，不上传到服务器。
 
-Other commands:
+## 在 Remotion 中使用
 
-```bash
-npm run build       # Build library + web playground
-npm run test        # Build library and run component/math/playground Vitest tests
-npm run typecheck   # Type check library, playground, tests and examples
-npm run check       # Run tests, type check, build
-```
-
-## What is included?
-
-| Name | Category | Configurable properties |
-| --- | --- | --- |
-| `FadeIn` | Entrance | opacity, delay, duration |
-| `SlideIn` | Entrance | direction, distance, delay, duration |
-| `ScaleIn` | Entrance | fromScale, transformOrigin, timing |
-| `SpringPop` | Entrance | fromScale, damping, stiffness, mass, timing |
-| `Typewriter` | Typography | text, cursor, cursorCharacter, timing |
-| `WordReveal` | Typography | text, stagger, distance, timing |
-| `WaveText` | Typography | text, stagger, amplitude, timing |
-| `CountUp` | Data | from/to, decimals, prefix/suffix, locale, timing |
-| `ProgressBar` | Data | value, width/height, colors, timing |
-| `ProgressRing` | Data | value, size, strokeWidth, colors, label, timing |
-| `CardReveal` | UI | tiltDegrees, distance, timing |
-
-## Usage in a Remotion Composition
+将音频放到宿主工程的 `public/` 目录，保持 `remotion`、`@remotion/media` 和 `@remotion/media-utils` 版本一致。此工作区使用 `4.0.536`。
 
 ```tsx
-import { AbsoluteFill, Composition, registerRoot } from 'remotion';
-import { SlideIn, CountUp, ProgressBar } from '@remotions/animations';
+import {Audio} from '@remotion/media';
+import {MirroredSpectrum} from '@remotions/animations';
+import {staticFile} from 'remotion';
 
-const Demo = () => (
-  <AbsoluteFill style={{backgroundColor: '#11111b', color: 'white', padding: 80}}>
-    <SlideIn direction="up" delayInFrames={5} durationInFrames={35}>
-      <h1>Welcome to Remotions</h1>
-    </SlideIn>
-    <CountUp to={12800} suffix="+" delayInFrames={25} durationInFrames={45} />
-    <ProgressBar value={86} delayInFrames={30} durationInFrames={45} />
-  </AbsoluteFill>
-);
+const src = staticFile('your-audio.wav');
 
-const Root = () => <Composition id="Demo" component={Demo} width={1280} height={720} fps={30} durationInFrames={150} />;
-registerRoot(Root);
+export const Scene = () => <>
+  <Audio src={src} />
+  <MirroredSpectrum src={src} color="#8ee5d2" />
+</>;
 ```
 
-Install this workspace library into another project as a local dependency while developing, or publish the package after review. The package is **not** published at `@remotions/animations` yet.
+`Oscilloscope`、`MirroredSpectrum`、`VoiceNote` 都接受 `src`、`color`、`width`、`height`。组件只根据当前帧与解码后的音频计算画面；声音播放由宿主 Composition 的 `<Audio>` 控制。支持浏览器与 Remotion 可解码的音频格式；远程文件须允许跨域读取。长音频通过 `useWindowedAudioData()` 分段读取，而不是把整段原始音频一直放在内存中。
 
-## Component contract
+## 工程结构
 
-- All animations are pure functions of `useCurrentFrame()` and (for physics) `useVideoConfig().fps`.
-- `delayInFrames` defaults to 0; `durationInFrames` is measured in **frames**, not milliseconds.
-- Components do not use CSS transitions, random runtime values, timers, or uncontrolled animation state.
-- Children-based effects accept `children`, `className`, and `style`.
-- Typographic/data effects accept `className` and `style`.
-- `style` overrides computed wrapper styles when properties conflict; avoid overriding `opacity` or `transform` on the animated wrapper if you want the built-in effect to remain visible.
-- Wrap components in a Remotion `Composition`, `Player`, or another Remotion time context. Outside Remotion, the hooks cannot read frame information.
+- `packages/animations/`：三个可复用的音频动画组件，构建 ESM、CJS 和类型声明。
+- `apps/catalog/`：中文素材库、Remotion Player、原创 WAV 示例音频。
+- `scripts/generate-demo-audio.mjs`：可重复生成示例音频；不依赖第三方音效素材。
+- `examples/AudioComposition.tsx`：在 Remotion Composition 中引用音频动画的示例。
+- `archive/v0.1-legacy/`：以前的通用动效与历史验证文档，不参与当前构建。
 
-## Architecture
+运行 `npm run check` 可执行组件与示例音频测试、类型检查和生产构建。当前工作区尚未发布到 npm，也未配置网站部署。更多结果见 [验证记录](docs/VERIFICATION.md)。
 
-```text
-remotions/
-├── apps/playground/          # Vite app + @remotion/player previews
-├── packages/animations/      # Reusable React + Remotion components
-│   ├── src/components/       # Individual animation effects
-│   ├── src/internal/         # Pure timing helpers and hooks
-│   └── tests/                # Animation math tests
-└── .github/workflows/ci.yml # Verification on push / PR
-```
+## 来源与许可
 
-## Constraints for 0.1
-
-- No npm publication or GitHub Pages deployment is configured. Dependency installation requires registry access; a successful build on a clean machine must be confirmed before release.
-- Animation components expect Remotion's rendering context.
-- Typewriter and WaveText use `Intl.Segmenter` for grapheme-aware text animation (with a code-point fallback on older browsers). For absolutely identical output across browsers and render machines, use matching runtime versions and fonts.
-- Per-frame PNG / video render snapshots and visual regression tests are not yet included.
-- The website previews effects with fixed example settings. Library consumers can still customize animation props in their own compositions. Preview loops include enough frames for staggered typography.
-
-## Roadmap
-
-- **0.1:** 11 frame-driven effects, searchable component gallery, looping previews, tests and CI. This repository contains the implementation; see [the V0.1 plan](docs/V0.1-PLAN.md) and [contributor guide](CONTRIBUTING.md).
-- **0.2:** Docs site, examples by use case, accessibility reviews, polished presets and visual regressions.
-- **0.3:** Prop schema / registry, CLI install, templates and publish workflow.
-
-## License
-
-MIT, see [LICENSE](./LICENSE).
-
-## Browser preview
-
-Select an effect from the gallery or use the category filters and search to find one. The selected animation plays in a looping preview with standard playback controls. The webpage does not expose development/debug panels, code snippets or animation parameter editors. Animations remain configurable when used as React components in a Remotion project.
-
-## Verification and limitations
-
-`npm run check` passes on Windows with Node 24.15.0 and npm 11.12.1: 48 Vitest tests, full TypeScript checking (including tests and examples), library ESM/CJS declaration builds, and the production playground build. Package contents and both module import modes were checked. Earlier browser smoke checks covered the original editor controls; the simplified gallery/preview still needs a new browser smoke check. See [the verification record](docs/VERIFICATION.md) for evidence and limits.
-
-CI uses the committed lockfile with `npm ci` and checks Node 22 and 24. The production playground currently has one Vite bundle-size advisory; per-frame video rendering and automated visual regressions remain future work. This PR does not publish the npm package or deploy the playground.
+音频处理使用 Remotion 官方的 [`@remotion/media-utils`](https://www.remotion.dev/docs/audio/visualization) API；三个视觉组件为本仓库独立实现。项目采用 MIT 许可，详见 [LICENSE](LICENSE)。

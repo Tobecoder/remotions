@@ -1,5 +1,5 @@
 {
-  "name": "@remotions/playground",
+  "name": "@remotions/catalog",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,8 +10,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@remotions/animations": "0.1.0",
+    "@remotion/media": "4.0.536",
+    "@remotion/media-utils": "4.0.536",
     "@remotion/player": "4.0.536",
+    "@remotions/animations": "0.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "remotion": "4.0.536"

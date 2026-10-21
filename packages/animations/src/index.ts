@@ -1,25 +1,2 @@
-export type {MotionTiming, MotionChildrenProps, MotionStyleProps} from './types';
-export {FadeIn} from './components/FadeIn';
-export type {FadeInProps} from './components/FadeIn';
-export {SlideIn} from './components/SlideIn';
-export type {SlideInProps, SlideDirection} from './components/SlideIn';
-export {ScaleIn} from './components/ScaleIn';
-export type {ScaleInProps} from './components/ScaleIn';
-export {SpringPop} from './components/SpringPop';
-export type {SpringPopProps} from './components/SpringPop';
-export {Typewriter} from './components/Typewriter';
-export type {TypewriterProps} from './components/Typewriter';
-export {WordReveal} from './components/WordReveal';
-export type {WordRevealProps} from './components/WordReveal';
-export {CountUp} from './components/CountUp';
-export type {CountUpProps} from './components/CountUp';
-export {ProgressBar} from './components/ProgressBar';
-export type {ProgressBarProps} from './components/ProgressBar';
-export {ProgressRing} from './components/ProgressRing';
-export type {ProgressRingProps} from './components/ProgressRing';
-export {CardReveal} from './components/CardReveal';
-export type {CardRevealProps} from './components/CardReveal';
-export {WaveText} from './components/WaveText';
-export type {WaveTextProps} from './components/WaveText';
-
-export {splitGraphemes} from './internal/graphemes';
+export {Oscilloscope, MirroredSpectrum, VoiceNote} from './components/AudioVisualizers';
+export type {AudioVisualizerProps} from './components/AudioVisualizers';

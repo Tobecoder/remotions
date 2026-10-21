@@ -1,7 +1,7 @@
 {
   "name": "@remotions/animations",
   "version": "0.1.0",
-  "description": "Reusable frame-driven Remotion animation components",
+  "description": "Audio-reactive animation components for Remotion",
   "type": "module",
   "sideEffects": false,
   "files": [
@@ -25,15 +25,17 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --clean --external react,remotion",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean --external react,remotion,@remotion/media-utils",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json"
   },
   "peerDependencies": {
+    "@remotion/media-utils": "^4.0.0",
     "react": ">=18",
     "remotion": "^4.0.0"
   },
   "devDependencies": {
+    "@remotion/media-utils": "4.0.536",
     "react": "^19.0.0",
     "remotion": "4.0.536"
   },

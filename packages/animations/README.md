@@ -1,22 +1,16 @@
 # @remotions/animations
 
-Eleven typed, frame-driven React components for Remotion 4.x. Version 0.1.0 is not yet published to npm.
+Three audio-reactive Remotion components: `Oscilloscope`, `MirroredSpectrum`, and `VoiceNote`. Each accepts an audio `src`, optional `color`, `width`, and `height`. The components read audio data at the current Remotion frame; add `<Audio src={src} />` separately when sound should play.
 
 ```tsx
-import {FadeIn, CountUp} from '@remotions/animations';
+import {Audio} from '@remotion/media';
+import {Oscilloscope} from '@remotions/animations';
+import {staticFile} from 'remotion';
 
-export const Scene = () => (
-  <FadeIn delayInFrames={10} durationInFrames={30}>
-    <CountUp to={12800} suffix="+" durationInFrames={45} />
-  </FadeIn>
-);
+const src = staticFile('music.wav');
+export const Scene = () => <><Audio src={src} /><Oscilloscope src={src} /></>;
 ```
 
-Render within a Remotion Composition or Player. Timing uses video frames, not milliseconds.
-`style` and `className` customize wrappers; wrapper style overrides take precedence over computed animation styles.
+React 18+, Remotion 4.x and `@remotion/media-utils` 4.x are peer dependencies. Keep Remotion packages on matching exact versions in the host app. The workspace currently uses 4.0.536. This package is not yet published to npm.
 
-Exports: FadeIn, SlideIn, ScaleIn, SpringPop, Typewriter, WordReveal, WaveText, CountUp, ProgressBar, ProgressRing, CardReveal, splitGraphemes and all component prop types.
-
-React 18+ and Remotion 4.x are peer dependencies. Keep Remotion runtime packages on matching exact versions in your app. ESM, CommonJS and corresponding TypeScript declarations are included.
-
-See the [repository](https://github.com/Tobecoder/remotions) for the playground, component options and contribution instructions. MIT licensed; see LICENSE.
+The old general-purpose motion components have been removed from the public entry point and archived in the repository's `archive/v0.1-legacy` folder. MIT licensed; see LICENSE.
