@@ -46,7 +46,7 @@ import {PulseRings} from '@remotions/animations';
 export const IntroScene = () => <PulseRings color="#409eff" width={1920} height={1080} />;
 ```
 
-`Oscilloscope`、`MirroredSpectrum`、`VoiceNote` 都接受 `src`、`color`、`width`、`height`。组件只根据当前帧与解码后的音频计算画面；声音播放由宿主 Composition 的 `<Audio>` 控制。当前分析路径使用 `useWindowedAudioData()`，因此 `src` 应为 WAV 文件（本地 `staticFile()`、对象 URL 或允许跨域读取的远程 WAV）；MP3、AAC 等格式请先转换为 WAV。长音频通过窗口化读取，而不是把整段原始音频一直放在内存中。
+`Oscilloscope`、`MirroredSpectrum`、`VoiceNote` 都接受 `src`、`color`、`width`、`height`。组件只根据当前帧与解码后的音频计算画面；声音播放由宿主 Composition 的 `<Audio>` 控制。`Oscilloscope` 和 `MirroredSpectrum` 使用 `useWindowedAudioData()`，因此 `src` 应为 WAV 文件（本地 `staticFile()`、对象 URL 或允许跨域读取的远程 WAV），适合长音频的实时窗口分析。`VoiceNote` 是覆盖完整音频的静态波形，使用 `useAudioData()` 读取完整源文件；长音频会占用更多内存。
 
 ## 工程结构
 

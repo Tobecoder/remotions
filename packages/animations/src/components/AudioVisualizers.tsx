@@ -1,6 +1,7 @@
 import {
   createSmoothSvgPath,
   getWaveformPortion,
+  useAudioData,
   useWindowedAudioData,
   visualizeAudio,
 } from '@remotion/media-utils';
@@ -8,7 +9,7 @@ import {useId} from 'react';
 import {useCurrentFrame, useVideoConfig} from 'remotion';
 
 export type AudioVisualizerProps = {
-  /** A WAV URL from staticFile(), an object URL, or a CORS-enabled remote file. */
+  /** An audio URL from staticFile(), an object URL, or a CORS-enabled remote file. */
   src: string;
   color?: string;
   width?: number;
@@ -43,6 +44,19 @@ const getBarLayout = (availableWidth: number, requestedBars: number, requestedGa
     (safeWidth - gap * (barCount - 1)) / barCount,
   );
   return {barCount, barWidth, gap};
+};
+
+const aggregateFrequencyBands = (frequencyData: number[], bandCount: number) => {
+  const safeBandCount = Math.max(1, Math.floor(bandCount));
+  if (frequencyData.length === 0) return [];
+
+  return Array.from({length: safeBandCount}, (_, bandIndex) => {
+    const start = Math.floor((bandIndex * frequencyData.length) / safeBandCount);
+    const end = Math.max(start + 1, Math.floor(((bandIndex + 1) * frequencyData.length) / safeBandCount));
+    return frequencyData.slice(start, end).reduce((peak, value) => {
+      return Math.max(peak, Number.isFinite(value) ? value : 0);
+    }, 0);
+  });
 };
 
 const useAudioWindow = (src: string, frameOverride?: number) => {
@@ -141,7 +155,7 @@ export const Oscilloscope = ({
     ? createSmoothSvgPath({
         points: waveform.map((value, index) => ({
           x: horizontalStart + (index / Math.max(1, waveform.length - 1)) * (horizontalEnd - horizontalStart),
-          y: svgHeight / 2 + value * (svgHeight / 2) * 2,
+          y: svgHeight / 2 + clamp(value, -1, 1) * Math.max(0, svgHeight / 2 - lineWidth * 2),
         })),
       })
     : null;
@@ -200,7 +214,7 @@ export const MirroredSpectrum = ({
         optimizeFor: 'speed',
       })
     : [];
-  const subset = frequencyData.slice(0, numberOfFrequencies);
+  const subset = aggregateFrequencyBands(frequencyData, numberOfFrequencies);
   const frequenciesToDisplay = [
     ...subset.slice(barCount % 2).reverse(),
     ...subset,
@@ -246,20 +260,24 @@ export const VoiceNote = ({
   height = 300,
 }: AudioVisualizerProps) => {
   const gradientId = `remotions-waveform-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
-  const {frame, durationInFrames, durationInSeconds, audioData, dataOffsetInSeconds} = useAudioWindow(src, 0);
+  const frame = useCurrentFrame();
+  const {fps, durationInFrames = DEFAULT_DURATION_IN_FRAMES} = useVideoConfig();
+  const audioData = useAudioData(src);
+  const durationInSeconds = Math.max(1 / fps, audioData?.durationInSeconds ?? durationInFrames / fps);
   const svgWidth = getSafeSize(width, 900);
   const svgHeight = getSafeSize(height, 300);
   const {barCount, barWidth, gap} = getBarLayout(Math.max(1, svgWidth - 16), DEFAULT_WAVEFORM_SAMPLES, 5);
   const waveform = getOrganicVoiceWaveform(getWaveform({
     audioData,
-    dataOffsetInSeconds,
+    dataOffsetInSeconds: 0,
     durationInSeconds,
     numberOfSamples: barCount,
     outputRange: 'zero-to-one',
     startTimeInSeconds: 0,
     normalize: true,
   }));
-  const progress = clamp(frame / Math.max(1, durationInFrames - 1), 0, 1);
+  const audioDurationInFrames = Math.max(1, Math.ceil(durationInSeconds * fps));
+  const progress = clamp(frame / Math.max(1, audioDurationInFrames - 1), 0, 1);
   const unplayedColor = '#cbd5e1';
   const maxBarHeight = svgHeight * 0.7;
 

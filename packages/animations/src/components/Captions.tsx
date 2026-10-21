@@ -285,7 +285,7 @@ export const PoppingWordCaptions = ({
         const y = baseY + (1 - localProgress) * fittedFontSize * 0.62;
         const previousWidth = activeCharWidths.slice(0, index).reduce((total, characterWidth) => total + characterWidth + gap, 0);
         const x = activeStartX + previousWidth + activeCharWidths[index] / 2;
-        return <g key={`${character}-${index}`} transform={`translate(${x} ${y}) scale(${scale})`}>
+        return <g key={`${character}-${index}`} data-caption-word-index={index} opacity={localProgress} transform={`translate(${x} ${y}) scale(${scale})`}>
           <circle r={fittedFontSize * 0.62} fill={index % 2 === 0 ? secondaryColor : '#ffffff'} opacity={index % 2 === 0 ? 0.18 : 0.7} />
           <text textAnchor="middle" dominantBaseline="middle" fill={color} fontSize={fittedFontSize}>{character}</text>
         </g>;

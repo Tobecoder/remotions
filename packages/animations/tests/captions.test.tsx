@@ -83,4 +83,17 @@ describe('caption components', () => {
     expect(maxFontSize(highlight)).toBeLessThan(62);
     expect(highlight).toContain('letter-spacing:0.9px');
   });
+
+  it('keeps words hidden until their individual pop phase', () => {
+    const popCaptions: Caption[] = [
+      {text: '甲乙丙', startMs: 0, endMs: 3000, timestampMs: 1500, confidence: null},
+    ];
+    clock.frame = 10;
+    const early = renderToStaticMarkup(<PoppingWordCaptions captions={popCaptions} width={640} height={260} />);
+    expect(early).toContain('data-caption-word-index="2" opacity="0"');
+
+    clock.frame = 80;
+    const late = renderToStaticMarkup(<PoppingWordCaptions captions={popCaptions} width={640} height={260} />);
+    expect(late.match(/data-caption-word-index="\d" opacity="1"/g)).toHaveLength(3);
+  });
 });
