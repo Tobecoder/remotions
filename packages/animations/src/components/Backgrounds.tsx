@@ -18,8 +18,8 @@ export type BackgroundProps = {
 };
 
 const getDimensions = (width: number, height: number) => ({
-  width: Math.max(1, width),
-  height: Math.max(1, height),
+  width: Number.isFinite(width) ? Math.max(1, width) : 1,
+  height: Number.isFinite(height) ? Math.max(1, height) : 1,
 });
 
 const getPhase = (frame: number, fps: number, speed: number) => interpolate(

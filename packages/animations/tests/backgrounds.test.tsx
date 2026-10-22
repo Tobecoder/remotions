@@ -61,6 +61,13 @@ describe('background components', () => {
     expect(markup).toContain('height="1"');
   });
 
+  it('falls back to finite dimensions for invalid input', () => {
+    const markup = renderToStaticMarkup(<MovingWaves width={Number.NaN} height={Number.POSITIVE_INFINITY} />);
+    expect(markup).not.toMatch(/NaN|Infinity/);
+    expect(markup).toContain('width="1"');
+    expect(markup).toContain('height="1"');
+  });
+
   it.each([
     ['MovingWaves', <MovingWaves width={640} height={360} />],
     ['MovingZigzags', <MovingZigzags width={640} height={360} />],

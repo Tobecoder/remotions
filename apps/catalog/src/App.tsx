@@ -1,5 +1,5 @@
 import {useRef, useState} from 'react';
-import type {CSSProperties, MouseEvent as ReactMouseEvent} from 'react';
+import type {CSSProperties, KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent} from 'react';
 import {CatalogCardPreview} from './CatalogCardPreview';
 import type {CatalogCardPreviewHandle} from './CatalogCardPreview';
 import {catalog, categories, demoAudioSrc, demoCaptions} from './catalog';
@@ -11,6 +11,7 @@ export const App = () => {
   const [selected, setSelected] = useState<DemoId>('oscilloscope');
   const [hovered, setHovered] = useState<DemoId | null>(null);
   const lastPointerType = useRef<string | null>(null);
+  const categoryTabRefs = useRef<Partial<Record<CategoryId, HTMLButtonElement | null>>>({});
   const previewRefs = useRef<Partial<Record<DemoId, CatalogCardPreviewHandle | null>>>({});
   const category = categories.find((item) => item.id === selectedCategory) ?? categories[0];
   const categoryItems = catalog.filter((item) => item.category === selectedCategory);
@@ -23,6 +24,23 @@ export const App = () => {
     setSelectedCategory(next);
     setHovered(null);
     if (first) setSelected(first.id);
+  };
+
+  const handleCategoryKeyDown = (event: ReactKeyboardEvent<HTMLButtonElement>, current: CategoryId) => {
+    const currentIndex = categories.findIndex((item) => item.id === current);
+    if (currentIndex < 0 || categories.length === 0) return;
+
+    let nextIndex: number | null = null;
+    if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % categories.length;
+    if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + categories.length) % categories.length;
+    if (event.key === 'Home') nextIndex = 0;
+    if (event.key === 'End') nextIndex = categories.length - 1;
+    if (nextIndex === null) return;
+
+    event.preventDefault();
+    const next = categories[nextIndex];
+    chooseCategory(next.id);
+    categoryTabRefs.current[next.id]?.focus();
   };
 
   const handleCardClick = (itemId: DemoId, event: ReactMouseEvent<HTMLButtonElement>) => {
@@ -62,13 +80,13 @@ export const App = () => {
           {categories.map((item) => {
             const count = catalog.filter((demo) => demo.category === item.id).length;
             const isSelected = item.id === selectedCategory;
-            return <button key={item.id} type="button" role="tab" aria-selected={isSelected} aria-controls="catalog-panel" className={`category-tab${isSelected ? ' active' : ''}${item.status === 'coming-soon' ? ' upcoming' : ''}`} onClick={() => chooseCategory(item.id)}>
+            return <button key={item.id} type="button" role="tab" aria-selected={isSelected} aria-controls="catalog-panel" tabIndex={isSelected ? 0 : -1} ref={(element) => {categoryTabRefs.current[item.id] = element;}} onKeyDown={(event) => handleCategoryKeyDown(event, item.id)} className={`category-tab${isSelected ? ' active' : ''}${item.status === 'coming-soon' ? ' upcoming' : ''}`} onClick={() => chooseCategory(item.id)}>
               <span>{item.name}</span><small>{item.status === 'active' ? `${count} 个组件` : '即将上线'}</small>
             </button>;
           })}
         </div>
         <div id="catalog-panel" role="tabpanel" aria-label={`${category.name}组件`}>
-          {categoryItems.length > 0 ? <div className="catalog-grid">{categoryItems.map((item) => <button key={item.id} type="button" className={selected === item.id ? 'motion-card selected' : 'motion-card'} style={{'--card-accent': item.color} as CSSProperties} aria-pressed={selected === item.id} aria-label={`预览${item.name}`} onPointerDown={(event) => {lastPointerType.current = event.pointerType;}} onPointerUp={(event) => {if (event.pointerType !== 'touch') lastPointerType.current = null;}} onPointerCancel={() => {lastPointerType.current = null; setHovered(null); previewRefs.current[item.id]?.stop();}} onPointerEnter={(event) => {if (event.pointerType === 'touch') return; setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onPointerLeave={(event) => {if (event.pointerType === 'touch') return; setHovered(null); previewRefs.current[item.id]?.stop();}} onFocus={(event) => {if (lastPointerType.current === 'touch') return; setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onBlur={() => {setHovered(null); previewRefs.current[item.id]?.stop();}} onClick={(event) => handleCardClick(item.id, event)}>
+          {categoryItems.length > 0 ? <div className="catalog-grid">{categoryItems.map((item) => <button key={item.id} type="button" className={selected === item.id ? 'motion-card selected' : 'motion-card'} style={{'--card-accent': item.color} as CSSProperties} aria-pressed={hovered === item.id} aria-label={hovered === item.id ? `停止预览${item.name}` : `预览${item.name}`} onPointerDown={(event) => {lastPointerType.current = event.pointerType;}} onPointerUp={(event) => {if (event.pointerType !== 'touch') lastPointerType.current = null;}} onPointerCancel={() => {lastPointerType.current = null; setHovered(null); previewRefs.current[item.id]?.stop();}} onPointerEnter={(event) => {if (event.pointerType === 'touch') return; setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onPointerLeave={(event) => {if (event.pointerType === 'touch') return; setHovered(null); previewRefs.current[item.id]?.stop();}} onFocus={(event) => {if (lastPointerType.current === 'touch') return; setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onBlur={() => {setHovered(null); previewRefs.current[item.id]?.stop();}} onClick={(event) => handleCardClick(item.id, event)}>
             <div className={`mini-art mini-${item.id}`}><CatalogCardPreview ref={(handle) => {previewRefs.current[item.id] = handle;}} inputProps={{id: item.id, src, captions: demoCaptions}} active={hovered === item.id} /></div>
             <div className="motion-card-info"><div className="motion-card-copy"><div className="motion-card-title"><strong>{item.name}</strong><span className="motion-card-use-case">{item.useCase}</span></div><span className="motion-description">{item.description}</span></div></div>
           </button>)}</div> : <div className="empty-category"><span className="empty-mark">✦</span><strong>{category.name}正在整理中，后续组件会继续加入。</strong></div>}
