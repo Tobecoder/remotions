@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {getPreviewDurationInSeconds, getPreviewLoopMode} from './catalog';
+import {getPreviewDurationInSeconds, getPreviewLoopMode, getPreviewStillFrame} from './catalog';
 import {getPreviewDurationInFrames, getPreviewFrame, getPreviewLoopDurationInFrames} from './previewTimeline';
 
 describe('catalog preview timeline', () => {
@@ -51,5 +51,12 @@ describe('catalog preview timeline', () => {
     expect(getPreviewFrame(0, 30, 150, 'forward-hold')).toBe(0);
     expect(getPreviewFrame(4999, 30, 150, 'forward-hold')).toBe(149);
     expect(getPreviewFrame(999999, 30, 150, 'forward-hold')).toBe(149);
+  });
+
+  it.each(['location-lower-third', 'name-lower-third'] as const)('%s previews the complete entrance and exit with a visible resting frame', (id) => {
+    expect(getPreviewLoopMode(id)).toBe('forward');
+    expect(getPreviewDurationInSeconds(id)).toBe(4);
+    expect(getPreviewStillFrame(id)).toBe(60);
+    expect(getPreviewFrame(4000, 30, 120)).toBe(0);
   });
 });
