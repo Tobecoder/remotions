@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useLayoutEffect, useRef, useState} from 'react';
 import {CanvasImage, Easing, interpolate, useCurrentFrame, useDelayRender, useVideoConfig} from 'remotion';
 import type {EffectProps} from './Effects';
 
@@ -28,19 +28,50 @@ export const loadContentEffectEngine = () => enginePromise ??= Promise.all([
   scale: scaling.scale, pageTurn: peeling.pageTurn, shine: shining.shine, tear: tearing.tear,
 }));
 
-const useEffectEngine = () => {
-  const [engine, setEngine] = useState<EffectFactories | null>(null);
+type RenderBlock = {released: boolean; release: () => void};
+
+const createRenderBlock = (delayRender: ReturnType<typeof useDelayRender>['delayRender'], continueRender: ReturnType<typeof useDelayRender>['continueRender']): RenderBlock => {
+  const handle = delayRender('Loading Remotion content effects');
+  const block: RenderBlock = {
+    released: false,
+    release: () => {
+      if (block.released) return;
+      block.released = true;
+      continueRender(handle);
+    },
+  };
+  return block;
+};
+
+/** Register before commit, then release only after the engine-backed child commits. */
+export const useContentEffectEngine = (loadEngine = loadContentEffectEngine) => {
   const {delayRender, continueRender, cancelRender} = useDelayRender();
-  useEffect(() => {
+  const blockRef = useRef<RenderBlock | null>(null);
+  const [initialBlock] = useState(() => {
+    // The ref also guards React Strict Mode's repeated state initializer.
+    blockRef.current ??= createRenderBlock(delayRender, continueRender);
+    return blockRef.current;
+  });
+  const [engine, setEngine] = useState<EffectFactories | null>(null);
+
+  useLayoutEffect(() => {
+    // Strict Mode replays setup after cleanup; restore its render block before paint.
+    if (blockRef.current?.released) blockRef.current = createRenderBlock(delayRender, continueRender);
+    const block = blockRef.current ?? initialBlock;
     let active = true;
-    const handle = delayRender('Loading Remotion content effects');
-    loadContentEffectEngine().then((loaded) => {
+    loadEngine().then((loaded) => {
       if (active) setEngine(loaded);
     }).catch((error: unknown) => {
-      if (active) cancelRender(error instanceof Error ? error : new Error(String(error)));
-    }).finally(() => continueRender(handle));
-    return () => {active = false; continueRender(handle);};
-  }, [delayRender, continueRender, cancelRender]);
+      if (!active) return;
+      block.release();
+      cancelRender(error instanceof Error ? error : new Error(String(error)));
+    });
+    return () => {active = false; block.release();};
+  }, [initialBlock, loadEngine, delayRender, continueRender, cancelRender]);
+
+  useLayoutEffect(() => {
+    if (engine) blockRef.current?.release();
+  });
   return engine;
 };
 
@@ -91,7 +122,7 @@ export const getContentEffectChain = (engine: EffectFactories, kind: ContentEffe
 
 const ContentEffect = ({kind, width = 1280, height = 720, src = demoGraphic, backgroundColor, durationInSeconds = kind === 'peel' ? 2 : 1.5, speed = 1, progress}: ContentEffectProps & {kind: ContentEffectKind}) => {
   const time = useProgress(durationInSeconds, speed, progress);
-  const engine = useEffectEngine();
+  const engine = useContentEffectEngine();
   const canvasWidth = dimension(width);
   const canvasHeight = dimension(height);
   const effects = engine ? getContentEffectChain(engine, kind, time, canvasWidth, canvasHeight) : undefined;

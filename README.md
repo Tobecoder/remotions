@@ -115,7 +115,7 @@ export const Scene = () => (
 - `examples/AudioComposition.tsx`：在 Remotion Composition 中引用音频动画的示例。
 - `archive/v0.1-legacy/`：以前的通用动效与历史验证文档，不参与当前构建。
 
-运行 `npm run check` 可执行组件与示例音频测试、类型检查和生产构建。组件库尚未发布到 npm；目录站点的部署状态以项目中的托管配置为准。更多结果见 [验证记录](docs/VERIFICATION.md)。
+运行 `npm run check` 可执行组件与示例音频测试、构建后 CJS 效果挂载检查、类型检查和生产构建。`npm run verify:effects:render` 使用支持 WebGPU 的 Chromium 导出效果短片，并解码检查 MP4 关键帧，输出保存在 `.verification/content-effects/`。组件库尚未发布到 npm；目录站点的部署状态以项目中的托管配置为准。更多结果见 [验证记录](docs/VERIFICATION.md)。
 
 ## 来源与许可
 
