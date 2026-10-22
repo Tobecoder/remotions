@@ -78,4 +78,16 @@ describe('catalog preview timeline', () => {
     expect(getPreviewLoopMode('on-screen-messages')).toBe('forward-hold');
     expect(getPreviewStillFrame('on-screen-messages')).toBe(90);
   });
+
+  it.each(['circle-marker', 'crossed-off-text', 'strike-through-text', 'text-marker', 'spinning-text-wheel'] as const)('%s holds its finished text instead of erasing or reversing', (id) => {
+    expect(getPreviewLoopMode(id)).toBe('forward-hold');
+    expect(getPreviewDurationInSeconds(id)).toBe(4);
+    expect(getPreviewStillFrame(id)).toBe(60);
+  });
+
+  it('keeps cylinder text moving forward through a complete revolution', () => {
+    expect(getPreviewLoopMode('cylinder-text')).toBe('forward');
+    expect(getPreviewDurationInSeconds('cylinder-text')).toBe(6);
+    expect(getPreviewFrame(6000, 30, 180)).toBe(0);
+  });
 });

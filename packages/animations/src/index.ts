@@ -17,3 +17,5 @@ export {Peel, Shine, TearApart, WigglingCallout} from './components/ContentEffec
 export type {ContentEffectProps, WigglingCalloutProps} from './components/ContentEffects';
 export {NewsArticleHighlight, OnScreenMessages, PolaroidPictures, SpeedLines} from './components/Storytelling';
 export type {StorytellingProps, NewsArticleHighlightProps, OnScreenMessagesProps, StoryMessage, PolaroidPhoto, PolaroidPicturesProps, SpeedLinesProps} from './components/Storytelling';
+export {CircleMarker, CrossedOffText, CylinderText, SpinningTextWheel, StrikeThroughText, TextMarker} from './components/TextEffects';
+export type {TextEffectProps, TextAnnotationProps, CylinderTextProps, SpinningTextWheelProps} from './components/TextEffects';
