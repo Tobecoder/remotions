@@ -4,6 +4,7 @@ import {CatalogCardPreview} from './CatalogCardPreview';
 import type {CatalogCardPreviewHandle} from './CatalogCardPreview';
 import {catalog, categories, demoAudioSrc, demoCaptions} from './catalog';
 import type {CategoryId, DemoId} from './catalog';
+import {getNextCategoryIndex, isPreviewToggleActivation, togglePreview} from './interaction';
 import './styles.css';
 
 export const App = () => {
@@ -28,13 +29,7 @@ export const App = () => {
 
   const handleCategoryKeyDown = (event: ReactKeyboardEvent<HTMLButtonElement>, current: CategoryId) => {
     const currentIndex = categories.findIndex((item) => item.id === current);
-    if (currentIndex < 0 || categories.length === 0) return;
-
-    let nextIndex: number | null = null;
-    if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % categories.length;
-    if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + categories.length) % categories.length;
-    if (event.key === 'Home') nextIndex = 0;
-    if (event.key === 'End') nextIndex = categories.length - 1;
+    const nextIndex = getNextCategoryIndex(currentIndex, categories.length, event.key);
     if (nextIndex === null) return;
 
     event.preventDefault();
@@ -46,10 +41,11 @@ export const App = () => {
   const handleCardClick = (itemId: DemoId, event: ReactMouseEvent<HTMLButtonElement>) => {
     const nativePointerType = (event.nativeEvent as MouseEvent & {pointerType?: string}).pointerType;
     const clickPointerType = nativePointerType || lastPointerType.current;
-    const isTouch = clickPointerType === 'touch';
+    const shouldTogglePreview = isPreviewToggleActivation(event.detail, clickPointerType);
     setSelected(itemId);
-    if (isTouch) {
-      if (hovered === itemId) {
+    if (shouldTogglePreview) {
+      const nextActive = togglePreview(hovered === itemId);
+      if (!nextActive) {
         setHovered(null);
         previewRefs.current[itemId]?.stop();
       } else {
