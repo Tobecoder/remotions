@@ -7,3 +7,5 @@ export {Oscilloscope, MirroredSpectrum, VoiceNote} from './components/AudioVisua
 export type {AudioVisualizerProps} from './components/AudioVisualizers';
 export {PulseRings, ParticleField, ShimmerSweep} from './components/Effects';
 export type {EffectProps} from './components/Effects';
+export {PictureInPictureTransition, ProductCollection, RotatingCards, SlideToSplitScreen} from './components/Layouts';
+export type {LayoutProps, PictureInPictureTransitionProps, ProductCollectionProps, RotatingCardsProps, SlideToSplitScreenProps} from './components/Layouts';

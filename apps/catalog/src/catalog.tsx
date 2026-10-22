@@ -1,8 +1,8 @@
-import {BasicCaptions, LiquidContours, MirroredSpectrum, MovingPillCaptions, MovingWaves, MovingZigzags, NotebookPaper, Oscilloscope, PaperTexture, ParticleField, PoppingWordCaptions, PulseRings, RotatingStarburst, RoundedCaptions, ShimmerSweep, VoiceNote, WordHighlightCaptions} from '@remotions/animations';
+import {BasicCaptions, LiquidContours, MirroredSpectrum, MovingPillCaptions, MovingWaves, MovingZigzags, NotebookPaper, Oscilloscope, PaperTexture, ParticleField, PictureInPictureTransition, PoppingWordCaptions, ProductCollection, PulseRings, RotatingCards, RotatingStarburst, RoundedCaptions, ShimmerSweep, SlideToSplitScreen, VoiceNote, WordHighlightCaptions} from '@remotions/animations';
 import type {Caption} from '@remotions/animations';
 import {staticFile} from 'remotion';
 
-export type DemoId = 'oscilloscope' | 'spectrum' | 'voice' | 'basic-captions' | 'rounded-captions' | 'moving-pill-captions' | 'popping-word-captions' | 'word-highlight-captions' | 'liquid-contours' | 'moving-waves' | 'moving-zigzags' | 'notebook-paper' | 'paper-texture' | 'rotating-starburst' | 'pulse-rings' | 'particle-field' | 'shimmer-sweep';
+export type DemoId = 'oscilloscope' | 'spectrum' | 'voice' | 'basic-captions' | 'rounded-captions' | 'moving-pill-captions' | 'popping-word-captions' | 'word-highlight-captions' | 'liquid-contours' | 'moving-waves' | 'moving-zigzags' | 'notebook-paper' | 'paper-texture' | 'rotating-starburst' | 'pulse-rings' | 'particle-field' | 'shimmer-sweep' | 'picture-in-picture' | 'slide-to-split-screen' | 'rotating-cards' | 'product-collection';
 export type CategoryId = 'audio' | 'captions' | 'backgrounds' | 'effects' | 'layouts';
 export type CatalogCategory = {
   id: CategoryId;
@@ -23,7 +23,7 @@ export type Demo = {
   previewLoopMode?: PreviewLoopMode;
 };
 
-export type PreviewLoopMode = 'forward' | 'ping-pong';
+export type PreviewLoopMode = 'forward' | 'forward-hold' | 'ping-pong';
 
 /** Categories are intentionally independent from the demo list so new families can be added without changing the page layout. */
 export const categories: CatalogCategory[] = [
@@ -31,7 +31,7 @@ export const categories: CatalogCategory[] = [
   {id: 'captions', name: '字幕动画', description: '文字跟着时间出现', status: 'active'},
   {id: 'backgrounds', name: '背景特效', description: '可循环的氛围背景', status: 'active'},
   {id: 'effects', name: '视觉效果', description: '光、粒子与形变', status: 'active'},
-  {id: 'layouts', name: '版式转场', description: '可复用的镜头结构', status: 'coming-soon'},
+  {id: 'layouts', name: '版式转场', description: '可复用的镜头结构', status: 'active'},
 ];
 
 export const catalog: Demo[] = [
@@ -52,6 +52,10 @@ export const catalog: Demo[] = [
   {id: 'pulse-rings', category: 'effects', name: '光环脉冲', componentName: 'PulseRings', description: '同心光环从中心扩散，制造清晰的节奏焦点', useCase: '片头强调 · Logo 出场', color: '#409eff', tag: '01', previewDurationInSeconds: 4.5},
   {id: 'particle-field', category: 'effects', name: '粒子漂移', componentName: 'ParticleField', description: '细小粒子缓慢漂移，给画面增加空间层次', useCase: '科技背景 · 氛围过渡', color: '#409eff', tag: '02', previewDurationInSeconds: 8},
   {id: 'shimmer-sweep', category: 'effects', name: '光泽扫过', componentName: 'ShimmerSweep', description: '高光沿斜线扫过网格，适合标题或卡片强调', useCase: '标题强调 · 产品展示', color: '#409eff', tag: '03', previewDurationInSeconds: 5.5},
+  {id: 'picture-in-picture', category: 'layouts', name: '画中画转场', componentName: 'PictureInPictureTransition', description: '全屏画面收缩为可配置的小窗，适合产品演示和播客画面', useCase: '产品演示 · 播客画面', color: '#409eff', tag: '01', previewDurationInSeconds: 5, previewLoopMode: 'forward-hold'},
+  {id: 'slide-to-split-screen', category: 'layouts', name: '滑动分屏', componentName: 'SlideToSplitScreen', description: '全屏画面展开为双栏分屏，适合对比和讲解', useCase: '前后对比 · 双画面讲解', color: '#67c23a', tag: '02', previewDurationInSeconds: 5, previewLoopMode: 'forward-hold'},
+  {id: 'rotating-cards', category: 'layouts', name: '旋转卡片', componentName: 'RotatingCards', description: '卡片依次进入中心，适合案例、作品和商品展示', useCase: '案例展示 · 商品陈列', color: '#8b5cf6', tag: '03', previewDurationInSeconds: 5, previewLoopMode: 'forward-hold'},
+  {id: 'product-collection', category: 'layouts', name: '产品卡组', componentName: 'ProductCollection', description: '三张商品卡以透视、旋转和缩放依次占据中心', useCase: '商品集合 · 作品陈列', color: '#f56c6c', tag: '04', previewDurationInSeconds: 5, previewLoopMode: 'forward-hold'},
 ];
 
 export const getPreviewDurationInSeconds = (id: DemoId) => catalog.find((item) => item.id === id)?.previewDurationInSeconds ?? 6;
@@ -76,9 +80,11 @@ export const AudioCardComposition = ({id, src, captions = demoCaptions}: Preview
   const isAudio = active.category === 'audio';
   const isCaption = active.category === 'captions';
   const isEffect = active.category === 'effects';
-  return <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: isBackground ? '#eaf5ff' : isAudio ? '#f8fafc' : isCaption ? '#eef6ff' : isEffect ? '#f4f8ff' : 'linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%)', color: '#303133', fontFamily: 'system-ui, sans-serif'}}>
-    {!isBackground && !isAudio && !isCaption && !isEffect && <div style={{position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(#409eff18 1px, transparent 0), linear-gradient(90deg, #409eff18 1px, transparent 0)', backgroundSize: '32px 32px', maskImage: 'linear-gradient(transparent, #000 28%, #000 72%, transparent)'}} />}
-    <div style={{position: 'absolute', inset: isBackground || isAudio || isCaption || isEffect ? 0 : '32px 24px 28px', display: isBackground || isAudio || isCaption || isEffect ? 'block' : 'grid', placeItems: 'center'}}>
+  const isLayout = active.category === 'layouts';
+  const isFullPreview = isBackground || isAudio || isCaption || isEffect || isLayout;
+  return <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: isBackground ? '#eaf5ff' : isAudio ? '#f8fafc' : isCaption ? '#eef6ff' : isEffect ? '#f4f8ff' : isLayout ? '#f5f8fc' : 'linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%)', color: '#303133', fontFamily: 'system-ui, sans-serif'}}>
+    {!isFullPreview && <div style={{position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(#409eff18 1px, transparent 0), linear-gradient(90deg, #409eff18 1px, transparent 0)', backgroundSize: '32px 32px', maskImage: 'linear-gradient(transparent, #000 28%, #000 72%, transparent)'}} />}
+    <div style={{position: 'absolute', inset: isFullPreview ? 0 : '32px 24px 28px', display: isFullPreview ? 'block' : 'grid', placeItems: 'center'}}>
       {id === 'oscilloscope' && <Oscilloscope src={src} color={active.color} width={900} height={300} />}
       {id === 'spectrum' && <MirroredSpectrum src={src} color={active.color} width={900} height={300} />}
       {id === 'voice' && <VoiceNote src={src} color={active.color} width={900} height={300} />}
@@ -96,6 +102,10 @@ export const AudioCardComposition = ({id, src, captions = demoCaptions}: Preview
       {id === 'pulse-rings' && <PulseRings color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f4f8ff" width={640} height={260} />}
       {id === 'particle-field' && <ParticleField color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f8fbff" width={640} height={260} />}
       {id === 'shimmer-sweep' && <ShimmerSweep color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f4f8ff" width={640} height={260} />}
+      {id === 'picture-in-picture' && <PictureInPictureTransition color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f4f8ff" width={640} height={260} />}
+      {id === 'slide-to-split-screen' && <SlideToSplitScreen color={active.color} secondaryColor="#67c23a" backgroundColor="#f4f8ff" width={640} height={260} />}
+      {id === 'rotating-cards' && <RotatingCards color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f5f8fc" width={640} height={260} />}
+      {id === 'product-collection' && <ProductCollection backgroundColor="#f5f5f3" width={640} height={260} />}
     </div>
   </div>;
 };
