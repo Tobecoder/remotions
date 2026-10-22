@@ -60,7 +60,7 @@ export const App = () => {
       <section className="hero">
         <div className="eyebrow"><span className="live-dot" /> REMOTION 动效素材库</div>
         <h1>让素材<span>随时可用</span></h1>
-        <p>把可复用的 Remotion 组件按类别收进一个持续扩展的库。现在从音频动画、字幕动画、背景特效、视觉效果和版式转场开始，悬浮卡片即可看到逐帧动效。</p>
+        <p>把可复用的 Remotion 组件按类别收进一个持续扩展的库。现在从音频动画、字幕动画、数据图表、背景特效、视觉效果和版式转场开始，悬浮卡片即可看到逐帧动效。</p>
         <div className="hero-actions"><a className="button-primary" href="#library">探索素材库 ↗</a></div>
         <div className="hero-stats"><span><strong>{String(categories.length).padStart(2, '0')}</strong> 个分类骨架</span><span><strong>{String(catalog.length).padStart(2, '0')}</strong> 个已开放组件</span><span><strong>30 FPS</strong> 逐帧预览</span></div>
       </section>

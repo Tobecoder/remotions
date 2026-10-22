@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Twenty-one reusable Remotion components: the audio-reactive `Oscilloscope`, `MirroredSpectrum`, and `VoiceNote`; the caption styles `BasicCaptions`, `RoundedCaptions`, `MovingPillCaptions`, `PoppingWordCaptions`, and `WordHighlightCaptions`; the background effects `LiquidContours`, `MovingWaves`, `MovingZigzags`, `NotebookPaper`, `PaperTexture`, and `RotatingStarburst`; the visual effects `PulseRings`, `ParticleField`, and `ShimmerSweep`; and the layout transitions `PictureInPictureTransition`, `SlideToSplitScreen`, `RotatingCards`, and `ProductCollection`. Audio components accept an audio `src`, optional `color`, `width`, and `height`; add `<Audio src={src} />` separately when sound should play. Caption components accept Remotion `Caption[]` data plus optional `color`, `secondaryColor`, `backgroundColor`, `fontSize`, `width`, and `height`. Background, visual effects, and layouts accept optional `color`, `secondaryColor`, `backgroundColor`, `speed`, `width`, and `height`.
+Twenty-six reusable Remotion components: the audio-reactive `Oscilloscope`, `MirroredSpectrum`, and `VoiceNote`; the caption styles `BasicCaptions`, `RoundedCaptions`, `MovingPillCaptions`, `PoppingWordCaptions`, and `WordHighlightCaptions`; the data charts `HorizontalBarChart`, `LineChart`, `NumberCounter`, `PieChart`, and `VerticalBarChart`; the background effects `LiquidContours`, `MovingWaves`, `MovingZigzags`, `NotebookPaper`, `PaperTexture`, and `RotatingStarburst`; the visual effects `PulseRings`, `ParticleField`, and `ShimmerSweep`; and the layout transitions `PictureInPictureTransition`, `SlideToSplitScreen`, `RotatingCards`, and `ProductCollection`. Audio components accept an audio `src`, optional `color`, `width`, and `height`; add `<Audio src={src} />` separately when sound should play. Caption components accept Remotion `Caption[]` data plus optional `color`, `secondaryColor`, `backgroundColor`, `fontSize`, `width`, and `height`. Chart components accept optional `ChartDatum[]` data, `color`, `secondaryColor`, `backgroundColor`, `speed`, `progress`, `width`, and `height`. Bar and line charts preserve finite negative values and calculate a zero baseline; pie charts treat negative values as zero weights, use the actual positive weight total for percentages even when it is below one, and show an empty state when all weights are zero. An item color overrides the component color only when it is explicitly provided, and data items are not silently truncated; an explicit empty array renders an empty state, while dense data normalizes staggered timing, reduces row or column size, and samples labels while retaining labels for sparse positive pie slices to keep the drawing readable inside the canvas. Background, visual effects, and layouts accept optional `color`, `secondaryColor`, `backgroundColor`, `speed`, `width`, and `height`.
 
 ```tsx
 import {Audio} from '@remotion/media';
@@ -28,6 +28,21 @@ export const CaptionScene = () => <WordHighlightCaptions captions={captions} col
 import {LiquidContours} from '@remotions/animations';
 
 export const BackgroundScene = () => <LiquidContours width={1920} height={1080} />;
+```
+
+Chart components use the same frame-driven timing and can share one data shape:
+
+```tsx
+import {LineChart} from '@remotions/animations';
+import type {ChartDatum} from '@remotions/animations';
+
+const data: ChartDatum[] = [
+  {label: '一月', value: 34},
+  {label: '二月', value: 48},
+  {label: '三月', value: 71},
+];
+
+export const ChartScene = () => <LineChart data={data} color="#409eff" />;
 ```
 
 Layouts are frame-driven transitions that can be used with the default panels or your own React content:
