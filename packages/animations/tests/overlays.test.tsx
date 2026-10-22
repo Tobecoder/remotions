@@ -1,6 +1,6 @@
 import {renderToStaticMarkup} from 'react-dom/server';
 import {describe, expect, it, vi} from 'vitest';
-import {LocationLowerThird, NameLowerThird, SocialSafeZones} from '../src';
+import {LocationLowerThird, NameLowerThird} from '../src';
 
 const clock = vi.hoisted(() => ({frame: 0, fps: 30}));
 vi.mock('remotion', async (importOriginal) => ({
@@ -57,24 +57,6 @@ describe('overlay components', () => {
     expect(middle).toContain('clip-path:inset(0 0% 0 0)');
     expect(middle).not.toContain('Event venue');
     expect(last).toMatch(/data-overlay-part="pin" opacity="0"/);
-  });
-
-  it.each(['instagram', 'tiktok'] as const)('renders a transparent %s interface with separate actions and navigation', (platform) => {
-    const markup = renderToStaticMarkup(<SocialSafeZones platform={platform} />);
-    expect(markup).toContain('data-overlay-part="action-rail"');
-    expect(markup).toContain('data-overlay-part="bottom-navigation"');
-    expect(markup).not.toContain('data-overlay-part="safe-area"');
-    expect(markup).not.toContain('<image');
-    expect(markup).not.toMatch(/NaN|Infinity/);
-    expect(markup).toContain('viewBox="0 0 1080 1920"');
-  });
-
-  it('keeps the static UI stable across frames and makes the shaded guide opt-in', () => {
-    clock.frame = 0;
-    const first = renderToStaticMarkup(<SocialSafeZones />);
-    clock.frame = 119;
-    expect(renderToStaticMarkup(<SocialSafeZones />)).toBe(first);
-    expect(renderToStaticMarkup(<SocialSafeZones showSafeArea />)).toContain('data-overlay-part="safe-area"');
   });
 
   it.each([24, 30, 60])('maps the controlled cycle to the same natural frames at %s FPS', (fps) => {

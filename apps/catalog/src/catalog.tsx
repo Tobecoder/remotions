@@ -1,8 +1,8 @@
-import {BasicCaptions, HorizontalBarChart, LineChart, LiquidContours, LocationLowerThird, MirroredSpectrum, MovingPillCaptions, MovingWaves, MovingZigzags, NameLowerThird, NotebookPaper, NumberCounter, Oscilloscope, PaperTexture, ParticleField, PieChart, PictureInPictureTransition, PoppingWordCaptions, ProductCollection, PulseRings, RotatingCards, RotatingStarburst, RoundedCaptions, ShimmerSweep, SlideToSplitScreen, SocialSafeZones, VerticalBarChart, VoiceNote, WordHighlightCaptions} from '@remotions/animations';
+import {BasicCaptions, HorizontalBarChart, LineChart, LiquidContours, LocationLowerThird, MirroredSpectrum, MovingPillCaptions, MovingWaves, MovingZigzags, NameLowerThird, NotebookPaper, NumberCounter, Oscilloscope, PaperTexture, ParticleField, PieChart, PictureInPictureTransition, PoppingWordCaptions, ProductCollection, PulseRings, RotatingCards, RotatingStarburst, RoundedCaptions, ShimmerSweep, SlideToSplitScreen, VerticalBarChart, VoiceNote, WordHighlightCaptions} from '@remotions/animations';
 import type {Caption} from '@remotions/animations';
-import {Img, staticFile} from 'remotion';
+import {staticFile} from 'remotion';
 
-export type DemoId = 'oscilloscope' | 'spectrum' | 'voice' | 'basic-captions' | 'rounded-captions' | 'moving-pill-captions' | 'popping-word-captions' | 'word-highlight-captions' | 'horizontal-bar-chart' | 'line-chart' | 'number-counter' | 'pie-chart' | 'vertical-bar-chart' | 'liquid-contours' | 'moving-waves' | 'moving-zigzags' | 'notebook-paper' | 'paper-texture' | 'rotating-starburst' | 'pulse-rings' | 'particle-field' | 'shimmer-sweep' | 'picture-in-picture' | 'slide-to-split-screen' | 'rotating-cards' | 'product-collection' | 'location-lower-third' | 'name-lower-third' | 'social-safe-zones';
+export type DemoId = 'oscilloscope' | 'spectrum' | 'voice' | 'basic-captions' | 'rounded-captions' | 'moving-pill-captions' | 'popping-word-captions' | 'word-highlight-captions' | 'horizontal-bar-chart' | 'line-chart' | 'number-counter' | 'pie-chart' | 'vertical-bar-chart' | 'liquid-contours' | 'moving-waves' | 'moving-zigzags' | 'notebook-paper' | 'paper-texture' | 'rotating-starburst' | 'pulse-rings' | 'particle-field' | 'shimmer-sweep' | 'picture-in-picture' | 'slide-to-split-screen' | 'rotating-cards' | 'product-collection' | 'location-lower-third' | 'name-lower-third';
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays';
 export type CatalogCategory = {
   id: CategoryId;
@@ -35,7 +35,7 @@ export const categories: CatalogCategory[] = [
   {id: 'backgrounds', name: '背景特效', description: '可循环的氛围背景', status: 'active'},
   {id: 'effects', name: '视觉效果', description: '光、粒子与形变', status: 'active'},
   {id: 'layouts', name: '版式转场', description: '可复用的镜头结构', status: 'active'},
-  {id: 'overlays', name: '信息叠加', description: '下三分之一与安全区', status: 'active'},
+  {id: 'overlays', name: '信息叠加', description: '地点与人物信息条', status: 'active'},
 ];
 
 export const catalog: Demo[] = [
@@ -67,7 +67,6 @@ export const catalog: Demo[] = [
   {id: 'product-collection', category: 'layouts', name: '产品卡组', componentName: 'ProductCollection', description: '三张商品卡以透视、旋转和缩放依次占据中心', useCase: '商品集合 · 作品陈列', color: '#f56c6c', tag: '04', previewDurationInSeconds: 5, previewLoopMode: 'forward-hold'},
   {id: 'location-lower-third', category: 'overlays', name: '地点下三分之一', componentName: 'LocationLowerThird', description: '定位针描绘填色后，地点文字从左向右展开', useCase: '活动现场 · 旅行记录', color: '#2563eb', tag: '01', previewDurationInSeconds: 4, previewStillFrame: 60},
   {id: 'name-lower-third', category: 'overlays', name: '姓名下三分之一', componentName: 'NameLowerThird', description: '蓝黑双色信息条交错擦入，介绍姓名与身份', useCase: '访谈视频 · 人物介绍', color: '#2563eb', tag: '02', previewDurationInSeconds: 4, previewStillFrame: 60},
-  {id: 'social-safe-zones', category: 'overlays', name: '社交安全区', componentName: 'SocialSafeZones', description: '叠加竖屏平台界面，检查文字与操作栏的遮挡', useCase: '短视频 · 竖屏构图', color: '#2563eb', tag: '03', previewDurationInSeconds: 4},
 ];
 
 export const getPreviewDurationInSeconds = (id: DemoId) => catalog.find((item) => item.id === id)?.previewDurationInSeconds ?? 6;
@@ -128,16 +127,12 @@ export const AudioCardComposition = ({id, src, captions = demoCaptions}: Preview
       {id === 'product-collection' && <ProductCollection backgroundColor="#f5f5f3" fadeOut={false} width={640} height={260} />}
       {id === 'location-lower-third' && <LocationLowerThird width={640} height={260} location="Berlin, Germany" />}
       {id === 'name-lower-third' && <div style={{width: '100%', height: '100%', display: 'grid', placeItems: 'center'}}><NameLowerThird width={460} height={114} name="Alex Morgan" role="Creative Developer" /></div>}
-      {id === 'social-safe-zones' && <div style={{width: '100%', height: '100%', display: 'grid', placeItems: 'center', backgroundColor: '#fff'}}><div style={{position: 'relative', width: 146.25, height: 260, overflow: 'hidden'}}><Img src="https://remotion.media/transition-bg-blue.jpg" style={{position: 'absolute', width: '100%', height: '100%', objectFit: 'cover'}} /><span style={{position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: '#fff', fontSize: 100, fontWeight: 700}}>A</span><div style={{position: 'absolute', inset: 0}}><SocialSafeZones width={146.25} height={260} platform="tiktok" /></div></div></div>}
     </div>
   </div>;
 };
 
 export const snippetFor = (id: DemoId): string => {
   const active = catalog.find((item) => item.id === id) ?? catalog[0];
-  if (id === 'social-safe-zones') {
-    return `import {SocialSafeZones} from '@remotions/animations';\n\n// Place over your footage in a 1080 × 1920 composition.\nexport const Scene = () => (\n  <SocialSafeZones color="#ffffff" platform="instagram" />\n);`;
-  }
   if (active.category === 'overlays') {
     const textProps = id === 'location-lower-third' ? 'location="Berlin, Germany"' : 'name="Alex Morgan" role="Creative Developer"';
     return `import {${active.componentName}} from '@remotions/animations';\n\nexport const Scene = () => (\n  <${active.componentName} color="${active.color}" ${textProps} durationInSeconds={4} />\n);`;

@@ -11,5 +11,5 @@ export {PictureInPictureTransition, ProductCollection, RotatingCards, SlideToSpl
 export type {LayoutProps, PictureInPictureTransitionProps, ProductCollectionProps, RotatingCardsProps, SlideToSplitScreenProps} from './components/Layouts';
 export {HorizontalBarChart, LineChart, NumberCounter, PieChart, VerticalBarChart} from './components/Charts';
 export type {ChartDatum, ChartProps, NumberCounterProps} from './components/Charts';
-export {LocationLowerThird, NameLowerThird, SocialSafeZones} from './components/Overlays';
-export type {LocationLowerThirdProps, NameLowerThirdProps, OverlayProps, SocialSafeZonesProps} from './components/Overlays';
+export {LocationLowerThird, NameLowerThird} from './components/Overlays';
+export type {LocationLowerThirdProps, NameLowerThirdProps, OverlayProps} from './components/Overlays';

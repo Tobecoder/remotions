@@ -13,7 +13,7 @@ describe('animation catalog', () => {
       'LiquidContours', 'MovingWaves', 'MovingZigzags', 'NotebookPaper', 'PaperTexture', 'RotatingStarburst',
       'PulseRings', 'ParticleField', 'ShimmerSweep',
       'PictureInPictureTransition', 'SlideToSplitScreen', 'RotatingCards', 'ProductCollection',
-      'LocationLowerThird', 'NameLowerThird', 'SocialSafeZones',
+      'LocationLowerThird', 'NameLowerThird',
     ]);
     expect(catalog.filter((item) => item.category === 'audio')).toHaveLength(3);
     expect(catalog.filter((item) => item.category === 'captions')).toHaveLength(5);
@@ -21,7 +21,7 @@ describe('animation catalog', () => {
     expect(catalog.filter((item) => item.category === 'backgrounds')).toHaveLength(6);
     expect(catalog.filter((item) => item.category === 'effects')).toHaveLength(3);
     expect(catalog.filter((item) => item.category === 'layouts')).toHaveLength(4);
-    expect(catalog.filter((item) => item.category === 'overlays')).toHaveLength(3);
+    expect(catalog.filter((item) => item.category === 'overlays')).toHaveLength(2);
   });
 
   it('keeps future categories separate from the active catalog entries', () => {
