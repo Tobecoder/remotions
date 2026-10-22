@@ -2,8 +2,9 @@ import {forwardRef, useCallback, useEffect, useImperativeHandle, useRef} from 'r
 import type {SyntheticEvent} from 'react';
 import {Player} from '@remotion/player';
 import type {PlayerRef} from '@remotion/player';
-import {AudioCardComposition} from './catalog';
+import {AudioCardComposition, getPreviewDurationInSeconds} from './catalog';
 import type {PreviewProps} from './catalog';
+import {getPreviewDurationInFrames, getPreviewFrame} from './previewTimeline';
 
 type CatalogCardPreviewProps = {
   inputProps: PreviewProps;
@@ -16,12 +17,13 @@ export type CatalogCardPreviewHandle = {
 };
 
 const fps = 30;
-const durationInFrames = 180;
 
 /** A silent inline Remotion preview for browsing the catalog cards. */
 export const CatalogCardPreview = forwardRef<CatalogCardPreviewHandle, CatalogCardPreviewProps>(({inputProps, active}, ref) => {
   const playerRef = useRef<PlayerRef>(null);
   const animationFrameRef = useRef<number | null>(null);
+  const durationInSeconds = getPreviewDurationInSeconds(inputProps.id);
+  const durationInFrames = getPreviewDurationInFrames(durationInSeconds, fps);
 
   const stop = useCallback(() => {
     if (animationFrameRef.current !== null) {
@@ -44,12 +46,12 @@ export const CatalogCardPreview = forwardRef<CatalogCardPreviewHandle, CatalogCa
     const tick = (now: number) => {
       const currentPlayer = playerRef.current;
       if (!currentPlayer) return;
-      const nextFrame = Math.floor(((now - startedAt) / 1000) * fps) % durationInFrames;
+      const nextFrame = getPreviewFrame(now - startedAt, fps, durationInFrames);
       currentPlayer.seekTo(nextFrame);
       animationFrameRef.current = requestAnimationFrame(tick);
     };
     animationFrameRef.current = requestAnimationFrame(tick);
-  }, [stop]);
+  }, [durationInFrames, stop]);
 
   useImperativeHandle(ref, () => ({start, stop}), [start, stop]);
 
