@@ -73,6 +73,25 @@ const chartText = (size: number, color = '#303133') => ({
   fontSize: Math.max(8, size),
 });
 
+type StaggeredProgressOptions = {
+  startBase?: number;
+  startSpread?: number;
+  endBase?: number;
+  endSpread?: number;
+};
+
+const getStaggeredProgress = (
+  phase: number,
+  index: number,
+  itemCount: number,
+  {startBase = 0, startSpread = 0.24, endBase = 0.58, endSpread = 0.15}: StaggeredProgressOptions = {},
+) => {
+  const normalizedIndex = itemCount <= 1 ? 0 : index / (itemCount - 1);
+  const start = Math.min(0.9, startBase + normalizedIndex * startSpread);
+  const end = Math.min(1, Math.max(start + 0.02, endBase + normalizedIndex * endSpread));
+  return interpolate(phase, [start, end], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+};
+
 /** A directly labeled horizontal bar chart that grows in staggered rows. */
 export const HorizontalBarChart = ({
   width = 960,
@@ -95,13 +114,15 @@ export const HorizontalBarChart = ({
   const top = dimensions.height * 0.16;
   const bottom = dimensions.height * 0.12;
   const chartWidth = Math.max(1, dimensions.width - left - right);
-  const rowHeight = Math.max(14, (dimensions.height - top - bottom) / Math.max(1, items.length));
+  const availableHeight = Math.max(1, dimensions.height - top - bottom);
+  const rowHeight = availableHeight / Math.max(1, items.length);
   const domainMin = Math.min(0, ...items.map((item) => item.value));
   const domainMax = Math.max(0, ...items.map((item) => item.value));
   const domainRange = Math.max(1, domainMax - domainMin);
   const valueToX = (value: number) => left + ((value - domainMin) / domainRange) * chartWidth;
   const baselineX = valueToX(0);
-  const fontSize = Math.max(10, Math.min(dimensions.width, dimensions.height) * 0.045);
+  const baseFontSize = Math.min(dimensions.width, dimensions.height) * 0.045;
+  const fontSize = Math.max(8, Math.min(baseFontSize, rowHeight * 0.72));
 
   return <svg role="img" aria-label="横向条形图" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={svgStyle}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
@@ -115,8 +136,8 @@ export const HorizontalBarChart = ({
     <line x1={baselineX} y1={top - 8} x2={baselineX} y2={dimensions.height - bottom} stroke={color} strokeOpacity="0.34" strokeWidth="1.5" />
     {items.map((item, index) => {
       const rowY = top + index * rowHeight;
-      const barHeight = Math.max(8, rowHeight * 0.48);
-      const rowProgress = interpolate(phase, [index * 0.08, 0.58 + index * 0.05], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+      const barHeight = rowHeight * 0.48;
+      const rowProgress = getStaggeredProgress(phase, index, items.length, {endSpread: 0.15});
       const valueX = valueToX(item.value);
       const animatedValueX = baselineX + (valueX - baselineX) * rowProgress;
       const barX = Math.min(baselineX, animatedValueX);
@@ -191,7 +212,7 @@ export const LineChart = ({
     <path d={path} fill="none" stroke={color} strokeWidth={Math.max(2, dimensions.height * 0.014)} strokeLinecap="round" strokeLinejoin="round" pathLength={1000} strokeDasharray="1000 1000" strokeDashoffset={1000 * (1 - phase)} />
     {items.map((item, index) => {
       const point = points[index];
-      const pointPhase = interpolate(phase, [index * 0.08, 0.5 + index * 0.06], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+      const pointPhase = getStaggeredProgress(phase, index, items.length, {startSpread: 0.4, endBase: 0.5, endSpread: 0.3});
       return <g key={`${item.label}-${index}`} opacity={pointPhase}>
         <circle cx={point.x} cy={point.y} r={Math.max(3, dimensions.height * 0.022)} fill={backgroundColor} stroke={color} strokeWidth={Math.max(2, dimensions.height * 0.01)} />
         <text x={point.x} y={point.y - Math.max(9, dimensions.height * 0.05)} textAnchor="middle" style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text>
@@ -226,10 +247,10 @@ export const PieChart = ({
   const {fps} = useVideoConfig();
   const dimensions = getDimensions(width, height);
   const items = sanitizeData(data, [
-    {label: '产品', value: 42},
-    {label: '研发', value: 28},
-    {label: '内容', value: 18},
-    {label: '其他', value: 12},
+    {label: '产品', value: 42, color: '#409eff'},
+    {label: '研发', value: 28, color: '#67c23a'},
+    {label: '内容', value: 18, color: '#e6a23c'},
+    {label: '其他', value: 12, color: '#8b5cf6'},
   ]);
   const phase = getProgress(frame, fps, durationInSeconds, speed, progress);
   const centerX = dimensions.width * 0.42;
@@ -253,7 +274,7 @@ export const PieChart = ({
       const labelRadius = radius + Math.max(18, dimensions.width * 0.055);
       const labelX = centerX + Math.cos(midAngle) * labelRadius;
       const labelY = centerY + Math.sin(midAngle) * labelRadius;
-      const labelOpacity = interpolate(phase, [0.25 + index * 0.05, 0.75 + index * 0.04], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+      const labelOpacity = getStaggeredProgress(phase, index, items.length, {startBase: 0.25, startSpread: 0.15, endBase: 0.75, endSpread: 0.12});
       const isFullSlice = slice >= Math.PI * 2 - 1e-6;
       return <g key={`${item.label}-${index}`}>
         {isFullSlice && phase >= 1 - 1e-6 ? <circle data-pie-full="true" cx={centerX} cy={centerY} r={radius} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} /> : <path d={arcPath(centerX, centerY, radius, startAngle, animatedEnd)} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} />}
@@ -282,10 +303,10 @@ export const VerticalBarChart = ({
   const {fps} = useVideoConfig();
   const dimensions = getDimensions(width, height);
   const items = sanitizeData(data, [
-    {label: '北', value: 34},
-    {label: '中', value: 58},
-    {label: '南', value: 88},
-    {label: '西', value: 72},
+    {label: '北', value: 34, color: '#409eff'},
+    {label: '中', value: 58, color: '#67c23a'},
+    {label: '南', value: 88, color: '#e6a23c'},
+    {label: '西', value: 72, color: '#8b5cf6'},
   ]);
   const phase = getProgress(frame, fps, durationInSeconds, speed, progress);
   const left = dimensions.width * 0.1;
@@ -297,11 +318,12 @@ export const VerticalBarChart = ({
   const domainMin = Math.min(0, ...items.map((item) => item.value));
   const domainMax = Math.max(0, ...items.map((item) => item.value));
   const domainRange = Math.max(1, domainMax - domainMin);
-  const valueToY = (value: number) => top + ((domainMax - value) / domainRange) * innerHeight;
+  const valueToY = (value: number) => top + (domainMax === domainMin ? 1 : (domainMax - value) / domainRange) * innerHeight;
   const baseline = valueToY(0);
   const slotWidth = innerWidth / Math.max(1, items.length);
-  const barWidth = Math.max(6, slotWidth * 0.54);
-  const fontSize = Math.max(10, Math.min(dimensions.width, dimensions.height) * 0.04);
+  const barWidth = Math.max(1, slotWidth * 0.54);
+  const baseFontSize = Math.min(dimensions.width, dimensions.height) * 0.04;
+  const fontSize = Math.max(8, Math.min(baseFontSize, slotWidth * 0.72));
 
   return <svg role="img" aria-label="纵向条形图" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={svgStyle}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
@@ -310,7 +332,7 @@ export const VerticalBarChart = ({
       return <line key={`grid-${index}`} x1={left} y1={y} x2={left + innerWidth} y2={y} stroke={secondaryColor} strokeOpacity="0.14" strokeWidth="1" />;
     })}
     {items.map((item, index) => {
-      const barProgress = interpolate(phase, [index * 0.08, 0.58 + index * 0.06], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+      const barProgress = getStaggeredProgress(phase, index, items.length, {endSpread: 0.18});
       const x = left + slotWidth * index + (slotWidth - barWidth) / 2;
       const valueY = valueToY(item.value);
       const animatedValueY = baseline + (valueY - baseline) * barProgress;

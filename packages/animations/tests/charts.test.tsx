@@ -69,6 +69,37 @@ describe('data chart components', () => {
     expect(ids.every((id) => markup.includes(`url(#${id})`))).toBe(true);
   });
 
+  it('uses varied colors for the default pie and vertical bar charts', () => {
+    const pie = renderToStaticMarkup(<PieChart progress={1} />);
+    const vertical = renderToStaticMarkup(<VerticalBarChart progress={1} />);
+    const palette = ['#409eff', '#67c23a', '#e6a23c', '#8b5cf6'];
+
+    for (const color of palette) {
+      expect(pie).toContain(`fill="${color}"`);
+      expect(vertical).toContain(`fill="${color}"`);
+    }
+  });
+
+  it('normalizes staggered timing and keeps dense bars inside the canvas', () => {
+    const makeData = (count: number) => Array.from({length: count}, (_, index) => ({label: `项${index}`, value: index + 1}));
+
+    expect(() => renderToStaticMarkup(<HorizontalBarChart width={640} height={260} data={makeData(21)} progress={1} />)).not.toThrow();
+    expect(() => renderToStaticMarkup(<LineChart width={640} height={260} data={makeData(26)} progress={1} />)).not.toThrow();
+    expect(() => renderToStaticMarkup(<VerticalBarChart width={640} height={260} data={makeData(30)} progress={1} />)).not.toThrow();
+    expect(() => renderToStaticMarkup(<PieChart width={640} height={260} data={makeData(51)} progress={1} />)).not.toThrow();
+
+    const horizontal = renderToStaticMarkup(<HorizontalBarChart width={640} height={260} data={makeData(20)} progress={1} />);
+    const rectTags = [...horizontal.matchAll(/<rect\b[^>]*>/g)].map((match) => match[0]);
+    for (const rect of rectTags) {
+      const y = Number(rect.match(/\sy="([^"]+)"/)?.[1]);
+      const rectHeight = Number(rect.match(/\sheight="([^"]+)"/)?.[1]);
+      if (Number.isFinite(y) && Number.isFinite(rectHeight)) {
+        expect(y).toBeGreaterThanOrEqual(0);
+        expect(y + rectHeight).toBeLessThanOrEqual(260.000001);
+      }
+    }
+  });
+
   it('keeps signed vertical bars finite', () => {
     const markup = renderToStaticMarkup(<VerticalBarChart width={320} height={220} data={[{label: '负', value: -20}, {label: '正', value: 40}]} progress={1} />);
 
