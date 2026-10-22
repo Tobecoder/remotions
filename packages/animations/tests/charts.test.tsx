@@ -78,6 +78,17 @@ describe('data chart components', () => {
     expect(markup).toContain('>全部 100%</text>');
   });
 
+  it('uses the complete positive total for fractional pie weights', () => {
+    const fractional = renderToStaticMarkup(<PieChart data={[{label: 'A', value: 0.2}, {label: 'B', value: 0.3}]} progress={1} />);
+    const single = renderToStaticMarkup(<PieChart data={[{label: 'A', value: 0.5}]} progress={1} />);
+
+    expect(fractional).toContain('>A 40%</text>');
+    expect(fractional).toContain('>B 60%</text>');
+    expect(fractional).not.toContain('暂无有效占比数据');
+    expect(single).toContain('data-pie-full="true"');
+    expect(single).toContain('>A 100%</text>');
+  });
+
   it('uses unique gradient IDs for multiple line charts', () => {
     const markup = renderToStaticMarkup(<><LineChart color="#f00" /><LineChart color="#00f" /></>);
     const ids = [...markup.matchAll(/id="(line-chart-area-[^"]+)"/g)].map((match) => match[1]);
@@ -134,6 +145,13 @@ describe('data chart components', () => {
     expect((pie.match(/>项\d+ \d+%<\/text>/g) ?? []).length).toBeLessThan(51);
     expect((line.match(/<title>/g) ?? []).length).toBe(26);
     expect((pie.match(/<title>/g) ?? []).length).toBe(51);
+  });
+
+  it('keeps the label for the only positive pie slice', () => {
+    const data = Array.from({length: 10}, (_, index) => ({label: `项${index}`, value: index === 1 ? 100 : 0}));
+    const markup = renderToStaticMarkup(<PieChart data={data} progress={1} />);
+
+    expect(markup).toContain('>项1 100%</text>');
   });
 
   it('shows an empty state when pie weights are all zero or negative', () => {

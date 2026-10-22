@@ -271,7 +271,11 @@ export const PieChart = ({
   const innerRadius = radius * 0.55;
   const pieWeights = items.map((item) => Math.max(0, item.value));
   const positiveTotal = pieWeights.reduce((sum, value) => sum + value, 0);
-  const total = Math.max(1, positiveTotal);
+  const total = positiveTotal;
+  const positiveIndexes = items.reduce<number[]>((indexes, item, index) => {
+    if (pieWeights[index] > 0) indexes.push(index);
+    return indexes;
+  }, []);
   const fontSize = Math.max(10, Math.min(dimensions.width, dimensions.height) * 0.04);
   let angle = -Math.PI / 2;
 
@@ -290,7 +294,8 @@ export const PieChart = ({
         const labelY = centerY + Math.sin(midAngle) * labelRadius;
         const labelOpacity = getStaggeredProgress(phase, index, items.length, {startBase: 0.25, startSpread: 0.15, endBase: 0.75, endSpread: 0.12});
         const isFullSlice = slice >= Math.PI * 2 - 1e-6;
-        const labelVisible = weight > 0 && isSampledLabel(index, items.length, 8);
+        const positiveIndex = positiveIndexes.indexOf(index);
+        const labelVisible = positiveIndex >= 0 && isSampledLabel(positiveIndex, positiveIndexes.length, 8);
         return <g key={`${item.label}-${index}`}>
           <title>{`${item.label}: ${Math.round((weight / total) * 100)}%`}</title>
           {isFullSlice && phase >= 1 - 1e-6 ? <circle data-pie-full="true" cx={centerX} cy={centerY} r={radius} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} /> : <path d={arcPath(centerX, centerY, radius, startAngle, animatedEnd)} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} />}
