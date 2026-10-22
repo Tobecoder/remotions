@@ -89,6 +89,17 @@ describe('data chart components', () => {
     expect(single).toContain('>A 100%</text>');
   });
 
+  it('does not render zero-weight pie slice paths', () => {
+    const full = renderToStaticMarkup(<PieChart data={[{label: 'A', value: 100}, {label: 'B', value: 0}]} progress={1} />);
+    const split = renderToStaticMarkup(<PieChart data={[{label: 'A', value: 50}, {label: 'B', value: 0}, {label: 'C', value: 50}]} progress={1} />);
+
+    expect((full.match(/<path\b/g) ?? []).length).toBe(0);
+    expect((full.match(/data-pie-full="true"/g) ?? []).length).toBe(1);
+    expect(full).toContain('B: 0%');
+    expect((split.match(/<path\b/g) ?? []).length).toBe(2);
+    expect(split).toContain('B: 0%');
+  });
+
   it('uses unique gradient IDs for multiple line charts', () => {
     const markup = renderToStaticMarkup(<><LineChart color="#f00" /><LineChart color="#00f" /></>);
     const ids = [...markup.matchAll(/id="(line-chart-area-[^"]+)"/g)].map((match) => match[1]);

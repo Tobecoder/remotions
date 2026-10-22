@@ -298,7 +298,7 @@ export const PieChart = ({
         const labelVisible = positiveIndex >= 0 && isSampledLabel(positiveIndex, positiveIndexes.length, 8);
         return <g key={`${item.label}-${index}`}>
           <title>{`${item.label}: ${Math.round((weight / total) * 100)}%`}</title>
-          {isFullSlice && phase >= 1 - 1e-6 ? <circle data-pie-full="true" cx={centerX} cy={centerY} r={radius} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} /> : <path d={arcPath(centerX, centerY, radius, startAngle, animatedEnd)} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} />}
+          {weight > 0 ? isFullSlice && phase >= 1 - 1e-6 ? <circle data-pie-full="true" cx={centerX} cy={centerY} r={radius} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} /> : <path d={arcPath(centerX, centerY, radius, startAngle, animatedEnd)} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} /> : null}
           {labelVisible ? <text x={labelX} y={labelY} textAnchor={labelX < centerX ? 'end' : 'start'} dominantBaseline="middle" opacity={labelOpacity} style={{...chartText(fontSize, '#606266'), fontWeight: 650}}>{item.label} {Math.round((weight / total) * 100)}%</text> : null}
         </g>;
       })}
