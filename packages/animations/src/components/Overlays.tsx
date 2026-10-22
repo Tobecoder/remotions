@@ -58,7 +58,7 @@ export const LocationLowerThird = ({
   const hole = envelope(time, 0.085, 0.18, 0.85, 0.94, settle);
   const reveal = envelope(time, 0.118, 0.32, 0.74, 0.91, settle);
   const textOpacity = envelope(time, 0.118, 0.185, 0.82, 0.925, Easing.linear);
-  return <svg role="img" aria-label="地点下三分之一叠加" width={dimension(width)} height={dimension(height)} viewBox="0 0 680 138" style={{display: 'block', backgroundColor, pointerEvents: 'none'}}>
+  return <svg role="img" aria-label="地点叠加" width={dimension(width)} height={dimension(height)} viewBox="0 0 680 138" style={{display: 'block', backgroundColor, pointerEvents: 'none'}}>
     <g data-overlay-part="pin" opacity={pin} transform={`translate(56 ${4 - (1 - pin) * 10}) translate(52 126) scale(${0.88 + pin * 0.12}) translate(-52 -126)`}>
       <svg width="104" height="130" viewBox="0 0 64 80" overflow="visible" style={{filter: 'drop-shadow(0 6px 8px #18181b24)'}}>
         <path d="M32 4 C16 4 5 16 5 31 C5 47 22 68 32 76 C42 68 59 47 59 31 C59 16 48 4 32 4 Z" fill={color} fillOpacity={ink} stroke={color} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" pathLength="1" strokeDasharray="1" strokeDashoffset={1 - pin} />
@@ -93,7 +93,7 @@ export const NameLowerThird = ({
     fontSize: 34, fontWeight: 700, letterSpacing: 1, lineHeight: 1,
     clipPath: `inset(0 ${(1 - reveal) * 100}% 0 0)`,
   });
-  return <div role="img" aria-label="姓名下三分之一叠加" style={containerStyle(width, height, backgroundColor)}>
+  return <div role="img" aria-label="姓名叠加" style={containerStyle(width, height, backgroundColor)}>
     <div style={{position: 'absolute', left: (dimension(width) - 534 * scale) / 2, top: (dimension(height) - 132 * scale) / 2, width: 534, height: 132, transform: `scale(${scale})`, transformOrigin: 'top left'}}>
       <div data-overlay-part="name-bar" style={barStyle(nameReveal, color)}><span style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{name}</span></div>
       <div data-overlay-part="role-bar" style={barStyle(roleReveal, secondaryColor)}><span style={{overflow: 'hidden', textOverflow: 'ellipsis'}}>{role}</span></div>

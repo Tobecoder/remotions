@@ -65,8 +65,8 @@ export const catalog: Demo[] = [
   {id: 'slide-to-split-screen', category: 'layouts', name: '滑动分屏', componentName: 'SlideToSplitScreen', description: '全屏画面展开为双栏分屏，适合对比和讲解', useCase: '前后对比 · 双画面讲解', color: '#67c23a', tag: '02', previewDurationInSeconds: 5, previewLoopMode: 'forward-hold'},
   {id: 'rotating-cards', category: 'layouts', name: '旋转卡片', componentName: 'RotatingCards', description: '卡片依次进入中心，适合案例、作品和商品展示', useCase: '案例展示 · 商品陈列', color: '#8b5cf6', tag: '03', previewDurationInSeconds: 5, previewLoopMode: 'forward-hold'},
   {id: 'product-collection', category: 'layouts', name: '产品卡组', componentName: 'ProductCollection', description: '三张商品卡以透视、旋转和缩放依次占据中心', useCase: '商品集合 · 作品陈列', color: '#f56c6c', tag: '04', previewDurationInSeconds: 5, previewLoopMode: 'forward-hold'},
-  {id: 'location-lower-third', category: 'overlays', name: '地点下三分之一', componentName: 'LocationLowerThird', description: '定位针描绘填色后，地点文字从左向右展开', useCase: '活动现场 · 旅行记录', color: '#2563eb', tag: '01', previewDurationInSeconds: 4, previewStillFrame: 60},
-  {id: 'name-lower-third', category: 'overlays', name: '姓名下三分之一', componentName: 'NameLowerThird', description: '蓝黑双色信息条交错擦入，介绍姓名与身份', useCase: '访谈视频 · 人物介绍', color: '#2563eb', tag: '02', previewDurationInSeconds: 4, previewStillFrame: 60},
+  {id: 'location-lower-third', category: 'overlays', name: '地点叠加', componentName: 'LocationLowerThird', description: '定位针描绘填色后，地点文字从左向右展开', useCase: '活动现场 · 旅行记录', color: '#2563eb', tag: '01', previewDurationInSeconds: 4, previewStillFrame: 60},
+  {id: 'name-lower-third', category: 'overlays', name: '姓名叠加', componentName: 'NameLowerThird', description: '蓝黑双色信息条交错擦入，介绍姓名与身份', useCase: '访谈视频 · 人物介绍', color: '#2563eb', tag: '02', previewDurationInSeconds: 4, previewStillFrame: 60},
 ];
 
 export const getPreviewDurationInSeconds = (id: DemoId) => catalog.find((item) => item.id === id)?.previewDurationInSeconds ?? 6;
