@@ -17,10 +17,13 @@
     "test:effects:cjs": "node scripts/verify-content-effects.cjs",
     "verify:effects:render": "npm run build:lib && node scripts/verify-content-effects-render.mjs",
     "verify:storytelling": "npm run build:lib && node scripts/verify-storytelling.mjs",
-    "verify:text-effects": "npm run build:lib && node scripts/verify-text-effects.mjs"
+    "verify:text-effects": "npm run build:lib && node scripts/verify-text-effects.mjs",
+    "preview:dp": "remotion studio examples/dp-intro/index.tsx --no-open --port=3001 --public-dir=examples/dp-intro/public",
+    "verify:dp": "node examples/dp-intro/verify.mjs"
   },
   "devDependencies": {
     "@remotion/bundler": "4.0.537",
+    "@remotion/cli": "4.0.537",
     "@remotion/media": "4.0.537",
     "@remotion/renderer": "4.0.537",
     "@types/node": "26.6.5",

@@ -1,0 +1,168 @@
+{
+  "version": 2,
+  "duration_frames": 5812,
+  "shots": [
+    {
+      "id": "S01",
+      "purpose": "四级楼梯，几种走法？",
+      "type": "ST-005",
+      "start_frame": 0,
+      "end_frame": 278,
+      "voice_anchor": "四级楼梯，每次只能走一级或两级，一共有多少种走法？",
+      "intent": {
+        "lesson": "四级楼梯，几种走法？"
+      },
+      "config": {
+        "entry": "src/scenes/S01.tsx",
+        "props": {},
+        "inputs": [
+          "assets/lesson-data.json"
+        ],
+        "code_files": []
+      }
+    },
+    {
+      "id": "S02",
+      "purpose": "先列出来：五种走法",
+      "type": "ST-005",
+      "start_frame": 278,
+      "end_frame": 864,
+      "voice_anchor": "先试着列出来：四次一步，两次两步，以及把一次两步放在",
+      "intent": {
+        "lesson": "先列出来：五种走法"
+      },
+      "config": {
+        "entry": "src/scenes/S02.tsx",
+        "props": {},
+        "inputs": [
+          "assets/lesson-data.json"
+        ],
+        "code_files": []
+      }
+    },
+    {
+      "id": "S03",
+      "purpose": "只看最后一步",
+      "type": "ST-005",
+      "start_frame": 864,
+      "end_frame": 1725,
+      "voice_anchor": "换个角度，只看最后一步。到达第四级，最后要么从第三级",
+      "intent": {
+        "lesson": "只看最后一步"
+      },
+      "config": {
+        "entry": "src/scenes/S03.tsx",
+        "props": {},
+        "inputs": [
+          "assets/lesson-data.json"
+        ],
+        "code_files": []
+      }
+    },
+    {
+      "id": "S04",
+      "purpose": "给每个答案一个名字",
+      "type": "ST-005",
+      "start_frame": 1725,
+      "end_frame": 2451,
+      "voice_anchor": "我们把到达第 i 级的走法数量，记作 dp[i]。这",
+      "intent": {
+        "lesson": "给每个答案一个名字"
+      },
+      "config": {
+        "entry": "src/scenes/S04.tsx",
+        "props": {},
+        "inputs": [
+          "assets/lesson-data.json"
+        ],
+        "code_files": []
+      }
+    },
+    {
+      "id": "S05",
+      "purpose": "计算需要起点",
+      "type": "ST-005",
+      "start_frame": 2451,
+      "end_frame": 3053,
+      "voice_anchor": "但计算总得有个起点。第零级，就是还没开始爬，原地不动",
+      "intent": {
+        "lesson": "计算需要起点"
+      },
+      "config": {
+        "entry": "src/scenes/S05.tsx",
+        "props": {},
+        "inputs": [
+          "assets/lesson-data.json"
+        ],
+        "code_files": []
+      }
+    },
+    {
+      "id": "S06",
+      "purpose": "从小到大，逐格计算",
+      "type": "ST-005",
+      "start_frame": 3053,
+      "end_frame": 3839,
+      "voice_anchor": "接下来从小往大算。第二级，一加一，等于二。第三级，二",
+      "intent": {
+        "lesson": "从小到大，逐格计算"
+      },
+      "config": {
+        "entry": "src/scenes/S06.tsx",
+        "props": {},
+        "inputs": [
+          "assets/lesson-data.json"
+        ],
+        "code_files": []
+      }
+    },
+    {
+      "id": "S07",
+      "purpose": "把过程写成代码",
+      "type": "ST-005",
+      "start_frame": 3839,
+      "end_frame": 4602,
+      "voice_anchor": "这就是动态规划的一种基本做法：先解决小问题，存下答案",
+      "intent": {
+        "lesson": "把过程写成代码"
+      },
+      "config": {
+        "entry": "src/scenes/S07.tsx",
+        "props": {},
+        "inputs": [
+          "assets/lesson-data.json"
+        ],
+        "code_files": []
+      }
+    },
+    {
+      "id": "S08",
+      "purpose": "记住三个问题",
+      "type": "ST-005",
+      "start_frame": 4602,
+      "end_frame": 5812,
+      "voice_anchor": "初学动态规划，先问三个问题：这个格子表示什么？它能从",
+      "intent": {
+        "lesson": "记住三个问题"
+      },
+      "config": {
+        "entry": "src/scenes/S08.tsx",
+        "props": {},
+        "inputs": [
+          "assets/lesson-data.json"
+        ],
+        "code_files": []
+      }
+    }
+  ],
+  "audio_tracks": [
+    {
+      "path": "public/audio/narration.wav",
+      "start_frame": 0,
+      "end_frame": 5812,
+      "gain": 1
+    }
+  ],
+  "subtitle_cues": [],
+  "local_types": []
+}

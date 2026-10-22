@@ -1,0 +1,30 @@
+{
+  "workflow": "composition-v2",
+  "title": "动态规划入门：从最后一步想起",
+  "width": 1920,
+  "height": 1080,
+  "aspect_ratio": "16:9",
+  "fps": 30,
+  "output_target": "web",
+  "subtitle_mode": "burn-in",
+  "media_policy": "no_video",
+  "brief": {
+    "audience": "理解变量、数组和循环的 DP 初学者",
+    "goal": "通过四级楼梯解释状态、递推和初始条件",
+    "source": "MIT 6.006 Lecture 19；本例独立枚举核对"
+  },
+  "visual": {
+    "background": "#f6f5f0",
+    "ink": "#18243b",
+    "one_step": "#3167e3",
+    "two_steps": "#dd8b35",
+    "answer": "#248469"
+  },
+  "narration": {
+    "enabled": true,
+    "provider": "windows-system-speech",
+    "voice": "Microsoft Huihui Desktop",
+    "user_selected": true
+  },
+  "production_policy": "confirmed-plan-visual-assets-v1"
+}

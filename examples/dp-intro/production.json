@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "plan": {
+    "path": "plan.md",
+    "revision": 1,
+    "complete": true
+  },
+  "approval": {
+    "source": "human_user",
+    "user_reply": "按方案制作，先用本机中文合成音试听",
+    "revision": 1,
+    "plan_signature": "3de826ceaf5e8b32e082ecf6269ec8592299cc6d27fd1a1ed99087cd2f8c4aee"
+  },
+  "inventory_complete": true,
+  "visual_assets": [
+    {
+      "id": "LESSON",
+      "kind": "data",
+      "path": "assets/lesson-data.json",
+      "required": true,
+      "review": {
+        "status": "pass",
+        "notes": "逐项审查枚举路径 1111/112/121/211/22，步长仅 1/2 且和为 4，互不重复；dp 表与独立枚举一致；空路径 dp[0]=1、互斥最后一步分类、n=4 的短代码和五级练习答案已核对。纯图形镜头无外部图片，统一蓝/橙/绿概念色与字体、字幕安全区已盘点。",
+        "sha256": "ab6aff0fd7fbc314578557dbd3dc620dfaca970f1ac33ba0296b0957e9cb0dd1",
+        "technical": {
+          "type": "data",
+          "parse": "pass"
+        }
+      }
+    },
+    {
+      "id": "COPY",
+      "kind": "data",
+      "path": "assets/voice-segments.json",
+      "required": true,
+      "review": {
+        "status": "pass",
+        "notes": "逐句核对批准稿的原文和分镜顺序；仅将 DP 数组符号转换为对应的口语读音，显示字幕仍使用原文；共八镜，句子未增删。声音与字幕尚未合成，不以估时当语音时间。",
+        "sha256": "4a00ebbce42d261407959b8cfcf3d2f8ed4d6b21e5e05411563ff6ff76cfe607",
+        "technical": {
+          "type": "data",
+          "parse": "pass"
+        }
+      }
+    }
+  ]
+}
