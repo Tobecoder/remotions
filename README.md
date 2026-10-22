@@ -1,6 +1,6 @@
 # Remotions ✦
 
-面向 Remotion 的开源动效素材库。当前开放音频动画、字幕动画、数据图表、背景特效、视觉效果、版式转场、信息叠加和叙事动画分类，包含三十六个可复用组件：**示波曲线、镜像频谱、语音波形、基础字幕、气泡字幕、移动气泡、弹出单词、逐字高亮、横向条形图、趋势折线图、数字计数器、占比饼图、纵向条形图、液态轮廓、流动波浪、折线流动、笔记网格、纸张纹理、旋转星芒、光环脉冲、粒子漂移、光泽扫过、摇摆气泡、纸面揭开、斜向扫光、纸面撕裂、画中画转场、滑动分屏、旋转卡片、产品卡组、地点叠加、姓名叠加、新闻高亮、速度线、屏幕消息、拍立得照片**。原有 11 个通用动效已从公开组件入口和网站移除，历史实现保存在 [`archive/v0.1-legacy`](archive/v0.1-legacy/README.md)。
+面向 Remotion 的开源动效素材库。当前开放音频动画、字幕动画、数据图表、背景特效、视觉效果、版式转场、信息叠加、叙事动画和文字特效分类，包含四十二个可复用组件：**示波曲线、镜像频谱、语音波形、基础字幕、气泡字幕、移动气泡、弹出单词、逐字高亮、横向条形图、趋势折线图、数字计数器、占比饼图、纵向条形图、液态轮廓、流动波浪、折线流动、笔记网格、纸张纹理、旋转星芒、光环脉冲、粒子漂移、光泽扫过、摇摆气泡、纸面揭开、斜向扫光、纸面撕裂、画中画转场、滑动分屏、旋转卡片、产品卡组、地点叠加、姓名叠加、新闻高亮、速度线、屏幕消息、拍立得照片、圈画标记、交叉划除、圆柱文字、旋转文字轮、删除线、荧光标记**。原有 11 个通用动效已从公开组件入口和网站移除，历史实现保存在 [`archive/v0.1-legacy`](archive/v0.1-legacy/README.md)。
 
 ## 本地运行
 
@@ -11,7 +11,7 @@ npm ci
 npm run dev
 ```
 
-打开终端显示的本地地址（默认 `http://localhost:3000`）。网页按分类展示组件；悬浮卡片会在卡片内部播放逐帧画面，直接查看音频可视化、字幕动画、数据图表、背景特效、视觉效果、版式转场、信息叠加和叙事动画。
+打开终端显示的本地地址（默认 `http://localhost:3000`）。网页按分类展示组件；悬浮卡片会在卡片内部播放逐帧画面，直接查看音频可视化、字幕动画、数据图表、背景特效、视觉效果、版式转场、信息叠加、叙事动画和文字特效。
 
 ## 在 Remotion 中使用
 
@@ -109,7 +109,7 @@ export const Scene = () => (
 
 ## 工程结构
 
-- `packages/animations/`：三十六个可复用的音频动画、字幕动画、数据图表、背景特效、视觉效果、版式转场、信息叠加和叙事动画组件，构建 ESM、CJS 和类型声明。
+- `packages/animations/`：四十二个可复用的音频动画、字幕动画、数据图表、背景特效、视觉效果、版式转场、信息叠加、叙事动画和文字特效组件，构建 ESM、CJS 和类型声明。
 - `apps/catalog/`：中文素材库、卡片内 Remotion 动效预览、原创 WAV 示例音频。
 - `scripts/generate-demo-audio.mjs`：可重复生成示例音频；不依赖第三方音效素材。
 - `examples/AudioComposition.tsx`：在 Remotion Composition 中引用音频动画的示例。
@@ -141,6 +141,30 @@ export const Photos = () => <PolaroidPictures photos={[
 消息保留显式换行和空行，舞台会按浏览器实际排版高度等比适配；长聊天在固定小画布中会相应缩小。照片注释保留多行，在原有纸张注释区域内自动缩小字体并留出相邻照片的避让空间，不截断文字；简短注释仍为原来的字号。
 
 照片注释可用 `captionFontFamily`、聊天文字可用 `fontFamily` 自定义字体；宿主应在渲染前加载所需字体。目录自带本地 Caveat 字体，中文注释回退到楷体；照片示例图片与字体来源见 [素材说明](apps/catalog/public/storytelling/README.md)。它们不随动画 npm 包分发。`npm run verify:storytelling` 可生成横屏/竖屏关键帧并检查可见内容和退出状态，结果保存在 `.verification/storytelling/`。
+
+## 文字特效
+
+参考 [Remotion Elements Text Effects](https://www.remotion.dev/elements/#element-category-text-effects) 接入六个组件：`CircleMarker`（圈画标记）、`CrossedOffText`（交叉划除）、`CylinderText`（圆柱文字）、`SpinningTextWheel`（旋转文字轮）、`StrikeThroughText`（删除线）、`TextMarker`（荧光标记）。默认演示保留源站英文文案与衬线/无衬线字体；分类、说明和代码示例为中文。
+
+```tsx
+import {CircleMarker, SpinningTextWheel} from '@remotions/animations';
+
+export const MarkedTitle = () => <CircleMarker
+  text="让重要的信息被看见" markedText="重要的信息" color="#2563eb"
+  width={900} height={340}
+/>;
+export const Selection = () => <SpinningTextWheel
+  items={['星期五', '星期六', '星期日', '星期一', '星期二', '星期三', '星期四']}
+/>;
+```
+
+- 四个标记组件直接使用 `@remotion/rough-notation`，支持 `text`、首个字面匹配的 `markedText`、笔触 `color`、`textColor`、`fontFamily`、参考字号 `fontSize`、尺寸、`durationInSeconds`（默认 4 秒）、非负速度倍率 `speed` 和受控 `progress`。未匹配短语不画标记；空字符串不替换成演示文本。多行文本按真实排版高度等比适配，字符不会横向拉伸。
+- `SpinningTextWheel` 的 `items` 为字符串数组，首项是最终选中项；显式空数组不添加演示项。支持尺寸、字体、颜色、时长、非负速度倍率和受控进度。长选项统一减小字号。
+- `CylinderText` 使用官方 `@remotion/effects/cylinder`，将 SVG 文字纹理交给 `CanvasImage` 处理透视、前后面与阴影，避免实验性 HTML-in-canvas 开关。支持 `text`、颜色、背景、系统 `fontFamily`、尺寸、`tilt`（0–85°）、`speed`（每秒转数，默认 `1/6`，负数反转，0 静止）和 `progress`（0–1 对应一整圈）。需要 WebGPU；SVG 纹理中的字体须由运行系统提供，不会继承网页的 `@font-face`。
+
+宿主请安装版本一致的 `remotion`、`@remotion/effects` 和 `@remotion/rough-notation`（当前 4.0.537）。标记与文字轮的宿主应预先加载所需字体；目录使用本地 Cormorant Garamond 700、Mona Sans 700，字体来源与许可见 [字体说明](apps/catalog/public/text-effects/README.md)。标记库为 MIT，原生圆柱效果遵循 Remotion 自身许可。依赖采用原生动态导入，ESM/CJS 两种入口都可使用。
+
+目录中的标记和文字轮正向播放后停在完成状态；圆柱按默认 6 秒一整圈持续正向循环。`npm run verify:text-effects` 用真实浏览器检查六种效果的横屏、竖屏关键帧、循环边界前后的圆柱整圈一致性及长中文文本，输出在 `.verification/text-effects/`。
 
 ## 来源与许可
 

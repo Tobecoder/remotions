@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+@font-face {font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 700; font-display: swap; src: url('/text-effects/cormorant-garamond-700.ttf') format('truetype');}
+@font-face {font-family: 'Mona Sans'; font-style: normal; font-weight: 700; font-display: swap; src: url('/text-effects/mona-sans-700.ttf') format('truetype');}
+
 :root {
   --el-color-primary: #409eff;
   --el-color-primary-light-3: #79bbff;

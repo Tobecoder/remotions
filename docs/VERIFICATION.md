@@ -1,5 +1,16 @@
 # Remotion 素材库验证记录 — 2026-10-22
 
+## Text Effects 接入验证
+
+- 从已合并 PR #4 的 main `8115a70` 创建 `feat/remotions-text-effects`，本轮独立新增 6 项文字特效，目录共 9 类、42 个组件。
+- 对照官方 Text Effects 六项的公开源码和预览图。四个文字标记直接使用 `@remotion/rough-notation` 4.0.537；保留官方笔触粗细、交叉次数、颜色与时序。文字轮保留 3D 透视、遮罩、减速和首项选中，横向卡片只收紧外围留白。
+- 圆柱使用官方 cylinder shader，参数保持 `radius=min(width,height)*0.42`、X 轴倾斜 52°、Z 轴 -18°、shading 0.35。以 SVG 文字纹理替代实验性 HTML-in-canvas 输入，仍由 CanvasImage/WebGPU 渲染，不需要 HTML-in-canvas 开关；SVG 纹理使用系统字体。
+- 文字标记、文字轮支持空输入、文字/选项、颜色、字体、尺寸、时长、速度和受控进度。圆柱的速度单位明确为每秒转数，支持负向与冻结。多行文本按真实流式高度适配；关键词为首个字面匹配。
+- 新增 23 项动画/异步加载测试和 12 项目录/时间线测试。`npm run check` 共 235 项通过（动画包 145、目录站 90），类型、ESM/CJS 和声明构建、生产构建、原有 CJS 效果加载检查通过。`npm pack --dry-run -w @remotions/animations --cache .npm-cache` 通过。
+- `npm run verify:text-effects` 从构建后的 CJS 入口加载真实原生依赖，在现有 Chromium + ANGLE 后端生成 33 张 PNG：六种效果的横屏首/中/末帧及竖屏画面、多行中文、中文选项和总览。检查尺寸和可见文本，圆柱比较第 0/180 帧的实际像素一致性并确认中间帧改变。关键帧已人工查看。
+- 本地目录已检查 6 张卡片、字体和原生圆柱加载；标记和文字轮正向完成后保持，圆柱按 6 秒一圈持续正向播放。本轮没有导出 MP4、实机手机验收或重新部署站点。远端 CI 以对应 PR 为准。
+- 参考字体 Cormorant Garamond / Mona Sans 700 和 SIL OFL 许可保存在目录站 public/text-effects；它们不会进入动画包。rough-notation 为 MIT，圆柱效果引擎保留 Remotion 自身许可。
+
 ## Storytelling 接入验证
 
 - 本轮修复已在修改前用真实浏览器复现：20 行聊天超出画布、长中文/英文及显式多行照片注释超出注释区域。现在消息估算逐段处理 LF/CRLF/空行，并在浏览器提交时读取真实流式高度；注释按实际字体测量自适应字号，保留纸张大小、原来的动画轨迹和短文案排版。

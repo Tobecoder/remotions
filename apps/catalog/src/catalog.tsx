@@ -1,10 +1,11 @@
+import {CircleMarker, CrossedOffText, CylinderText, SpinningTextWheel, StrikeThroughText, TextMarker} from '@remotions/animations';
 import {BasicCaptions, HorizontalBarChart, LineChart, LiquidContours, LocationLowerThird, MirroredSpectrum, MovingPillCaptions, MovingWaves, MovingZigzags, NameLowerThird, NotebookPaper, NumberCounter, Oscilloscope, PaperTexture, ParticleField, Peel, PieChart, PictureInPictureTransition, PoppingWordCaptions, ProductCollection, PulseRings, RotatingCards, RotatingStarburst, RoundedCaptions, Shine, ShimmerSweep, SlideToSplitScreen, TearApart, VerticalBarChart, VoiceNote, WigglingCallout, WordHighlightCaptions} from '@remotions/animations';
 import type {Caption} from '@remotions/animations';
 import {NewsArticleHighlight, OnScreenMessages, PolaroidPictures, SpeedLines} from '@remotions/animations';
 import {staticFile} from 'remotion';
 
-export type DemoId = 'oscilloscope' | 'spectrum' | 'voice' | 'basic-captions' | 'rounded-captions' | 'moving-pill-captions' | 'popping-word-captions' | 'word-highlight-captions' | 'horizontal-bar-chart' | 'line-chart' | 'number-counter' | 'pie-chart' | 'vertical-bar-chart' | 'liquid-contours' | 'moving-waves' | 'moving-zigzags' | 'notebook-paper' | 'paper-texture' | 'rotating-starburst' | 'pulse-rings' | 'particle-field' | 'shimmer-sweep' | 'picture-in-picture' | 'slide-to-split-screen' | 'rotating-cards' | 'product-collection' | 'location-lower-third' | 'name-lower-third' | 'wiggling-callout' | 'peel' | 'shine' | 'tear-apart' | 'news-article-highlight' | 'speed-lines' | 'on-screen-messages' | 'polaroid-pictures';
-export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling';
+export type DemoId = 'oscilloscope' | 'spectrum' | 'voice' | 'basic-captions' | 'rounded-captions' | 'moving-pill-captions' | 'popping-word-captions' | 'word-highlight-captions' | 'horizontal-bar-chart' | 'line-chart' | 'number-counter' | 'pie-chart' | 'vertical-bar-chart' | 'liquid-contours' | 'moving-waves' | 'moving-zigzags' | 'notebook-paper' | 'paper-texture' | 'rotating-starburst' | 'pulse-rings' | 'particle-field' | 'shimmer-sweep' | 'picture-in-picture' | 'slide-to-split-screen' | 'rotating-cards' | 'product-collection' | 'location-lower-third' | 'name-lower-third' | 'wiggling-callout' | 'peel' | 'shine' | 'tear-apart' | 'news-article-highlight' | 'speed-lines' | 'on-screen-messages' | 'polaroid-pictures' | 'circle-marker' | 'crossed-off-text' | 'cylinder-text' | 'spinning-text-wheel' | 'strike-through-text' | 'text-marker';
+export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {
   id: CategoryId;
   name: string;
@@ -38,6 +39,7 @@ export const categories: CatalogCategory[] = [
   {id: 'layouts', name: '版式转场', description: '可复用的镜头结构', status: 'active'},
   {id: 'overlays', name: '信息叠加', description: '地点与人物信息条', status: 'active'},
   {id: 'storytelling', name: '叙事动画', description: '用消息、照片与标记讲述故事', status: 'active'},
+  {id: 'text-effects', name: '文字特效', description: '手绘标记与立体文字运动', status: 'active'},
 ];
 
 export const catalog: Demo[] = [
@@ -77,6 +79,12 @@ export const catalog: Demo[] = [
   {id: 'speed-lines', category: 'storytelling', name: '速度线', componentName: 'SpeedLines', description: '放射状线条快速闪动，将注意力收束到画面中心', useCase: '漫画强调 · 冲击瞬间', color: '#606266', tag: '02', previewDurationInSeconds: 1.5, previewStillFrame: 12},
   {id: 'on-screen-messages', category: 'storytelling', name: '屏幕消息', componentName: 'OnScreenMessages', description: '蓝灰聊天气泡错峰浮现，让对话自然推进', useCase: '对话演绎 · 悬念叙事', color: '#248bf5', tag: '03', previewDurationInSeconds: 5.4, previewStillFrame: 90, previewLoopMode: 'forward-hold'},
   {id: 'polaroid-pictures', category: 'storytelling', name: '拍立得照片', componentName: 'PolaroidPictures', description: '带胶带与手写注释的照片从不同方向错落进入', useCase: '旅行回忆 · 照片叙事', color: '#a0875b', tag: '04', previewDurationInSeconds: 5, previewStillFrame: 80},
+  {id: 'circle-marker', category: 'text-effects', name: '圈画标记', componentName: 'CircleMarker', description: '蓝色手绘圆圈逐笔围住关键词', useCase: '关键词强调 · 观点标注', color: '#2563eb', tag: '01', previewDurationInSeconds: 4, previewLoopMode: 'forward-hold', previewStillFrame: 60},
+  {id: 'crossed-off-text', category: 'text-effects', name: '交叉划除', componentName: 'CrossedOffText', description: '红色交叉笔触密集划过指定词语', useCase: '观点修正 · 文案强调', color: '#eb2525', tag: '02', previewDurationInSeconds: 4, previewLoopMode: 'forward-hold', previewStillFrame: 60},
+  {id: 'cylinder-text', category: 'text-effects', name: '圆柱文字', componentName: 'CylinderText', description: '文字沿倾斜圆柱持续旋转，保留前后透视', useCase: '品牌片头 · 循环标题', color: '#182033', tag: '03', previewDurationInSeconds: 6, previewStillFrame: 60},
+  {id: 'spinning-text-wheel', category: 'text-effects', name: '旋转文字轮', componentName: 'SpinningTextWheel', description: '立体文字轮快速滚动，减速停在首个选项', useCase: '选择揭示 · 日期展示', color: '#182033', tag: '04', previewDurationInSeconds: 4, previewLoopMode: 'forward-hold', previewStillFrame: 60},
+  {id: 'strike-through-text', category: 'text-effects', name: '删除线', componentName: 'StrikeThroughText', description: '红色手绘线从左向右划过指定短语', useCase: '前后对比 · 观点修正', color: '#f11515', tag: '05', previewDurationInSeconds: 4, previewLoopMode: 'forward-hold', previewStillFrame: 60},
+  {id: 'text-marker', category: 'text-effects', name: '荧光标记', componentName: 'TextMarker', description: '柔黄色荧光笔划过文字底部，保留自然笔触', useCase: '引用强调 · 教程标记', color: '#e6a23c', tag: '06', previewDurationInSeconds: 4, previewLoopMode: 'forward-hold', previewStillFrame: 60},
 ];
 
 export const getPreviewDurationInSeconds = (id: DemoId) => catalog.find((item) => item.id === id)?.previewDurationInSeconds ?? 6;
@@ -106,7 +114,8 @@ export const AudioCardComposition = ({id, src, captions = demoCaptions}: Preview
   const isLayout = active.category === 'layouts';
   const isOverlay = active.category === 'overlays';
   const isStorytelling = active.category === 'storytelling';
-  const isFullPreview = isBackground || isAudio || isCaption || isChart || isEffect || isLayout || isOverlay || isStorytelling;
+  const isTextEffect = active.category === 'text-effects';
+  const isFullPreview = isTextEffect || isBackground || isAudio || isCaption || isChart || isEffect || isLayout || isOverlay || isStorytelling;
   return <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: isBackground ? '#eaf5ff' : isAudio ? '#f8fafc' : isCaption ? '#eef6ff' : isChart ? '#f7fbff' : isEffect ? '#f4f8ff' : isLayout ? '#f5f8fc' : isOverlay ? '#f8fbff' : 'linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%)', color: '#303133', fontFamily: 'system-ui, sans-serif'}}>
     {!isFullPreview && <div style={{position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(#409eff18 1px, transparent 0), linear-gradient(90deg, #409eff18 1px, transparent 0)', backgroundSize: '32px 32px', maskImage: 'linear-gradient(transparent, #000 28%, #000 72%, transparent)'}} />}
     <div style={{position: 'absolute', inset: isFullPreview ? 0 : '32px 24px 28px', display: isFullPreview ? 'block' : 'grid', placeItems: 'center'}}>
@@ -140,6 +149,12 @@ export const AudioCardComposition = ({id, src, captions = demoCaptions}: Preview
       {id === 'product-collection' && <ProductCollection backgroundColor="#f5f5f3" fadeOut={false} width={640} height={260} />}
       {id === 'location-lower-third' && <LocationLowerThird width={640} height={260} location="Berlin, Germany" />}
       {id === 'name-lower-third' && <div style={{width: '100%', height: '100%', display: 'grid', placeItems: 'center'}}><NameLowerThird width={460} height={114} name="Alex Morgan" role="Creative Developer" /></div>}
+      {id === 'circle-marker' && <CircleMarker width={640} height={260} backgroundColor="#edf2f4" />}
+      {id === 'crossed-off-text' && <CrossedOffText width={640} height={260} backgroundColor="#edf2f4" />}
+      {id === 'strike-through-text' && <StrikeThroughText width={640} height={260} backgroundColor="#edf2f4" />}
+      {id === 'text-marker' && <TextMarker width={640} height={260} backgroundColor="#edf2f4" />}
+      {id === 'spinning-text-wheel' && <SpinningTextWheel width={640} height={260} backgroundColor="#edf2f4" />}
+      {id === 'cylinder-text' && <div style={{width: '100%', height: '100%', display: 'grid', placeItems: 'center', backgroundColor: '#edf2f4'}}><CylinderText width={462} height={260} /></div>}
       {id === 'news-article-highlight' && <NewsArticleHighlight width={640} height={260} backgroundColor="#edf2f4" />}
       {id === 'speed-lines' && <SpeedLines width={640} height={260} backgroundColor="#222831" />}
       {id === 'on-screen-messages' && <OnScreenMessages width={640} height={260} backgroundColor="#edf2f4" />}
@@ -154,6 +169,11 @@ export const AudioCardComposition = ({id, src, captions = demoCaptions}: Preview
 
 export const snippetFor = (id: DemoId): string => {
   const active = catalog.find((item) => item.id === id) ?? catalog[0];
+  if (active.category === 'text-effects') {
+    if (id === 'cylinder-text') return `import {CylinderText} from '@remotions/animations';\n\nexport const Scene = () => <CylinderText color="#182033" text="ALWAYS IN MOTION • ALWAYS IN MOTION • " speed={1 / 6} tilt={52} />;`;
+    if (id === 'spinning-text-wheel') return `import {SpinningTextWheel} from '@remotions/animations';\n\nexport const Scene = () => <SpinningTextWheel color="#182033" items={['星期五', '星期六', '星期日', '星期一', '星期二', '星期三', '星期四']} />;`;
+    return `import {${active.componentName}} from '@remotions/animations';\n\nexport const Scene = () => <${active.componentName} color="${id === 'text-marker' ? 'rgba(255,236,79,0.62)' : active.color}" text="让重要的信息被看见" markedText="重要的信息" />;`;
+  }
   if (active.category === 'storytelling') {
     if (id === 'on-screen-messages') return `import {OnScreenMessages} from '@remotions/animations';\n\nexport const Scene = () => (\n  <OnScreenMessages color="#248bf5" messages={[\n    {from: 'them', text: '故事从哪里开始？'},\n    {from: 'me', text: '从这一条消息开始。'},\n  ]} width={1260} height={680} />\n);`;
     if (id === 'polaroid-pictures') return `import {PolaroidPictures} from '@remotions/animations';\nimport {staticFile} from 'remotion';\n\nexport const Scene = () => (\n  <PolaroidPictures color="#2d2620" photos={[\n    {src: staticFile('photo-a.jpg'), caption: '第一站'},\n    {src: staticFile('photo-b.jpg'), caption: '沿途风景'},\n    {src: staticFile('photo-c.jpg'), caption: '下一次见'},\n  ]} width={1480} height={640} />\n);`;
