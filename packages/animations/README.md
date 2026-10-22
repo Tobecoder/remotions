@@ -79,3 +79,5 @@ Use matching Remotion and effects versions (currently 4.0.537). Page curl requir
 - `SpeedLines`: optional `lineCount` (1–256) and string `seed`; default 56 deterministic rays and a 1.5-second entrance/hold/exit.
 
 Explicit empty message/photo arrays remain empty. Omitted arrays use the demo. News and photos exit at progress 1 by default; `fadeOut={false}` preserves a visible ending. Long conversations expand their fitted stage instead of dropping messages. The catalog loops complete news/photo/speed effects and holds the completed conversation.
+
+Conversations preserve explicit line breaks and empty paragraphs, and fit their stage to the measured browser flow height. Long captions keep their text, shrink to fit the original paper margin, and reserve horizontal space where photos overlap. Short captions retain their 44px reference size. Load your chosen fonts before rendering, as above; layout also updates when fonts finish loading. Very long text necessarily appears smaller in a fixed viewport.

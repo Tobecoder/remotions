@@ -1,5 +1,6 @@
 import type {CSSProperties, ReactNode} from 'react';
 import {Easing, Img, interpolate, random, useCurrentFrame, useVideoConfig} from 'remotion';
+import {estimateTextLines, FittedPhotoCaption, useConversationHeight} from './StorytellingText';
 
 export type StorytellingProps = {
   width?: number;
@@ -56,13 +57,11 @@ const demoMessages: readonly StoryMessage[] = [
 export const OnScreenMessages = ({width = 1260, height = 680, color = '#248bf5', incomingColor = '#e5e5ea', backgroundColor, durationInSeconds = 5.4, speed = 1, progress, messages = demoMessages, fontFamily = 'Inter, Arial, "Microsoft YaHei", sans-serif'}: OnScreenMessagesProps) => {
   const frame = useTime(durationInSeconds, speed, progress) * 161;
   // Grow the reference stage for long conversations instead of cropping or discarding items.
-  const textHeight = messages.reduce((sum, message) => {
-    const ems = Array.from(message.text).reduce((length, char) => length + (/[^\u0000-\u007f]/u.test(char) ? 1 : 0.65), 0);
-    return sum + Math.max(1, Math.ceil(ems / 21)) * 50 + 64;
-  }, 0);
-  const stageHeight = Math.max(680, 148 + textHeight);
+  const textHeight = messages.reduce((sum, message) => sum + estimateTextLines(message.text, 840, 40) * 50 + 64, 0);
+  const conversation = useConversationHeight(JSON.stringify(messages.map((message) => message.text)), fontFamily);
+  const stageHeight = Math.max(680, conversation.height === null ? 148 + textHeight : conversation.height + 58);
   return <Stage width={width} height={height} baseWidth={1260} baseHeight={stageHeight} backgroundColor={backgroundColor} label="屏幕消息">
-    <div style={{display: 'flex', flexDirection: 'column', gap: 32, paddingTop: 90, paddingInline: 70, fontFamily, boxSizing: 'border-box'}}>
+    <div ref={conversation.ref} data-story-conversation="" style={{display: 'flex', flexDirection: 'column', gap: 32, paddingTop: 90, paddingInline: 70, fontFamily, boxSizing: 'border-box', tabSize: 4}}>
       {messages.map((message, index) => {
         const outgoing = message.from === 'me';
         const start = 2 + index / Math.max(1, messages.length - 1) * 50;
@@ -169,7 +168,7 @@ export const PolaroidPictures = ({width = 1480, height = 640, color = '#2d2620',
             <Img src={photo.src} alt={photo.alt ?? photo.caption ?? ''} style={{width: '100%', height: '100%', objectFit: 'cover', filter: photo.filter}} />
             {photo.label && <div style={{position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: '#fff', fontFamily: 'Arial, sans-serif', fontSize: 160, fontWeight: 900, textShadow: '0 4px 30px rgba(0,0,0,.55)'}}>{photo.label}</div>}
           </div>
-          <div style={{fontFamily: captionFontFamily, fontWeight: 600, fontSize: 44, height: 84, marginTop: 8, display: 'flex', justifyContent: 'center', alignItems: 'center', lineHeight: 1.1, textAlign: 'center', overflowWrap: 'anywhere', overflow: 'hidden'}}>{photo.caption}</div>
+          <FittedPhotoCaption fontFamily={captionFontFamily} text={photo.caption} />
         </div>;
       })}
     </div>

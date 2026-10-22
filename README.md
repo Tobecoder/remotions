@@ -138,6 +138,8 @@ export const Photos = () => <PolaroidPictures photos={[
 
 四项均支持 `width`、`height`、`color`、`backgroundColor`、`durationInSeconds`、`speed`、`progress`，默认背景透明。`NewsArticleHighlight` 与 `PolaroidPictures` 默认包含结尾退出，设 `fadeOut={false}` 可保留最终内容。消息和照片传入 `[]` 时保持空白；省略才使用演示内容。新闻高亮的 `highlights` 按精确文本匹配，不作为正则表达式解析。速度线可通过 `lineCount` 和 `seed` 控制密度与随机图案，默认 56 条、1.5 秒。
 
+消息保留显式换行和空行，舞台会按浏览器实际排版高度等比适配；长聊天在固定小画布中会相应缩小。照片注释保留多行，在原有纸张注释区域内自动缩小字体并留出相邻照片的避让空间，不截断文字；简短注释仍为原来的字号。
+
 照片注释可用 `captionFontFamily`、聊天文字可用 `fontFamily` 自定义字体；宿主应在渲染前加载所需字体。目录自带本地 Caveat 字体，中文注释回退到楷体；照片示例图片与字体来源见 [素材说明](apps/catalog/public/storytelling/README.md)。它们不随动画 npm 包分发。`npm run verify:storytelling` 可生成横屏/竖屏关键帧并检查可见内容和退出状态，结果保存在 `.verification/storytelling/`。
 
 ## 来源与许可

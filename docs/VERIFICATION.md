@@ -2,6 +2,10 @@
 
 ## Storytelling 接入验证
 
+- 本轮修复已在修改前用真实浏览器复现：20 行聊天超出画布、长中文/英文及显式多行照片注释超出注释区域。现在消息估算逐段处理 LF/CRLF/空行，并在浏览器提交时读取真实流式高度；注释按实际字体测量自适应字号，保留纸张大小、原来的动画轨迹和短文案排版。
+- 增加 8 项文本回归测试，并将截图验收扩展为 20 张：原有 16 张正常关键帧，加上多行聊天与长注释各自的横屏/竖屏截图。新增检查读取真实文本 Range 的边界，并逐字采样照片注释的遮挡情况，断言文字未裁切、未被相邻照片盖住。本地全部通过；新增边界截图已人工查看。
+- 原有正常案例 16 张 PNG 与修改前逐像素比较，用于确认默认视觉表现保持一致。本轮仅修正文本布局，分支仍包含尚未合并的 Effects / Overlays；未来向 main 提 PR 时需说明这三组功能，或按基础分支先后合并。
+
 - 分支 `feat/remotions-storytelling` 从已推送的 Effects 分支 `6ce7cdb` 创建，保留尚未合并的 Effects / Overlays；没有将本轮改动写入 main。
 - 参考 [新闻高亮](https://www.remotion.dev/elements/text/news-article-highlight/)、[速度线](https://www.remotion.dev/elements/storytelling/speed-lines/)、[屏幕消息](https://www.remotion.dev/elements/storytelling/on-screen-messages/)、[拍立得照片](https://www.remotion.dev/elements/storytelling/polaroid-pictures/) 的公开演示和源码，新增四个组件及独立中文分类。新闻标记使用本库 SVG 实现；保留衬线排版、手绘笔触、错峰时序、蓝灰消息尾巴、胶带纸影与多方向照片入场。
 - 14 项新增组件测试覆盖逐帧可见性、受控进度、24/30/60 FPS、速度、完整退出/可选保留、消息顺序、确定性速度线与中心留空、空数组、长文本、多照片及非法参数。单元测试替换图片加载端；真实 Img 在下面的浏览器检查中执行。
@@ -9,7 +13,7 @@
 - `npm run verify:storytelling` 使用构建后的 CJS 入口、真实 Remotion 浏览器和本地图片/字体生成 16 张 PNG：640×260 下四项的首/中/末帧，以及 360×640 下各项的中间帧。检查图像尺寸、有效内容和预期退出状态，全部通过。关键帧已人工查看；照片为旋转、漂移、胶带与阴影留出空间，竖屏采用等比居中的横向参考舞台。
 - 本地真实目录检查了四张卡片、叙事分类、照片悬浮时依次进入与本地图片加载。此轮没有导出新的 MP4，也没有重新部署站点；远端 CI 状态以对应 PR 为准。
 
-- `npm run check`：192 个测试通过（动画包 114 项、目录站 78 项），另通过独立 CJS 运行检查；根项目语义类型检查、组件库 ESM/CJS 与类型声明、Vite 生产构建通过。`npm pack --dry-run -w @remotions/animations` 通过。
+- `npm run check`：200 个测试通过（动画包 122 项、目录站 78 项），另通过独立 CJS 运行检查；根项目语义类型检查、组件库 ESM/CJS 与类型声明、Vite 生产构建通过。`npm pack --dry-run -w @remotions/animations` 通过。
 - 示例 WAV 由 `scripts/generate-demo-audio.mjs` 生成，为 48 kHz、单声道、6 秒的原创信号；测试检查文件结构与不同片段的能量变化。
 - React 交互测试覆盖分类方向键与 Home/End、鼠标悬浮/点击、触摸点击两次播放/停止、键盘聚焦后停止/恢复预览；测试中的卡片预览句柄使用轻量替身，真实 Remotion Player 的跨浏览器验收仍需手工执行。
 - Layouts 覆盖画中画转场、滑动分屏、本库旋转卡片和产品卡组 ProductCollection，测试验证帧驱动变化、受控进度、画中画裁剪圆角、目录预览末帧可见以及非法尺寸回退；目录预览对这四个版式使用单向播放并停在末帧，避免倒放或直接重置造成误导。

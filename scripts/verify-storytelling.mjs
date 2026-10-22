@@ -15,7 +15,22 @@ const port = Number(process.env.REMOTION_VERIFICATION_PORT || 3348);
 const report = [];
 try {
   const compositions = await getCompositions(serveUrl, {puppeteerInstance: browser, port});
+  const failures = [];
   for (const composition of compositions) {
+    if (composition.durationInFrames === 1) {
+      const checks = [];
+      const file = path.join(output, `${composition.id}.png`);
+      await renderStill({serveUrl, composition, port, frame: 0, puppeteerInstance: browser, output: file, imageFormat: 'png', onBrowserLog: (log) => {
+        if (log.text.startsWith('STORY_LAYOUT_REPORT:')) checks.push(...JSON.parse(log.text.slice('STORY_LAYOUT_REPORT:'.length)));
+      }});
+      assert.equal(checks.length, composition.id.startsWith('Messages') ? 1 : 3);
+      report.push({composition: composition.id, checks});
+      await writeFile(path.join(output, 'report.json'), JSON.stringify(report, null, 2));
+      const clipped = checks.some((check) => check.clipped || check.occluded);
+      if (clipped) failures.push(`${composition.id}: text exceeds its clipping bounds`);
+      console.log(`${composition.id}: browser text bounds ${clipped ? 'FAILED' : 'verified'}`);
+      continue;
+    }
     const middle = composition.id.startsWith('Speed') ? 12 : Math.floor(composition.durationInFrames * 0.6);
     const frames = composition.id.endsWith('Portrait') ? [middle] : [0, middle, composition.durationInFrames - 1];
     const counts = [];
@@ -38,6 +53,7 @@ try {
     console.log(`${composition.id}: ${frames.join('/')} verified`);
   }
   await writeFile(path.join(output, 'report.json'), JSON.stringify(report, null, 2));
+  assert.equal(failures.length, 0, failures.join('\n'));
 } finally {
   await browser.close({silent: true});
 }
