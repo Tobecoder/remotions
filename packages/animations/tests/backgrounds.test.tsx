@@ -10,6 +10,32 @@ vi.mock('remotion', async (importOriginal) => ({
   useVideoConfig: () => ({fps: 30}),
 }));
 
+type PathBand = {
+  minY: number;
+  maxY: number;
+  centerY: number;
+};
+
+const getVisiblePathBands = (markup: string, height: number): PathBand[] => Array.from(
+  markup.matchAll(/<path([^>]*)d="([^"]+)"/g),
+  (match) => {
+    const yValues = Array.from(match[2].matchAll(/-?\d+(?:\.\d+)?/g), (value, index) => index % 2 === 1 ? Number(value[0]) : null)
+      .filter((value): value is number => value !== null);
+    const minY = Math.min(...yValues);
+    const maxY = Math.max(...yValues);
+    return {minY, maxY, centerY: (minY + maxY) / 2};
+  },
+).filter(({minY, maxY}) => maxY >= 0 && minY <= height).sort((a, b) => a.centerY - b.centerY);
+
+const coversViewport = (bands: PathBand[], height: number) => {
+  let coveredThrough = 0;
+  for (const band of bands) {
+    if (band.minY > coveredThrough + 0.01) return false;
+    coveredThrough = Math.max(coveredThrough, band.maxY);
+  }
+  return coveredThrough >= height;
+};
+
 describe('background components', () => {
   it.each([
     ['LiquidContours', <LiquidContours width={640} height={360} />],
@@ -45,6 +71,27 @@ describe('background components', () => {
       const paths = Array.from(markup.matchAll(/<path[^>]* d="([^"]+)"/g), (match) => match[1]);
       const yValues = paths.flatMap((path) => Array.from(path.matchAll(/-?\d+(?:\.\d+)?/g), (match, index) => index % 2 === 1 ? Number(match[0]) : null).filter((value): value is number => value !== null));
       expect(yValues.some((value) => value >= 0 && value <= 360), `frame ${frame} should contain a visible band`).toBe(true);
+    }
+  });
+
+  it.each([
+    ['MovingWaves', <MovingWaves width={640} height={360} />],
+    ['MovingZigzags', <MovingZigzags width={640} height={360} />],
+  ])('%s covers the viewport and stays continuous across loop boundaries', (_, component) => {
+    const frames = [478, 479, 480, 481, 959, 960];
+    const snapshots = frames.map((frame) => {
+      clock.frame = frame;
+      const bands = getVisiblePathBands(renderToStaticMarkup(component), 360);
+      expect(coversViewport(bands, 360), `frame ${frame} should cover the full viewport`).toBe(true);
+      return bands;
+    });
+
+    for (let index = 1; index < snapshots.length; index++) {
+      const previous = snapshots[index - 1];
+      const current = snapshots[index];
+      expect(current).toHaveLength(previous.length);
+      const largestShift = Math.max(...current.map((band, bandIndex) => Math.abs(band.centerY - previous[bandIndex].centerY)));
+      expect(largestShift, `frames ${frames[index - 1]} and ${frames[index]} should not jump`).toBeLessThan(4);
     }
   });
 

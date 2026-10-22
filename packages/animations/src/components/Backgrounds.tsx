@@ -37,6 +37,15 @@ const wrap = (value: number, period: number) => {
   return remainder < 0 ? remainder + period : remainder;
 };
 
+const getBandScroll = (phase: number) => {
+  const rawRows = phase / Math.PI;
+  const wholeRows = Math.trunc(rawRows);
+  return {
+    wholeRows,
+    fraction: rawRows - wholeRows,
+  };
+};
+
 type Point = readonly [number, number];
 
 const midpoint = (a: Point, b: Point): Point => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
@@ -473,16 +482,17 @@ export const MovingWaves = ({
   const spacing = Math.max(18, dimensions.height * 0.105);
   const thickness = Math.max(10, dimensions.height * 0.06);
   const amplitude = spacing * 0.34;
-  const drift = wrap((phase / (Math.PI * 2)) * spacing * 2, spacing * 4);
+  const {fraction, wholeRows} = getBandScroll(phase);
   const waveCount = Math.ceil(dimensions.height / spacing) + 3;
   return <svg role="img" aria-label="向上流动的波浪背景" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
     {Array.from({length: waveCount}, (_, index) => {
-      const baseline = index * spacing - drift - spacing;
+      const bandIndex = index + wholeRows;
+      const baseline = (index - fraction - 1) * spacing;
       return <path
         key={index}
-        d={getWaveBandPath(dimensions.width, baseline, amplitude, thickness, phase * 0.22 + index * 0.18, 5.4)}
-        fill={index % 4 === 0 ? secondaryColor : color}
+        d={getWaveBandPath(dimensions.width, baseline, amplitude, thickness, phase * 0.22 + bandIndex * 0.18, 5.4)}
+        fill={wrap(bandIndex, 4) === 0 ? secondaryColor : color}
         opacity="0.98"
       />;
     })}
@@ -505,17 +515,18 @@ export const MovingZigzags = ({
   const spacing = Math.max(24, dimensions.height * 0.12);
   const thickness = Math.max(8, dimensions.height * 0.055);
   const amplitude = spacing * 0.36;
-  const drift = wrap((phase / (Math.PI * 2)) * spacing * 2, spacing * 4);
+  const {fraction, wholeRows} = getBandScroll(phase);
   const bandCount = Math.ceil(dimensions.height / spacing) + 4;
 
   return <svg role="img" aria-label="向上流动的折线背景" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
     {Array.from({length: bandCount}, (_, index) => {
-      const baseline = index * spacing - drift - spacing;
+      const bandIndex = index + wholeRows;
+      const baseline = (index - fraction - 1) * spacing;
       return <path
         key={index}
-        d={getZigzagBandPath(dimensions.width, baseline, amplitude, thickness, phase * 0.2 + index * 0.22, 8)}
-        fill={index % 4 === 0 ? secondaryColor : color}
+        d={getZigzagBandPath(dimensions.width, baseline, amplitude, thickness, phase * 0.2 + bandIndex * 0.22, 8)}
+        fill={wrap(bandIndex, 4) === 0 ? secondaryColor : color}
         opacity="0.94"
       />;
     })}
