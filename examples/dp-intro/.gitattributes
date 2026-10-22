@@ -1,0 +1,5 @@
+# Approval records hash exact input bytes; preserve their line endings.
+plan.md -text whitespace=cr-at-eol
+script.txt -text whitespace=cr-at-eol
+assets/lesson-data.json -text whitespace=cr-at-eol
+assets/voice-segments.json -text whitespace=cr-at-eol
