@@ -526,6 +526,5 @@ export const RotatingCards = ({
   return <div role="img" aria-label="旋转卡片布局" data-layout="rotating-cards" style={rootStyle(dimensions, backgroundColor)}>
     <div style={{position: 'absolute', inset: 0, background: `radial-gradient(circle at 50% 45%, ${secondaryColor}18 0%, transparent 54%), ${backgroundColor}`}} />
     {items.map(renderCard)}
-    <div style={{position: 'absolute', left: dimensions.width * 0.08, bottom: dimensions.height * 0.09, color, fontSize: Math.max(10, Math.min(dimensions.width, dimensions.height) * 0.04), fontWeight: 700, letterSpacing: '0.14em'}}>REMOTIONS / LAYOUTS</div>
   </div>;
 };
