@@ -11,6 +11,7 @@ describe('animation catalog', () => {
       'BasicCaptions', 'RoundedCaptions', 'MovingPillCaptions', 'PoppingWordCaptions', 'WordHighlightCaptions',
       'HorizontalBarChart', 'LineChart', 'NumberCounter', 'PieChart', 'VerticalBarChart',
       'LiquidContours', 'MovingWaves', 'MovingZigzags', 'NotebookPaper', 'PaperTexture', 'RotatingStarburst',
+      'WigglingCallout', 'Peel', 'Shine', 'TearApart',
       'PulseRings', 'ParticleField', 'ShimmerSweep',
       'PictureInPictureTransition', 'SlideToSplitScreen', 'RotatingCards', 'ProductCollection',
       'LocationLowerThird', 'NameLowerThird',
@@ -19,7 +20,7 @@ describe('animation catalog', () => {
     expect(catalog.filter((item) => item.category === 'captions')).toHaveLength(5);
     expect(catalog.filter((item) => item.category === 'charts')).toHaveLength(5);
     expect(catalog.filter((item) => item.category === 'backgrounds')).toHaveLength(6);
-    expect(catalog.filter((item) => item.category === 'effects')).toHaveLength(3);
+    expect(catalog.filter((item) => item.category === 'effects')).toHaveLength(7);
     expect(catalog.filter((item) => item.category === 'layouts')).toHaveLength(4);
     expect(catalog.filter((item) => item.category === 'overlays')).toHaveLength(2);
   });
@@ -37,6 +38,10 @@ describe('animation catalog', () => {
       expect(snippet).toContain(`<${componentName} captions={captions} color=`);
       expect(snippet).toContain("import type {Caption} from '@remotion/captions';");
       expect(snippet).not.toContain('<Audio src={src} />');
+    } else if (id === 'peel' || id === 'shine' || id === 'tear-apart') {
+      expect(snippet).toContain(`<${componentName} src=`);
+      expect(snippet).toContain("staticFile('your-image.png')");
+      expect(snippet).not.toContain('color=');
     } else if (category !== 'audio') {
       expect(snippet).toContain(`<${componentName} color=`);
       expect(snippet).not.toContain('<Audio src={src} />');

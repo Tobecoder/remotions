@@ -8,6 +8,10 @@ describe('catalog preview timeline', () => {
     ['moving-waves', 8],
     ['pulse-rings', 4.5],
     ['shimmer-sweep', 5.5],
+    ['wiggling-callout', 4],
+    ['peel', 2],
+    ['shine', 1.5],
+    ['tear-apart', 1.5],
   ] as const)('uses the component cycle for %s', (id, seconds) => {
     expect(getPreviewDurationInSeconds(id)).toBe(seconds);
   });

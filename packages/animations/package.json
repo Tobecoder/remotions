@@ -25,7 +25,7 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --clean --external react,remotion,@remotion/media-utils",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean --external react,remotion,@remotion/media-utils,@remotion/effects",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json"
   },
@@ -33,13 +33,15 @@
     "@remotion/captions": "^4.0.0",
     "@remotion/media-utils": "^4.0.0",
     "react": ">=18",
-    "remotion": "^4.0.0"
+    "remotion": "^4.0.537",
+    "@remotion/effects": "4.0.537"
   },
   "devDependencies": {
-    "@remotion/captions": "^4.0.536",
-    "@remotion/media-utils": "4.0.536",
+    "@remotion/captions": "4.0.537",
+    "@remotion/effects": "4.0.537",
+    "@remotion/media-utils": "4.0.537",
     "react": "^19.0.0",
-    "remotion": "4.0.536"
+    "remotion": "4.0.537"
   },
   "license": "MIT"
 }

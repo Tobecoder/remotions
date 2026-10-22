@@ -1,6 +1,6 @@
 # Remotions ✦
 
-面向 Remotion 的开源动效素材库。当前开放音频动画、字幕动画、数据图表、背景特效、视觉效果、版式转场和信息叠加分类，包含二十八个可复用组件：**示波曲线、镜像频谱、语音波形、基础字幕、气泡字幕、移动气泡、弹出单词、逐字高亮、横向条形图、趋势折线图、数字计数器、占比饼图、纵向条形图、液态轮廓、流动波浪、折线流动、笔记网格、纸张纹理、旋转星芒、光环脉冲、粒子漂移、光泽扫过、画中画转场、滑动分屏、旋转卡片、产品卡组、地点叠加、姓名叠加**。原有 11 个通用动效已从公开组件入口和网站移除，历史实现保存在 [`archive/v0.1-legacy`](archive/v0.1-legacy/README.md)。
+面向 Remotion 的开源动效素材库。当前开放音频动画、字幕动画、数据图表、背景特效、视觉效果、版式转场和信息叠加分类，包含三十二个可复用组件：**示波曲线、镜像频谱、语音波形、基础字幕、气泡字幕、移动气泡、弹出单词、逐字高亮、横向条形图、趋势折线图、数字计数器、占比饼图、纵向条形图、液态轮廓、流动波浪、折线流动、笔记网格、纸张纹理、旋转星芒、光环脉冲、粒子漂移、光泽扫过、摇摆气泡、纸面揭开、斜向扫光、纸面撕裂、画中画转场、滑动分屏、旋转卡片、产品卡组、地点叠加、姓名叠加**。原有 11 个通用动效已从公开组件入口和网站移除，历史实现保存在 [`archive/v0.1-legacy`](archive/v0.1-legacy/README.md)。
 
 ## 本地运行
 
@@ -45,6 +45,21 @@ import {PulseRings} from '@remotions/animations';
 
 export const IntroScene = () => <PulseRings color="#409eff" width={1920} height={1080} />;
 ```
+
+Effects 新增与 Remotion Elements 对照的 `WigglingCallout`、`Peel`、`Shine` 和 `TearApart`。后三者直接调用官方 `@remotion/effects` 引擎，通过 `CanvasImage` 作用于图片，包含真实卷曲折面、贴图扫光和不规则撕裂。目录保留演示图片的 16:9 比例；摇摆和撕裂单向播放后停留，揭开和扫光按各自时长重复演示。
+
+```tsx
+import {Peel, Shine, TearApart, WigglingCallout} from '@remotions/animations';
+import {staticFile} from 'remotion';
+
+export const Scene = () => (
+  <Peel src={staticFile('your-image.png')} width={1280} height={720} />
+);
+```
+
+`Peel`、`Shine`、`TearApart` 接受 `src`、`width`、`height`、`backgroundColor`、`durationInSeconds`、`speed` 和 `progress`。`WigglingCallout` 使用 `text`、`color` 和 `secondaryColor` 自定义气泡。`progress` 表示完整动作进度，目录静止时采用可读的代表帧。图片示例来自 Remotion Elements，可用自己的图片替换。
+
+这一组效果要求宿主与 `@remotion/effects` 使用一致的 Remotion 版本，当前为 **4.0.537**；卷曲需要 WebGPU。本库通过原生动态导入加载效果引擎，保留 ESM/CJS 两种入口。效果引擎适用 [Remotion 官方许可](https://www.remotion.dev/docs/effects/api#license)，本库封装代码仍使用 MIT。
 
 数据图表接受可复用的 `ChartDatum[]`，每个组件都支持 `progress`，适合把数据展示固定到某一帧。横向/纵向条形图和趋势折线图会保留有限的负值并自动计算零基线；占比饼图将负值按零权重处理，使用实际正权重总和计算占比（即使总量小于 1 也不会被抬高），权重总和为零时显示无有效占比状态。只有数据项显式提供 `color` 时才会覆盖组件的主题色，数据项不会被静默截断；显式传入 `data={[]}` 会显示空状态。数据较多时会归一化交错动画、压缩行高或柱宽并对各类图表隔项显示标签，同时保留稀疏数据中的有效扇区标签，保持图形在画布内：
 
@@ -94,7 +109,7 @@ export const Scene = () => (
 
 ## 工程结构
 
-- `packages/animations/`：二十八个可复用的音频动画、字幕动画、数据图表、背景特效、视觉效果、版式转场和信息叠加组件，构建 ESM、CJS 和类型声明。
+- `packages/animations/`：三十二个可复用的音频动画、字幕动画、数据图表、背景特效、视觉效果、版式转场和信息叠加组件，构建 ESM、CJS 和类型声明。
 - `apps/catalog/`：中文素材库、卡片内 Remotion 动效预览、原创 WAV 示例音频。
 - `scripts/generate-demo-audio.mjs`：可重复生成示例音频；不依赖第三方音效素材。
 - `examples/AudioComposition.tsx`：在 Remotion Composition 中引用音频动画的示例。

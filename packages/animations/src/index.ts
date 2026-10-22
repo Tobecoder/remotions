@@ -13,3 +13,5 @@ export {HorizontalBarChart, LineChart, NumberCounter, PieChart, VerticalBarChart
 export type {ChartDatum, ChartProps, NumberCounterProps} from './components/Charts';
 export {LocationLowerThird, NameLowerThird} from './components/Overlays';
 export type {LocationLowerThirdProps, NameLowerThirdProps, OverlayProps} from './components/Overlays';
+export {Peel, Shine, TearApart, WigglingCallout} from './components/ContentEffects';
+export type {ContentEffectProps, WigglingCalloutProps} from './components/ContentEffects';

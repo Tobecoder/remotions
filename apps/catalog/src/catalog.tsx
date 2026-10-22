@@ -1,8 +1,8 @@
-import {BasicCaptions, HorizontalBarChart, LineChart, LiquidContours, LocationLowerThird, MirroredSpectrum, MovingPillCaptions, MovingWaves, MovingZigzags, NameLowerThird, NotebookPaper, NumberCounter, Oscilloscope, PaperTexture, ParticleField, PieChart, PictureInPictureTransition, PoppingWordCaptions, ProductCollection, PulseRings, RotatingCards, RotatingStarburst, RoundedCaptions, ShimmerSweep, SlideToSplitScreen, VerticalBarChart, VoiceNote, WordHighlightCaptions} from '@remotions/animations';
+import {BasicCaptions, HorizontalBarChart, LineChart, LiquidContours, LocationLowerThird, MirroredSpectrum, MovingPillCaptions, MovingWaves, MovingZigzags, NameLowerThird, NotebookPaper, NumberCounter, Oscilloscope, PaperTexture, ParticleField, Peel, PieChart, PictureInPictureTransition, PoppingWordCaptions, ProductCollection, PulseRings, RotatingCards, RotatingStarburst, RoundedCaptions, Shine, ShimmerSweep, SlideToSplitScreen, TearApart, VerticalBarChart, VoiceNote, WigglingCallout, WordHighlightCaptions} from '@remotions/animations';
 import type {Caption} from '@remotions/animations';
 import {staticFile} from 'remotion';
 
-export type DemoId = 'oscilloscope' | 'spectrum' | 'voice' | 'basic-captions' | 'rounded-captions' | 'moving-pill-captions' | 'popping-word-captions' | 'word-highlight-captions' | 'horizontal-bar-chart' | 'line-chart' | 'number-counter' | 'pie-chart' | 'vertical-bar-chart' | 'liquid-contours' | 'moving-waves' | 'moving-zigzags' | 'notebook-paper' | 'paper-texture' | 'rotating-starburst' | 'pulse-rings' | 'particle-field' | 'shimmer-sweep' | 'picture-in-picture' | 'slide-to-split-screen' | 'rotating-cards' | 'product-collection' | 'location-lower-third' | 'name-lower-third';
+export type DemoId = 'oscilloscope' | 'spectrum' | 'voice' | 'basic-captions' | 'rounded-captions' | 'moving-pill-captions' | 'popping-word-captions' | 'word-highlight-captions' | 'horizontal-bar-chart' | 'line-chart' | 'number-counter' | 'pie-chart' | 'vertical-bar-chart' | 'liquid-contours' | 'moving-waves' | 'moving-zigzags' | 'notebook-paper' | 'paper-texture' | 'rotating-starburst' | 'pulse-rings' | 'particle-field' | 'shimmer-sweep' | 'picture-in-picture' | 'slide-to-split-screen' | 'rotating-cards' | 'product-collection' | 'location-lower-third' | 'name-lower-third' | 'wiggling-callout' | 'peel' | 'shine' | 'tear-apart';
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays';
 export type CatalogCategory = {
   id: CategoryId;
@@ -33,7 +33,7 @@ export const categories: CatalogCategory[] = [
   {id: 'captions', name: '字幕动画', description: '文字跟着时间出现', status: 'active'},
   {id: 'charts', name: '数据图表', description: '让数据产生动效', status: 'active'},
   {id: 'backgrounds', name: '背景特效', description: '可循环的氛围背景', status: 'active'},
-  {id: 'effects', name: '视觉效果', description: '光、粒子与形变', status: 'active'},
+  {id: 'effects', name: '视觉效果', description: '摇摆、卷曲、扫光与撕裂', status: 'active'},
   {id: 'layouts', name: '版式转场', description: '可复用的镜头结构', status: 'active'},
   {id: 'overlays', name: '信息叠加', description: '地点与人物信息条', status: 'active'},
 ];
@@ -58,9 +58,13 @@ export const catalog: Demo[] = [
   {id: 'notebook-paper', category: 'backgrounds', name: '笔记网格', componentName: 'NotebookPaper', description: '蓝色网格和侧边线组成轻量纸张背景', useCase: '教程画面 · 知识卡片', color: '#8db8da', tag: '04', previewDurationInSeconds: 8, previewLoopMode: 'ping-pong'},
   {id: 'paper-texture', category: 'backgrounds', name: '纸张纹理', componentName: 'PaperTexture', description: '细微颗粒缓慢变化，给画面增加纸张触感', useCase: '手绘内容 · 氛围铺底', color: '#9eb8cf', tag: '05', previewDurationInSeconds: 8, previewLoopMode: 'ping-pong'},
   {id: 'rotating-starburst', category: 'backgrounds', name: '旋转星芒', componentName: 'RotatingStarburst', description: '放射光束缓慢旋转，制造能量聚焦', useCase: '片头转场 · 重点强调', color: '#70b7e8', tag: '06', previewDurationInSeconds: 8},
-  {id: 'pulse-rings', category: 'effects', name: '光环脉冲', componentName: 'PulseRings', description: '同心光环从中心扩散，制造清晰的节奏焦点', useCase: '片头强调 · Logo 出场', color: '#409eff', tag: '01', previewDurationInSeconds: 4.5},
-  {id: 'particle-field', category: 'effects', name: '粒子漂移', componentName: 'ParticleField', description: '细小粒子缓慢漂移，给画面增加空间层次', useCase: '科技背景 · 氛围过渡', color: '#409eff', tag: '02', previewDurationInSeconds: 8},
-  {id: 'shimmer-sweep', category: 'effects', name: '光泽扫过', componentName: 'ShimmerSweep', description: '高光沿斜线扫过网格，适合标题或卡片强调', useCase: '标题强调 · 产品展示', color: '#409eff', tag: '03', previewDurationInSeconds: 5.5},
+  {id: 'wiggling-callout', category: 'effects', name: '摇摆气泡', componentName: 'WigglingCallout', description: '大字气泡围绕尖角摇摆，逐渐回到静止', useCase: '折扣标记 · 重点提示', color: '#2563eb', tag: '01', previewDurationInSeconds: 4, previewLoopMode: 'forward-hold'},
+  {id: 'peel', category: 'effects', name: '纸面揭开', componentName: 'Peel', description: '画面沿斜向折线卷起，显露纸背与弯曲阴影', useCase: '页面揭示 · 画面转场', color: '#2563eb', tag: '02', previewDurationInSeconds: 2, previewStillFrame: 28},
+  {id: 'shine', category: 'effects', name: '斜向扫光', componentName: 'Shine', description: '柔和高光贴着画面扫过，保留原图细节', useCase: '产品展示 · 质感强调', color: '#2563eb', tag: '03', previewDurationInSeconds: 1.5, previewStillFrame: 22},
+  {id: 'tear-apart', category: 'effects', name: '纸面撕裂', componentName: 'TearApart', description: '画面沿不规则裂缝向两侧分开，并轻微旋转', useCase: '分割揭示 · 创意转场', color: '#2563eb', tag: '04', previewDurationInSeconds: 1.5, previewLoopMode: 'forward-hold', previewStillFrame: 30},
+  {id: 'pulse-rings', category: 'effects', name: '光环脉冲', componentName: 'PulseRings', description: '同心光环从中心扩散，制造清晰的节奏焦点', useCase: '片头强调 · Logo 出场', color: '#409eff', tag: '05', previewDurationInSeconds: 4.5},
+  {id: 'particle-field', category: 'effects', name: '粒子漂移', componentName: 'ParticleField', description: '细小粒子缓慢漂移，给画面增加空间层次', useCase: '科技背景 · 氛围过渡', color: '#409eff', tag: '06', previewDurationInSeconds: 8},
+  {id: 'shimmer-sweep', category: 'effects', name: '光泽扫过', componentName: 'ShimmerSweep', description: '高光沿斜线扫过网格，适合标题或卡片强调', useCase: '标题强调 · 产品展示', color: '#409eff', tag: '07', previewDurationInSeconds: 5.5},
   {id: 'picture-in-picture', category: 'layouts', name: '画中画转场', componentName: 'PictureInPictureTransition', description: '全屏画面收缩为可配置的小窗，适合产品演示和播客画面', useCase: '产品演示 · 播客画面', color: '#409eff', tag: '01', previewDurationInSeconds: 5, previewLoopMode: 'forward-hold'},
   {id: 'slide-to-split-screen', category: 'layouts', name: '滑动分屏', componentName: 'SlideToSplitScreen', description: '全屏画面展开为双栏分屏，适合对比和讲解', useCase: '前后对比 · 双画面讲解', color: '#67c23a', tag: '02', previewDurationInSeconds: 5, previewLoopMode: 'forward-hold'},
   {id: 'rotating-cards', category: 'layouts', name: '旋转卡片', componentName: 'RotatingCards', description: '卡片依次进入中心，适合案例、作品和商品展示', useCase: '案例展示 · 商品陈列', color: '#8b5cf6', tag: '03', previewDurationInSeconds: 5, previewLoopMode: 'forward-hold'},
@@ -118,6 +122,8 @@ export const AudioCardComposition = ({id, src, captions = demoCaptions}: Preview
       {id === 'notebook-paper' && <NotebookPaper color={active.color} secondaryColor="#8b5cf6" backgroundColor="#fbfdff" width={640} height={260} />}
       {id === 'paper-texture' && <PaperTexture color={active.color} secondaryColor="#d3b58d" backgroundColor="#fbfaf6" width={640} height={260} />}
       {id === 'rotating-starburst' && <RotatingStarburst color={active.color} secondaryColor={active.color} backgroundColor="#dff0ff" width={640} height={260} />}
+      {id === 'wiggling-callout' && <WigglingCallout width={640} height={260} />}
+      {(id === 'peel' || id === 'shine' || id === 'tear-apart') && <div style={{width: '100%', height: '100%', display: 'grid', placeItems: 'center', backgroundColor: '#edf2f4'}}>{id === 'peel' ? <Peel width={462} height={260} /> : id === 'shine' ? <Shine width={462} height={260} /> : <TearApart width={462} height={260} />}</div>}
       {id === 'pulse-rings' && <PulseRings color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f4f8ff" width={640} height={260} />}
       {id === 'particle-field' && <ParticleField color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f8fbff" width={640} height={260} />}
       {id === 'shimmer-sweep' && <ShimmerSweep color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f4f8ff" width={640} height={260} />}
@@ -133,6 +139,9 @@ export const AudioCardComposition = ({id, src, captions = demoCaptions}: Preview
 
 export const snippetFor = (id: DemoId): string => {
   const active = catalog.find((item) => item.id === id) ?? catalog[0];
+  if (id === 'peel' || id === 'shine' || id === 'tear-apart') {
+    return `import {${active.componentName}} from '@remotions/animations';\nimport {staticFile} from 'remotion';\n\nexport const Scene = () => (\n  <${active.componentName} src={staticFile('your-image.png')} width={1280} height={720} />\n);`;
+  }
   if (active.category === 'overlays') {
     const textProps = id === 'location-lower-third' ? 'location="Berlin, Germany"' : 'name="Alex Morgan" role="Creative Developer"';
     return `import {${active.componentName}} from '@remotions/animations';\n\nexport const Scene = () => (\n  <${active.componentName} color="${active.color}" ${textProps} durationInSeconds={4} />\n);`;
