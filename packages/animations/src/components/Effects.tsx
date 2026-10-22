@@ -132,6 +132,13 @@ export const ShimmerSweep = ({
   const skew = dimensions.height * 0.24;
   const columns = Math.max(8, Math.ceil(dimensions.width / 56));
   const rows = Math.max(5, Math.ceil(dimensions.height / 52));
+  const sweepTravel = dimensions.width * 1.02;
+
+  const renderBeam = (beamX: number, key: string) => <g key={key}>
+    <path d={`M ${beamX - beamWidth},0 L ${beamX + beamWidth},0 L ${beamX + beamWidth - skew},${dimensions.height} L ${beamX - beamWidth - skew},${dimensions.height} Z`} fill={color} opacity="0.1" />
+    <path d={`M ${beamX - beamWidth * 0.28},0 L ${beamX + beamWidth * 0.28},0 L ${beamX + beamWidth * 0.28 - skew},${dimensions.height} L ${beamX - beamWidth * 0.28 - skew},${dimensions.height} Z`} fill={secondaryColor} opacity="0.2" />
+    <path d={`M ${beamX - 2},0 L ${beamX + 2},0 L ${beamX + 2 - skew},${dimensions.height} L ${beamX - 2 - skew},${dimensions.height} Z`} fill="#ffffff" opacity="0.7" />
+  </g>;
 
   return <svg role="img" aria-label="光泽扫过效果" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
@@ -139,8 +146,7 @@ export const ShimmerSweep = ({
       {Array.from({length: columns + 1}, (_, index) => <line key={`column-${index}`} x1={(index / columns) * dimensions.width} y1="0" x2={(index / columns) * dimensions.width} y2={dimensions.height} />)}
       {Array.from({length: rows + 1}, (_, index) => <line key={`row-${index}`} x1="0" y1={(index / rows) * dimensions.height} x2={dimensions.width} y2={(index / rows) * dimensions.height} />)}
     </g>
-    <path d={`M ${sweepX - beamWidth},0 L ${sweepX + beamWidth},0 L ${sweepX + beamWidth - skew},${dimensions.height} L ${sweepX - beamWidth - skew},${dimensions.height} Z`} fill={color} opacity="0.1" />
-    <path d={`M ${sweepX - beamWidth * 0.28},0 L ${sweepX + beamWidth * 0.28},0 L ${sweepX + beamWidth * 0.28 - skew},${dimensions.height} L ${sweepX - beamWidth * 0.28 - skew},${dimensions.height} Z`} fill={secondaryColor} opacity="0.2" />
-    <path d={`M ${sweepX - 2},0 L ${sweepX + 2},0 L ${sweepX + 2 - skew},${dimensions.height} L ${sweepX - 2 - skew},${dimensions.height} Z`} fill="#ffffff" opacity="0.7" />
+    {renderBeam(sweepX, 'primary-beam')}
+    {renderBeam(sweepX - sweepTravel, 'wrapped-beam')}
   </svg>;
 };

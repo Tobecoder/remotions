@@ -102,6 +102,17 @@ describe('background components', () => {
     }
   });
 
+  it.each([
+    ['MovingWaves', <MovingWaves width={640} height={360} />],
+    ['MovingZigzags', <MovingZigzags width={640} height={360} />],
+  ])('%s closes its forward eight-second cycle', (_, component) => {
+    clock.frame = 0;
+    const first = renderToStaticMarkup(component);
+    clock.frame = 240;
+    const looped = renderToStaticMarkup(component);
+    expect(looped).toBe(first);
+  });
+
   it('keeps the notebook grid offset within one cell at long frames', () => {
     clock.frame = 3000;
     const markup = renderToStaticMarkup(<NotebookPaper width={640} height={360} />);

@@ -38,7 +38,9 @@ const wrap = (value: number, period: number) => {
 };
 
 const getBandScroll = (phase: number) => {
-  const rawRows = phase / Math.PI;
+  // Move four rows per eight-second cycle. The row palette also repeats every
+  // four rows, so the forward loop returns to the same geometry at 2π.
+  const rawRows = (phase / (Math.PI * 2)) * 4;
   const wholeRows = Math.trunc(rawRows);
   return {
     wholeRows,
@@ -491,7 +493,7 @@ export const MovingWaves = ({
       const baseline = (index - fraction - 1) * spacing;
       return <path
         key={index}
-        d={getWaveBandPath(dimensions.width, baseline, amplitude, thickness, phase * 0.22 + bandIndex * 0.18, 5.4)}
+        d={getWaveBandPath(dimensions.width, baseline, amplitude, thickness, Math.sin(phase) * 0.22 + wrap(bandIndex, 4) * 0.18, 5.4)}
         fill={wrap(bandIndex, 4) === 0 ? secondaryColor : color}
         opacity="0.98"
       />;
@@ -525,7 +527,7 @@ export const MovingZigzags = ({
       const baseline = (index - fraction - 1) * spacing;
       return <path
         key={index}
-        d={getZigzagBandPath(dimensions.width, baseline, amplitude, thickness, phase * 0.2 + bandIndex * 0.22, 8)}
+        d={getZigzagBandPath(dimensions.width, baseline, amplitude, thickness, Math.sin(phase) * 0.2 + wrap(bandIndex, 4) * 0.22, 8)}
         fill={wrap(bandIndex, 4) === 0 ? secondaryColor : color}
         opacity="0.94"
       />;

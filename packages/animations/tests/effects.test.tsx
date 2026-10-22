@@ -38,4 +38,21 @@ describe('visual effect components', () => {
     const looped = renderToStaticMarkup(<ParticleField width={640} height={260} />);
     expect(looped).toBe(first);
   });
+
+  it('keeps the ShimmerSweep wrapped beam present at the forward loop boundary', () => {
+    clock.frame = 0;
+    const first = renderToStaticMarkup(<ShimmerSweep width={640} height={260} />);
+    clock.frame = 164;
+    const last = renderToStaticMarkup(<ShimmerSweep width={640} height={260} />);
+    expect(first.match(/<path/g)?.length).toBe(last.match(/<path/g)?.length);
+    const getBeamStarts = (markup: string) => Array.from(markup.matchAll(/<path d="M (-?\d+(?:\.\d+)?),0/g), (match) => Number(match[1]));
+    const firstStarts = getBeamStarts(first);
+    const lastStarts = getBeamStarts(last);
+    expect(firstStarts).toHaveLength(6);
+    expect(lastStarts).toHaveLength(6);
+    const nearestWrappedBeam = Math.min(...firstStarts.flatMap((start) => lastStarts.map((candidate) => Math.abs(start - candidate))));
+    expect(nearestWrappedBeam).toBeLessThan(8);
+    expect(first).not.toMatch(/NaN|Infinity/);
+    expect(last).not.toMatch(/NaN|Infinity/);
+  });
 });

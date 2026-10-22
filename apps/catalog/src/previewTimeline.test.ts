@@ -19,15 +19,18 @@ describe('catalog preview timeline', () => {
     expect(getPreviewFrame((durationInFrames / fps) * 1000, fps, durationInFrames)).toBe(0);
   });
 
-  it.each(['liquid-contours', 'moving-waves', 'moving-zigzags', 'notebook-paper', 'paper-texture', 'shimmer-sweep'] as const)('%s uses a ping-pong preview loop', (id) => {
+  it.each(['liquid-contours', 'notebook-paper', 'paper-texture'] as const)('%s uses a ping-pong preview loop', (id) => {
     expect(getPreviewLoopMode(id)).toBe('ping-pong');
   });
 
   it('keeps audio, captions, and exact effect cycles playing forward', () => {
     expect(getPreviewLoopMode('oscilloscope')).toBe('forward');
     expect(getPreviewLoopMode('basic-captions')).toBe('forward');
+    expect(getPreviewLoopMode('moving-waves')).toBe('forward');
+    expect(getPreviewLoopMode('moving-zigzags')).toBe('forward');
     expect(getPreviewLoopMode('particle-field')).toBe('forward');
     expect(getPreviewLoopMode('rotating-starburst')).toBe('forward');
+    expect(getPreviewLoopMode('shimmer-sweep')).toBe('forward');
   });
 
   it('turns around without jumping between the last and first preview frames', () => {
