@@ -46,7 +46,7 @@ import {PulseRings} from '@remotions/animations';
 export const IntroScene = () => <PulseRings color="#409eff" width={1920} height={1080} />;
 ```
 
-数据图表接受可复用的 `ChartDatum[]`，每个组件都支持 `progress`，适合把数据展示固定到某一帧。横向/纵向条形图和趋势折线图会保留有限的负值并自动计算零基线；占比饼图将负值按零权重处理。只有数据项显式提供 `color` 时才会覆盖组件的主题色，数据项不会被静默截断；数据较多时会归一化交错动画并压缩行高或柱宽，保持图形在画布内：
+数据图表接受可复用的 `ChartDatum[]`，每个组件都支持 `progress`，适合把数据展示固定到某一帧。横向/纵向条形图和趋势折线图会保留有限的负值并自动计算零基线；占比饼图将负值按零权重处理。只有数据项显式提供 `color` 时才会覆盖组件的主题色，数据项不会被静默截断；显式传入 `data={[]}` 会显示空状态。数据较多时会归一化交错动画、压缩行高或柱宽并隔项显示标签，保持图形在画布内：
 
 ```tsx
 import {LineChart} from '@remotions/animations';

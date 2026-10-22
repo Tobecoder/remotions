@@ -41,6 +41,23 @@ describe('data chart components', () => {
     expect(start).not.toBe(end);
   });
 
+  it('treats an explicit empty data array as an empty state', () => {
+    const emptyCharts = [
+      renderToStaticMarkup(<HorizontalBarChart data={[]} progress={1} />),
+      renderToStaticMarkup(<LineChart data={[]} progress={1} />),
+      renderToStaticMarkup(<PieChart data={[]} progress={1} />),
+      renderToStaticMarkup(<VerticalBarChart data={[]} progress={1} />),
+    ];
+
+    for (const markup of emptyCharts) {
+      expect(markup).toContain('暂无数据');
+      expect(markup).not.toContain('设计');
+      expect(markup).not.toContain('一月');
+      expect(markup).not.toContain('产品');
+      expect(markup).not.toContain('北');
+    }
+  });
+
   it('preserves signed and long data while honoring the component color', () => {
     const data = Array.from({length: 9}, (_, index) => ({
       label: index === 0 ? '负值' : `项${index}`,
@@ -98,6 +115,14 @@ describe('data chart components', () => {
         expect(y + rectHeight).toBeLessThanOrEqual(260.000001);
       }
     }
+
+    const horizontalLabels = horizontal.match(/>项\d+<\/text>/g) ?? [];
+    const vertical = renderToStaticMarkup(<VerticalBarChart width={640} height={260} data={makeData(30)} progress={1} />);
+    const verticalLabels = vertical.match(/>项\d+<\/text>/g) ?? [];
+    expect(horizontalLabels.length).toBeGreaterThan(0);
+    expect(horizontalLabels.length).toBeLessThan(20);
+    expect(verticalLabels.length).toBeGreaterThan(0);
+    expect(verticalLabels.length).toBeLessThan(30);
   });
 
   it('keeps signed vertical bars finite', () => {

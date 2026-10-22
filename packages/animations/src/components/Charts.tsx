@@ -50,7 +50,7 @@ const getProgress = (frame: number, fps: number, durationInSeconds: number, spee
 };
 
 const sanitizeData = (data: readonly ChartDatum[] | undefined, fallback: readonly ChartDatum[]) => {
-  const source = data && data.length > 0 ? data : fallback;
+  const source = data === undefined ? fallback : data;
   return source.map((item) => ({
     label: String(item.label ?? ''),
     value: Number.isFinite(item.value) ? item.value : 0,
@@ -123,6 +123,7 @@ export const HorizontalBarChart = ({
   const baselineX = valueToX(0);
   const baseFontSize = Math.min(dimensions.width, dimensions.height) * 0.045;
   const fontSize = Math.max(8, Math.min(baseFontSize, rowHeight * 0.72));
+  const labelStride = items.length > 12 ? Math.ceil(items.length / 12) : 1;
 
   return <svg role="img" aria-label="横向条形图" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={svgStyle}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
@@ -134,7 +135,7 @@ export const HorizontalBarChart = ({
       </g>;
     })}
     <line x1={baselineX} y1={top - 8} x2={baselineX} y2={dimensions.height - bottom} stroke={color} strokeOpacity="0.34" strokeWidth="1.5" />
-    {items.map((item, index) => {
+    {items.length === 0 ? <text x={dimensions.width / 2} y={dimensions.height / 2} textAnchor="middle" dominantBaseline="middle" style={{...chartText(baseFontSize, '#909399'), fontWeight: 650}}>暂无数据</text> : items.map((item, index) => {
       const rowY = top + index * rowHeight;
       const barHeight = rowHeight * 0.48;
       const rowProgress = getStaggeredProgress(phase, index, items.length, {endSpread: 0.15});
@@ -143,11 +144,13 @@ export const HorizontalBarChart = ({
       const barX = Math.min(baselineX, animatedValueX);
       const barWidth = Math.abs(animatedValueX - baselineX);
       const valueLabelX = item.value < 0 ? Math.max(4, animatedValueX - 8) : Math.min(dimensions.width - 4, animatedValueX + 8);
+      const labelVisible = index % labelStride === 0 || index === items.length - 1;
       return <g key={`${item.label}-${index}`}>
-        <text x={left - 12} y={rowY + barHeight * 0.82} textAnchor="end" style={{...chartText(fontSize, '#606266'), fontWeight: 650}}>{item.label}</text>
+        <title>{`${item.label}: ${Math.round(item.value)}`}</title>
+        {labelVisible ? <text x={left - 12} y={rowY + barHeight * 0.82} textAnchor="end" style={{...chartText(fontSize, '#606266'), fontWeight: 650}}>{item.label}</text> : null}
         <rect x={left} y={rowY} width={chartWidth} height={barHeight} rx={barHeight / 2} fill={secondaryColor} fillOpacity="0.1" />
         <rect x={barX} y={rowY} width={Math.max(0, barWidth)} height={barHeight} rx={barHeight / 2} fill={item.color ?? color} />
-        <text x={valueLabelX} y={rowY + barHeight * 0.82} textAnchor={item.value < 0 ? 'end' : 'start'} style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text>
+        {labelVisible ? <text x={valueLabelX} y={rowY + barHeight * 0.82} textAnchor={item.value < 0 ? 'end' : 'start'} style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text> : null}
       </g>;
     })}
   </svg>;
@@ -208,17 +211,20 @@ export const LineChart = ({
       const y = top + (innerHeight * index) / 3;
       return <line key={`grid-${index}`} x1={left} y1={y} x2={left + innerWidth} y2={y} stroke={secondaryColor} strokeOpacity="0.14" strokeWidth="1" />;
     })}
-    <path d={areaPath} fill={`url(#${gradientId})`} opacity={phase} />
-    <path d={path} fill="none" stroke={color} strokeWidth={Math.max(2, dimensions.height * 0.014)} strokeLinecap="round" strokeLinejoin="round" pathLength={1000} strokeDasharray="1000 1000" strokeDashoffset={1000 * (1 - phase)} />
-    {items.map((item, index) => {
-      const point = points[index];
-      const pointPhase = getStaggeredProgress(phase, index, items.length, {startSpread: 0.4, endBase: 0.5, endSpread: 0.3});
-      return <g key={`${item.label}-${index}`} opacity={pointPhase}>
-        <circle cx={point.x} cy={point.y} r={Math.max(3, dimensions.height * 0.022)} fill={backgroundColor} stroke={color} strokeWidth={Math.max(2, dimensions.height * 0.01)} />
-        <text x={point.x} y={point.y - Math.max(9, dimensions.height * 0.05)} textAnchor="middle" style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text>
-        <text x={point.x} y={dimensions.height - bottom * 0.36} textAnchor="middle" style={chartText(fontSize * 0.85, '#909399')}>{item.label}</text>
-      </g>;
-    })}
+    {items.length === 0 ? <text x={dimensions.width / 2} y={dimensions.height / 2} textAnchor="middle" dominantBaseline="middle" style={{...chartText(fontSize, '#909399'), fontWeight: 650}}>暂无数据</text> : <>
+      <path d={areaPath} fill={`url(#${gradientId})`} opacity={phase} />
+      <path d={path} fill="none" stroke={color} strokeWidth={Math.max(2, dimensions.height * 0.014)} strokeLinecap="round" strokeLinejoin="round" pathLength={1000} strokeDasharray="1000 1000" strokeDashoffset={1000 * (1 - phase)} />
+      {items.map((item, index) => {
+        const point = points[index];
+        const pointPhase = getStaggeredProgress(phase, index, items.length, {startSpread: 0.4, endBase: 0.5, endSpread: 0.3});
+        return <g key={`${item.label}-${index}`} opacity={pointPhase}>
+          <title>{`${item.label}: ${Math.round(item.value)}`}</title>
+          <circle cx={point.x} cy={point.y} r={Math.max(3, dimensions.height * 0.022)} fill={backgroundColor} stroke={color} strokeWidth={Math.max(2, dimensions.height * 0.01)} />
+          <text x={point.x} y={point.y - Math.max(9, dimensions.height * 0.05)} textAnchor="middle" style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text>
+          <text x={point.x} y={dimensions.height - bottom * 0.36} textAnchor="middle" style={chartText(fontSize * 0.85, '#909399')}>{item.label}</text>
+        </g>;
+      })}
+    </>}
   </svg>;
 };
 
@@ -264,26 +270,29 @@ export const PieChart = ({
 
   return <svg role="img" aria-label="占比饼图" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={svgStyle}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
-    {items.map((item, index) => {
-      const weight = pieWeights[index];
-      const slice = (weight / total) * Math.PI * 2;
-      const startAngle = angle;
-      angle += slice;
-      const midAngle = startAngle + slice / 2;
-      const animatedEnd = startAngle + slice * phase;
-      const labelRadius = radius + Math.max(18, dimensions.width * 0.055);
-      const labelX = centerX + Math.cos(midAngle) * labelRadius;
-      const labelY = centerY + Math.sin(midAngle) * labelRadius;
-      const labelOpacity = getStaggeredProgress(phase, index, items.length, {startBase: 0.25, startSpread: 0.15, endBase: 0.75, endSpread: 0.12});
-      const isFullSlice = slice >= Math.PI * 2 - 1e-6;
-      return <g key={`${item.label}-${index}`}>
-        {isFullSlice && phase >= 1 - 1e-6 ? <circle data-pie-full="true" cx={centerX} cy={centerY} r={radius} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} /> : <path d={arcPath(centerX, centerY, radius, startAngle, animatedEnd)} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} />}
-        <text x={labelX} y={labelY} textAnchor={labelX < centerX ? 'end' : 'start'} dominantBaseline="middle" opacity={labelOpacity} style={{...chartText(fontSize, '#606266'), fontWeight: 650}}>{item.label} {Math.round((weight / total) * 100)}%</text>
-      </g>;
-    })}
-    <circle cx={centerX} cy={centerY} r={innerRadius} fill={backgroundColor} />
-    <text x={centerX} y={centerY - fontSize * 0.1} textAnchor="middle" style={{...chartText(fontSize * 1.25, '#303133'), fontWeight: 800}}>数据</text>
-    <text x={centerX} y={centerY + fontSize * 1.25} textAnchor="middle" style={chartText(fontSize * 0.72, secondaryColor)}>占比</text>
+    {items.length === 0 ? <text x={dimensions.width / 2} y={dimensions.height / 2} textAnchor="middle" dominantBaseline="middle" style={{...chartText(fontSize, '#909399'), fontWeight: 650}}>暂无数据</text> : <>
+      {items.map((item, index) => {
+        const weight = pieWeights[index];
+        const slice = (weight / total) * Math.PI * 2;
+        const startAngle = angle;
+        angle += slice;
+        const midAngle = startAngle + slice / 2;
+        const animatedEnd = startAngle + slice * phase;
+        const labelRadius = radius + Math.max(18, dimensions.width * 0.055);
+        const labelX = centerX + Math.cos(midAngle) * labelRadius;
+        const labelY = centerY + Math.sin(midAngle) * labelRadius;
+        const labelOpacity = getStaggeredProgress(phase, index, items.length, {startBase: 0.25, startSpread: 0.15, endBase: 0.75, endSpread: 0.12});
+        const isFullSlice = slice >= Math.PI * 2 - 1e-6;
+        return <g key={`${item.label}-${index}`}>
+          <title>{`${item.label}: ${Math.round((weight / total) * 100)}%`}</title>
+          {isFullSlice && phase >= 1 - 1e-6 ? <circle data-pie-full="true" cx={centerX} cy={centerY} r={radius} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} /> : <path d={arcPath(centerX, centerY, radius, startAngle, animatedEnd)} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} />}
+          <text x={labelX} y={labelY} textAnchor={labelX < centerX ? 'end' : 'start'} dominantBaseline="middle" opacity={labelOpacity} style={{...chartText(fontSize, '#606266'), fontWeight: 650}}>{item.label} {Math.round((weight / total) * 100)}%</text>
+        </g>;
+      })}
+      <circle cx={centerX} cy={centerY} r={innerRadius} fill={backgroundColor} />
+      <text x={centerX} y={centerY - fontSize * 0.1} textAnchor="middle" style={{...chartText(fontSize * 1.25, '#303133'), fontWeight: 800}}>数据</text>
+      <text x={centerX} y={centerY + fontSize * 1.25} textAnchor="middle" style={chartText(fontSize * 0.72, secondaryColor)}>占比</text>
+    </>}
   </svg>;
 };
 
@@ -324,6 +333,7 @@ export const VerticalBarChart = ({
   const barWidth = Math.max(1, slotWidth * 0.54);
   const baseFontSize = Math.min(dimensions.width, dimensions.height) * 0.04;
   const fontSize = Math.max(8, Math.min(baseFontSize, slotWidth * 0.72));
+  const labelStride = items.length > 10 ? Math.ceil(items.length / 10) : 1;
 
   return <svg role="img" aria-label="纵向条形图" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={svgStyle}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
@@ -331,7 +341,7 @@ export const VerticalBarChart = ({
       const y = top + (innerHeight * index) / 3;
       return <line key={`grid-${index}`} x1={left} y1={y} x2={left + innerWidth} y2={y} stroke={secondaryColor} strokeOpacity="0.14" strokeWidth="1" />;
     })}
-    {items.map((item, index) => {
+    {items.length === 0 ? <text x={dimensions.width / 2} y={dimensions.height / 2} textAnchor="middle" dominantBaseline="middle" style={{...chartText(baseFontSize, '#909399'), fontWeight: 650}}>暂无数据</text> : items.map((item, index) => {
       const barProgress = getStaggeredProgress(phase, index, items.length, {endSpread: 0.18});
       const x = left + slotWidth * index + (slotWidth - barWidth) / 2;
       const valueY = valueToY(item.value);
@@ -339,11 +349,13 @@ export const VerticalBarChart = ({
       const barTop = Math.min(baseline, animatedValueY);
       const animatedBarHeight = Math.abs(animatedValueY - baseline);
       const labelY = item.value < 0 ? Math.min(dimensions.height - bottom * 0.12, baseline + animatedBarHeight + fontSize) : Math.max(top + fontSize, barTop - 9);
+      const labelVisible = index % labelStride === 0 || index === items.length - 1;
       return <g key={`${item.label}-${index}`}>
+        <title>{`${item.label}: ${Math.round(item.value)}`}</title>
         <rect x={x} y={top} width={barWidth} height={innerHeight} rx={barWidth / 2} fill={secondaryColor} fillOpacity="0.08" />
         <rect x={x} y={barTop} width={barWidth} height={Math.max(0, animatedBarHeight)} rx={barWidth / 2} fill={item.color ?? color} />
-        <text x={x + barWidth / 2} y={labelY} textAnchor="middle" style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text>
-        <text x={x + barWidth / 2} y={top + innerHeight + bottom * 0.42} textAnchor="middle" style={chartText(fontSize * 0.9, '#606266')}>{item.label}</text>
+        {labelVisible ? <text x={x + barWidth / 2} y={labelY} textAnchor="middle" style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text> : null}
+        {labelVisible ? <text x={x + barWidth / 2} y={top + innerHeight + bottom * 0.42} textAnchor="middle" style={chartText(fontSize * 0.9, '#606266')}>{item.label}</text> : null}
       </g>;
     })}
   </svg>;
