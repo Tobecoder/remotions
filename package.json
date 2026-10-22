@@ -13,14 +13,20 @@
     "build": "npm run build:lib && npm run build -w @remotions/catalog",
     "test": "npm run build:lib && npm run test -w @remotions/animations && npm run test -w @remotions/catalog",
     "typecheck": "npm run build:lib && tsc -p tsconfig.check.json",
-    "check": "npm run test && npm run typecheck && npm run build"
+    "check": "npm run test && npm run test:effects:cjs && npm run typecheck && npm run build",
+    "test:effects:cjs": "node scripts/verify-content-effects.cjs",
+    "verify:effects:render": "npm run build:lib && node scripts/verify-content-effects-render.mjs",
+    "verify:storytelling": "npm run build:lib && node scripts/verify-storytelling.mjs"
   },
   "devDependencies": {
-    "@remotion/media": "4.0.536",
+    "@remotion/bundler": "4.0.537",
+    "@remotion/media": "4.0.537",
+    "@remotion/renderer": "4.0.537",
     "@types/node": "26.6.5",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.4.0",
+    "pngjs": "7.0.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.0",

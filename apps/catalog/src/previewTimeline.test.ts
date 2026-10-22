@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {getPreviewDurationInSeconds, getPreviewLoopMode} from './catalog';
+import {getPreviewDurationInSeconds, getPreviewLoopMode, getPreviewStillFrame} from './catalog';
 import {getPreviewDurationInFrames, getPreviewFrame, getPreviewLoopDurationInFrames} from './previewTimeline';
 
 describe('catalog preview timeline', () => {
@@ -8,6 +8,14 @@ describe('catalog preview timeline', () => {
     ['moving-waves', 8],
     ['pulse-rings', 4.5],
     ['shimmer-sweep', 5.5],
+    ['wiggling-callout', 4],
+    ['peel', 2],
+    ['shine', 1.5],
+    ['tear-apart', 1.5],
+    ['news-article-highlight', 5],
+    ['speed-lines', 1.5],
+    ['on-screen-messages', 5.4],
+    ['polaroid-pictures', 5],
   ] as const)('uses the component cycle for %s', (id, seconds) => {
     expect(getPreviewDurationInSeconds(id)).toBe(seconds);
   });
@@ -51,5 +59,23 @@ describe('catalog preview timeline', () => {
     expect(getPreviewFrame(0, 30, 150, 'forward-hold')).toBe(0);
     expect(getPreviewFrame(4999, 30, 150, 'forward-hold')).toBe(149);
     expect(getPreviewFrame(999999, 30, 150, 'forward-hold')).toBe(149);
+  });
+
+  it.each(['location-lower-third', 'name-lower-third'] as const)('%s previews the complete entrance and exit with a visible resting frame', (id) => {
+    expect(getPreviewLoopMode(id)).toBe('forward');
+    expect(getPreviewDurationInSeconds(id)).toBe(4);
+    expect(getPreviewStillFrame(id)).toBe(60);
+    expect(getPreviewFrame(4000, 30, 120)).toBe(0);
+  });
+
+  it.each(['news-article-highlight', 'speed-lines', 'polaroid-pictures'] as const)('%s shows its full entrance and exit, with an interior resting frame', (id) => {
+    expect(getPreviewLoopMode(id)).toBe('forward');
+    expect(getPreviewStillFrame(id)).toBeGreaterThan(0);
+    expect(getPreviewStillFrame(id)).toBeLessThan(getPreviewDurationInSeconds(id) * 30 - 1);
+  });
+
+  it('holds the completed conversation without reversing the message order', () => {
+    expect(getPreviewLoopMode('on-screen-messages')).toBe('forward-hold');
+    expect(getPreviewStillFrame('on-screen-messages')).toBe(90);
   });
 });

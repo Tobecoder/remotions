@@ -11,3 +11,9 @@ export {PictureInPictureTransition, ProductCollection, RotatingCards, SlideToSpl
 export type {LayoutProps, PictureInPictureTransitionProps, ProductCollectionProps, RotatingCardsProps, SlideToSplitScreenProps} from './components/Layouts';
 export {HorizontalBarChart, LineChart, NumberCounter, PieChart, VerticalBarChart} from './components/Charts';
 export type {ChartDatum, ChartProps, NumberCounterProps} from './components/Charts';
+export {LocationLowerThird, NameLowerThird} from './components/Overlays';
+export type {LocationLowerThirdProps, NameLowerThirdProps, OverlayProps} from './components/Overlays';
+export {Peel, Shine, TearApart, WigglingCallout} from './components/ContentEffects';
+export type {ContentEffectProps, WigglingCalloutProps} from './components/ContentEffects';
+export {NewsArticleHighlight, OnScreenMessages, PolaroidPictures, SpeedLines} from './components/Storytelling';
+export type {StorytellingProps, NewsArticleHighlightProps, OnScreenMessagesProps, StoryMessage, PolaroidPhoto, PolaroidPicturesProps, SpeedLinesProps} from './components/Storytelling';

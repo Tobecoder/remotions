@@ -294,3 +294,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, .upload-button:focus
   :root { scroll-behavior: auto; }
   .motion-card, .button-primary, .category-tab { transition: none; }
 }
+@font-face {
+  font-family: 'Caveat';
+  src: url('/storytelling/caveat-600.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}

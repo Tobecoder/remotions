@@ -2,7 +2,7 @@ import {forwardRef, useCallback, useEffect, useImperativeHandle, useRef} from 'r
 import type {SyntheticEvent} from 'react';
 import {Player} from '@remotion/player';
 import type {PlayerRef} from '@remotion/player';
-import {AudioCardComposition, getPreviewDurationInSeconds, getPreviewLoopMode} from './catalog';
+import {AudioCardComposition, getPreviewDurationInSeconds, getPreviewLoopMode, getPreviewStillFrame} from './catalog';
 import type {PreviewProps} from './catalog';
 import {getPreviewDurationInFrames, getPreviewFrame, getPreviewLoopDurationInFrames} from './previewTimeline';
 
@@ -26,6 +26,7 @@ export const CatalogCardPreview = forwardRef<CatalogCardPreviewHandle, CatalogCa
   const loopMode = getPreviewLoopMode(inputProps.id);
   const cycleDurationInFrames = getPreviewDurationInFrames(durationInSeconds, fps);
   const durationInFrames = getPreviewLoopDurationInFrames(cycleDurationInFrames, loopMode);
+  const stillFrame = getPreviewStillFrame(inputProps.id);
 
   const stop = useCallback(() => {
     if (animationFrameRef.current !== null) {
@@ -35,8 +36,8 @@ export const CatalogCardPreview = forwardRef<CatalogCardPreviewHandle, CatalogCa
     const player = playerRef.current;
     if (!player) return;
     player.pause();
-    player.seekTo(0);
-  }, []);
+    player.seekTo(stillFrame);
+  }, [stillFrame]);
 
   const start = useCallback((event?: SyntheticEvent) => {
     void event;
@@ -73,6 +74,7 @@ export const CatalogCardPreview = forwardRef<CatalogCardPreviewHandle, CatalogCa
       component={AudioCardComposition}
       inputProps={inputProps}
       durationInFrames={durationInFrames}
+      initialFrame={stillFrame}
       fps={fps}
       compositionWidth={compositionWidth}
       compositionHeight={compositionHeight}
