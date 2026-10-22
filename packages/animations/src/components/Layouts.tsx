@@ -158,7 +158,8 @@ export const PictureInPictureTransition = ({
   const dimensions = getDimensions(width, height);
   const phase = getPictureInPictureProgress(frame, fps, durationInSeconds, speed, progress);
   const scale = clamp(Number.isFinite(insetScale) ? insetScale : 0.38, 0.18, 0.72);
-  const edgePadding = Number.isFinite(padding) ? Math.max(0, padding as number) : 0;
+  const hasExplicitPadding = Number.isFinite(padding);
+  const edgePadding = hasExplicitPadding ? Math.max(0, padding as number) : 0;
   const cropLeft = interpolate(phase, [0, 1], [0, 0.302], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const cropRight = cropLeft;
   const cropTop = interpolate(phase, [0, 1], [0, 0.06], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
@@ -168,8 +169,12 @@ export const PictureInPictureTransition = ({
   const visibleBottomOffset = dimensions.height * (1 - cropBottom) * sourceScale;
   const visibleLeftOffset = dimensions.width * cropLeft * sourceScale;
   const visibleTopOffset = dimensions.height * cropTop * sourceScale;
-  const sourceRightMargin = dimensions.width * (1 - 0.7109375 - (1 - 0.302) * 0.38) + edgePadding;
-  const sourceTopMargin = dimensions.height * (0.0212963 + 0.06 * 0.38) + edgePadding;
+  const sourceRightMargin = hasExplicitPadding
+    ? edgePadding
+    : dimensions.width * (1 - 0.7109375 - (1 - 0.302) * 0.38);
+  const sourceTopMargin = hasExplicitPadding
+    ? edgePadding
+    : dimensions.height * (0.0212963 + 0.06 * 0.38);
   const sourceTargetX = insetPosition.endsWith('right')
     ? dimensions.width - sourceRightMargin - visibleRightOffset
     : edgePadding - visibleLeftOffset;
@@ -432,7 +437,7 @@ export const ProductCollection = ({
   }) * designScale;
 
   return <div role="img" aria-label="源站旋转卡片布局" data-layout="product-collection" style={rootStyle(dimensions, backgroundColor)}>
-    <div style={{
+    <div data-product-collection-container="true" style={{
       WebkitFontSmoothing: 'antialiased',
       color: '#1d1d19',
       fontFamily: 'Inter, sans-serif',

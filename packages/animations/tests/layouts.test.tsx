@@ -11,6 +11,19 @@ vi.mock('remotion', async (importOriginal) => ({
   Img: ({src, style}: {src: string; style?: CSSProperties}) => <img src={src} style={style} alt="" />,
 }));
 
+const readTranslate = (markup: string) => {
+  const match = markup.match(/translate:([^;\"]+)/);
+  const values = match?.[1].trim().match(/^(-?\d+(?:\.\d+)?)px\s+(-?\d+(?:\.\d+)?)px$/);
+  if (!values) throw new Error(`Could not read translate from ${markup}`);
+  return {x: Number(values[1]), y: Number(values[2])};
+};
+
+const readProductCollectionContainer = (markup: string) => {
+  const match = markup.match(/<div(?=[^>]*data-product-collection-container="true")[^>]*>/);
+  if (!match) throw new Error(`Could not find ProductCollection container in ${markup}`);
+  return match[0];
+};
+
 describe('layout components', () => {
   it.each([
     ['PictureInPictureTransition', <PictureInPictureTransition width={640} height={260} />],
@@ -41,8 +54,34 @@ describe('layout components', () => {
   it('can keep the ProductCollection visible when a preview holds the last frame', () => {
     const sourceFade = renderToStaticMarkup(<ProductCollection width={640} height={260} progress={1} />);
     const visibleEnd = renderToStaticMarkup(<ProductCollection width={640} height={260} progress={1} fadeOut={false} />);
-    expect(sourceFade).toContain('opacity:0');
-    expect(visibleEnd).toContain('opacity:1');
+    expect(readProductCollectionContainer(sourceFade)).toContain('opacity:0');
+    expect(readProductCollectionContainer(visibleEnd)).toContain('opacity:1');
+  });
+
+  it('uses explicit PiP padding as the final edge margin for every inset position', () => {
+    const width = 1920;
+    const height = 1080;
+    const padding = 20;
+    const positions = [
+      {insetPosition: 'top-left' as const, left: true, top: true},
+      {insetPosition: 'top-right' as const, left: false, top: true},
+      {insetPosition: 'bottom-left' as const, left: true, top: false},
+      {insetPosition: 'bottom-right' as const, left: false, top: false},
+    ];
+
+    for (const insetScale of [0.38, 0.72]) {
+      const visibleLeft = width * 0.302 * insetScale;
+      const visibleRight = width * (1 - 0.302) * insetScale;
+      const visibleTop = height * 0.06 * insetScale;
+      const visibleBottom = height * (1 - 0.06) * insetScale;
+
+      for (const position of positions) {
+        const markup = renderToStaticMarkup(<PictureInPictureTransition width={width} height={height} progress={1} insetPosition={position.insetPosition} insetScale={insetScale} padding={padding} />);
+        const {x, y} = readTranslate(markup);
+        expect(x + (position.left ? visibleLeft : visibleRight)).toBeCloseTo(position.left ? padding : width - padding, 5);
+        expect(y + (position.top ? visibleTop : visibleBottom)).toBeCloseTo(position.top ? padding : height - padding, 5);
+      }
+    }
   });
 
   it('falls back to finite dimensions for invalid input', () => {

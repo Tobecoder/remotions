@@ -42,7 +42,7 @@ export const LayoutScene = () => (
 );
 ```
 
-`SlideToSplitScreen` accepts `children` and `secondary` scenes, while `RotatingCards` keeps the library's own `cards` array implementation. `ProductCollection` is the source-style three-card layout and supports `fadeOut={false}` for a visible held end frame. All four layouts support `durationInSeconds`, `speed`, and an optional controlled `progress` value.
+`SlideToSplitScreen` accepts `children` and `secondary` scenes, while `RotatingCards` keeps the library's own `cards` array implementation. `ProductCollection` is the source-style three-card layout and supports `fadeOut={false}` for a visible held end frame. All four layouts support `durationInSeconds`, `speed`, and an optional controlled `progress` value. For `PictureInPictureTransition`, `padding` is the final pixel margin from the canvas edge on all four sides; when omitted, the source-style top-right inset is preserved.
 
 React 18+, Remotion 4.x, `@remotion/media-utils` 4.x and `@remotion/captions` 4.x are peer dependencies. Keep Remotion packages on matching exact versions in the host app. The workspace currently uses 4.0.536. This package is not yet published to npm.
 
