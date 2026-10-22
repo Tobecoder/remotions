@@ -15,6 +15,7 @@ describe('animation catalog', () => {
       'PulseRings', 'ParticleField', 'ShimmerSweep',
       'PictureInPictureTransition', 'SlideToSplitScreen', 'RotatingCards', 'ProductCollection',
       'LocationLowerThird', 'NameLowerThird',
+      'NewsArticleHighlight', 'SpeedLines', 'OnScreenMessages', 'PolaroidPictures',
     ]);
     expect(catalog.filter((item) => item.category === 'audio')).toHaveLength(3);
     expect(catalog.filter((item) => item.category === 'captions')).toHaveLength(5);
@@ -23,10 +24,11 @@ describe('animation catalog', () => {
     expect(catalog.filter((item) => item.category === 'effects')).toHaveLength(7);
     expect(catalog.filter((item) => item.category === 'layouts')).toHaveLength(4);
     expect(catalog.filter((item) => item.category === 'overlays')).toHaveLength(2);
+    expect(catalog.filter((item) => item.category === 'storytelling')).toHaveLength(4);
   });
 
   it('keeps future categories separate from the active catalog entries', () => {
-    expect(categories.map((item) => item.id)).toEqual(['audio', 'captions', 'charts', 'backgrounds', 'effects', 'layouts', 'overlays']);
+    expect(categories.map((item) => item.id)).toEqual(['audio', 'captions', 'charts', 'backgrounds', 'effects', 'layouts', 'overlays', 'storytelling']);
     expect(categories.filter((item) => item.status === 'coming-soon')).toHaveLength(0);
     expect(categories.every((item) => item.name && item.description)).toBe(true);
   });

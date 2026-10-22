@@ -15,3 +15,5 @@ export {LocationLowerThird, NameLowerThird} from './components/Overlays';
 export type {LocationLowerThirdProps, NameLowerThirdProps, OverlayProps} from './components/Overlays';
 export {Peel, Shine, TearApart, WigglingCallout} from './components/ContentEffects';
 export type {ContentEffectProps, WigglingCalloutProps} from './components/ContentEffects';
+export {NewsArticleHighlight, OnScreenMessages, PolaroidPictures, SpeedLines} from './components/Storytelling';
+export type {StorytellingProps, NewsArticleHighlightProps, OnScreenMessagesProps, StoryMessage, PolaroidPhoto, PolaroidPicturesProps, SpeedLinesProps} from './components/Storytelling';

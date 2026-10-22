@@ -1,6 +1,6 @@
 # Remotions ✦
 
-面向 Remotion 的开源动效素材库。当前开放音频动画、字幕动画、数据图表、背景特效、视觉效果、版式转场和信息叠加分类，包含三十二个可复用组件：**示波曲线、镜像频谱、语音波形、基础字幕、气泡字幕、移动气泡、弹出单词、逐字高亮、横向条形图、趋势折线图、数字计数器、占比饼图、纵向条形图、液态轮廓、流动波浪、折线流动、笔记网格、纸张纹理、旋转星芒、光环脉冲、粒子漂移、光泽扫过、摇摆气泡、纸面揭开、斜向扫光、纸面撕裂、画中画转场、滑动分屏、旋转卡片、产品卡组、地点叠加、姓名叠加**。原有 11 个通用动效已从公开组件入口和网站移除，历史实现保存在 [`archive/v0.1-legacy`](archive/v0.1-legacy/README.md)。
+面向 Remotion 的开源动效素材库。当前开放音频动画、字幕动画、数据图表、背景特效、视觉效果、版式转场、信息叠加和叙事动画分类，包含三十六个可复用组件：**示波曲线、镜像频谱、语音波形、基础字幕、气泡字幕、移动气泡、弹出单词、逐字高亮、横向条形图、趋势折线图、数字计数器、占比饼图、纵向条形图、液态轮廓、流动波浪、折线流动、笔记网格、纸张纹理、旋转星芒、光环脉冲、粒子漂移、光泽扫过、摇摆气泡、纸面揭开、斜向扫光、纸面撕裂、画中画转场、滑动分屏、旋转卡片、产品卡组、地点叠加、姓名叠加、新闻高亮、速度线、屏幕消息、拍立得照片**。原有 11 个通用动效已从公开组件入口和网站移除，历史实现保存在 [`archive/v0.1-legacy`](archive/v0.1-legacy/README.md)。
 
 ## 本地运行
 
@@ -11,11 +11,11 @@ npm ci
 npm run dev
 ```
 
-打开终端显示的本地地址（默认 `http://localhost:3000`）。网页按分类展示组件；悬浮卡片会在卡片内部播放逐帧画面，直接查看音频可视化、字幕动画、数据图表、背景特效、视觉效果、版式转场和信息叠加。
+打开终端显示的本地地址（默认 `http://localhost:3000`）。网页按分类展示组件；悬浮卡片会在卡片内部播放逐帧画面，直接查看音频可视化、字幕动画、数据图表、背景特效、视觉效果、版式转场、信息叠加和叙事动画。
 
 ## 在 Remotion 中使用
 
-将音频放到宿主工程的 `public/` 目录，保持 `remotion`、`@remotion/media` 和 `@remotion/media-utils` 版本一致。此工作区使用 `4.0.536`。
+将音频放到宿主工程的 `public/` 目录，保持 `remotion`、`@remotion/media` 和 `@remotion/media-utils` 版本一致。此工作区使用 `4.0.537`。
 
 ```tsx
 import {Audio} from '@remotion/media';
@@ -109,13 +109,36 @@ export const Scene = () => (
 
 ## 工程结构
 
-- `packages/animations/`：三十二个可复用的音频动画、字幕动画、数据图表、背景特效、视觉效果、版式转场和信息叠加组件，构建 ESM、CJS 和类型声明。
+- `packages/animations/`：三十六个可复用的音频动画、字幕动画、数据图表、背景特效、视觉效果、版式转场、信息叠加和叙事动画组件，构建 ESM、CJS 和类型声明。
 - `apps/catalog/`：中文素材库、卡片内 Remotion 动效预览、原创 WAV 示例音频。
 - `scripts/generate-demo-audio.mjs`：可重复生成示例音频；不依赖第三方音效素材。
 - `examples/AudioComposition.tsx`：在 Remotion Composition 中引用音频动画的示例。
 - `archive/v0.1-legacy/`：以前的通用动效与历史验证文档，不参与当前构建。
 
 运行 `npm run check` 可执行组件与示例音频测试、构建后 CJS 效果挂载检查、类型检查和生产构建。`npm run verify:effects:render` 使用支持 WebGPU 的 Chromium 导出效果短片，并解码检查 MP4 关键帧，输出保存在 `.verification/content-effects/`。组件库尚未发布到 npm；目录站点的部署状态以项目中的托管配置为准。更多结果见 [验证记录](docs/VERIFICATION.md)。
+
+## 叙事动画
+
+叙事动画包含 `NewsArticleHighlight`、`SpeedLines`、`OnScreenMessages`、`PolaroidPictures`，参考 [Remotion Elements Storytelling](https://www.remotion.dev/elements/#element-category-storytelling) 的排版与运动节奏实现。
+
+```tsx
+import {OnScreenMessages, NewsArticleHighlight, PolaroidPictures} from '@remotions/animations';
+import {staticFile} from 'remotion';
+
+export const Dialogue = () => <OnScreenMessages messages={[
+  {from: 'them', text: '故事从哪里开始？'},
+  {from: 'me', text: '从这一条消息开始。'},
+]} />;
+
+export const Article = () => <NewsArticleHighlight headline="把灵感变成故事" highlights={['变成故事']} summary="你的文章摘要" />;
+export const Photos = () => <PolaroidPictures photos={[
+  {src: staticFile('photo.jpg'), caption: '沿途风景'},
+]} />;
+```
+
+四项均支持 `width`、`height`、`color`、`backgroundColor`、`durationInSeconds`、`speed`、`progress`，默认背景透明。`NewsArticleHighlight` 与 `PolaroidPictures` 默认包含结尾退出，设 `fadeOut={false}` 可保留最终内容。消息和照片传入 `[]` 时保持空白；省略才使用演示内容。新闻高亮的 `highlights` 按精确文本匹配，不作为正则表达式解析。速度线可通过 `lineCount` 和 `seed` 控制密度与随机图案，默认 56 条、1.5 秒。
+
+照片注释可用 `captionFontFamily`、聊天文字可用 `fontFamily` 自定义字体；宿主应在渲染前加载所需字体。目录自带本地 Caveat 字体，中文注释回退到楷体；照片示例图片与字体来源见 [素材说明](apps/catalog/public/storytelling/README.md)。它们不随动画 npm 包分发。`npm run verify:storytelling` 可生成横屏/竖屏关键帧并检查可见内容和退出状态，结果保存在 `.verification/storytelling/`。
 
 ## 来源与许可
 

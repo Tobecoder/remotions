@@ -15,7 +15,8 @@
     "typecheck": "npm run build:lib && tsc -p tsconfig.check.json",
     "check": "npm run test && npm run test:effects:cjs && npm run typecheck && npm run build",
     "test:effects:cjs": "node scripts/verify-content-effects.cjs",
-    "verify:effects:render": "npm run build:lib && node scripts/verify-content-effects-render.mjs"
+    "verify:effects:render": "npm run build:lib && node scripts/verify-content-effects-render.mjs",
+    "verify:storytelling": "npm run build:lib && node scripts/verify-storytelling.mjs"
   },
   "devDependencies": {
     "@remotion/bundler": "4.0.537",
