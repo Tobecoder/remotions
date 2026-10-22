@@ -1,3 +1,4 @@
+import {useId} from 'react';
 import {Easing, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 
 export type ChartDatum = {
@@ -29,8 +30,6 @@ export type ChartProps = {
 
 type ChartDimensions = {width: number; height: number};
 
-const palette = ['#409eff', '#67c23a', '#e6a23c', '#8b5cf6', '#f56c6c', '#13c2c2'];
-
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 
 const getDimensions = (width: number, height: number): ChartDimensions => ({
@@ -52,20 +51,20 @@ const getProgress = (frame: number, fps: number, durationInSeconds: number, spee
 
 const sanitizeData = (data: readonly ChartDatum[] | undefined, fallback: readonly ChartDatum[]) => {
   const source = data && data.length > 0 ? data : fallback;
-  return source.slice(0, 8).map((item, index) => ({
-    label: String(item.label ?? '').slice(0, 24),
-    value: Number.isFinite(item.value) ? Math.max(0, item.value) : 0,
-    color: item.color ?? palette[index % palette.length],
+  return source.map((item) => ({
+    label: String(item.label ?? ''),
+    value: Number.isFinite(item.value) ? item.value : 0,
+    color: item.color,
   }));
 };
 
 const svgStyle = {display: 'block', maxWidth: '100%'} as const;
 
 const defaultData: readonly ChartDatum[] = [
-  {label: '设计', value: 68},
-  {label: '工程', value: 84},
-  {label: '内容', value: 52},
-  {label: '增长', value: 92},
+  {label: '设计', value: 68, color: '#409eff'},
+  {label: '工程', value: 84, color: '#67c23a'},
+  {label: '内容', value: 52, color: '#e6a23c'},
+  {label: '增长', value: 92, color: '#8b5cf6'},
 ];
 
 const chartText = (size: number, color = '#303133') => ({
@@ -96,8 +95,12 @@ export const HorizontalBarChart = ({
   const top = dimensions.height * 0.16;
   const bottom = dimensions.height * 0.12;
   const chartWidth = Math.max(1, dimensions.width - left - right);
-  const rowHeight = Math.max(18, (dimensions.height - top - bottom) / Math.max(1, items.length));
-  const maxValue = Math.max(1, ...items.map((item) => item.value));
+  const rowHeight = Math.max(14, (dimensions.height - top - bottom) / Math.max(1, items.length));
+  const domainMin = Math.min(0, ...items.map((item) => item.value));
+  const domainMax = Math.max(0, ...items.map((item) => item.value));
+  const domainRange = Math.max(1, domainMax - domainMin);
+  const valueToX = (value: number) => left + ((value - domainMin) / domainRange) * chartWidth;
+  const baselineX = valueToX(0);
   const fontSize = Math.max(10, Math.min(dimensions.width, dimensions.height) * 0.045);
 
   return <svg role="img" aria-label="横向条形图" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={svgStyle}>
@@ -106,19 +109,24 @@ export const HorizontalBarChart = ({
       const x = left + (chartWidth * index) / 4;
       return <g key={`tick-${index}`}>
         <line x1={x} y1={top - 8} x2={x} y2={dimensions.height - bottom} stroke={secondaryColor} strokeOpacity="0.13" strokeWidth="1" />
-        <text x={x} y={top - 16} textAnchor="middle" style={chartText(fontSize * 0.72, '#909399')}>{Math.round((maxValue * index) / 4)}</text>
+        <text x={x} y={top - 16} textAnchor="middle" style={chartText(fontSize * 0.72, '#909399')}>{Math.round(domainMin + (domainRange * index) / 4)}</text>
       </g>;
     })}
+    <line x1={baselineX} y1={top - 8} x2={baselineX} y2={dimensions.height - bottom} stroke={color} strokeOpacity="0.34" strokeWidth="1.5" />
     {items.map((item, index) => {
       const rowY = top + index * rowHeight;
       const barHeight = Math.max(8, rowHeight * 0.48);
       const rowProgress = interpolate(phase, [index * 0.08, 0.58 + index * 0.05], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-      const barWidth = (item.value / maxValue) * chartWidth * rowProgress;
+      const valueX = valueToX(item.value);
+      const animatedValueX = baselineX + (valueX - baselineX) * rowProgress;
+      const barX = Math.min(baselineX, animatedValueX);
+      const barWidth = Math.abs(animatedValueX - baselineX);
+      const valueLabelX = item.value < 0 ? Math.max(4, animatedValueX - 8) : Math.min(dimensions.width - 4, animatedValueX + 8);
       return <g key={`${item.label}-${index}`}>
         <text x={left - 12} y={rowY + barHeight * 0.82} textAnchor="end" style={{...chartText(fontSize, '#606266'), fontWeight: 650}}>{item.label}</text>
         <rect x={left} y={rowY} width={chartWidth} height={barHeight} rx={barHeight / 2} fill={secondaryColor} fillOpacity="0.1" />
-        <rect x={left} y={rowY} width={Math.max(0, barWidth)} height={barHeight} rx={barHeight / 2} fill={item.color ?? color} />
-        <text x={left + chartWidth + 8} y={rowY + barHeight * 0.82} style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text>
+        <rect x={barX} y={rowY} width={Math.max(0, barWidth)} height={barHeight} rx={barHeight / 2} fill={item.color ?? color} />
+        <text x={valueLabelX} y={rowY + barHeight * 0.82} textAnchor={item.value < 0 ? 'end' : 'start'} style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text>
       </g>;
     })}
   </svg>;
@@ -154,21 +162,22 @@ export const LineChart = ({
   const bottom = dimensions.height * 0.2;
   const innerWidth = Math.max(1, dimensions.width - left - right);
   const innerHeight = Math.max(1, dimensions.height - top - bottom);
-  const minValue = Math.min(...items.map((item) => item.value), 0);
-  const maxValue = Math.max(1, ...items.map((item) => item.value));
-  const range = Math.max(1, maxValue - minValue);
+  const domainMin = Math.min(0, ...items.map((item) => item.value));
+  const domainMax = Math.max(0, ...items.map((item) => item.value));
+  const range = Math.max(1, domainMax - domainMin);
   const points = items.map((item, index) => ({
     x: items.length === 1 ? left + innerWidth / 2 : left + (innerWidth * index) / (items.length - 1),
-    y: top + innerHeight * (1 - (item.value - minValue) / range),
+    y: top + innerHeight * (1 - (item.value - domainMin) / range),
   }));
   const path = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ');
-  const baseline = top + innerHeight;
+  const baseline = top + innerHeight * (1 - (0 - domainMin) / range);
   const areaPath = `${path} L ${points[points.length - 1]?.x ?? left} ${baseline} L ${points[0]?.x ?? left} ${baseline} Z`;
   const fontSize = Math.max(10, Math.min(dimensions.width, dimensions.height) * 0.04);
+  const gradientId = `line-chart-area-${useId().replace(/:/g, '')}`;
 
   return <svg role="img" aria-label="趋势折线图" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={svgStyle}>
     <defs>
-      <linearGradient id="line-chart-area" x1="0" y1="0" x2="0" y2="1">
+      <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stopColor={color} stopOpacity="0.26" />
         <stop offset="100%" stopColor={color} stopOpacity="0" />
       </linearGradient>
@@ -178,7 +187,7 @@ export const LineChart = ({
       const y = top + (innerHeight * index) / 3;
       return <line key={`grid-${index}`} x1={left} y1={y} x2={left + innerWidth} y2={y} stroke={secondaryColor} strokeOpacity="0.14" strokeWidth="1" />;
     })}
-    <path d={areaPath} fill="url(#line-chart-area)" opacity={phase} />
+    <path d={areaPath} fill={`url(#${gradientId})`} opacity={phase} />
     <path d={path} fill="none" stroke={color} strokeWidth={Math.max(2, dimensions.height * 0.014)} strokeLinecap="round" strokeLinejoin="round" pathLength={1000} strokeDasharray="1000 1000" strokeDashoffset={1000 * (1 - phase)} />
     {items.map((item, index) => {
       const point = points[index];
@@ -227,14 +236,16 @@ export const PieChart = ({
   const centerY = dimensions.height * 0.52;
   const radius = Math.max(20, Math.min(dimensions.width, dimensions.height) * 0.29);
   const innerRadius = radius * 0.55;
-  const total = Math.max(1, items.reduce((sum, item) => sum + item.value, 0));
+  const pieWeights = items.map((item) => Math.max(0, item.value));
+  const total = Math.max(1, pieWeights.reduce((sum, value) => sum + value, 0));
   const fontSize = Math.max(10, Math.min(dimensions.width, dimensions.height) * 0.04);
   let angle = -Math.PI / 2;
 
   return <svg role="img" aria-label="占比饼图" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={svgStyle}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
     {items.map((item, index) => {
-      const slice = (item.value / total) * Math.PI * 2;
+      const weight = pieWeights[index];
+      const slice = (weight / total) * Math.PI * 2;
       const startAngle = angle;
       angle += slice;
       const midAngle = startAngle + slice / 2;
@@ -243,9 +254,10 @@ export const PieChart = ({
       const labelX = centerX + Math.cos(midAngle) * labelRadius;
       const labelY = centerY + Math.sin(midAngle) * labelRadius;
       const labelOpacity = interpolate(phase, [0.25 + index * 0.05, 0.75 + index * 0.04], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+      const isFullSlice = slice >= Math.PI * 2 - 1e-6;
       return <g key={`${item.label}-${index}`}>
-        <path d={arcPath(centerX, centerY, radius, startAngle, animatedEnd)} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} />
-        <text x={labelX} y={labelY} textAnchor={labelX < centerX ? 'end' : 'start'} dominantBaseline="middle" opacity={labelOpacity} style={{...chartText(fontSize, '#606266'), fontWeight: 650}}>{item.label} {Math.round((item.value / total) * 100)}%</text>
+        {isFullSlice && phase >= 1 - 1e-6 ? <circle data-pie-full="true" cx={centerX} cy={centerY} r={radius} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} /> : <path d={arcPath(centerX, centerY, radius, startAngle, animatedEnd)} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} />}
+        <text x={labelX} y={labelY} textAnchor={labelX < centerX ? 'end' : 'start'} dominantBaseline="middle" opacity={labelOpacity} style={{...chartText(fontSize, '#606266'), fontWeight: 650}}>{item.label} {Math.round((weight / total) * 100)}%</text>
       </g>;
     })}
     <circle cx={centerX} cy={centerY} r={innerRadius} fill={backgroundColor} />
@@ -282,8 +294,11 @@ export const VerticalBarChart = ({
   const bottom = dimensions.height * 0.2;
   const innerWidth = Math.max(1, dimensions.width - left - right);
   const innerHeight = Math.max(1, dimensions.height - top - bottom);
-  const baseline = top + innerHeight;
-  const maxValue = Math.max(1, ...items.map((item) => item.value));
+  const domainMin = Math.min(0, ...items.map((item) => item.value));
+  const domainMax = Math.max(0, ...items.map((item) => item.value));
+  const domainRange = Math.max(1, domainMax - domainMin);
+  const valueToY = (value: number) => top + ((domainMax - value) / domainRange) * innerHeight;
+  const baseline = valueToY(0);
   const slotWidth = innerWidth / Math.max(1, items.length);
   const barWidth = Math.max(6, slotWidth * 0.54);
   const fontSize = Math.max(10, Math.min(dimensions.width, dimensions.height) * 0.04);
@@ -296,13 +311,17 @@ export const VerticalBarChart = ({
     })}
     {items.map((item, index) => {
       const barProgress = interpolate(phase, [index * 0.08, 0.58 + index * 0.06], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-      const barHeight = (item.value / maxValue) * innerHeight * barProgress;
       const x = left + slotWidth * index + (slotWidth - barWidth) / 2;
+      const valueY = valueToY(item.value);
+      const animatedValueY = baseline + (valueY - baseline) * barProgress;
+      const barTop = Math.min(baseline, animatedValueY);
+      const animatedBarHeight = Math.abs(animatedValueY - baseline);
+      const labelY = item.value < 0 ? Math.min(dimensions.height - bottom * 0.12, baseline + animatedBarHeight + fontSize) : Math.max(top + fontSize, barTop - 9);
       return <g key={`${item.label}-${index}`}>
-        <rect x={x} y={baseline - innerHeight} width={barWidth} height={innerHeight} rx={barWidth / 2} fill={secondaryColor} fillOpacity="0.08" />
-        <rect x={x} y={baseline - barHeight} width={barWidth} height={Math.max(0, barHeight)} rx={barWidth / 2} fill={item.color ?? color} />
-        <text x={x + barWidth / 2} y={Math.max(top + fontSize, baseline - barHeight - 9)} textAnchor="middle" style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text>
-        <text x={x + barWidth / 2} y={baseline + bottom * 0.42} textAnchor="middle" style={chartText(fontSize * 0.9, '#606266')}>{item.label}</text>
+        <rect x={x} y={top} width={barWidth} height={innerHeight} rx={barWidth / 2} fill={secondaryColor} fillOpacity="0.08" />
+        <rect x={x} y={barTop} width={barWidth} height={Math.max(0, animatedBarHeight)} rx={barWidth / 2} fill={item.color ?? color} />
+        <text x={x + barWidth / 2} y={labelY} textAnchor="middle" style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text>
+        <text x={x + barWidth / 2} y={top + innerHeight + bottom * 0.42} textAnchor="middle" style={chartText(fontSize * 0.9, '#606266')}>{item.label}</text>
       </g>;
     })}
   </svg>;
