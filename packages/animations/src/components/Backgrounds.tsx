@@ -31,6 +31,12 @@ const getPhase = (frame: number, fps: number, speed: number) => interpolate(
 
 const fract = (value: number) => value - Math.floor(value);
 
+const wrap = (value: number, period: number) => {
+  if (!Number.isFinite(period) || period <= 0) return 0;
+  const remainder = value % period;
+  return remainder < 0 ? remainder + period : remainder;
+};
+
 type Point = readonly [number, number];
 
 const midpoint = (a: Point, b: Point): Point => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
@@ -259,14 +265,108 @@ const createLiquidShaderState = (canvas: HTMLCanvasElement): LiquidShaderState |
   };
 };
 
-const parseColor = (value: string): [number, number, number, number] => {
-  const normalized = value.replace('#', '');
-  const hex = normalized.length === 3 ? normalized.split('').map((part) => `${part}${part}`).join('') : normalized;
-  const red = Number.parseInt(hex.slice(0, 2), 16) / 255;
-  const green = Number.parseInt(hex.slice(2, 4), 16) / 255;
-  const blue = Number.parseInt(hex.slice(4, 6), 16) / 255;
-  return [Number.isFinite(red) ? red : 0, Number.isFinite(green) ? green : 0, Number.isFinite(blue) ? blue : 0, 1];
+type ParsedColor = [number, number, number, number];
+
+const clampColor = (value: number) => Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : 0;
+
+const parseColorChannel = (value: string) => {
+  const normalized = value.trim();
+  if (normalized.endsWith('%')) {
+    return clampColor(Number.parseFloat(normalized.slice(0, -1)) / 100);
+  }
+  return clampColor(Number.parseFloat(normalized) / 255);
 };
+
+const parseAlpha = (value: string | undefined) => {
+  if (!value) return 1;
+  const normalized = value.trim();
+  if (normalized.endsWith('%')) {
+    return clampColor(Number.parseFloat(normalized.slice(0, -1)) / 100);
+  }
+  return clampColor(Number.parseFloat(normalized));
+};
+
+const NAMED_COLORS: Record<string, string> = {
+  black: '#000000',
+  blue: '#0000ff',
+  brown: '#a52a2a',
+  cyan: '#00ffff',
+  gray: '#808080',
+  green: '#008000',
+  grey: '#808080',
+  magenta: '#ff00ff',
+  orange: '#ffa500',
+  pink: '#ffc0cb',
+  purple: '#800080',
+  red: '#ff0000',
+  rebeccapurple: '#663399',
+  transparent: '#00000000',
+  white: '#ffffff',
+  yellow: '#ffff00',
+};
+
+let cssColorContext: CanvasRenderingContext2D | null | undefined;
+
+const getCssColorContext = () => {
+  if (cssColorContext !== undefined) return cssColorContext;
+  if (typeof document === 'undefined') {
+    cssColorContext = null;
+    return cssColorContext;
+  }
+  cssColorContext = document.createElement('canvas').getContext('2d');
+  return cssColorContext;
+};
+
+const parseColorValue = (value: string, allowBrowserParser: boolean): ParsedColor | null => {
+  const normalized = value.trim().toLowerCase();
+  const named = NAMED_COLORS[normalized];
+  if (named) return parseColorValue(named, false);
+
+  const hexMatch = normalized.match(/^#([\da-f]{3,8})$/i);
+  if (hexMatch) {
+    const raw = hexMatch[1];
+    const expanded = raw.length === 3 || raw.length === 4
+      ? raw.split('').map((part) => `${part}${part}`).join('')
+      : raw;
+    if (expanded.length !== 6 && expanded.length !== 8) return null;
+    const red = Number.parseInt(expanded.slice(0, 2), 16);
+    const green = Number.parseInt(expanded.slice(2, 4), 16);
+    const blue = Number.parseInt(expanded.slice(4, 6), 16);
+    const alpha = expanded.length === 8 ? Number.parseInt(expanded.slice(6, 8), 16) / 255 : 1;
+    return [red / 255, green / 255, blue / 255, alpha];
+  }
+
+  const functionMatch = normalized.match(/^rgba?\((.*)\)$/);
+  if (functionMatch) {
+    const body = functionMatch[1].trim();
+    const parts = body.includes(',')
+      ? body.split(',').map((part) => part.trim())
+      : body.split(/[\s/]+/).filter(Boolean);
+    if (parts.length >= 3) {
+      return [
+        parseColorChannel(parts[0]),
+        parseColorChannel(parts[1]),
+        parseColorChannel(parts[2]),
+        parseAlpha(parts[3]),
+      ];
+    }
+  }
+
+  if (allowBrowserParser) {
+    const context = getCssColorContext();
+    if (context) {
+      context.fillStyle = '#000000';
+      context.fillStyle = normalized;
+      const serialized = context.fillStyle;
+      if (serialized !== '#000000' || normalized === 'black') {
+        return parseColorValue(serialized, false);
+      }
+    }
+  }
+  return null;
+};
+
+export const parseColor = (value: string): ParsedColor => parseColorValue(value, true) ?? [0, 0, 0, 1];
 
 const drawLiquidContours = (state: LiquidShaderState, width: number, height: number, phase: number, color: string, secondColor: string) => {
   const {gl} = state;
@@ -373,7 +473,7 @@ export const MovingWaves = ({
   const spacing = Math.max(18, dimensions.height * 0.105);
   const thickness = Math.max(10, dimensions.height * 0.06);
   const amplitude = spacing * 0.34;
-  const drift = (phase / (Math.PI * 2)) * spacing * 2;
+  const drift = wrap((phase / (Math.PI * 2)) * spacing * 2, spacing * 4);
   const waveCount = Math.ceil(dimensions.height / spacing) + 3;
   return <svg role="img" aria-label="向上流动的波浪背景" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
@@ -405,7 +505,7 @@ export const MovingZigzags = ({
   const spacing = Math.max(24, dimensions.height * 0.12);
   const thickness = Math.max(8, dimensions.height * 0.055);
   const amplitude = spacing * 0.36;
-  const drift = (phase / (Math.PI * 2)) * spacing * 2;
+  const drift = wrap((phase / (Math.PI * 2)) * spacing * 2, spacing * 4);
   const bandCount = Math.ceil(dimensions.height / spacing) + 4;
 
   return <svg role="img" aria-label="向上流动的折线背景" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={{display: 'block', maxWidth: '100%'}}>
@@ -437,7 +537,7 @@ export const NotebookPaper = ({
   const phase = getPhase(frame, fps, speed);
   const gridSize = Math.max(22, Math.min(48, dimensions.width * 0.045));
   const offsetX = Math.sin(phase * 0.6) * gridSize * 0.08;
-  const offsetY = (phase / (Math.PI * 2)) * gridSize;
+  const offsetY = wrap((phase / (Math.PI * 2)) * gridSize, gridSize);
   const columns = Math.ceil(dimensions.width / gridSize) + 3;
   const rows = Math.ceil(dimensions.height / gridSize) + 3;
   const marginX = Math.max(28, dimensions.width * 0.12);

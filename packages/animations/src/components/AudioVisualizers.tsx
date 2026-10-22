@@ -124,9 +124,11 @@ const getOrganicVoiceWaveform = (waveform: number[]) => {
     const texture = hash - Math.floor(hash);
     const phrase = 0.22 + 0.78 * (0.5 + 0.5 * Math.sin(index * 0.26 + Math.sin(index * 0.09) * 1.6));
     const articulation = 0.72 + 0.28 * (0.5 + 0.5 * Math.sin(index * 1.17 + texture * 2.5));
-    const contour = clamp(localAverage * 0.48 + sample * 0.22 + localChange * 1.1 + 0.04, 0, 1);
+    const energy = clamp(Math.abs(localAverage) * 0.62 + Math.abs(sample) * 0.28 + localChange * 0.9, 0, 1);
+    if (energy <= Number.EPSILON) return 0;
+    const contour = clamp(localAverage * 0.48 + sample * 0.22 + localChange * 1.1, 0, 1);
     const voiceShape = contour * 0.62 + phrase * 0.38;
-    return clamp(voiceShape * (0.8 + texture * 0.36) * articulation, 0, 1);
+    return clamp(voiceShape * energy * (0.8 + texture * 0.36) * articulation, 0, 1);
   });
 };
 

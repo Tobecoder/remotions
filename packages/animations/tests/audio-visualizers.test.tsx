@@ -4,11 +4,14 @@ import {MirroredSpectrum, Oscilloscope, VoiceNote} from '../src';
 
 const clock = vi.hoisted(() => ({frame: 10}));
 const spectrumState = vi.hoisted(() => ({override: null as number[] | null}));
+const waveformState = vi.hoisted(() => ({silent: false}));
 const audioDataHook = vi.hoisted(() => vi.fn(() => ({loaded: true, durationInSeconds: 42})));
 const waveformPortion = vi.hoisted(() => vi.fn(({numberOfSamples, outputRange}: {numberOfSamples: number; outputRange: string}) =>
   Array.from({length: numberOfSamples}, (_, index) => ({
     index,
-    amplitude: outputRange === 'minus-one-to-one'
+    amplitude: waveformState.silent
+      ? 0
+      : outputRange === 'minus-one-to-one'
       ? Math.sin(index / 3 + clock.frame / 4) * 0.6
       : Math.abs(Math.sin(index / 3 + clock.frame / 4)) * 0.6,
   }))));
@@ -86,5 +89,17 @@ describe('audio-driven components', () => {
     expect(waveformPortion.mock.calls.at(-1)?.[0]).toMatchObject({durationInSeconds: 42});
     const progressStops = Array.from(markup.matchAll(/<stop offset="([0-9.]+)%"/g), (match) => Number(match[1]));
     expect(progressStops[1]).toBeCloseTo((30 / (42 * 30 - 1)) * 100);
+  });
+
+  it('keeps a silent voice waveform at its minimum visual baseline', () => {
+    waveformState.silent = true;
+    try {
+      const markup = renderToStaticMarkup(<VoiceNote src="/silent.wav" />);
+      const heights = Array.from(markup.matchAll(/<rect[^>]* data-audio-bar="true"[^>]* height="(\d+(?:\.\d+)?)"/g), (match) => Number(match[1]));
+      expect(heights.length).toBeGreaterThan(0);
+      expect(Math.max(...heights)).toBe(8);
+    } finally {
+      waveformState.silent = false;
+    }
   });
 });
