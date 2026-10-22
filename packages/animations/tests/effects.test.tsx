@@ -55,4 +55,18 @@ describe('visual effect components', () => {
     expect(first).not.toMatch(/NaN|Infinity/);
     expect(last).not.toMatch(/NaN|Infinity/);
   });
+
+  it.each([
+    [640, 260],
+    [1920, 1080],
+    [1080, 1920],
+  ])('moves the old ShimmerSweep beam fully outside before looping at %sx%s', (width, height) => {
+    clock.frame = 164;
+    const markup = renderToStaticMarkup(<ShimmerSweep width={width} height={height} />);
+    const bottomLeftXs = Array.from(markup.matchAll(/<path d="([^\"]+)"/g), (match) => {
+      const values = Array.from(match[1].matchAll(/-?\d+(?:\.\d+)?/g), (value) => Number(value[0]));
+      return values[6];
+    });
+    expect(bottomLeftXs.slice(0, 3).every((value) => value >= width - 0.01)).toBe(true);
+  });
 });

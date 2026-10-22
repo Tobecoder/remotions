@@ -127,12 +127,18 @@ export const ShimmerSweep = ({
   const {fps} = useVideoConfig();
   const dimensions = getDimensions(width, height);
   const phase = getPhase(frame, fps, speed, 5.5);
-  const sweepX = interpolate(phase, [0, 1], [dimensions.width * 0.2, dimensions.width * 1.22]);
   const beamWidth = Math.max(24, dimensions.width * 0.13);
   const skew = dimensions.height * 0.24;
   const columns = Math.max(8, Math.ceil(dimensions.width / 56));
   const rows = Math.max(5, Math.ceil(dimensions.height / 52));
-  const sweepTravel = dimensions.width * 1.02;
+  const sweepStart = dimensions.width * 0.2;
+  const effectiveSpeed = Math.max(0, speed);
+  const cycleFrames = Math.max(2, Math.round((fps * 5.5) / Math.max(0.001, effectiveSpeed)));
+  // Include the beam width and diagonal skew. The extra one-frame margin
+  // keeps the old beam outside the viewport on the last rendered frame.
+  const baseTravel = dimensions.width + beamWidth + skew - sweepStart;
+  const sweepTravel = baseTravel * (cycleFrames / (cycleFrames - 1));
+  const sweepX = interpolate(phase, [0, 1], [sweepStart, sweepStart + sweepTravel]);
 
   const renderBeam = (beamX: number, key: string) => <g key={key}>
     <path d={`M ${beamX - beamWidth},0 L ${beamX + beamWidth},0 L ${beamX + beamWidth - skew},${dimensions.height} L ${beamX - beamWidth - skew},${dimensions.height} Z`} fill={color} opacity="0.1" />
