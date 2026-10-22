@@ -1,9 +1,9 @@
-import {BasicCaptions, LiquidContours, MirroredSpectrum, MovingPillCaptions, MovingWaves, MovingZigzags, NotebookPaper, Oscilloscope, PaperTexture, ParticleField, PictureInPictureTransition, PoppingWordCaptions, ProductCollection, PulseRings, RotatingCards, RotatingStarburst, RoundedCaptions, ShimmerSweep, SlideToSplitScreen, VoiceNote, WordHighlightCaptions} from '@remotions/animations';
+import {BasicCaptions, HorizontalBarChart, LineChart, LiquidContours, MirroredSpectrum, MovingPillCaptions, MovingWaves, MovingZigzags, NotebookPaper, NumberCounter, Oscilloscope, PaperTexture, ParticleField, PieChart, PictureInPictureTransition, PoppingWordCaptions, ProductCollection, PulseRings, RotatingCards, RotatingStarburst, RoundedCaptions, ShimmerSweep, SlideToSplitScreen, VerticalBarChart, VoiceNote, WordHighlightCaptions} from '@remotions/animations';
 import type {Caption} from '@remotions/animations';
 import {staticFile} from 'remotion';
 
-export type DemoId = 'oscilloscope' | 'spectrum' | 'voice' | 'basic-captions' | 'rounded-captions' | 'moving-pill-captions' | 'popping-word-captions' | 'word-highlight-captions' | 'liquid-contours' | 'moving-waves' | 'moving-zigzags' | 'notebook-paper' | 'paper-texture' | 'rotating-starburst' | 'pulse-rings' | 'particle-field' | 'shimmer-sweep' | 'picture-in-picture' | 'slide-to-split-screen' | 'rotating-cards' | 'product-collection';
-export type CategoryId = 'audio' | 'captions' | 'backgrounds' | 'effects' | 'layouts';
+export type DemoId = 'oscilloscope' | 'spectrum' | 'voice' | 'basic-captions' | 'rounded-captions' | 'moving-pill-captions' | 'popping-word-captions' | 'word-highlight-captions' | 'horizontal-bar-chart' | 'line-chart' | 'number-counter' | 'pie-chart' | 'vertical-bar-chart' | 'liquid-contours' | 'moving-waves' | 'moving-zigzags' | 'notebook-paper' | 'paper-texture' | 'rotating-starburst' | 'pulse-rings' | 'particle-field' | 'shimmer-sweep' | 'picture-in-picture' | 'slide-to-split-screen' | 'rotating-cards' | 'product-collection';
+export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts';
 export type CatalogCategory = {
   id: CategoryId;
   name: string;
@@ -29,6 +29,7 @@ export type PreviewLoopMode = 'forward' | 'forward-hold' | 'ping-pong';
 export const categories: CatalogCategory[] = [
   {id: 'audio', name: '音频动画', description: '让声音驱动画面', status: 'active'},
   {id: 'captions', name: '字幕动画', description: '文字跟着时间出现', status: 'active'},
+  {id: 'charts', name: '数据图表', description: '让数据产生动效', status: 'active'},
   {id: 'backgrounds', name: '背景特效', description: '可循环的氛围背景', status: 'active'},
   {id: 'effects', name: '视觉效果', description: '光、粒子与形变', status: 'active'},
   {id: 'layouts', name: '版式转场', description: '可复用的镜头结构', status: 'active'},
@@ -43,6 +44,11 @@ export const catalog: Demo[] = [
   {id: 'moving-pill-captions', category: 'captions', name: '移动气泡', componentName: 'MovingPillCaptions', description: '字形气泡包边从侧边滑入，形成轻快节奏', useCase: '短视频 · 重点提示', color: '#e6a23c', tag: '03'},
   {id: 'popping-word-captions', category: 'captions', name: '弹出单词', componentName: 'PoppingWordCaptions', description: '字符逐个弹出，增强语气和节奏', useCase: '标题强调 · 节奏剪辑', color: '#f56c6c', tag: '04'},
   {id: 'word-highlight-captions', category: 'captions', name: '逐字高亮', componentName: 'WordHighlightCaptions', description: '高亮沿字幕推进，模拟卡拉 OK 阅读感', useCase: '歌词视频 · 口播字幕', color: '#8b5cf6', tag: '05'},
+  {id: 'horizontal-bar-chart', category: 'charts', name: '横向条形图', componentName: 'HorizontalBarChart', description: '数据条按顺序展开，直接标注每一项数值', useCase: '指标对比 · 项目复盘', color: '#409eff', tag: '01', previewDurationInSeconds: 4, previewLoopMode: 'forward-hold'},
+  {id: 'line-chart', category: 'charts', name: '趋势折线图', componentName: 'LineChart', description: '折线沿时间轴绘出变化趋势，保留关键节点', useCase: '增长趋势 · 数据故事', color: '#67c23a', tag: '02', previewDurationInSeconds: 4, previewLoopMode: 'forward-hold'},
+  {id: 'number-counter', category: 'charts', name: '数字计数器', componentName: 'NumberCounter', description: '数字从起点平滑计数到目标值，适合强调成果', useCase: '数据结论 · 成果展示', color: '#e6a23c', tag: '03', previewDurationInSeconds: 4, previewLoopMode: 'forward-hold'},
+  {id: 'pie-chart', category: 'charts', name: '占比饼图', componentName: 'PieChart', description: '分区从中心展开，标签跟随每个占比出现', useCase: '构成分析 · 比例说明', color: '#8b5cf6', tag: '04', previewDurationInSeconds: 4, previewLoopMode: 'forward-hold'},
+  {id: 'vertical-bar-chart', category: 'charts', name: '纵向条形图', componentName: 'VerticalBarChart', description: '柱形依次升起，适合展示排名和阶段数据', useCase: '排名展示 · 阶段对比', color: '#f56c6c', tag: '05', previewDurationInSeconds: 4, previewLoopMode: 'forward-hold'},
   {id: 'liquid-contours', category: 'backgrounds', name: '液态轮廓', componentName: 'LiquidContours', description: '双色轮廓带缓慢流动，铺出柔和氛围', useCase: '品牌背景 · 氛围铺底', color: '#70b7e8', tag: '01', previewDurationInSeconds: 8, previewLoopMode: 'ping-pong'},
   {id: 'moving-waves', category: 'backgrounds', name: '流动波浪', componentName: 'MovingWaves', description: '多层波浪持续向上流动，适合循环使用', useCase: '音乐视频 · 开场铺底', color: '#70b7e8', tag: '02', previewDurationInSeconds: 8},
   {id: 'moving-zigzags', category: 'backgrounds', name: '折线流动', componentName: 'MovingZigzags', description: '重复折线向上漂移，增加画面的节奏和方向感', useCase: '科技背景 · 节奏铺底', color: '#70b7e8', tag: '03', previewDurationInSeconds: 8},
@@ -79,10 +85,11 @@ export const AudioCardComposition = ({id, src, captions = demoCaptions}: Preview
   const isBackground = active.category === 'backgrounds';
   const isAudio = active.category === 'audio';
   const isCaption = active.category === 'captions';
+  const isChart = active.category === 'charts';
   const isEffect = active.category === 'effects';
   const isLayout = active.category === 'layouts';
-  const isFullPreview = isBackground || isAudio || isCaption || isEffect || isLayout;
-  return <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: isBackground ? '#eaf5ff' : isAudio ? '#f8fafc' : isCaption ? '#eef6ff' : isEffect ? '#f4f8ff' : isLayout ? '#f5f8fc' : 'linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%)', color: '#303133', fontFamily: 'system-ui, sans-serif'}}>
+  const isFullPreview = isBackground || isAudio || isCaption || isChart || isEffect || isLayout;
+  return <div style={{width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: isBackground ? '#eaf5ff' : isAudio ? '#f8fafc' : isCaption ? '#eef6ff' : isChart ? '#f7fbff' : isEffect ? '#f4f8ff' : isLayout ? '#f5f8fc' : 'linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%)', color: '#303133', fontFamily: 'system-ui, sans-serif'}}>
     {!isFullPreview && <div style={{position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(#409eff18 1px, transparent 0), linear-gradient(90deg, #409eff18 1px, transparent 0)', backgroundSize: '32px 32px', maskImage: 'linear-gradient(transparent, #000 28%, #000 72%, transparent)'}} />}
     <div style={{position: 'absolute', inset: isFullPreview ? 0 : '32px 24px 28px', display: isFullPreview ? 'block' : 'grid', placeItems: 'center'}}>
       {id === 'oscilloscope' && <Oscilloscope src={src} color={active.color} width={900} height={300} />}
@@ -93,6 +100,11 @@ export const AudioCardComposition = ({id, src, captions = demoCaptions}: Preview
       {id === 'moving-pill-captions' && <MovingPillCaptions captions={captions} color="#ffffff" secondaryColor="#e6a23c" backgroundColor="#fff7e6" width={640} height={260} />}
       {id === 'popping-word-captions' && <PoppingWordCaptions captions={captions} color="#1f2937" secondaryColor="#f56c6c" backgroundColor="#fff1f0" width={640} height={260} />}
       {id === 'word-highlight-captions' && <WordHighlightCaptions captions={captions} color="#64748b" secondaryColor="#8b5cf6" backgroundColor="#f6f2ff" width={640} height={260} />}
+      {id === 'horizontal-bar-chart' && <HorizontalBarChart color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f7fbff" width={640} height={260} />}
+      {id === 'line-chart' && <LineChart color={active.color} secondaryColor="#67c23a" backgroundColor="#f7fbff" width={640} height={260} />}
+      {id === 'number-counter' && <NumberCounter color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f7fbff" width={640} height={260} to={128} suffix="+" />}
+      {id === 'pie-chart' && <PieChart color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f7fbff" width={640} height={260} />}
+      {id === 'vertical-bar-chart' && <VerticalBarChart color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f7fbff" width={640} height={260} />}
       {id === 'liquid-contours' && <LiquidContours color={active.color} secondaryColor={active.color} backgroundColor="#dff0ff" width={640} height={260} />}
       {id === 'moving-waves' && <MovingWaves color={active.color} secondaryColor={active.color} backgroundColor="#dff0ff" width={640} height={260} />}
       {id === 'moving-zigzags' && <MovingZigzags color={active.color} secondaryColor={active.color} backgroundColor="#dff0ff" width={640} height={260} />}
@@ -117,6 +129,12 @@ export const snippetFor = (id: DemoId): string => {
   }
   if (active.category === 'captions') {
     return `import type {Caption} from '@remotion/captions';\nimport {${active.componentName}} from '@remotions/animations';\n\nconst captions: Caption[] = [{text: 'Hello', startMs: 0, endMs: 900, timestampMs: 450, confidence: null}];\n\nexport const Scene = () => (\n  <${active.componentName} captions={captions} color="${active.color}" />\n);`;
+  }
+  if (active.category === 'charts') {
+    if (active.componentName === 'NumberCounter') {
+      return `import {${active.componentName}} from '@remotions/animations';\n\nexport const Scene = () => (\n  <${active.componentName} color="${active.color}" from={0} to={128} suffix="+" />\n);`;
+    }
+    return `import {${active.componentName}} from '@remotions/animations';\nimport type {ChartDatum} from '@remotions/animations';\n\nconst data: ChartDatum[] = [\n  {label: '设计', value: 68},\n  {label: '工程', value: 84},\n  {label: '内容', value: 52},\n];\n\nexport const Scene = () => (\n  <${active.componentName} color="${active.color}" data={data} />\n);`;
   }
   return `import {${active.componentName}} from '@remotions/animations';\n\nexport const Scene = () => (\n  <${active.componentName} color="${active.color}" />\n);`;
 };

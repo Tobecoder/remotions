@@ -9,3 +9,5 @@ export {PulseRings, ParticleField, ShimmerSweep} from './components/Effects';
 export type {EffectProps} from './components/Effects';
 export {PictureInPictureTransition, ProductCollection, RotatingCards, SlideToSplitScreen} from './components/Layouts';
 export type {LayoutProps, PictureInPictureTransitionProps, ProductCollectionProps, RotatingCardsProps, SlideToSplitScreenProps} from './components/Layouts';
+export {HorizontalBarChart, LineChart, NumberCounter, PieChart, VerticalBarChart} from './components/Charts';
+export type {ChartDatum, ChartProps, NumberCounterProps} from './components/Charts';

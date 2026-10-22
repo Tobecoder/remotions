@@ -1,7 +1,7 @@
 {
   "name": "@remotions/animations",
   "version": "0.1.0",
-  "description": "Audio-reactive animation components for Remotion",
+  "description": "Reusable audio, caption, data, background, effect, and layout animation components for Remotion",
   "type": "module",
   "sideEffects": false,
   "files": [

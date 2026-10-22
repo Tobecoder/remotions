@@ -23,6 +23,12 @@ describe('catalog preview timeline', () => {
     expect(getPreviewLoopMode(id)).toBe('ping-pong');
   });
 
+  it.each(['horizontal-bar-chart', 'line-chart', 'number-counter', 'pie-chart', 'vertical-bar-chart'] as const)('%s holds its final chart frame', (id) => {
+    expect(getPreviewLoopMode(id)).toBe('forward-hold');
+    const durationInFrames = getPreviewDurationInFrames(getPreviewDurationInSeconds(id), 30);
+    expect(getPreviewFrame(999999, 30, durationInFrames, 'forward-hold')).toBe(durationInFrames - 1);
+  });
+
   it('keeps audio, captions, and exact effect cycles playing forward', () => {
     expect(getPreviewLoopMode('oscilloscope')).toBe('forward');
     expect(getPreviewLoopMode('basic-captions')).toBe('forward');
