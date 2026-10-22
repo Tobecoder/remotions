@@ -18,6 +18,12 @@ const readTranslate = (markup: string) => {
   return {x: Number(values[1]), y: Number(values[2])};
 };
 
+const readClipRadius = (markup: string) => {
+  const match = markup.match(/clip-path:inset\([^;\"]*round ([\d.]+)px\)/);
+  if (!match) throw new Error(`Could not read clip radius from ${markup}`);
+  return Number(match[1]);
+};
+
 const readProductCollectionContainer = (markup: string) => {
   const match = markup.match(/<div(?=[^>]*data-product-collection-container="true")[^>]*>/);
   if (!match) throw new Error(`Could not find ProductCollection container in ${markup}`);
@@ -81,6 +87,13 @@ describe('layout components', () => {
         expect(x + (position.left ? visibleLeft : visibleRight)).toBeCloseTo(position.left ? padding : width - padding, 5);
         expect(y + (position.top ? visibleTop : visibleBottom)).toBeCloseTo(position.top ? padding : height - padding, 5);
       }
+    }
+  });
+
+  it('applies corner radius to the visible PiP crop', () => {
+    for (const [insetScale, cornerRadius] of [[0.38, 48], [0.72, 24]]) {
+      const markup = renderToStaticMarkup(<PictureInPictureTransition width={1920} height={1080} progress={1} insetScale={insetScale} cornerRadius={cornerRadius} />);
+      expect(readClipRadius(markup)).toBeCloseTo(cornerRadius / insetScale, 5);
     }
   });
 

@@ -184,12 +184,13 @@ export const PictureInPictureTransition = ({
   const translateX = interpolate(phase, [0, 1], [0, sourceTargetX]);
   const translateY = interpolate(phase, [0, 1], [0, sourceTargetY]);
   const radius = interpolate(phase, [0, 1], [0, Number.isFinite(cornerRadius) ? Math.max(0, cornerRadius) : 48]);
+  const clipRadius = sourceScale > 0 ? radius / sourceScale : radius;
   const source = children ?? <SourceScene label="A" src={primarySrc} dimensions={dimensions} />;
   const backdrop = background ?? <SourceScene label="B" src={secondarySrc} dimensions={dimensions} />;
 
   return <div role="img" aria-label="画中画转场布局" data-layout="picture-in-picture" style={rootStyle(dimensions, backgroundColor)}>
     <div style={{position: 'absolute', inset: 0}}>{backdrop}</div>
-    <div style={{position: 'absolute', left: 0, top: 0, width: dimensions.width, height: dimensions.height, overflow: 'hidden', borderRadius: radius, clipPath: `inset(${cropTop * 100}% ${cropRight * 100}% ${cropBottom * 100}% ${cropLeft * 100}%)`, transformOrigin: 'top left', translate: `${translateX}px ${translateY}px`, scale: sourceScale, willChange: 'transform'}}>{source}</div>
+    <div style={{position: 'absolute', left: 0, top: 0, width: dimensions.width, height: dimensions.height, overflow: 'hidden', clipPath: `inset(${cropTop * 100}% ${cropRight * 100}% ${cropBottom * 100}% ${cropLeft * 100}% round ${clipRadius}px)`, transformOrigin: 'top left', translate: `${translateX}px ${translateY}px`, scale: sourceScale, willChange: 'transform'}}>{source}</div>
   </div>;
 };
 
