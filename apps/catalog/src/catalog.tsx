@@ -105,7 +105,7 @@ export const AudioCardComposition = ({id, src, captions = demoCaptions}: Preview
       {id === 'picture-in-picture' && <PictureInPictureTransition color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f4f8ff" width={640} height={260} />}
       {id === 'slide-to-split-screen' && <SlideToSplitScreen color={active.color} secondaryColor="#67c23a" backgroundColor="#f4f8ff" width={640} height={260} />}
       {id === 'rotating-cards' && <RotatingCards color={active.color} secondaryColor="#8b5cf6" backgroundColor="#f5f8fc" width={640} height={260} />}
-      {id === 'product-collection' && <ProductCollection backgroundColor="#f5f5f3" width={640} height={260} />}
+      {id === 'product-collection' && <ProductCollection backgroundColor="#f5f5f3" fadeOut={false} width={640} height={260} />}
     </div>
   </div>;
 };

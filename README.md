@@ -58,7 +58,7 @@ export const LayoutScene = () => (
 );
 ```
 
-`SlideToSplitScreen` 接受 `children` 和 `secondary` 两个场景，`RotatingCards` 保留本库自有的 `cards` 数组实现，`ProductCollection` 对齐 Remotion Elements 的源站旋转卡片；四个版式组件都支持 `durationInSeconds`、`speed` 和可选的 `progress` 控制。
+`SlideToSplitScreen` 接受 `children` 和 `secondary` 两个场景，`RotatingCards` 保留本库自有的 `cards` 数组实现，`ProductCollection` 对齐 Remotion Elements 的源站旋转卡片；四个版式组件都支持 `durationInSeconds`、`speed` 和可选的 `progress` 控制。`ProductCollection` 还支持 `fadeOut={false}`，适合停在目录预览的最后一帧。
 
 `Oscilloscope`、`MirroredSpectrum`、`VoiceNote` 都接受 `src`、`color`、`width`、`height`。组件只根据当前帧与解码后的音频计算画面；声音播放由宿主 Composition 的 `<Audio>` 控制。`Oscilloscope` 和 `MirroredSpectrum` 使用 `useWindowedAudioData()`，`src` 可以使用 Mediabunny 支持的音频格式（例如 WAV、MP3、AAC）；实际可用格式取决于运行环境的解码器、资源加载和跨域配置，适合长音频的实时窗口分析。`VoiceNote` 是覆盖完整音频的静态波形，使用 `useAudioData()` 读取完整源文件；长音频会占用更多内存。
 

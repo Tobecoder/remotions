@@ -159,16 +159,26 @@ export const PictureInPictureTransition = ({
   const phase = getPictureInPictureProgress(frame, fps, durationInSeconds, speed, progress);
   const scale = clamp(Number.isFinite(insetScale) ? insetScale : 0.38, 0.18, 0.72);
   const edgePadding = Number.isFinite(padding) ? Math.max(0, padding as number) : 0;
-  const sourceTargetX = insetPosition.endsWith('right') ? dimensions.width * 0.7109375 : edgePadding;
-  const sourceTargetY = insetPosition.startsWith('bottom') ? dimensions.height - dimensions.height * scale - edgePadding : dimensions.height * 0.0212963;
-  const translateX = interpolate(phase, [0, 1], [0, sourceTargetX]);
-  const translateY = interpolate(phase, [0, 1], [0, sourceTargetY]);
-  const sourceScale = interpolate(phase, [0, 1], [1, scale]);
-  const radius = interpolate(phase, [0, 1], [0, Number.isFinite(cornerRadius) ? Math.max(0, cornerRadius) : 48]);
   const cropLeft = interpolate(phase, [0, 1], [0, 0.302], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const cropRight = cropLeft;
   const cropTop = interpolate(phase, [0, 1], [0, 0.06], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const cropBottom = cropTop;
+  const sourceScale = interpolate(phase, [0, 1], [1, scale]);
+  const visibleRightOffset = dimensions.width * (1 - cropRight) * sourceScale;
+  const visibleBottomOffset = dimensions.height * (1 - cropBottom) * sourceScale;
+  const visibleLeftOffset = dimensions.width * cropLeft * sourceScale;
+  const visibleTopOffset = dimensions.height * cropTop * sourceScale;
+  const sourceRightMargin = dimensions.width * (1 - 0.7109375 - (1 - 0.302) * 0.38) + edgePadding;
+  const sourceTopMargin = dimensions.height * (0.0212963 + 0.06 * 0.38) + edgePadding;
+  const sourceTargetX = insetPosition.endsWith('right')
+    ? dimensions.width - sourceRightMargin - visibleRightOffset
+    : edgePadding - visibleLeftOffset;
+  const sourceTargetY = insetPosition.startsWith('bottom')
+    ? dimensions.height - edgePadding - visibleBottomOffset
+    : sourceTopMargin - visibleTopOffset;
+  const translateX = interpolate(phase, [0, 1], [0, sourceTargetX]);
+  const translateY = interpolate(phase, [0, 1], [0, sourceTargetY]);
+  const radius = interpolate(phase, [0, 1], [0, Number.isFinite(cornerRadius) ? Math.max(0, cornerRadius) : 48]);
   const source = children ?? <SourceScene label="A" src={primarySrc} dimensions={dimensions} />;
   const backdrop = background ?? <SourceScene label="B" src={secondarySrc} dimensions={dimensions} />;
 
@@ -259,6 +269,8 @@ export type ProductCollectionProps = LayoutProps & {
   primarySrc?: string;
   /** Image used for the middle card. */
   secondarySrc?: string;
+  /** Whether the source-style container fades out during the final frames. */
+  fadeOut?: boolean;
 };
 
 const sourceProductCard = ({
@@ -383,12 +395,16 @@ export const ProductCollection = ({
   labels = ['A', 'B', 'C'],
   primarySrc = defaultPrimarySrc,
   secondarySrc = defaultSecondarySrc,
+  fadeOut = true,
 }: ProductCollectionProps) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const dimensions = getDimensions(width, height);
   const durationInFrames = getSafeDurationInFrames(fps, durationInSeconds);
-  const animationFrame = frame * getSafeSpeed(speed);
+  const controlledProgress = progress !== undefined && Number.isFinite(progress) ? clamp(progress, 0, 1) : null;
+  const animationFrame = controlledProgress === null
+    ? frame * getSafeSpeed(speed)
+    : controlledProgress * Math.max(0, durationInFrames - 1);
   const safeLabels: [string, string, string] = [labels[0] ?? 'A', labels[1] ?? 'B', labels[2] ?? 'C'];
   const designScale = Math.min(dimensions.width / 1020, dimensions.height / 660);
   const containerWidth = 900 * designScale;
@@ -399,7 +415,7 @@ export const ProductCollection = ({
   const scaleUpEnd = Math.min(16, Math.max(fadeInEnd + 1, durationInFrames - 1));
   const holdStart = Math.min(Math.max(scaleUpEnd + 1, durationInFrames - 8), durationInFrames);
   const lastFrame = Math.max(holdStart + 1, durationInFrames - 1);
-  const outerOpacity = interpolate(animationFrame, [0, fadeInEnd, holdStart, lastFrame], [0, 1, 1, 0], {
+  const outerOpacity = interpolate(animationFrame, [0, fadeInEnd, holdStart, lastFrame], [0, 1, 1, fadeOut ? 0 : 1], {
     easing: [Easing.bezier(0.16, 1, 0.3, 1), Easing.bezier(0.16, 1, 0.3, 1), Easing.bezier(0.16, 1, 0.3, 1)],
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',

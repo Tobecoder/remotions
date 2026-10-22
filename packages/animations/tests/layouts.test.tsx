@@ -32,6 +32,17 @@ describe('layout components', () => {
     const start = renderToStaticMarkup(<PictureInPictureTransition width={640} height={260} progress={0} />);
     const end = renderToStaticMarkup(<PictureInPictureTransition width={640} height={260} progress={1} />);
     expect(start).not.toBe(end);
+
+    const productStart = renderToStaticMarkup(<ProductCollection width={640} height={260} progress={0} />);
+    const productMiddle = renderToStaticMarkup(<ProductCollection width={640} height={260} progress={0.5} />);
+    expect(productStart).not.toBe(productMiddle);
+  });
+
+  it('can keep the ProductCollection visible when a preview holds the last frame', () => {
+    const sourceFade = renderToStaticMarkup(<ProductCollection width={640} height={260} progress={1} />);
+    const visibleEnd = renderToStaticMarkup(<ProductCollection width={640} height={260} progress={1} fadeOut={false} />);
+    expect(sourceFade).toContain('opacity:0');
+    expect(visibleEnd).toContain('opacity:1');
   });
 
   it('falls back to finite dimensions for invalid input', () => {
