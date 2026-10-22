@@ -30,4 +30,12 @@ describe('visual effect components', () => {
     expect(markup).toContain('width="1"');
     expect(markup).toContain('height="1"');
   });
+
+  it('closes the ParticleField geometry at its eight-second boundary', () => {
+    clock.frame = 0;
+    const first = renderToStaticMarkup(<ParticleField width={640} height={260} />);
+    clock.frame = 240;
+    const looped = renderToStaticMarkup(<ParticleField width={640} height={260} />);
+    expect(looped).toBe(first);
+  });
 });

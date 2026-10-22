@@ -87,7 +87,8 @@ export const ParticleField = ({
     const baseY = fract(Math.sin(seed * 29.17 + 4.3) * 24634.6345);
     const orbit = phase * Math.PI * 2 + seed * 0.63;
     const x = fract(baseX + Math.sin(orbit) * (0.025 + (seed % 4) * 0.008)) * dimensions.width;
-    const y = fract(baseY + Math.cos(orbit * 0.82) * (0.018 + (seed % 3) * 0.009)) * dimensions.height;
+    // Keep both axes on the same phase so the 8-second cycle closes exactly.
+    const y = fract(baseY + Math.cos(orbit) * (0.018 + (seed % 3) * 0.009)) * dimensions.height;
     const radius = Math.max(1.2, Math.min(dimensions.width, dimensions.height) * (0.006 + (seed % 5) * 0.002));
     const opacity = 0.34 + (seed % 5) * 0.1;
     return {index, x, y, radius, opacity};

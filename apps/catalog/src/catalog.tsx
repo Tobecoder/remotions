@@ -20,7 +20,10 @@ export type Demo = {
   color: string;
   tag: string;
   previewDurationInSeconds?: number;
+  previewLoopMode?: PreviewLoopMode;
 };
+
+export type PreviewLoopMode = 'forward' | 'ping-pong';
 
 /** Categories are intentionally independent from the demo list so new families can be added without changing the page layout. */
 export const categories: CatalogCategory[] = [
@@ -40,18 +43,19 @@ export const catalog: Demo[] = [
   {id: 'moving-pill-captions', category: 'captions', name: '移动气泡', componentName: 'MovingPillCaptions', description: '字形气泡包边从侧边滑入，形成轻快节奏', useCase: '短视频 · 重点提示', color: '#e6a23c', tag: '03'},
   {id: 'popping-word-captions', category: 'captions', name: '弹出单词', componentName: 'PoppingWordCaptions', description: '字符逐个弹出，增强语气和节奏', useCase: '标题强调 · 节奏剪辑', color: '#f56c6c', tag: '04'},
   {id: 'word-highlight-captions', category: 'captions', name: '逐字高亮', componentName: 'WordHighlightCaptions', description: '高亮沿字幕推进，模拟卡拉 OK 阅读感', useCase: '歌词视频 · 口播字幕', color: '#8b5cf6', tag: '05'},
-  {id: 'liquid-contours', category: 'backgrounds', name: '液态轮廓', componentName: 'LiquidContours', description: '双色轮廓带缓慢流动，铺出柔和氛围', useCase: '品牌背景 · 氛围铺底', color: '#70b7e8', tag: '01', previewDurationInSeconds: 8},
-  {id: 'moving-waves', category: 'backgrounds', name: '流动波浪', componentName: 'MovingWaves', description: '多层波浪持续向上流动，适合循环使用', useCase: '音乐视频 · 开场铺底', color: '#70b7e8', tag: '02', previewDurationInSeconds: 8},
-  {id: 'moving-zigzags', category: 'backgrounds', name: '折线流动', componentName: 'MovingZigzags', description: '重复折线向上漂移，增加画面的节奏和方向感', useCase: '科技背景 · 节奏铺底', color: '#70b7e8', tag: '03', previewDurationInSeconds: 8},
-  {id: 'notebook-paper', category: 'backgrounds', name: '笔记网格', componentName: 'NotebookPaper', description: '蓝色网格和侧边线组成轻量纸张背景', useCase: '教程画面 · 知识卡片', color: '#8db8da', tag: '04', previewDurationInSeconds: 8},
-  {id: 'paper-texture', category: 'backgrounds', name: '纸张纹理', componentName: 'PaperTexture', description: '细微颗粒缓慢变化，给画面增加纸张触感', useCase: '手绘内容 · 氛围铺底', color: '#9eb8cf', tag: '05', previewDurationInSeconds: 8},
+  {id: 'liquid-contours', category: 'backgrounds', name: '液态轮廓', componentName: 'LiquidContours', description: '双色轮廓带缓慢流动，铺出柔和氛围', useCase: '品牌背景 · 氛围铺底', color: '#70b7e8', tag: '01', previewDurationInSeconds: 8, previewLoopMode: 'ping-pong'},
+  {id: 'moving-waves', category: 'backgrounds', name: '流动波浪', componentName: 'MovingWaves', description: '多层波浪持续向上流动，适合循环使用', useCase: '音乐视频 · 开场铺底', color: '#70b7e8', tag: '02', previewDurationInSeconds: 8, previewLoopMode: 'ping-pong'},
+  {id: 'moving-zigzags', category: 'backgrounds', name: '折线流动', componentName: 'MovingZigzags', description: '重复折线向上漂移，增加画面的节奏和方向感', useCase: '科技背景 · 节奏铺底', color: '#70b7e8', tag: '03', previewDurationInSeconds: 8, previewLoopMode: 'ping-pong'},
+  {id: 'notebook-paper', category: 'backgrounds', name: '笔记网格', componentName: 'NotebookPaper', description: '蓝色网格和侧边线组成轻量纸张背景', useCase: '教程画面 · 知识卡片', color: '#8db8da', tag: '04', previewDurationInSeconds: 8, previewLoopMode: 'ping-pong'},
+  {id: 'paper-texture', category: 'backgrounds', name: '纸张纹理', componentName: 'PaperTexture', description: '细微颗粒缓慢变化，给画面增加纸张触感', useCase: '手绘内容 · 氛围铺底', color: '#9eb8cf', tag: '05', previewDurationInSeconds: 8, previewLoopMode: 'ping-pong'},
   {id: 'rotating-starburst', category: 'backgrounds', name: '旋转星芒', componentName: 'RotatingStarburst', description: '放射光束缓慢旋转，制造能量聚焦', useCase: '片头转场 · 重点强调', color: '#70b7e8', tag: '06', previewDurationInSeconds: 8},
   {id: 'pulse-rings', category: 'effects', name: '光环脉冲', componentName: 'PulseRings', description: '同心光环从中心扩散，制造清晰的节奏焦点', useCase: '片头强调 · Logo 出场', color: '#409eff', tag: '01', previewDurationInSeconds: 4.5},
   {id: 'particle-field', category: 'effects', name: '粒子漂移', componentName: 'ParticleField', description: '细小粒子缓慢漂移，给画面增加空间层次', useCase: '科技背景 · 氛围过渡', color: '#409eff', tag: '02', previewDurationInSeconds: 8},
-  {id: 'shimmer-sweep', category: 'effects', name: '光泽扫过', componentName: 'ShimmerSweep', description: '高光沿斜线扫过网格，适合标题或卡片强调', useCase: '标题强调 · 产品展示', color: '#409eff', tag: '03', previewDurationInSeconds: 5.5},
+  {id: 'shimmer-sweep', category: 'effects', name: '光泽扫过', componentName: 'ShimmerSweep', description: '高光沿斜线扫过网格，适合标题或卡片强调', useCase: '标题强调 · 产品展示', color: '#409eff', tag: '03', previewDurationInSeconds: 5.5, previewLoopMode: 'ping-pong'},
 ];
 
 export const getPreviewDurationInSeconds = (id: DemoId) => catalog.find((item) => item.id === id)?.previewDurationInSeconds ?? 6;
+export const getPreviewLoopMode = (id: DemoId): PreviewLoopMode => catalog.find((item) => item.id === id)?.previewLoopMode ?? 'forward';
 
 export type PreviewProps = {id: DemoId; src: string; captions?: Caption[]};
 export const demoAudioSrc = staticFile('demo-audio.wav');

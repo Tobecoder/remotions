@@ -2,9 +2,9 @@ import {forwardRef, useCallback, useEffect, useImperativeHandle, useRef} from 'r
 import type {SyntheticEvent} from 'react';
 import {Player} from '@remotion/player';
 import type {PlayerRef} from '@remotion/player';
-import {AudioCardComposition, getPreviewDurationInSeconds} from './catalog';
+import {AudioCardComposition, getPreviewDurationInSeconds, getPreviewLoopMode} from './catalog';
 import type {PreviewProps} from './catalog';
-import {getPreviewDurationInFrames, getPreviewFrame} from './previewTimeline';
+import {getPreviewDurationInFrames, getPreviewFrame, getPreviewLoopDurationInFrames} from './previewTimeline';
 
 type CatalogCardPreviewProps = {
   inputProps: PreviewProps;
@@ -23,7 +23,9 @@ export const CatalogCardPreview = forwardRef<CatalogCardPreviewHandle, CatalogCa
   const playerRef = useRef<PlayerRef>(null);
   const animationFrameRef = useRef<number | null>(null);
   const durationInSeconds = getPreviewDurationInSeconds(inputProps.id);
-  const durationInFrames = getPreviewDurationInFrames(durationInSeconds, fps);
+  const loopMode = getPreviewLoopMode(inputProps.id);
+  const cycleDurationInFrames = getPreviewDurationInFrames(durationInSeconds, fps);
+  const durationInFrames = getPreviewLoopDurationInFrames(cycleDurationInFrames, loopMode);
 
   const stop = useCallback(() => {
     if (animationFrameRef.current !== null) {
@@ -46,12 +48,12 @@ export const CatalogCardPreview = forwardRef<CatalogCardPreviewHandle, CatalogCa
     const tick = (now: number) => {
       const currentPlayer = playerRef.current;
       if (!currentPlayer) return;
-      const nextFrame = getPreviewFrame(now - startedAt, fps, durationInFrames);
+      const nextFrame = getPreviewFrame(now - startedAt, fps, cycleDurationInFrames, loopMode);
       currentPlayer.seekTo(nextFrame);
       animationFrameRef.current = requestAnimationFrame(tick);
     };
     animationFrameRef.current = requestAnimationFrame(tick);
-  }, [durationInFrames, stop]);
+  }, [cycleDurationInFrames, loopMode, stop]);
 
   useImperativeHandle(ref, () => ({start, stop}), [start, stop]);
 
