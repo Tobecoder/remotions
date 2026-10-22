@@ -6,6 +6,7 @@ const clock = vi.hoisted(() => ({frame: 10}));
 const spectrumState = vi.hoisted(() => ({override: null as number[] | null}));
 const waveformState = vi.hoisted(() => ({silent: false}));
 const audioDataHook = vi.hoisted(() => vi.fn(() => ({loaded: true, durationInSeconds: 42})));
+const windowedAudioHook = vi.hoisted(() => vi.fn((options: {src: string}) => ({audioData: {loaded: true}, dataOffsetInSeconds: 0, options})));
 const waveformPortion = vi.hoisted(() => vi.fn(({numberOfSamples, outputRange}: {numberOfSamples: number; outputRange: string}) =>
   Array.from({length: numberOfSamples}, (_, index) => ({
     index,
@@ -22,7 +23,7 @@ vi.mock('remotion', async (importOriginal) => ({
 }));
 vi.mock('@remotion/media-utils', () => ({
   useAudioData: audioDataHook,
-  useWindowedAudioData: () => ({audioData: {loaded: true}, dataOffsetInSeconds: 0}),
+  useWindowedAudioData: windowedAudioHook,
   getWaveformPortion: waveformPortion,
   visualizeAudio: () => spectrumState.override ?? Array.from({length: 64}, (_, index) => (clock.frame + index % 8) / 100),
   createSmoothSvgPath: ({points}: {points: Array<{x: number; y: number}>}) =>
@@ -48,6 +49,13 @@ describe('audio-driven components', () => {
     clock.frame = 20;
     const markup = renderToStaticMarkup(<MirroredSpectrum src="/demo.wav" />);
     expect((markup.match(/data-audio-bar="true"/g) ?? []).length).toBe(65);
+  });
+
+  it('passes non-WAV sources to windowed audio analysis', () => {
+    windowedAudioHook.mockClear();
+    renderToStaticMarkup(<Oscilloscope src="/demo.mp3" />);
+    renderToStaticMarkup(<MirroredSpectrum src="/demo.mp3" />);
+    expect(windowedAudioHook.mock.calls.map(([options]) => options.src)).toEqual(['/demo.mp3', '/demo.mp3']);
   });
 
   it('keeps custom-width bar geometry valid', () => {

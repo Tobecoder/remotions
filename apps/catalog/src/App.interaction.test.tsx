@@ -54,6 +54,21 @@ describe('catalog App interactions', () => {
     expect(card.getAttribute('aria-label')).toBe('预览示波曲线');
   });
 
+  it('lets a mouse click stop and resume a hover preview', () => {
+    render(<App />);
+    const card = screen.getByRole('button', {name: '预览示波曲线'});
+    fireEvent.pointerOver(card, {pointerType: 'mouse'});
+    expect(card.getAttribute('aria-pressed')).toBe('true');
+
+    fireEvent.click(card, {detail: 1});
+    expect(card.getAttribute('aria-pressed')).toBe('false');
+    expect(card.getAttribute('aria-label')).toBe('预览示波曲线');
+
+    fireEvent.click(card, {detail: 1});
+    expect(card.getAttribute('aria-pressed')).toBe('true');
+    expect(card.getAttribute('aria-label')).toBe('停止预览示波曲线');
+  });
+
   it('lets keyboard activation stop and resume a focus preview', () => {
     render(<App />);
     const card = screen.getByRole('button', {name: '预览示波曲线'});

@@ -1,5 +1,3 @@
-export type CategoryNavigationKey = 'ArrowLeft' | 'ArrowRight' | 'Home' | 'End';
-
 /** Return the category index selected by a tab-list navigation key. */
 export const getNextCategoryIndex = (
   currentIndex: number,
@@ -13,10 +11,5 @@ export const getNextCategoryIndex = (
   if (key === 'End') return categoryCount - 1;
   return null;
 };
-
-/** Keyboard clicks have no pointer detail; touch clicks retain their pointer type. */
-export const isPreviewToggleActivation = (detail: number, pointerType: string | null): boolean => (
-  pointerType === 'touch' || (detail === 0 && pointerType === null)
-);
 
 export const togglePreview = (active: boolean): boolean => !active;
