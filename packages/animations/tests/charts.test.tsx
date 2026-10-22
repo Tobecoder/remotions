@@ -125,6 +125,27 @@ describe('data chart components', () => {
     expect(verticalLabels.length).toBeLessThan(30);
   });
 
+  it('samples dense line and pie labels while retaining every item title', () => {
+    const makeData = (count: number) => Array.from({length: count}, (_, index) => ({label: `项${index}`, value: index + 1}));
+    const line = renderToStaticMarkup(<LineChart width={640} height={260} data={makeData(26)} progress={1} />);
+    const pie = renderToStaticMarkup(<PieChart width={640} height={260} data={makeData(51)} progress={1} />);
+
+    expect((line.match(/>项\d+<\/text>/g) ?? []).length).toBeLessThan(26);
+    expect((pie.match(/>项\d+ \d+%<\/text>/g) ?? []).length).toBeLessThan(51);
+    expect((line.match(/<title>/g) ?? []).length).toBe(26);
+    expect((pie.match(/<title>/g) ?? []).length).toBe(51);
+  });
+
+  it('shows an empty state when pie weights are all zero or negative', () => {
+    const zero = renderToStaticMarkup(<PieChart data={[{label: 'A', value: 0}, {label: 'B', value: 0}, {label: 'C', value: 0}]} progress={1} />);
+    const negative = renderToStaticMarkup(<PieChart data={[{label: 'A', value: -10}, {label: 'B', value: -4}]} progress={1} />);
+
+    expect(zero).toContain('暂无有效占比数据');
+    expect(negative).toContain('暂无有效占比数据');
+    expect(zero).not.toMatch(/>0%<\/text>/);
+    expect(negative).not.toMatch(/>0%<\/text>/);
+  });
+
   it('keeps signed vertical bars finite', () => {
     const markup = renderToStaticMarkup(<VerticalBarChart width={320} height={220} data={[{label: '负', value: -20}, {label: '正', value: 40}]} progress={1} />);
 

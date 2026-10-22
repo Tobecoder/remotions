@@ -92,6 +92,12 @@ const getStaggeredProgress = (
   return interpolate(phase, [start, end], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
 };
 
+const isSampledLabel = (index: number, itemCount: number, maxVisible: number) => {
+  if (itemCount <= maxVisible) return true;
+  const stride = Math.ceil(itemCount / maxVisible);
+  return index % stride === 0 || index === itemCount - 1;
+};
+
 /** A directly labeled horizontal bar chart that grows in staggered rows. */
 export const HorizontalBarChart = ({
   width = 960,
@@ -123,7 +129,6 @@ export const HorizontalBarChart = ({
   const baselineX = valueToX(0);
   const baseFontSize = Math.min(dimensions.width, dimensions.height) * 0.045;
   const fontSize = Math.max(8, Math.min(baseFontSize, rowHeight * 0.72));
-  const labelStride = items.length > 12 ? Math.ceil(items.length / 12) : 1;
 
   return <svg role="img" aria-label="横向条形图" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={svgStyle}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
@@ -144,7 +149,7 @@ export const HorizontalBarChart = ({
       const barX = Math.min(baselineX, animatedValueX);
       const barWidth = Math.abs(animatedValueX - baselineX);
       const valueLabelX = item.value < 0 ? Math.max(4, animatedValueX - 8) : Math.min(dimensions.width - 4, animatedValueX + 8);
-      const labelVisible = index % labelStride === 0 || index === items.length - 1;
+      const labelVisible = isSampledLabel(index, items.length, 12);
       return <g key={`${item.label}-${index}`}>
         <title>{`${item.label}: ${Math.round(item.value)}`}</title>
         {labelVisible ? <text x={left - 12} y={rowY + barHeight * 0.82} textAnchor="end" style={{...chartText(fontSize, '#606266'), fontWeight: 650}}>{item.label}</text> : null}
@@ -217,11 +222,12 @@ export const LineChart = ({
       {items.map((item, index) => {
         const point = points[index];
         const pointPhase = getStaggeredProgress(phase, index, items.length, {startSpread: 0.4, endBase: 0.5, endSpread: 0.3});
+        const labelVisible = isSampledLabel(index, items.length, 10);
         return <g key={`${item.label}-${index}`} opacity={pointPhase}>
           <title>{`${item.label}: ${Math.round(item.value)}`}</title>
           <circle cx={point.x} cy={point.y} r={Math.max(3, dimensions.height * 0.022)} fill={backgroundColor} stroke={color} strokeWidth={Math.max(2, dimensions.height * 0.01)} />
-          <text x={point.x} y={point.y - Math.max(9, dimensions.height * 0.05)} textAnchor="middle" style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text>
-          <text x={point.x} y={dimensions.height - bottom * 0.36} textAnchor="middle" style={chartText(fontSize * 0.85, '#909399')}>{item.label}</text>
+          {labelVisible ? <text x={point.x} y={point.y - Math.max(9, dimensions.height * 0.05)} textAnchor="middle" style={{...chartText(fontSize, '#303133'), fontWeight: 750}}>{Math.round(item.value)}</text> : null}
+          {labelVisible ? <text x={point.x} y={dimensions.height - bottom * 0.36} textAnchor="middle" style={chartText(fontSize * 0.85, '#909399')}>{item.label}</text> : null}
         </g>;
       })}
     </>}
@@ -264,13 +270,14 @@ export const PieChart = ({
   const radius = Math.max(20, Math.min(dimensions.width, dimensions.height) * 0.29);
   const innerRadius = radius * 0.55;
   const pieWeights = items.map((item) => Math.max(0, item.value));
-  const total = Math.max(1, pieWeights.reduce((sum, value) => sum + value, 0));
+  const positiveTotal = pieWeights.reduce((sum, value) => sum + value, 0);
+  const total = Math.max(1, positiveTotal);
   const fontSize = Math.max(10, Math.min(dimensions.width, dimensions.height) * 0.04);
   let angle = -Math.PI / 2;
 
   return <svg role="img" aria-label="占比饼图" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={svgStyle}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
-    {items.length === 0 ? <text x={dimensions.width / 2} y={dimensions.height / 2} textAnchor="middle" dominantBaseline="middle" style={{...chartText(fontSize, '#909399'), fontWeight: 650}}>暂无数据</text> : <>
+    {items.length === 0 ? <text x={dimensions.width / 2} y={dimensions.height / 2} textAnchor="middle" dominantBaseline="middle" style={{...chartText(fontSize, '#909399'), fontWeight: 650}}>暂无数据</text> : positiveTotal <= 0 ? <text x={dimensions.width / 2} y={dimensions.height / 2} textAnchor="middle" dominantBaseline="middle" style={{...chartText(fontSize, '#909399'), fontWeight: 650}}>暂无有效占比数据</text> : <>
       {items.map((item, index) => {
         const weight = pieWeights[index];
         const slice = (weight / total) * Math.PI * 2;
@@ -283,10 +290,11 @@ export const PieChart = ({
         const labelY = centerY + Math.sin(midAngle) * labelRadius;
         const labelOpacity = getStaggeredProgress(phase, index, items.length, {startBase: 0.25, startSpread: 0.15, endBase: 0.75, endSpread: 0.12});
         const isFullSlice = slice >= Math.PI * 2 - 1e-6;
+        const labelVisible = weight > 0 && isSampledLabel(index, items.length, 8);
         return <g key={`${item.label}-${index}`}>
           <title>{`${item.label}: ${Math.round((weight / total) * 100)}%`}</title>
           {isFullSlice && phase >= 1 - 1e-6 ? <circle data-pie-full="true" cx={centerX} cy={centerY} r={radius} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} /> : <path d={arcPath(centerX, centerY, radius, startAngle, animatedEnd)} fill={item.color ?? color} stroke={backgroundColor} strokeWidth={Math.max(2, dimensions.height * 0.008)} />}
-          <text x={labelX} y={labelY} textAnchor={labelX < centerX ? 'end' : 'start'} dominantBaseline="middle" opacity={labelOpacity} style={{...chartText(fontSize, '#606266'), fontWeight: 650}}>{item.label} {Math.round((weight / total) * 100)}%</text>
+          {labelVisible ? <text x={labelX} y={labelY} textAnchor={labelX < centerX ? 'end' : 'start'} dominantBaseline="middle" opacity={labelOpacity} style={{...chartText(fontSize, '#606266'), fontWeight: 650}}>{item.label} {Math.round((weight / total) * 100)}%</text> : null}
         </g>;
       })}
       <circle cx={centerX} cy={centerY} r={innerRadius} fill={backgroundColor} />
@@ -333,7 +341,6 @@ export const VerticalBarChart = ({
   const barWidth = Math.max(1, slotWidth * 0.54);
   const baseFontSize = Math.min(dimensions.width, dimensions.height) * 0.04;
   const fontSize = Math.max(8, Math.min(baseFontSize, slotWidth * 0.72));
-  const labelStride = items.length > 10 ? Math.ceil(items.length / 10) : 1;
 
   return <svg role="img" aria-label="纵向条形图" width={dimensions.width} height={dimensions.height} viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} preserveAspectRatio="none" style={svgStyle}>
     <rect width={dimensions.width} height={dimensions.height} fill={backgroundColor} />
@@ -349,7 +356,7 @@ export const VerticalBarChart = ({
       const barTop = Math.min(baseline, animatedValueY);
       const animatedBarHeight = Math.abs(animatedValueY - baseline);
       const labelY = item.value < 0 ? Math.min(dimensions.height - bottom * 0.12, baseline + animatedBarHeight + fontSize) : Math.max(top + fontSize, barTop - 9);
-      const labelVisible = index % labelStride === 0 || index === items.length - 1;
+      const labelVisible = isSampledLabel(index, items.length, 10);
       return <g key={`${item.label}-${index}`}>
         <title>{`${item.label}: ${Math.round(item.value)}`}</title>
         <rect x={x} y={top} width={barWidth} height={innerHeight} rx={barWidth / 2} fill={secondaryColor} fillOpacity="0.08" />
