@@ -11,16 +11,18 @@ describe('animation catalog', () => {
       'BasicCaptions', 'RoundedCaptions', 'MovingPillCaptions', 'PoppingWordCaptions', 'WordHighlightCaptions',
       'LiquidContours', 'MovingWaves', 'MovingZigzags', 'NotebookPaper', 'PaperTexture', 'RotatingStarburst',
       'PulseRings', 'ParticleField', 'ShimmerSweep',
+      'PictureInPictureTransition', 'SlideToSplitScreen', 'RotatingCards', 'ProductCollection',
     ]);
     expect(catalog.filter((item) => item.category === 'audio')).toHaveLength(3);
     expect(catalog.filter((item) => item.category === 'captions')).toHaveLength(5);
     expect(catalog.filter((item) => item.category === 'backgrounds')).toHaveLength(6);
     expect(catalog.filter((item) => item.category === 'effects')).toHaveLength(3);
+    expect(catalog.filter((item) => item.category === 'layouts')).toHaveLength(4);
   });
 
   it('keeps future categories separate from the active catalog entries', () => {
     expect(categories.map((item) => item.id)).toEqual(['audio', 'captions', 'backgrounds', 'effects', 'layouts']);
-    expect(categories.filter((item) => item.status === 'coming-soon')).toHaveLength(1);
+    expect(categories.filter((item) => item.status === 'coming-soon')).toHaveLength(0);
     expect(categories.every((item) => item.name && item.description)).toBe(true);
   });
 

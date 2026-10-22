@@ -39,4 +39,11 @@ describe('catalog preview timeline', () => {
     expect(totalFrames).toBe(6);
     expect(Array.from({length: totalFrames + 1}, (_, frame) => getPreviewFrame(frame / 30 * 1000, 30, cycleFrames, 'ping-pong'))).toEqual([0, 1, 2, 3, 2, 1, 0]);
   });
+
+  it('holds the final frame for one-shot layout previews', () => {
+    expect(getPreviewLoopDurationInFrames(150, 'forward-hold')).toBe(150);
+    expect(getPreviewFrame(0, 30, 150, 'forward-hold')).toBe(0);
+    expect(getPreviewFrame(4999, 30, 150, 'forward-hold')).toBe(149);
+    expect(getPreviewFrame(999999, 30, 150, 'forward-hold')).toBe(149);
+  });
 });

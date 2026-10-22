@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Seventeen reusable Remotion components: the audio-reactive `Oscilloscope`, `MirroredSpectrum`, and `VoiceNote`; the caption styles `BasicCaptions`, `RoundedCaptions`, `MovingPillCaptions`, `PoppingWordCaptions`, and `WordHighlightCaptions`; the background effects `LiquidContours`, `MovingWaves`, `MovingZigzags`, `NotebookPaper`, `PaperTexture`, and `RotatingStarburst`; and the visual effects `PulseRings`, `ParticleField`, and `ShimmerSweep`. Audio components accept an audio `src`, optional `color`, `width`, and `height`; add `<Audio src={src} />` separately when sound should play. Caption components accept Remotion `Caption[]` data plus optional `color`, `secondaryColor`, `backgroundColor`, `fontSize`, `width`, and `height`. Background and visual effects accept optional `color`, `secondaryColor`, `backgroundColor`, `speed`, `width`, and `height`.
+Twenty-one reusable Remotion components: the audio-reactive `Oscilloscope`, `MirroredSpectrum`, and `VoiceNote`; the caption styles `BasicCaptions`, `RoundedCaptions`, `MovingPillCaptions`, `PoppingWordCaptions`, and `WordHighlightCaptions`; the background effects `LiquidContours`, `MovingWaves`, `MovingZigzags`, `NotebookPaper`, `PaperTexture`, and `RotatingStarburst`; the visual effects `PulseRings`, `ParticleField`, and `ShimmerSweep`; and the layout transitions `PictureInPictureTransition`, `SlideToSplitScreen`, `RotatingCards`, and `ProductCollection`. Audio components accept an audio `src`, optional `color`, `width`, and `height`; add `<Audio src={src} />` separately when sound should play. Caption components accept Remotion `Caption[]` data plus optional `color`, `secondaryColor`, `backgroundColor`, `fontSize`, `width`, and `height`. Background, visual effects, and layouts accept optional `color`, `secondaryColor`, `backgroundColor`, `speed`, `width`, and `height`.
 
 ```tsx
 import {Audio} from '@remotion/media';
@@ -29,6 +29,20 @@ import {LiquidContours} from '@remotions/animations';
 
 export const BackgroundScene = () => <LiquidContours width={1920} height={1080} />;
 ```
+
+Layouts are frame-driven transitions that can be used with the default panels or your own React content:
+
+```tsx
+import {PictureInPictureTransition} from '@remotions/animations';
+
+export const LayoutScene = () => (
+  <PictureInPictureTransition width={1920} height={1080} insetPosition="bottom-right">
+    <ProductScene />
+  </PictureInPictureTransition>
+);
+```
+
+`SlideToSplitScreen` accepts `children` and `secondary` scenes, while `RotatingCards` keeps the library's own `cards` array implementation. `ProductCollection` is the source-style three-card layout and supports `fadeOut={false}` for a visible held end frame. All four layouts support `durationInSeconds`, `speed`, and an optional controlled `progress` value. For `PictureInPictureTransition`, `padding` is the final pixel margin from the canvas edge on all four sides; when omitted, the source-style top-right inset is preserved.
 
 React 18+, Remotion 4.x, `@remotion/media-utils` 4.x and `@remotion/captions` 4.x are peer dependencies. Keep Remotion packages on matching exact versions in the host app. The workspace currently uses 4.0.536. This package is not yet published to npm.
 
