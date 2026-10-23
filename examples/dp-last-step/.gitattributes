@@ -1,0 +1,4 @@
+plan.md -text whitespace=cr-at-eol
+script.txt -text whitespace=cr-at-eol
+assets/scene-spec.json -text whitespace=cr-at-eol
+assets/voice-segments.json -text whitespace=cr-at-eol

@@ -1,0 +1,368 @@
+{
+  "fps": 30,
+  "durationInFrames": 600,
+  "durationInSeconds": 20,
+  "sampleRate": 16000,
+  "sampleCount": 320000,
+  "spokenEndSeconds": 16.395,
+  "tailHoldSeconds": 3.6050000000000004,
+  "voice": "Microsoft Huihui Desktop",
+  "timingSource": "Actual PCM sample counts; SAPI SpeakProgress word offsets, no estimated ASR. Original speed preserved.",
+  "audioSha256": "00e222a8fda313758821e3f0b82e3a0d61a9900a785babf2dc5a4755b6a6f9a4",
+  "cues": [
+    {
+      "id": "V001",
+      "scene": 0,
+      "text": "到第四级，只看最后一步。",
+      "spoken": "到第四级，只看最后一步。",
+      "start": 0.45,
+      "end": 3.95,
+      "sampleStart": 7200,
+      "sampleEnd": 63200
+    },
+    {
+      "id": "V002",
+      "scene": 0,
+      "text": "第三级有三种走法，再走一步。",
+      "spoken": "第三级有三种走法，再走一步。",
+      "start": 4.1,
+      "end": 7.985,
+      "sampleStart": 65600,
+      "sampleEnd": 127760
+    },
+    {
+      "id": "V003",
+      "scene": 0,
+      "text": "第二级有两种走法，再走两步。",
+      "spoken": "第二级有两种走法，再走两步。",
+      "start": 8.135,
+      "end": 12.015,
+      "sampleStart": 130160,
+      "sampleEnd": 192240
+    },
+    {
+      "id": "V004",
+      "scene": 0,
+      "text": "两类不重复，三加二，等于五。",
+      "spoken": "两类不重复，三加二，等于五。",
+      "start": 12.165,
+      "end": 16.395,
+      "sampleStart": 194640,
+      "sampleEnd": 262320
+    }
+  ],
+  "wordMarks": [
+    {
+      "milliseconds": 100,
+      "characterPosition": 0,
+      "characterCount": 1,
+      "text": "到",
+      "cue": "V001",
+      "audioSeconds": 0.55
+    },
+    {
+      "milliseconds": 345,
+      "characterPosition": 1,
+      "characterCount": 2,
+      "text": "第四",
+      "cue": "V001",
+      "audioSeconds": 0.7949999999999999
+    },
+    {
+      "milliseconds": 755,
+      "characterPosition": 3,
+      "characterCount": 1,
+      "text": "级",
+      "cue": "V001",
+      "audioSeconds": 1.205
+    },
+    {
+      "milliseconds": 1450,
+      "characterPosition": 5,
+      "characterCount": 1,
+      "text": "只",
+      "cue": "V001",
+      "audioSeconds": 1.9
+    },
+    {
+      "milliseconds": 1645,
+      "characterPosition": 6,
+      "characterCount": 1,
+      "text": "看",
+      "cue": "V001",
+      "audioSeconds": 2.095
+    },
+    {
+      "milliseconds": 1945,
+      "characterPosition": 7,
+      "characterCount": 2,
+      "text": "最后",
+      "cue": "V001",
+      "audioSeconds": 2.395
+    },
+    {
+      "milliseconds": 2365,
+      "characterPosition": 9,
+      "characterCount": 1,
+      "text": "一",
+      "cue": "V001",
+      "audioSeconds": 2.8150000000000004
+    },
+    {
+      "milliseconds": 2520,
+      "characterPosition": 10,
+      "characterCount": 1,
+      "text": "步",
+      "cue": "V001",
+      "audioSeconds": 2.97
+    },
+    {
+      "milliseconds": 100,
+      "characterPosition": 0,
+      "characterCount": 2,
+      "text": "第三",
+      "cue": "V002",
+      "audioSeconds": 4.199999999999999
+    },
+    {
+      "milliseconds": 525,
+      "characterPosition": 2,
+      "characterCount": 1,
+      "text": "级",
+      "cue": "V002",
+      "audioSeconds": 4.625
+    },
+    {
+      "milliseconds": 780,
+      "characterPosition": 3,
+      "characterCount": 1,
+      "text": "有",
+      "cue": "V002",
+      "audioSeconds": 4.88
+    },
+    {
+      "milliseconds": 1005,
+      "characterPosition": 4,
+      "characterCount": 1,
+      "text": "三",
+      "cue": "V002",
+      "audioSeconds": 5.1049999999999995
+    },
+    {
+      "milliseconds": 1265,
+      "characterPosition": 5,
+      "characterCount": 1,
+      "text": "种",
+      "cue": "V002",
+      "audioSeconds": 5.364999999999999
+    },
+    {
+      "milliseconds": 1460,
+      "characterPosition": 6,
+      "characterCount": 1,
+      "text": "走",
+      "cue": "V002",
+      "audioSeconds": 5.56
+    },
+    {
+      "milliseconds": 1655,
+      "characterPosition": 7,
+      "characterCount": 1,
+      "text": "法",
+      "cue": "V002",
+      "audioSeconds": 5.755
+    },
+    {
+      "milliseconds": 2340,
+      "characterPosition": 9,
+      "characterCount": 1,
+      "text": "再",
+      "cue": "V002",
+      "audioSeconds": 6.4399999999999995
+    },
+    {
+      "milliseconds": 2565,
+      "characterPosition": 10,
+      "characterCount": 1,
+      "text": "走",
+      "cue": "V002",
+      "audioSeconds": 6.664999999999999
+    },
+    {
+      "milliseconds": 2750,
+      "characterPosition": 11,
+      "characterCount": 1,
+      "text": "一",
+      "cue": "V002",
+      "audioSeconds": 6.85
+    },
+    {
+      "milliseconds": 2905,
+      "characterPosition": 12,
+      "characterCount": 1,
+      "text": "步",
+      "cue": "V002",
+      "audioSeconds": 7.004999999999999
+    },
+    {
+      "milliseconds": 100,
+      "characterPosition": 0,
+      "characterCount": 2,
+      "text": "第二",
+      "cue": "V003",
+      "audioSeconds": 8.235
+    },
+    {
+      "milliseconds": 465,
+      "characterPosition": 2,
+      "characterCount": 1,
+      "text": "级",
+      "cue": "V003",
+      "audioSeconds": 8.6
+    },
+    {
+      "milliseconds": 725,
+      "characterPosition": 3,
+      "characterCount": 1,
+      "text": "有",
+      "cue": "V003",
+      "audioSeconds": 8.86
+    },
+    {
+      "milliseconds": 935,
+      "characterPosition": 4,
+      "characterCount": 1,
+      "text": "两",
+      "cue": "V003",
+      "audioSeconds": 9.07
+    },
+    {
+      "milliseconds": 1175,
+      "characterPosition": 5,
+      "characterCount": 1,
+      "text": "种",
+      "cue": "V003",
+      "audioSeconds": 9.31
+    },
+    {
+      "milliseconds": 1375,
+      "characterPosition": 6,
+      "characterCount": 1,
+      "text": "走",
+      "cue": "V003",
+      "audioSeconds": 9.51
+    },
+    {
+      "milliseconds": 1565,
+      "characterPosition": 7,
+      "characterCount": 1,
+      "text": "法",
+      "cue": "V003",
+      "audioSeconds": 9.7
+    },
+    {
+      "milliseconds": 2250,
+      "characterPosition": 9,
+      "characterCount": 1,
+      "text": "再",
+      "cue": "V003",
+      "audioSeconds": 10.385
+    },
+    {
+      "milliseconds": 2470,
+      "characterPosition": 10,
+      "characterCount": 1,
+      "text": "走",
+      "cue": "V003",
+      "audioSeconds": 10.605
+    },
+    {
+      "milliseconds": 2655,
+      "characterPosition": 11,
+      "characterCount": 1,
+      "text": "两",
+      "cue": "V003",
+      "audioSeconds": 10.79
+    },
+    {
+      "milliseconds": 2890,
+      "characterPosition": 12,
+      "characterCount": 1,
+      "text": "步",
+      "cue": "V003",
+      "audioSeconds": 11.025
+    },
+    {
+      "milliseconds": 100,
+      "characterPosition": 0,
+      "characterCount": 1,
+      "text": "两",
+      "cue": "V004",
+      "audioSeconds": 12.264999999999999
+    },
+    {
+      "milliseconds": 355,
+      "characterPosition": 1,
+      "characterCount": 1,
+      "text": "类",
+      "cue": "V004",
+      "audioSeconds": 12.52
+    },
+    {
+      "milliseconds": 600,
+      "characterPosition": 2,
+      "characterCount": 1,
+      "text": "不",
+      "cue": "V004",
+      "audioSeconds": 12.764999999999999
+    },
+    {
+      "milliseconds": 790,
+      "characterPosition": 3,
+      "characterCount": 2,
+      "text": "重复",
+      "cue": "V004",
+      "audioSeconds": 12.954999999999998
+    },
+    {
+      "milliseconds": 1695,
+      "characterPosition": 6,
+      "characterCount": 1,
+      "text": "三",
+      "cue": "V004",
+      "audioSeconds": 13.86
+    },
+    {
+      "milliseconds": 1970,
+      "characterPosition": 7,
+      "characterCount": 1,
+      "text": "加",
+      "cue": "V004",
+      "audioSeconds": 14.135
+    },
+    {
+      "milliseconds": 2115,
+      "characterPosition": 8,
+      "characterCount": 1,
+      "text": "二",
+      "cue": "V004",
+      "audioSeconds": 14.28
+    },
+    {
+      "milliseconds": 2800,
+      "characterPosition": 10,
+      "characterCount": 2,
+      "text": "等于",
+      "cue": "V004",
+      "audioSeconds": 14.965
+    },
+    {
+      "milliseconds": 3170,
+      "characterPosition": 12,
+      "characterCount": 1,
+      "text": "五",
+      "cue": "V004",
+      "audioSeconds": 15.334999999999999
+    }
+  ]
+}

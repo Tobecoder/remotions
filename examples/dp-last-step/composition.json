@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "duration_frames": 600,
+  "shots": [
+    {
+      "id": "S01",
+      "purpose": "最后一步的两类来源互斥，合并得到五种走法",
+      "type": "ST-005",
+      "start_frame": 0,
+      "end_frame": 600,
+      "voice_anchor": "到第四级，只看最后一步。",
+      "intent": {
+        "action": "三颗金色走一步、两颗蓝色走两步，到第4级相加"
+      },
+      "config": {
+        "entry": "src/Scene.tsx",
+        "props": {},
+        "inputs": [
+          "assets/scene-spec.json"
+        ],
+        "code_files": []
+      }
+    }
+  ],
+  "audio_tracks": [
+    {
+      "path": "public/audio/narration.wav",
+      "start_frame": 0,
+      "end_frame": 600,
+      "gain": 1
+    }
+  ],
+  "subtitle_cues": [],
+  "local_types": []
+}

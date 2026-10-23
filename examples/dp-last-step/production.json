@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "plan": {
+    "path": "plan.md",
+    "revision": 1,
+    "complete": true
+  },
+  "approval": {
+    "source": "human_user",
+    "user_reply": "按你的来",
+    "revision": 1,
+    "plan_signature": "3b39112ae2a4a3999be56fffe936fcaaba52710e18e87692a87932780c601bc8"
+  },
+  "inventory_complete": true,
+  "visual_assets": [
+    {
+      "id": "FACTS",
+      "kind": "data",
+      "path": "assets/scene-spec.json",
+      "required": true,
+      "review": {
+        "status": "pass",
+        "notes": "逐项核对第3级三条前缀111/12/21后加1，第2级两条前缀11/2后加2，五个完整路径互异且总步数4。三维阶梯/棋子为制作时程序构造，仅使用已列事实与视觉规范，无外部画面素材；本机Microsoft YaHei已由原样片实际显示。",
+        "sha256": "b535c28094db97ffb15c29fcb6961d4a27e1f333100974b243318c9716525d6d",
+        "technical": {
+          "type": "data",
+          "parse": "pass"
+        }
+      }
+    },
+    {
+      "id": "COPY",
+      "kind": "data",
+      "path": "assets/voice-segments.json",
+      "required": true,
+      "review": {
+        "status": "pass",
+        "notes": "核对四句短稿，分别建立最后一步、已知三种后走一步、已知两种后走两步、互斥相加等于五；符合用户授权的20秒单一概念讲解，不引入额外知识点或代码。实际配音时间在合成后取得。",
+        "sha256": "93d78c712bdc1c042e956db7010f6d02f1149d453e4ea83c862e425015296042",
+        "technical": {
+          "type": "data",
+          "parse": "pass"
+        }
+      }
+    }
+  ]
+}

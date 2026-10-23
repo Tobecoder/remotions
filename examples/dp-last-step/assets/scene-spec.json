@@ -1,0 +1,54 @@
+{
+  "goal": 4,
+  "allowedSteps": [
+    1,
+    2
+  ],
+  "groups": [
+    {
+      "source": 3,
+      "count": 3,
+      "prefixes": [
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "lastStep": 1,
+      "color": "#e7aa28"
+    },
+    {
+      "source": 2,
+      "count": 2,
+      "prefixes": [
+        [
+          1,
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "lastStep": 2,
+      "color": "#397c8d"
+    }
+  ],
+  "meaning": "one token represents one distinct route, not one physical person",
+  "visual": {
+    "background": "#f6f4ef",
+    "stairs": "#fffdf7",
+    "ink": "#223633",
+    "font": "Microsoft YaHei",
+    "geometry": "four rounded white steps, physically lit spheres, contact shadows",
+    "noExternalImages": true
+  }
+}
