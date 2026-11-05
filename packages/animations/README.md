@@ -30,8 +30,8 @@ const Gallery = () => {
 
 `ChapterHeading` 也可以接收片头内容：`intro={{eyebrow, title, description}}`（`title` 支持 React 内容，例如两行标题及彩色强调），并传入 `introProgress`。同一进度控制片头退场与章节入场，无需另外写两个淡入淡出动画；`progress` 仍用于后续章节之间的切换。不传 `intro` 时保留普通章节切换行为。
 
-`ExplodedLayers` 的每张卡片与对应文案共用入场进度，文字、圆点和引线跟随该卡片的实际投影位置。底层卡片及其文案跟随 `tiltProgress`，其余层跟随各自的 `enterAt` / `duration`；`labelOpacity` 用于额外控制整组标注的显隐。
+`ExplodedLayers` 自带与素材库一致的默认时间线：0.4–1.2 秒转为透视，1.8 秒起从下向上依次加入中间层，相隔 0.5 秒、每层 0.55 秒。调用时提供 `time`、`startAt`（整体开始时间）、各层内容和画面位置即可。`tiltProgress`、各层 `enterAt` / `duration` 仍可显式传入，但普通案例不再各自改写这些参数。
 
-若中间层的文字、图片、波形不应相互透出，可设置 `opaquePaper`：纸片底色保持不透明，只有内容和标注文案按原进度显现。该选项不改变原来的移动方向、轨迹、入场时间或时长；默认不启用，保留素材库现有表现。
+每张卡片与对应文案共用进度，文字、圆点和引线跟随该卡片的实际位置；`labelOpacity` 用于整组标注显隐。组件库预览与十秒案例均使用默认的整卡淡入，不另设透明度模式。
 
 构建：`npm run build -w @remotions/animations`。旧代码可从 Git 历史查看。MIT 许可，见 LICENSE。

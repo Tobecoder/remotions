@@ -12,33 +12,52 @@ vi.mock('remotion',()=>({
   Img:({src,style}:{src:string;style?:CSSProperties})=><img src={src} style={style}/>,
 }));
 import {OpeningScene} from '../../../examples/reference-opening/OpeningScene';
-import {during} from '../src/reference-opening/motion';
+import {during,openingLayerStartAt,tiltedPose} from '../src/reference-opening/motion';
+import {MaterialDemo} from '../../../apps/catalog/src/MaterialDemo';
+import {ExplodedLayers} from '../src/reference-opening/ExplodedLayers';
 const at=(frame:number)=>{
   clock.frame=frame;
   return new DOMParser().parseFromString(renderToStaticMarkup(<OpeningScene/>),'text/html');
 };
 
 describe('ten-second example paper layering',()=>{
-  it('keeps every appearing paper opaque so underlying waveforms cannot bleed through captions',()=>{
-    for(const frame of [133,143,153,163,173,183]){
-      const panels=at(frame).querySelectorAll<HTMLElement>('[data-exploded-layers] > [data-perspective-panel]');
-      for(const panel of Array.from(panels).slice(1,-1))expect([0,1]).toContain(Number(panel.style.opacity));
+  const catalogueAt=(frame:number)=>{
+    clock.frame=frame;
+    return new DOMParser().parseFromString(renderToStaticMarkup(<MaterialDemo id="exploded-layers"/>),'text/html');
+  };
+  const panels=(document:Document)=>Array.from(document.querySelectorAll<HTMLElement>('[data-exploded-layers] > [data-perspective-panel]'));
+  const matrix=(panel:HTMLElement)=>panel.style.transform.match(/matrix\(([^)]+)\)/)![1].split(',').map(Number);
+  const frames=[0,12,18,24,36,54,61,69,77,84,91,99,116,126];
+
+  it('matches the catalogue fading, tilt, vertical motion and labels with only an overall start offset',()=>{
+    for(const frame of frames){
+      const catalogue=catalogueAt(frame),example=at(frame+Math.round(openingLayerStartAt*30));
+      const expected=panels(catalogue),actual=panels(example);
+      expect(actual).toHaveLength(expected.length);
+      actual.forEach((panel,index)=>{
+        expect(Number(panel.style.opacity||1)).toBeCloseTo(Number(expected[index].style.opacity||1),7);
+        const a=matrix(panel),b=matrix(expected[index]);
+        // Only the horizontal placement differs between the two layouts.
+        for(const axis of [0,1,2,3,5])expect(a[axis]).toBeCloseTo(b[axis],7);
+      });
+      const labels=catalogue.querySelectorAll('[data-layer-label]'),exampleLabels=example.querySelectorAll('[data-layer-label]');
+      exampleLabels.forEach((label,index)=>{
+        expect(label.getAttribute('data-layer-label')).toBe(labels[index].getAttribute('data-layer-label'));
+        expect(Number(label.getAttribute('opacity'))).toBeCloseTo(Number(labels[index].getAttribute('opacity')),7);
+      });
     }
   });
-  it('preserves the approved upward entry path and original timing for every middle card',()=>{
-    const entries=[{index:1,row:3,start:4.3},{index:2,row:2,start:4.65},{index:3,row:1,start:5},{index:4,row:0,start:5.4}];
-    for(const entry of entries){
-      let previous=Infinity;
-      for(const fraction of [0,.25,.5,.75,1]){
-        const frame=Math.round((entry.start+.55*fraction)*30);
-        const panel=at(frame).querySelectorAll<HTMLElement>('[data-exploded-layers] > [data-perspective-panel]')[entry.index];
-        const matrix=panel.style.transform.match(/matrix\(([^)]+)\)/)![1].split(',').map(Number);
-        const p=during(frame/30,entry.start,entry.start+.55);
-        const expectedY=53+35.6*(entry.row+1)+18*(1-p*p);
-        expect(matrix[5]).toBeCloseTo(expectedY,6);
-        expect(matrix[5]).toBeLessThanOrEqual(previous);
-        previous=matrix[5];
-      }
+  it('keeps the component defaults equal to the approved catalogue recipe',()=>{
+    // Frozen values from the approved catalogue, independent of the new defaults.
+    const starts=[3.3,2.8,2.3,1.8,.4];
+    for(const frame of frames){
+      const time=frame/30;
+      const fixture=new DOMParser().parseFromString(renderToStaticMarkup(<ExplodedLayers time={time} tiltProgress={during(time,.4,1.2)} front={{x:220,y:94,ax:1,ay:0,bx:0,by:1}} pose={{...tiltedPose,x:291}} screen={<span/>} layers={starts.map((enterAt,index)=>({id:String(index),label:String(index),enterAt,duration:.55,content:<span/>}))}/>),'text/html');
+      const expected=panels(fixture),actual=panels(catalogueAt(frame));
+      actual.forEach((panel,index)=>{
+        expect(Number(panel.style.opacity||1)).toBeCloseTo(Number(expected[index].style.opacity||1),7);
+        matrix(panel).forEach((value,axis)=>expect(value).toBeCloseTo(matrix(expected[index])[axis],7));
+      });
     }
   });
   it('shows one screenshot at a time, including source-frame changes',()=>{

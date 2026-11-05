@@ -18,12 +18,12 @@ const FanArtwork=({index}:{index:number})=><div style={{position:'relative',widt
 
 const PerspectiveDemo=({time}:{time:number})=><PerspectivePanel from={{x:220,y:114,ax:1,ay:0,bx:0,by:1}} to={{...tiltedPose,x:355,y:128}} progress={during(time,.45,2.1)} borderColor="#30343d" borderWidth={4}><DemoDocument/></PerspectivePanel>;
 
-const LayersDemo=({time}:{time:number})=><ExplodedLayers time={time} tiltProgress={during(time,.4,1.2)} front={{x:220,y:94,ax:1,ay:0,bx:0,by:1}} pose={{...tiltedPose,x:291}} screen={<DemoDocument title="一条完整的讲解视频"/>} layers={[
-  {id:'animation',label:'动画',enterAt:3.3,content:<DemoDocument title="逐帧编排" kind={3}/>},
-  {id:'captions',label:'字幕',enterAt:2.8,content:<DemoDocument title="跟着内容讲清楚" kind={2}/>},
-  {id:'voice',label:'配音',enterAt:2.3,content:<DemoDocument title="声音与节奏" kind={1}/>},
-  {id:'materials',label:'素材',enterAt:1.8,content:<DemoDocument title="图片与画面素材" kind={4}/>},
-  {id:'script',label:'脚本',enterAt:.4,content:<DemoDocument title="从一个清楚的问题开始"/>},
+const LayersDemo=({time}:{time:number})=><ExplodedLayers time={time} front={{x:220,y:94,ax:1,ay:0,bx:0,by:1}} pose={{...tiltedPose,x:291}} screen={<DemoDocument title="一条完整的讲解视频"/>} layers={[
+  {id:'animation',label:'动画',content:<DemoDocument title="逐帧编排" kind={3}/>},
+  {id:'captions',label:'字幕',content:<DemoDocument title="跟着内容讲清楚" kind={2}/>},
+  {id:'voice',label:'配音',content:<DemoDocument title="声音与节奏" kind={1}/>},
+  {id:'materials',label:'素材',content:<DemoDocument title="图片与画面素材" kind={4}/>},
+  {id:'script',label:'脚本',content:<DemoDocument title="从一个清楚的问题开始"/>},
 ]}/>;
 
 const ThumbnailDemo=({time}:{time:number})=>{

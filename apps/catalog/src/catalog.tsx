@@ -29,11 +29,11 @@ export const catalog: CatalogItem[] = [
 
 <ExplodedLayers
   time={frame / fps}
-  tiltProgress={progress}
+  startAt={0}
   screen={<FinishedVideo />}
   layers={[
-    {id:'captions',label:'字幕',content:<Captions />,enterAt:2},
-    {id:'script',label:'脚本',content:<Script />,enterAt:0.4},
+    {id:'captions',label:'字幕',content:<Captions />},
+    {id:'script',label:'脚本',content:<Script />},
   ]}
 />`},
   {id:'scene-thumbnail',category:'layouts',name:'章节缩略卡',component:'SceneThumbnail',description:'将完整场景缩小，收进下一节的章节卡',usage:'章节衔接 · 内容回顾',durationInFrames:150,posterFrame:105,code:`import {SceneThumbnail} from '@remotions/animations';

@@ -1,6 +1,6 @@
 import {AbsoluteFill, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {ChapterHeading, ExplodedLayers, FanCardDeck, SceneThumbnail, openingState} from '../../packages/animations/src/reference-opening';
-import {during, mix} from '../../packages/animations/src/reference-opening/motion';
+import {during, mix, openingLayerStartAt} from '../../packages/animations/src/reference-opening/motion';
 
 const texture=(name:string)=>staticFile(`textures/${name}.jpg`);
 const imageStyle={width:'100%',height:'100%',objectFit:'cover' as const,display:'block'};
@@ -59,11 +59,11 @@ export const OpeningScene=()=>{
   const time=frame/fps;
   const state=openingState(time);
   const layers=[
-    {id:'animation',label:'动画',content:<AnimationPage/>,enterAt:5.4,duration:.55},
-    {id:'captions',label:'字幕',content:<CaptionsPage/>,enterAt:5.0,duration:.55},
-    {id:'voice',label:'配音',content:<VoicePage/>,enterAt:4.65,duration:.55},
-    {id:'materials',label:'素材',content:<MaterialsPage/>,enterAt:4.3,duration:.55},
-    {id:'script',label:'脚本',content:<ScriptPage/>,enterAt:2.55,duration:.75},
+    {id:'animation',label:'动画',content:<AnimationPage/>},
+    {id:'captions',label:'字幕',content:<CaptionsPage/>},
+    {id:'voice',label:'配音',content:<VoicePage/>},
+    {id:'materials',label:'素材',content:<MaterialsPage/>},
+    {id:'script',label:'脚本',content:<ScriptPage/>},
   ];
   return <AbsoluteFill style={{background:'#f5f6ef',overflow:'hidden',fontFamily:'"Microsoft YaHei", "Noto Sans CJK SC", sans-serif'}}>
     <div data-opening-scene style={{position:'absolute',width:800,height:450,transformOrigin:'0 0',transform:`scale(${width/800},${height/450})`,overflow:'hidden'}}>
@@ -79,7 +79,7 @@ export const OpeningScene=()=>{
         <div style={{fontSize:8,fontWeight:700,letterSpacing:1.4,color:'#ce7053',marginBottom:7}}>这期聊三件事</div><div style={{fontSize:16,fontWeight:800,color:'#24272d'}}>一条讲解视频的制作全流程拆解</div>
       </div>
       <SceneThumbnail progress={state.thumbnail}>
-        <ExplodedLayers time={time} tiltProgress={state.tilt} layers={layers} opaquePaper screen={<ScreenContent time={time}/>} labelOpacity={1-during(time,8.5,8.83)}/>
+        <ExplodedLayers time={time} startAt={openingLayerStartAt} layers={layers} screen={<ScreenContent time={time}/>} labelOpacity={1-during(time,8.5,8.83)}/>
       </SceneThumbnail>
       <FanCardDeck x={300} cardHeight={122} spread={64} progress={state.fan} cards={skillNames.map((caption,i)=>({id:caption,caption,content:<Texture name={`skill-${i}`}/>}))}/>
       <div style={{position:'absolute',left:405,top:224,opacity:during(state.fan,.3,.9),transform:`translateY(${mix(9,0,state.fan)}px)`,background:'#30343f',border:'1px solid #ffffff29',padding:'10px 18px',borderRadius:5,color:'#fff',boxShadow:'0 6px 10px #22252c19',fontSize:14,fontFamily:'monospace',fontWeight:700}}><span style={{color:'#e77a52',fontSize:11,marginRight:7}}>◆</span>SKILL.md</div>
