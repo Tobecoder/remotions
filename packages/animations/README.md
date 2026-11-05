@@ -30,4 +30,6 @@ const Gallery = () => {
 
 `ChapterHeading` 也可以接收片头内容：`intro={{eyebrow, title, description}}`（`title` 支持 React 内容，例如两行标题及彩色强调），并传入 `introProgress`。同一进度控制片头退场与章节入场，无需另外写两个淡入淡出动画；`progress` 仍用于后续章节之间的切换。不传 `intro` 时保留普通章节切换行为。
 
+`ExplodedLayers` 的每张卡片与对应文案共用入场进度，文字、圆点和引线跟随该卡片的实际投影位置。底层卡片及其文案跟随 `tiltProgress`，其余层跟随各自的 `enterAt` / `duration`；`labelOpacity` 用于额外控制整组标注的显隐。
+
 构建：`npm run build -w @remotions/animations`。旧代码可从 Git 历史查看。MIT 许可，见 LICENSE。
