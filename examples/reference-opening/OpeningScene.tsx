@@ -41,7 +41,9 @@ const AnimationPage=()=> <div style={{height:'100%',background:'linear-gradient(
 /** Contents can be replaced independently of the camera/stack animation. */
 const ScreenContent=({time}:{time:number})=> {
   const moments=[0,.9,1.8,3.05,3.9,4.7,5.8,6.7,7.6];
-  return <div style={{position:'relative',width:'100%',height:'100%',background:'#f8f8fc'}}>{moments.map((at,i)=><div key={i} style={{position:'absolute',inset:0,opacity:i===0?1:during(time,at,at+.09)}}><Texture name={`screen-${i}`}/></div>)}</div>;
+  let current=0;
+  moments.forEach((at,index)=>{if(time>=at)current=index;});
+  return <div style={{position:'relative',width:'100%',height:'100%',background:'#f8f8fc'}}>{moments.map((_,i)=><div key={i} data-screen-frame={i} style={{position:'absolute',inset:0,opacity:Number(i===current)}}><Texture name={`screen-${i}`}/></div>)}</div>;
 };
 
 const Subtitle=({time}:{time:number})=>{
@@ -77,7 +79,7 @@ export const OpeningScene=()=>{
         <div style={{fontSize:8,fontWeight:700,letterSpacing:1.4,color:'#ce7053',marginBottom:7}}>这期聊三件事</div><div style={{fontSize:16,fontWeight:800,color:'#24272d'}}>一条讲解视频的制作全流程拆解</div>
       </div>
       <SceneThumbnail progress={state.thumbnail}>
-        <ExplodedLayers time={time} tiltProgress={state.tilt} layers={layers} screen={<ScreenContent time={time}/>} labelOpacity={1-during(time,8.5,8.83)}/>
+        <ExplodedLayers time={time} tiltProgress={state.tilt} layers={layers} opaquePaper screen={<ScreenContent time={time}/>} labelOpacity={1-during(time,8.5,8.83)}/>
       </SceneThumbnail>
       <FanCardDeck x={300} cardHeight={122} spread={64} progress={state.fan} cards={skillNames.map((caption,i)=>({id:caption,caption,content:<Texture name={`skill-${i}`}/>}))}/>
       <div style={{position:'absolute',left:405,top:224,opacity:during(state.fan,.3,.9),transform:`translateY(${mix(9,0,state.fan)}px)`,background:'#30343f',border:'1px solid #ffffff29',padding:'10px 18px',borderRadius:5,color:'#fff',boxShadow:'0 6px 10px #22252c19',fontSize:14,fontFamily:'monospace',fontWeight:700}}><span style={{color:'#e77a52',fontSize:11,marginRight:7}}>◆</span>SKILL.md</div>

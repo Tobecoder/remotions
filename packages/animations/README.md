@@ -32,4 +32,6 @@ const Gallery = () => {
 
 `ExplodedLayers` 的每张卡片与对应文案共用入场进度，文字、圆点和引线跟随该卡片的实际投影位置。底层卡片及其文案跟随 `tiltProgress`，其余层跟随各自的 `enterAt` / `duration`；`labelOpacity` 用于额外控制整组标注的显隐。
 
+若中间层的文字、图片、波形不应相互透出，可设置 `opaquePaper`：纸片底色保持不透明，只有内容和标注文案按原进度显现。该选项不改变原来的移动方向、轨迹、入场时间或时长；默认不启用，保留素材库现有表现。
+
 构建：`npm run build -w @remotions/animations`。旧代码可从 Git 历史查看。MIT 许可，见 LICENSE。

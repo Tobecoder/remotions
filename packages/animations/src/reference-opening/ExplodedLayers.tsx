@@ -17,29 +17,34 @@ export type ExplodedLayersProps = {
   panelHeight?: number;
   canvasWidth?: number;
   canvasHeight?: number;
+  opaquePaper?: boolean;
 };
 
 /** Layers are ordered nearest-to-screen first. The last layer is the base document. */
-export const ExplodedLayers = ({time,tiltProgress:rawTilt,layers,screen,screenLabel='成片',spacing=35.6,labelOpacity=1,pose=tiltedPose,front=frontPose,panelWidth=360,panelHeight=202.5,canvasWidth=800,canvasHeight=450}: ExplodedLayersProps) => {
+export const ExplodedLayers = ({time,tiltProgress:rawTilt,layers,screen,screenLabel='成片',spacing=35.6,labelOpacity=1,pose=tiltedPose,front=frontPose,panelWidth=360,panelHeight=202.5,canvasWidth=800,canvasHeight=450,opaquePaper=false}: ExplodedLayersProps) => {
   const tiltProgress=clamp(rawTilt);
   const metalId=useId().replace(/:/g,'');
   const leftX=pose.x+pose.bx*panelHeight-4, leftY=pose.y+pose.by*panelHeight+3;
   const rightX=pose.x+pose.ax*panelWidth+9, rightY=pose.y+pose.ay*panelWidth-1;
   const anchors=layers.map((layer,index)=>{
     const entry=during(time,layer.enterAt,layer.enterAt+(layer.duration??0.55));
-    const progress=index===layers.length-1?tiltProgress:entry;
+    const isBase=index===layers.length-1;
+    const progress=isBase?tiltProgress:entry;
+    const opaqueEntry=opaquePaper&&!isBase;
     const y=pose.y+spacing*(index+1);
-    const from=index===layers.length-1?front:{...pose,y:y+18};
+    const from=isBase?front:{...pose,y:y+18};
     const to={...pose,y:y+mix(18,0,progress)};
     const current=mixPose(from,to,progress);
-    return {layer,progress,from,to,leftX:current.x+current.bx*panelHeight-4,leftY:current.y+current.by*panelHeight+3,rightX:current.x+current.ax*panelWidth+9,rightY:current.y+current.ay*panelWidth-1};
+    return {layer,progress,from,to,opaqueEntry,opacity:opaqueEntry?Number(progress>0):progress,leftX:current.x+current.bx*panelHeight-4,leftY:current.y+current.by*panelHeight+3,rightX:current.x+current.ax*panelWidth+9,rightY:current.y+current.ay*panelWidth-1};
   });
   const screenLabelProgress=during(tiltProgress,.75,1);
   return <div data-exploded-layers style={{position:'absolute',inset:0}}>
     <div style={{position:'absolute',left:front.x+panelWidth*.436,top:front.y+panelHeight,width:46,height:48,opacity:1-during(tiltProgress,0,.55),transformOrigin:'top',transform:`scaleY(${mix(1,0.3,tiltProgress)})`}}>
       <svg viewBox="0 0 46 48" width="46" height="48"><defs><linearGradient id={metalId}><stop stopColor="#b9bdc2"/><stop offset=".5" stopColor="#f5f6f7"/><stop offset="1" stopColor="#a5aab0"/></linearGradient></defs><path d="M17 0H30L33 37L43 41Q46 44 40 46H5Q0 44 4 41L14 37Z" fill={`url(#${metalId})`}/><ellipse cx="23" cy="45" rx="23" ry="2" fill="#c2c4c6"/></svg>
     </div>
-    {[...anchors].reverse().map(({layer,progress,from,to})=><PerspectivePanel key={layer.id} width={panelWidth} height={panelHeight} from={from} to={to} progress={progress} style={{opacity:progress}}>{layer.content}</PerspectivePanel>)}
+    {[...anchors].reverse().map(({layer,progress,from,to,opaqueEntry,opacity})=><PerspectivePanel key={layer.id} width={panelWidth} height={panelHeight} from={from} to={to} progress={progress} style={{opacity}}>
+      {opaqueEntry?<div data-layer-reveal={layer.id} style={{width:'100%',height:'100%',opacity:progress}}>{layer.content}</div>:layer.content}
+    </PerspectivePanel>)}
     <PerspectivePanel width={panelWidth} height={panelHeight} from={front} to={pose} progress={tiltProgress} borderColor="#303238" borderWidth={4.5} radius={mix(8,3,tiltProgress)} shadow={tiltProgress<0.5}>
       {screen}
     </PerspectivePanel>
