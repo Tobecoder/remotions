@@ -11,3 +11,5 @@ export {ChapterHeading} from './ChapterHeading';
 export type {ChapterHeadingProps, HeadingContent, IntroHeadingContent} from './ChapterHeading';
 export type {PlanePose} from './motion';
 export {openingState, mixPose, frontPose, tiltedPose} from './motion';
+export {BlurredCollage} from './BlurredCollage';
+export type {BlurredCollageProps, CollageCard} from './BlurredCollage';

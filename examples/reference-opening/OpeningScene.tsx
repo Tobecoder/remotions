@@ -1,5 +1,5 @@
 import {AbsoluteFill, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {ChapterHeading, ExplodedLayers, FanCardDeck, SceneThumbnail, openingState} from '../../packages/animations/src/reference-opening';
+import {BlurredCollage, ChapterHeading, ExplodedLayers, FanCardDeck, SceneThumbnail, openingState} from '../../packages/animations/src/reference-opening';
 import {during, mix, openingLayerStartAt} from '../../packages/animations/src/reference-opening/motion';
 
 const texture=(name:string)=>staticFile(`textures/${name}.jpg`);
@@ -7,14 +7,12 @@ const imageStyle={width:'100%',height:'100%',objectFit:'cover' as const,display:
 const Texture=({name}:{name:string})=><Img src={texture(name)} style={imageStyle}/>;
 
 const PaperBackground=({time}:{time:number}) => {
-  const blurOpacity=1-during(time,2.5,3.65);
-  return <>
-    <AbsoluteFill style={{background:'#f5f6ef'}}><Img src={texture('paper')} style={imageStyle}/></AbsoluteFill>
-    <div style={{position:'absolute',inset:-30,filter:'blur(3px)',opacity:blurOpacity*.33,transform:`translateY(${-time*1.3}px) scale(1.02)`}}>
-      {[[-32,24,137,111,-5],[188,28,140,115,4],[328,-53,217,140,-3],[588,-36,207,106,5],[728,103,134,160,-4],[66,313,195,148,-7],[300,371,149,119,4],[500,335,215,147,-5],[604,270,124,82,3]].map(([x,y,w,h,rotation],i)=><div key={i} style={{position:'absolute',left:x,top:y,width:w,height:h,transform:`rotate(${rotation}deg)`,background:'#fff',padding:7,boxShadow:'0 7px 9px #34393417',opacity:.7}}><div style={{height:'70%',background:i%3===0?'#aab0b5':'#e0e0d7',overflow:'hidden'}}>{i%3!==0?<Texture name={`screen-${i%3}`}/>:null}</div><div style={{height:3,background:'#b9bcba',width:'65%',margin:'10px auto'}}/><div style={{height:2,background:'#b9bcba',width:'43%',margin:'5px auto'}}/></div>)}
-    </div>
-    <AbsoluteFill style={{background:'radial-gradient(ellipse at 50% 42%,transparent 35%,#c9ccbd0d 100%)'}}/>
-  </>;
+  return <BlurredCollage time={time} paper={<Texture name="paper"/>} cards={
+    [[-32,24,137,111,-5],[188,28,140,115,4],[328,-53,217,140,-3],[588,-36,207,106,5],[728,103,134,160,-4],[66,313,195,148,-7],[300,371,149,119,4],[500,335,215,147,-5],[604,270,124,82,3]].map(([x,y,width,height,rotation],i)=>({
+      id:String(i),x,y,width,height,rotation,
+      content:<div style={{height:'100%',padding:7,boxSizing:'border-box',opacity:.7}}><div style={{height:'70%',background:i%3===0?'#aab0b5':'#e0e0d7',overflow:'hidden'}}>{i%3!==0?<Texture name={`screen-${i%3}`}/>:null}</div><div style={{height:3,background:'#b9bcba',width:'65%',margin:'10px auto'}}/><div style={{height:2,background:'#b9bcba',width:'43%',margin:'5px auto'}}/></div>,
+    }))
+  }/>;
 };
 
 const ScriptPage=()=> <Texture name="script"/>;

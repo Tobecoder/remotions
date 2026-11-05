@@ -1,5 +1,11 @@
 # 本地验证 · 2026-11-05
 
+## 背景组件更新
+
+- 背景已改为公共组件 `BlurredCollage`，纸纹静止、图片墙向左下漂移，约 3–4 秒淡出。目录独立演示和本场景共享默认运动参数。
+- `npm run check`：30 项测试通过（组件包 17、目录站 13），类型及构建通过；包括实际目录/案例的背景参数一致性以及已有标题、分层回归检查。
+- `node examples/reference-opening/render.mjs --video-only` 成功；ffprobe 读取 300 帧，确认 H.264、1920×1080、30 FPS、10 秒，渲染日志错误 0。未进行浏览器视觉验收。
+
 ## 标题交接修复后的更新
 
 - 片头到“制作方法”已由一个 `ChapterHeading` 实例统一交接，使用 `intro` / `introProgress`，并保留后续章节切换的 `progress`。

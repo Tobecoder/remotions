@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **5 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **6 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
@@ -9,6 +9,7 @@ Remotion 可复用动画组件，当前公开导出 **5 个**。旧组件及归�
 | 版式转场 | `SceneThumbnail` | 完整场景缩为章节缩略卡 |
 | 版式转场 | `FanCardDeck` | 图片、文档等卡片的扇形展开 |
 | 文字特效 | `ChapterHeading` | 编号、标题和说明的遮罩切换 |
+| 背景特效 | `BlurredCollage` | 静止纸纹上的虚化拼贴向左下漂移并淡出 |
 
 ```tsx
 import {FanCardDeck} from '@remotions/animations';
@@ -35,3 +36,5 @@ const Gallery = () => {
 每张卡片与对应文案共用进度，文字、圆点和引线跟随该卡片的实际位置；`labelOpacity` 用于整组标注显隐。组件库预览与十秒案例均使用默认的整卡淡入，不另设透明度模式。
 
 构建：`npm run build -w @remotions/animations`。旧代码可从 Git 历史查看。MIT 许可，见 LICENSE。
+
+`BlurredCollage` 接收 `time={frame / fps}` 和 `cards`，每项指定 `id`、`content`、`x`、`y`、`width`、`height`，可选 `rotation`。默认以每秒 `(-16, 8)` 个设计像素向左下移动，3–4.25 秒淡出；`startAt` 可以整体延后。默认纸纹是固定种子的静态 SVG 纹理，也可用 `paper={<Img ... />}` 替换。`drift`、`blur`、`opacity`、`fadeStart`、`fadeEnd` 可调整，但目录与十秒案例使用同一默认运动参数。纸纹不跟随图片墙移动或淡出。

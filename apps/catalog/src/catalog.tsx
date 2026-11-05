@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -16,6 +16,19 @@ export const categories: CatalogCategory[] = [
 ];
 
 export const catalog: CatalogItem[] = [
+  {id:'blurred-collage',category:'backgrounds',name:'虚化拼贴漂移',component:'BlurredCollage',description:'图片墙向左下缓慢漂移，淡出后留下静止纸纹',usage:'片头铺底 · 教程开场',durationInFrames:180,posterFrame:18,code:`import {BlurredCollage} from '@remotions/animations';
+import {Img, useCurrentFrame, useVideoConfig} from 'remotion';
+
+// 800 × 450 设计画布；与十秒案例共用默认运动和淡出节拍。
+export const Background = () => <BlurredCollage
+  time={useCurrentFrame() / useVideoConfig().fps}
+  cards={[
+    {id:'a',x:-32,y:24,width:137,height:111,rotation:-5,
+      content:<Img src="/image-a.jpg" style={{width:'100%',height:'100%',objectFit:'cover'}} />},
+    {id:'b',x:328,y:-53,width:217,height:140,rotation:-3,
+      content:<Img src="/image-b.jpg" style={{width:'100%',height:'100%',objectFit:'cover'}} />},
+  ]}
+/>;`},
   {id:'perspective-panel',category:'layouts',name:'透视面板',component:'PerspectivePanel',description:'将正面内容转为倾斜的透视面板',usage:'截图展示 · 空间转场',durationInFrames:120,posterFrame:75,code:`import {PerspectivePanel} from '@remotions/animations';
 
 <PerspectivePanel

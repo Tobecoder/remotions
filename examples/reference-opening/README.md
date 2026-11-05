@@ -11,7 +11,7 @@ node examples/reference-opening/render.mjs
 
 输出 `.verification/reference-opening/reference-opening-10s.mp4` 及关键帧。先生成截图可加 `--stills`，快速四帧检查可再加 `--quick`。
 
-可复用组件位于 `packages/animations/src/reference-opening/`，现已按用户要求加入素材库，包入口公开导出五个组件及类型。目录独立演示与本场景复用同一套实现。
+可复用组件位于 `packages/animations/src/reference-opening/`，现已按用户要求加入素材库，包入口公开导出六个组件及类型。目录独立演示与本场景复用同一套实现。
 
 预览服务启动后打开 http://localhost:3004/Reference-Opening-10s 。
 
@@ -28,3 +28,5 @@ node examples/reference-opening/render.mjs
 片头两行标题到“制作方法”现由 `ChapterHeading` 的 `intro` / `introProgress` 统一处理，时间为 5.65–6.35 秒。与后续“制作方法 → Skill 推荐”的 `progress` 分开编排；共同复用同一个标题组件。
 
 分层展开以素材库组件的默认效果为准。案例仅传入 `startAt={2.1}`、图片文案和画面位置，不再单独设置各层时间、旋转进度或透明度模式。底层在 2.5–3.3 秒完成透视，中间层从 3.9 秒起每隔 0.5 秒入场、每层 0.55 秒；这些值由组件的同一套默认时间线产生。顶部截图始终只有一张可见。
+
+背景使用独立的 `BlurredCollage`：纸纹静止、虚化拼贴向左下漂移并在 3–4.25 秒淡出。目录卡片与案例只替换图片内容，使用相同的漂移、模糊与退场参数；见「背景特效 → 虚化拼贴漂移」。

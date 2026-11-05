@@ -9,3 +9,5 @@ export type {FanCardDeckProps, FanCard} from './reference-opening/FanCardDeck';
 export {ChapterHeading} from './reference-opening/ChapterHeading';
 export type {ChapterHeadingProps, HeadingContent, IntroHeadingContent} from './reference-opening/ChapterHeading';
 export type {PlanePose} from './reference-opening/motion';
+export {BlurredCollage} from './reference-opening/BlurredCollage';
+export type {BlurredCollageProps, CollageCard} from './reference-opening/BlurredCollage';

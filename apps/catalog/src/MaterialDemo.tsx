@@ -1,5 +1,5 @@
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
-import {ChapterHeading, ExplodedLayers, FanCardDeck, PerspectivePanel, SceneThumbnail} from '../../../packages/animations/src';
+import {BlurredCollage, ChapterHeading, ExplodedLayers, FanCardDeck, PerspectivePanel, SceneThumbnail} from '../../../packages/animations/src';
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
 
@@ -41,6 +41,9 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
   const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig(),time=frame/fps;
   let content;
   switch(id){
+    case 'blurred-collage':content=<BlurredCollage time={time} cards={[
+      [-32,24,137,111,-5],[188,28,140,115,4],[328,-53,217,140,-3],[588,-36,207,106,5],[728,103,134,160,-4],[66,313,195,148,-7],[300,371,149,119,4],[500,335,215,147,-5],[604,270,124,82,3],
+    ].map(([x,y,width,height,rotation],i)=>({id:String(i),x,y,width,height,rotation,content:<div style={{width:360,height:202.5,transformOrigin:'0 0',transform:`scale(${width/360},${height/202.5})`}}><DemoDocument title={['内容脚本','图片与画面','章节设计'][i%3]} kind={i%5}/></div>}))}/>;break;
     case 'perspective-panel':content=<PerspectiveDemo time={time}/>;break;
     case 'exploded-layers':content=<LayersDemo time={time}/>;break;
     case 'scene-thumbnail':content=<ThumbnailDemo time={time}/>;break;
