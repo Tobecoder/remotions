@@ -57,11 +57,27 @@ export const catalog: CatalogItem[] = [
     content:<img src={image.src} style={{width:'100%',height:'100%',objectFit:'cover'}} />,
   }))}
 />`},
-  {id:'chapter-heading',category:'text-effects',name:'章节标题切换',component:'ChapterHeading',description:'编号、标题和说明在各自遮罩内切换',usage:'章节标题 · 段落过渡',durationInFrames:120,posterFrame:80,code:`import {ChapterHeading} from '@remotions/animations';
+  {id:'chapter-heading',category:'text-effects',name:'章节标题切换',component:'ChapterHeading',description:'从片头大标题衔接到章节，再切换下一章节',usage:'片头标题 · 章节过渡',durationInFrames:180,posterFrame:18,code:`import {ChapterHeading} from '@remotions/animations';
+import {useCurrentFrame, useVideoConfig} from 'remotion';
 
-<ChapterHeading
-  from={{number:'01 / 03',title:'制作方法',description:'从脚本到成片'}}
-  to={{number:'02 / 03',title:'Skill 推荐',description:'大家最关心的'}}
-  progress={progress}
-/>`},
+// 800 × 450 画布，6 秒演示
+export const ChapterExample = () => {
+  const time = useCurrentFrame() / useVideoConfig().fps;
+  const transition = (start: number, end: number) => {
+    const p = Math.min(1, Math.max(0, (time - start) / (end - start)));
+    return p * p * (3 - 2 * p);
+  };
+  return <ChapterHeading
+    x={195} y={135}
+    intro={{
+      eyebrow:'REMOTION 教程 · 第二期',
+      title:<>一条讲解视频的<br/>制作<span style={{color:'#ca6041'}}>全流程</span>拆解</>,
+      description:'以上期16分钟的视频为例 · 从脚本到成片',
+    }}
+    introProgress={transition(1.2, 1.9)}
+    from={{number:'01 / 03',title:'制作方法',description:'从脚本到成片'}}
+    to={{number:'02 / 03',title:'Skill 推荐',description:'大家最关心的'}}
+    progress={transition(3.2, 4)}
+  />;
+};`},
 ];

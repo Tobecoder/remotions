@@ -45,7 +45,14 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
     case 'exploded-layers':content=<LayersDemo time={time}/>;break;
     case 'scene-thumbnail':content=<ThumbnailDemo time={time}/>;break;
     case 'fan-card-deck':content=<FanCardDeck x={156} y={114} cardWidth={112} cardHeight={166} spread={94} progress={during(time,.2,1.7)} cards={['脚本','画面','配音','字幕','动画'].map((caption,i)=>({id:caption,caption,content:<FanArtwork index={i}/>}))}/>;break;
-    case 'chapter-heading':content=<><div style={{position:'absolute',left:160,top:139,height:150,width:2,background:'#ce705340'}}/><ChapterHeading x={195} y={135} from={{number:'01 / 03',title:'制作方法',description:'从脚本到成片'}} to={{number:'02 / 03',title:'Skill 推荐',description:'大家最关心的'}} progress={during(time,.8,2)}/></>;break;
+    case 'chapter-heading':content=<><div style={{position:'absolute',left:160,top:139,height:150,width:2,background:'#ce705340'}}/><ChapterHeading
+      x={195} y={135}
+      intro={{eyebrow:'REMOTION 教程 · 第二期',title:<>一条讲解视频的<br/>制作<span style={{color:'#ca6041'}}>全流程</span>拆解</>,description:'以上期16分钟的视频为例 · 从脚本到成片'}}
+      introProgress={during(time,1.2,1.9)}
+      from={{number:'01 / 03',title:'制作方法',description:'从脚本到成片'}}
+      to={{number:'02 / 03',title:'Skill 推荐',description:'大家最关心的'}}
+      progress={during(time,3.2,4)}
+    /></>;break;
   }
   const zoom=id==='perspective-panel'?1.7:id==='exploded-layers'?1.2:id==='chapter-heading'?1.3:1;
   return <AbsoluteFill style={{background:'#f5f6ef',overflow:'hidden',fontFamily:'"Microsoft YaHei",sans-serif'}}><div data-demo-frame={frame} data-demo-id={id} style={{position:'absolute',width:800,height:450,transformOrigin:'0 0',transform:`scale(${width/800},${height/450})`,background:'radial-gradient(ellipse at 55% 45%,#fff 0%,#f3f4ec 100%)'}}><div style={{position:'absolute',inset:0,transformOrigin:'400px 225px',transform:`scale(${zoom})`}}>{content}</div></div></AbsoluteFill>;
