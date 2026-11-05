@@ -1,6 +1,5 @@
 import type {CSSProperties, ReactNode} from 'react';
 import {AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
-import {BasicCaptions} from '../../../packages/animations/src';
 import timing from '../timing.json';
 
 export {timing};
@@ -27,9 +26,12 @@ export const Page = ({title, subtitle, children, scene}:{title:string;subtitle:s
   </AbsoluteFill>;
 };
 export const CaptionTrack = ({offsetFrame=0}:{offsetFrame?:number}) => {
-  const captions=timing.cues.map(c=>({text:c.text,startMs:c.start*1000-offsetFrame/30*1000,endMs:c.end*1000-offsetFrame/30*1000,timestampMs:(c.start+c.end)*500-offsetFrame/30*1000,confidence:null}));
+  const frame=useCurrentFrame();
+  const {fps}=useVideoConfig();
+  const seconds=(frame+offsetFrame)/fps;
+  const caption=timing.cues.find(c=>seconds>=c.start&&seconds<c.end);
   return <div style={{position:'absolute',left:100,bottom:25,width:1720,height:130,borderTop:`1px solid ${C.line}`}}>
-    <BasicCaptions captions={captions} width={1720} height={120} color={C.ink} secondaryColor={C.paper} backgroundColor="transparent" fontFamily={FONT} fontSize={46}/>
+    <div style={{width:1720,height:120,display:'grid',placeItems:'center',color:C.ink,fontFamily:FONT,fontSize:46,fontWeight:800,textAlign:'center'}}>{caption?.text??''}</div>
   </div>;
 };
 export const Card = ({children,style}:{children:ReactNode;style?:CSSProperties}) => <div style={{backgroundColor:C.white,border:`1px solid ${C.line}`,borderRadius:28,boxShadow:'0 8px 25px #18243b05',...style}}>{children}</div>;

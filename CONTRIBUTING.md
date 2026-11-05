@@ -1,25 +1,15 @@
 # Contributing to Remotions
 
-Thanks for helping improve the library.
-
 ## Develop
 
-- Node.js 20+, npm 10+.
-- Install with `npm ci`, then run `npm run dev`.
-- Before opening a PR run `npm run check`.
-- Keep Remotion-related dependencies at compatible 4.x versions across all packages.
+- Use Node.js 20+ and npm 10+.
+- Run `npm ci`, then `npm run dev`.
+- Run `npm run check` before a PR.
 
-## Adding a component
+## Library reset
 
-1. Create a new audio-reactive component in `packages/animations/src/components/` with typed props, including an audio `src`.
-2. Use `useCurrentFrame()` and `useVideoConfig()` with `@remotion/media-utils` to calculate animation state from real audio; do not substitute CSS transitions, timers, or random waveform data.
-3. Export both component and props through `packages/animations/src/index.ts`.
-4. Add a catalog entry, preview branch and copy-ready TSX snippet in `apps/catalog/src/catalog.tsx`.
-5. Update the README and add focused tests for rendering and audio data handling.
+The previous animation materials and legacy archive have been removed. The package and category shell remain empty.
 
-## Code review checklist
+New materials should have a specific reference, a reviewable moving preview, replaceable content, and documented usage. Add public exports and catalog entries only after visual approval. Tests and successful renders do not replace that approval.
 
-- Visualization changes with the audio data at the current frame.
-- The visual and audible track use the same source and remain aligned after seeking.
-- Props have defaults and predictable units; public props are documented.
-- Long audio is windowed, and preview behavior is checked with a real fixture.
+Independent lesson projects in `examples/` are separate from the library. Preserve unrelated local work and do not register old lessons as replacement library materials.

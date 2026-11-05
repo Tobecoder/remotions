@@ -1,53 +1,22 @@
 import {useRef, useState} from 'react';
-import type {CSSProperties, KeyboardEvent as ReactKeyboardEvent} from 'react';
-import {CatalogCardPreview} from './CatalogCardPreview';
-import type {CatalogCardPreviewHandle} from './CatalogCardPreview';
-import {catalog, categories, demoAudioSrc, demoCaptions} from './catalog';
-import type {CategoryId, DemoId} from './catalog';
-import {getNextCategoryIndex, togglePreview} from './interaction';
+import type {KeyboardEvent} from 'react';
+import {catalog, categories} from './catalog';
+import type {CategoryId} from './catalog';
+import {getNextCategoryIndex} from './interaction';
 import './styles.css';
 
 export const App = () => {
-  const [selectedCategory, setSelectedCategory] = useState<CategoryId>('audio');
-  const [selected, setSelected] = useState<DemoId>('oscilloscope');
-  const [hovered, setHovered] = useState<DemoId | null>(null);
-  const lastPointerType = useRef<string | null>(null);
-  const categoryTabRefs = useRef<Partial<Record<CategoryId, HTMLButtonElement | null>>>({});
-  const previewRefs = useRef<Partial<Record<DemoId, CatalogCardPreviewHandle | null>>>({});
-  const category = categories.find((item) => item.id === selectedCategory) ?? categories[0];
-  const categoryItems = catalog.filter((item) => item.category === selectedCategory);
-  const src = demoAudioSrc;
+  const [selectedCategory, setSelectedCategory] = useState<CategoryId>(categories[0].id);
+  const tabRefs = useRef<Partial<Record<CategoryId, HTMLButtonElement | null>>>({});
+  const category = categories.find((item) => item.id === selectedCategory)!;
 
-  const chooseCategory = (next: CategoryId) => {
-    const nextCategory = categories.find((item) => item.id === next);
-    if (!nextCategory) return;
-    const first = catalog.find((item) => item.category === next);
-    setSelectedCategory(next);
-    setHovered(null);
-    if (first) setSelected(first.id);
-  };
-
-  const handleCategoryKeyDown = (event: ReactKeyboardEvent<HTMLButtonElement>, current: CategoryId) => {
-    const currentIndex = categories.findIndex((item) => item.id === current);
-    const nextIndex = getNextCategoryIndex(currentIndex, categories.length, event.key);
-    if (nextIndex === null) return;
-
+  const handleCategoryKeyDown = (event: KeyboardEvent<HTMLButtonElement>, current: CategoryId) => {
+    const index = getNextCategoryIndex(categories.findIndex((item) => item.id === current), categories.length, event.key);
+    if (index === null) return;
     event.preventDefault();
-    const next = categories[nextIndex];
-    chooseCategory(next.id);
-    categoryTabRefs.current[next.id]?.focus();
-  };
-
-  const handleCardClick = (itemId: DemoId) => {
-    setSelected(itemId);
-    const nextActive = togglePreview(hovered === itemId);
-    if (!nextActive) {
-      setHovered(null);
-      previewRefs.current[itemId]?.stop();
-    } else {
-      setHovered(itemId);
-    }
-    lastPointerType.current = null;
+    const next = categories[index];
+    setSelectedCategory(next.id);
+    tabRefs.current[next.id]?.focus();
   };
 
   return <div className="app" id="top">
@@ -55,32 +24,21 @@ export const App = () => {
       <a className="brand" href="#top" aria-label="Remotions 首页"><span className="brand-logo">✦</span><span>remotions</span><sup>LIBRARY / 01</sup></a>
       <nav className="nav" aria-label="主导航"><a href="#library">素材库</a><a href="https://github.com/Tobecoder/remotions" target="_blank" rel="noreferrer">GitHub ↗</a></nav>
     </header>
-
     <main>
       <section className="hero">
         <div className="eyebrow"><span className="live-dot" /> REMOTION 动效素材库</div>
         <h1>让素材<span>随时可用</span></h1>
-        <p>把可复用的 Remotion 组件按类别收进一个持续扩展的库，涵盖音频、字幕、图表、背景、视觉效果、版式、信息叠加、叙事动画和文字特效。悬浮卡片即可看到逐帧动效。</p>
-        <div className="hero-actions"><a className="button-primary" href="#library">探索素材库 ↗</a></div>
-        <div className="hero-stats"><span><strong>{String(categories.length).padStart(2, '0')}</strong> 个分类骨架</span><span><strong>{String(catalog.length).padStart(2, '0')}</strong> 个已开放组件</span><span><strong>30 FPS</strong> 逐帧预览</span></div>
+        <p>素材库正在重新整理，后续将加入按参考样片制作、经过确认的动画素材。</p>
+        <div className="hero-actions"><a className="button-primary" href="#library">查看素材库 ↗</a></div>
+        <div className="hero-stats"><span><strong>{String(categories.length).padStart(2, '0')}</strong> 个分类</span><span><strong data-testid="material-count">{String(catalog.length).padStart(2, '0')}</strong> 个动画素材</span></div>
       </section>
-
       <section id="library" className="workspace">
-        <div className="section-heading"><div><div className="overline">/ COMPONENT LIBRARY</div><h2>{category.name}</h2></div><p>悬浮卡片，在卡片内查看 Remotion 动效。</p></div>
+        <div className="section-heading"><div><div className="overline">/ COMPONENT LIBRARY</div><h2>{category.name}</h2></div><p>动画素材正在整理中。</p></div>
         <div className="category-tabs" role="tablist" aria-label="素材分类">
-          {categories.map((item) => {
-            const count = catalog.filter((demo) => demo.category === item.id).length;
-            const isSelected = item.id === selectedCategory;
-            return <button key={item.id} type="button" role="tab" aria-selected={isSelected} aria-controls="catalog-panel" tabIndex={isSelected ? 0 : -1} ref={(element) => {categoryTabRefs.current[item.id] = element;}} onKeyDown={(event) => handleCategoryKeyDown(event, item.id)} className={`category-tab${isSelected ? ' active' : ''}${item.status === 'coming-soon' ? ' upcoming' : ''}`} onClick={() => chooseCategory(item.id)}>
-              <span>{item.name}</span><small>{item.status === 'active' ? `${count} 个组件` : '即将上线'}</small>
-            </button>;
-          })}
+          {categories.map((item) => <button key={item.id} id={`category-${item.id}`} type="button" role="tab" aria-selected={item.id === selectedCategory} aria-controls="catalog-panel" tabIndex={item.id === selectedCategory ? 0 : -1} ref={(element) => {tabRefs.current[item.id] = element;}} onKeyDown={(event) => handleCategoryKeyDown(event, item.id)} className={`category-tab${item.id === selectedCategory ? ' active' : ''}`} onClick={() => setSelectedCategory(item.id)}><span>{item.name}</span><small>整理中</small></button>)}
         </div>
-        <div id="catalog-panel" role="tabpanel" aria-label={`${category.name}组件`}>
-          {categoryItems.length > 0 ? <div className="catalog-grid">{categoryItems.map((item) => <button key={item.id} type="button" className={selected === item.id ? 'motion-card selected' : 'motion-card'} style={{'--card-accent': item.color} as CSSProperties} aria-pressed={hovered === item.id} aria-label={hovered === item.id ? `停止预览${item.name}` : `预览${item.name}`} onPointerDown={(event) => {lastPointerType.current = event.pointerType;}} onPointerUp={(event) => {if (event.pointerType !== 'touch') lastPointerType.current = null;}} onPointerCancel={() => {lastPointerType.current = null; setHovered(null); previewRefs.current[item.id]?.stop();}} onPointerEnter={(event) => {if (event.pointerType === 'touch') return; setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onPointerLeave={(event) => {if (event.pointerType === 'touch') return; setHovered(null); previewRefs.current[item.id]?.stop();}} onFocus={(event) => {if (lastPointerType.current === 'touch') return; setHovered(item.id); previewRefs.current[item.id]?.start(event);}} onBlur={() => {setHovered(null); previewRefs.current[item.id]?.stop();}} onClick={() => handleCardClick(item.id)}>
-            <div className={`mini-art mini-${item.id}`}><CatalogCardPreview ref={(handle) => {previewRefs.current[item.id] = handle;}} inputProps={{id: item.id, src, captions: demoCaptions}} active={hovered === item.id} /></div>
-            <div className="motion-card-info"><div className="motion-card-copy"><div className="motion-card-title"><strong>{item.name}</strong><span className="motion-card-use-case">{item.useCase}</span></div><span className="motion-description">{item.description}</span></div></div>
-          </button>)}</div> : <div className="empty-category"><span className="empty-mark">✦</span><strong>{category.name}正在整理中，后续组件会继续加入。</strong></div>}
+        <div id="catalog-panel" role="tabpanel" aria-labelledby={`category-${selectedCategory}`}>
+          <div className="empty-category"><span className="empty-mark" aria-hidden="true">✦</span><strong>{category.name}正在整理中，后续组件会继续加入。</strong></div>
         </div>
       </section>
     </main>

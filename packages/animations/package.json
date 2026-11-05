@@ -1,7 +1,7 @@
 {
   "name": "@remotions/animations",
   "version": "0.1.0",
-  "description": "Reusable audio, caption, data, background, effect, and layout animation components for Remotion",
+  "description": "Remotions animation library scaffold; previous materials removed",
   "type": "module",
   "sideEffects": false,
   "files": [
@@ -25,25 +25,15 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --clean --external react,remotion,@remotion/media-utils,@remotion/effects,@remotion/rough-notation",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean --external react,remotion",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json"
   },
   "peerDependencies": {
-    "@remotion/captions": "^4.0.0",
-    "@remotion/effects": "4.0.537",
-    "@remotion/media-utils": "^4.0.0",
-    "@remotion/rough-notation": "4.0.537",
     "react": ">=18",
     "remotion": "^4.0.537"
   },
   "devDependencies": {
-    "@remotion/captions": "4.0.537",
-    "@remotion/effects": "4.0.537",
-    "@remotion/media-utils": "4.0.537",
-    "@remotion/rough-notation": "4.0.537",
-    "@testing-library/react": "^16.3.0",
-    "jsdom": "^26.1.0",
     "react": "^19.0.0",
     "remotion": "4.0.537"
   },

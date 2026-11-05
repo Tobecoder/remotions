@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — Library reset (2026-11-05)
+
+- Remove all 42 public animation components, old demos, their fixtures, and the legacy animation archive.
+- Keep the Chinese light catalog shell with zero materials and working category navigation.
+- Remove obsolete verification scripts and effect dependencies; preserve independent video examples.
+
+
 ## Unreleased — Audio animation foundation (2026-10-21)
 
 - Replace the public eleven-effect gallery with three real-audio-driven animations: Oscilloscope, MirroredSpectrum and VoiceNote.

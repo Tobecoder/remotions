@@ -11,5 +11,3 @@ export const getNextCategoryIndex = (
   if (key === 'End') return categoryCount - 1;
   return null;
 };
-
-export const togglePreview = (active: boolean): boolean => !active;

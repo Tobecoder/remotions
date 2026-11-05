@@ -1,5 +1,4 @@
 import {useCurrentFrame} from 'remotion';
-import {NumberCounter} from '../../../../packages/animations/src';
 import {C,Card,Page,cueFrame,tween} from '../shared';
 const ways=[[1,1,1,1],[1,1,2],[1,2,1],[2,1,1],[2,2]];
 export default function Enumerate(){
@@ -14,7 +13,7 @@ export default function Enumerate(){
       <div style={{marginLeft:'auto',fontSize:40,color:C.green}}>✓</div>
     </Card>)}
     <Card style={{position:'absolute',left:1290,top:330,width:500,height:430,paddingTop:30}}>
-      <NumberCounter width={500} height={280} from={count} to={count} label="" color={C.green} secondaryColor={C.muted} backgroundColor="transparent" progress={1}/>
+      <div style={{width:500,height:280,display:'grid',placeItems:'center',fontSize:90,fontWeight:800,color:C.green,fontVariantNumeric:'tabular-nums'}}>{count}</div>
       <div style={{textAlign:'center',fontSize:30,color:C.muted}}>已找到的合法走法</div>
     </Card>
   </Page>;

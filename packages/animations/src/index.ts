@@ -1,21 +1,2 @@
-export {LiquidContours, MovingWaves, MovingZigzags, NotebookPaper, PaperTexture, RotatingStarburst} from './components/Backgrounds';
-export type {BackgroundProps} from './components/Backgrounds';
-export {BasicCaptions, MovingPillCaptions, PoppingWordCaptions, RoundedCaptions, WordHighlightCaptions} from './components/Captions';
-export type {CaptionStyleProps} from './components/Captions';
-export type {Caption} from '@remotion/captions';
-export {Oscilloscope, MirroredSpectrum, VoiceNote} from './components/AudioVisualizers';
-export type {AudioVisualizerProps} from './components/AudioVisualizers';
-export {PulseRings, ParticleField, ShimmerSweep} from './components/Effects';
-export type {EffectProps} from './components/Effects';
-export {PictureInPictureTransition, ProductCollection, RotatingCards, SlideToSplitScreen} from './components/Layouts';
-export type {LayoutProps, PictureInPictureTransitionProps, ProductCollectionProps, RotatingCardsProps, SlideToSplitScreenProps} from './components/Layouts';
-export {HorizontalBarChart, LineChart, NumberCounter, PieChart, VerticalBarChart} from './components/Charts';
-export type {ChartDatum, ChartProps, NumberCounterProps} from './components/Charts';
-export {LocationLowerThird, NameLowerThird} from './components/Overlays';
-export type {LocationLowerThirdProps, NameLowerThirdProps, OverlayProps} from './components/Overlays';
-export {Peel, Shine, TearApart, WigglingCallout} from './components/ContentEffects';
-export type {ContentEffectProps, WigglingCalloutProps} from './components/ContentEffects';
-export {NewsArticleHighlight, OnScreenMessages, PolaroidPictures, SpeedLines} from './components/Storytelling';
-export type {StorytellingProps, NewsArticleHighlightProps, OnScreenMessagesProps, StoryMessage, PolaroidPhoto, PolaroidPicturesProps, SpeedLinesProps} from './components/Storytelling';
-export {CircleMarker, CrossedOffText, CylinderText, SpinningTextWheel, StrikeThroughText, TextMarker} from './components/TextEffects';
-export type {TextEffectProps, TextAnnotationProps, CylinderTextProps, SpinningTextWheelProps} from './components/TextEffects';
+// The previous animation library has been removed. New materials require visual approval.
+export {};
