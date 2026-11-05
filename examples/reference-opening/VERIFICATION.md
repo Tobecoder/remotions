@@ -8,4 +8,4 @@
 
 输出位于 `.verification/reference-opening/`：视频 `reference-opening-10s.mp4`、关键帧、`report.json`、Studio 截图。渲染输出未提交 Git；源码和所需静态贴图已包含在示例中。
 
-五个候选组件尚未加入正式素材目录，等待视觉确认。
+初次交付时五个组件尚未入库；此后按用户“把这5个组件单独放到素材库中，分好类”的指示，现已公开导出并分类登记。最新目录站检查见 `docs/VERIFICATION.md`。

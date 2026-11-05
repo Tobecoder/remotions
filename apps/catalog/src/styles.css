@@ -182,6 +182,21 @@ button:focus-visible, a:focus-visible, input:focus-visible, .upload-button:focus
 
 .footer { display: flex; justify-content: space-between; gap: 20px; padding: 30px 0 45px; border-top: 1px solid var(--el-border-color-lighter); color: var(--el-text-color-secondary); font-size: 14px; letter-spacing: 0.04em; }
 
+.material-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
+.material-card { min-width: 0; border: 1px solid var(--el-border-color-light); border-radius: 8px; overflow: hidden; background: #fff; transition: box-shadow .18s, border-color .18s; }
+.material-card:hover, .material-card:focus-within { border-color: var(--el-color-primary-light-3); box-shadow: var(--el-box-shadow-light); }
+.material-preview { display: block; width: 100%; padding: 0; border: 0; border-radius: 0; background: #f5f6ef; overflow: hidden; text-align: initial; }
+.material-preview:focus-visible { outline-offset: -3px; }
+.material-body { padding: 18px 20px; }
+.material-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.material-title h3 { margin: 0; font-size: 20px; line-height: 1.5; }
+.material-title span { font-size: 14px; line-height: 1.6; color: var(--el-text-color-secondary); text-align: right; margin-left: auto; }
+.material-body p { margin: 8px 0 14px; color: var(--el-text-color-regular); font-size: 16px; line-height: 1.7; }
+.material-code summary { width: fit-content; cursor: pointer; color: var(--el-color-primary-dark-2); font-size: 13px; }
+.material-code pre { margin-bottom: 0; max-height: 320px; overflow: auto; padding: 14px; border: 1px solid var(--el-border-color-light); border-radius: 4px; background: var(--el-fill-color-lighter); font-size: 12px; line-height: 1.7; }
+@media (max-width: 1180px) { .material-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 680px) { .material-grid { grid-template-columns: minmax(0,1fr); } }
+
 .draft-review { border: 1px solid var(--el-border-color-light); border-radius: 8px; overflow: hidden; }
 .draft-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 24px; }
 .draft-heading h3 { display: inline; margin: 0 0 0 12px; font-size: 22px; }

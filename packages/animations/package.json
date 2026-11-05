@@ -1,7 +1,7 @@
 {
   "name": "@remotions/animations",
   "version": "0.1.0",
-  "description": "Remotions animation library scaffold; previous materials removed",
+  "description": "Reusable Remotion perspective, layered storytelling, card and chapter animations",
   "type": "module",
   "sideEffects": false,
   "files": [

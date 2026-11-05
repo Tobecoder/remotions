@@ -9,7 +9,7 @@ node examples/reference-opening/render.mjs
 
 输出 `.verification/reference-opening/reference-opening-10s.mp4` 及关键帧。先生成截图可加 `--stills`，快速四帧检查可再加 `--quick`。
 
-可复用组件位于 `packages/animations/src/reference-opening/`，该目录的 `index.ts` 导出组件及类型。当前作为待验收候选，尚未放回正式素材目录。
+可复用组件位于 `packages/animations/src/reference-opening/`，现已按用户要求加入素材库，包入口公开导出五个组件及类型。目录独立演示与本场景复用同一套实现。
 
 预览服务启动后打开 http://localhost:3004/Reference-Opening-10s 。
 

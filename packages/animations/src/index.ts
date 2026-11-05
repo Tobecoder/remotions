@@ -1,2 +1,11 @@
-// The previous animation library has been removed. New materials require visual approval.
-export {};
+export {PerspectivePanel} from './reference-opening/PerspectivePanel';
+export type {PerspectivePanelProps} from './reference-opening/PerspectivePanel';
+export {ExplodedLayers} from './reference-opening/ExplodedLayers';
+export type {ExplodedLayersProps, ExplodedLayer} from './reference-opening/ExplodedLayers';
+export {SceneThumbnail} from './reference-opening/SceneThumbnail';
+export type {SceneThumbnailProps} from './reference-opening/SceneThumbnail';
+export {FanCardDeck} from './reference-opening/FanCardDeck';
+export type {FanCardDeckProps, FanCard} from './reference-opening/FanCardDeck';
+export {ChapterHeading} from './reference-opening/ChapterHeading';
+export type {ChapterHeadingProps, HeadingContent} from './reference-opening/ChapterHeading';
+export type {PlanePose} from './reference-opening/motion';

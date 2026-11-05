@@ -1,29 +1,81 @@
 /** @vitest-environment jsdom */
-import {afterEach, describe, expect, it} from 'vitest';
+import {afterAll, afterEach, beforeAll, describe, expect, it, vi} from 'vitest';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import {App} from './App';
+import {catalog} from './catalog';
 
-afterEach(cleanup);
+const players=vi.hoisted(()=>new Map<string,{play:ReturnType<typeof vi.fn>;pause:ReturnType<typeof vi.fn>;seekTo:ReturnType<typeof vi.fn>}>());
+vi.mock('@remotion/player',async()=>{
+  const {forwardRef,useImperativeHandle,useMemo}=await import('react');
+  return {Player:forwardRef(({inputProps}:{inputProps:{id:string}},ref)=>{
+    const api=useMemo(()=>({play:vi.fn(),pause:vi.fn(),seekTo:vi.fn(),addEventListener:vi.fn(),removeEventListener:vi.fn()}),[]);
+    useImperativeHandle(ref,()=>api);players.set(inputProps.id,api);
+    return <div data-player={inputProps.id}/>;
+  })};
+});
+beforeAll(()=>vi.stubGlobal('PointerEvent',class extends MouseEvent{
+  pointerType:string;
+  constructor(type:string,init:MouseEventInit&{pointerType?:string}={}){super(type,init);this.pointerType=init.pointerType??'mouse';}
+}));
+afterAll(()=>vi.unstubAllGlobals());
 
-describe('empty library', () => {
-  it('shows zero materials and no old cards or players', () => {
+afterEach(()=>{cleanup();players.clear();});
+
+describe('classified material library', () => {
+  it('opens the three layout cards and shows five materials without the withdrawn draft', () => {
     const {container} = render(<App />);
-    expect(screen.getByTestId('material-count').textContent).toBe('00');
-    expect(container.querySelector('.motion-card, canvas, video, audio')).toBeNull();
-    expect(screen.queryByRole('button', {name: /预览|停止预览/})).toBeNull();
+    expect(screen.getByTestId('material-count').textContent).toBe('05');
+    expect(container.querySelectorAll('[data-material-id]')).toHaveLength(3);
+    expect(screen.getAllByRole('button', {name: /播放预览/})).toHaveLength(3);
     expect(screen.queryByText('截图窗口聚焦')).toBeNull();
     expect(screen.queryByText(/查看原片/)).toBeNull();
   });
-  it('shows the matching empty state when each category is selected', () => {
+  it('only shows materials belonging to the selected category, with matching empty states', () => {
     render(<App />);
     for (const tab of screen.getAllByRole('tab')) {
       fireEvent.click(tab);
       const name = tab.querySelector('span')!.textContent!;
       const panel = screen.getByRole('tabpanel');
       expect(panel.getAttribute('aria-labelledby')).toBe(tab.id);
-      expect(panel.textContent).toContain(`${name}正在整理中，后续组件会继续加入。`);
+      const expected=catalog.filter(item=>`category-${item.category}`===tab.id);
+      if(expected.length){
+        expect(Array.from(panel.querySelectorAll<HTMLElement>('[data-material-id]')).map(card=>card.dataset.materialId)).toEqual(expected.map(item=>item.id));
+      }else expect(panel.textContent).toContain(`${name}正在整理中，后续组件会继续加入。`);
       expect(tab.getAttribute('aria-selected')).toBe('true');
     }
+  });
+  it('plays on the first mouse hover and lets a mouse click stop or resume',()=>{
+    render(<App/>);
+    const button=screen.getByRole('button',{name:'透视面板：播放预览'}),api=players.get('perspective-panel')!;
+    fireEvent.pointerEnter(button,{pointerType:'mouse'});
+    expect(api.seekTo).toHaveBeenLastCalledWith(0);expect(api.play).toHaveBeenCalledOnce();
+    expect(button.getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(button);expect(api.pause).toHaveBeenCalled();expect(button.getAttribute('aria-pressed')).toBe('false');
+    fireEvent.click(button);expect(button.getAttribute('aria-pressed')).toBe('true');
+    fireEvent.pointerLeave(button,{pointerType:'mouse'});expect(button.getAttribute('aria-pressed')).toBe('false');
+    expect(api.seekTo).toHaveBeenLastCalledWith(75);
+  });
+  it('waits for a touch click even if pointerleave precedes click, and stops on a second tap',()=>{
+    render(<App/>);
+    const button=screen.getByRole('button',{name:'透视面板：播放预览'}),api=players.get('perspective-panel')!;
+    fireEvent.pointerDown(button,{pointerType:'touch'});fireEvent.focus(button);fireEvent.pointerLeave(button,{pointerType:'touch'});
+    expect(api.play).not.toHaveBeenCalled();
+    fireEvent.click(button);expect(button.getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(button);expect(button.getAttribute('aria-pressed')).toBe('false');
+  });
+  it('does not start while scrolling and cancels safely',()=>{
+    render(<App/>);
+    const button=screen.getByRole('button',{name:'透视面板：播放预览'}),api=players.get('perspective-panel')!;
+    fireEvent.pointerDown(button,{pointerType:'touch'});fireEvent.pointerCancel(button,{pointerType:'touch'});
+    expect(api.play).not.toHaveBeenCalled();expect(button.getAttribute('aria-pressed')).toBe('false');
+  });
+  it('allows keyboard activation to stop and restart a focused preview',()=>{
+    render(<App/>);
+    const button=screen.getByRole('button',{name:'透视面板：播放预览'});
+    fireEvent.focus(button);expect(button.getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(button,{detail:0});expect(button.getAttribute('aria-pressed')).toBe('false');
+    fireEvent.click(button,{detail:0});expect(button.getAttribute('aria-pressed')).toBe('true');
+    fireEvent.blur(button);expect(button.getAttribute('aria-pressed')).toBe('false');
   });
   it('retains keyboard category navigation with wrapping and Home/End', () => {
     render(<App />);

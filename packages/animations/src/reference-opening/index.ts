@@ -1,4 +1,4 @@
-// Source-level candidate components; only promoted to the public catalogue after visual approval.
+// Shared implementations used by the public library and the reference-opening composition.
 export {PerspectivePanel} from './PerspectivePanel';
 export type {PerspectivePanelProps} from './PerspectivePanel';
 export {ExplodedLayers} from './ExplodedLayers';
