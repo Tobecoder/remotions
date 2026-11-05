@@ -1,0 +1,56 @@
+import {useId, type ReactNode} from 'react';
+import {PerspectivePanel} from './PerspectivePanel';
+import {clamp, during, frontPose, mix, tiltedPose, type PlanePose} from './motion';
+
+export type ExplodedLayer = {id:string;label:string;content:ReactNode;enterAt:number;duration?:number};
+export type ExplodedLayersProps = {
+  time: number;
+  tiltProgress: number;
+  layers: readonly ExplodedLayer[];
+  screen: ReactNode;
+  screenLabel?: string;
+  spacing?: number;
+  labelOpacity?: number;
+  pose?: PlanePose;
+  front?: PlanePose;
+  panelWidth?: number;
+  panelHeight?: number;
+  canvasWidth?: number;
+  canvasHeight?: number;
+};
+
+/** Layers are ordered nearest-to-screen first. The last layer is the base document. */
+export const ExplodedLayers = ({time,tiltProgress:rawTilt,layers,screen,screenLabel='成片',spacing=35.6,labelOpacity=1,pose=tiltedPose,front=frontPose,panelWidth=360,panelHeight=202.5,canvasWidth=800,canvasHeight=450}: ExplodedLayersProps) => {
+  const tiltProgress=clamp(rawTilt);
+  const metalId=useId().replace(/:/g,'');
+  const leftX=pose.x+pose.bx*panelHeight-4, leftY=pose.y+pose.by*panelHeight+3;
+  const rightX=pose.x+pose.ax*panelWidth+9, rightY=pose.y+pose.ay*panelWidth-1;
+  const anchors = layers.map((layer,index) => ({layer,index,entry:during(time,layer.enterAt,layer.enterAt+(layer.duration??0.55))}));
+  return <div data-exploded-layers style={{position:'absolute',inset:0}}>
+    <div style={{position:'absolute',left:front.x+panelWidth*.436,top:front.y+panelHeight,width:46,height:48,opacity:1-during(tiltProgress,0,.55),transformOrigin:'top',transform:`scaleY(${mix(1,0.3,tiltProgress)})`}}>
+      <svg viewBox="0 0 46 48" width="46" height="48"><defs><linearGradient id={metalId}><stop stopColor="#b9bdc2"/><stop offset=".5" stopColor="#f5f6f7"/><stop offset="1" stopColor="#a5aab0"/></linearGradient></defs><path d="M17 0H30L33 37L43 41Q46 44 40 46H5Q0 44 4 41L14 37Z" fill={`url(#${metalId})`}/><ellipse cx="23" cy="45" rx="23" ry="2" fill="#c2c4c6"/></svg>
+    </div>
+    {[...anchors].reverse().map(({layer,index,entry}) => {
+      const isBase=index===layers.length-1;
+      const p=isBase?tiltProgress:entry;
+      const y=pose.y+spacing*(index+1);
+      const end={...pose,y:y+mix(18,0,p)};
+      return <PerspectivePanel key={layer.id} width={panelWidth} height={panelHeight} from={isBase?front:{...pose,y:y+18}} to={end} progress={p} style={{opacity:p}}>{layer.content}</PerspectivePanel>;
+    })}
+    <PerspectivePanel width={panelWidth} height={panelHeight} from={front} to={pose} progress={tiltProgress} borderColor="#303238" borderWidth={4.5} radius={mix(8,3,tiltProgress)} shadow={tiltProgress<0.5}>
+      {screen}
+    </PerspectivePanel>
+    <svg width={canvasWidth} height={canvasHeight} style={{position:'absolute',inset:0,overflow:'visible',opacity:labelOpacity*during(tiltProgress,.75,1)}}>
+      <line x1={leftX} y1={leftY} x2={leftX} y2={leftY+spacing*layers.length} stroke="#cfc6bb" strokeDasharray="2 3" strokeWidth=".7"/>
+      {anchors.map(({layer,index,entry})=><g key={layer.id} opacity={entry}>
+        <circle cx={leftX} cy={leftY+spacing*(index+1)} r="3" fill="#df745b"/>
+        <circle cx={rightX} cy={rightY+spacing*(index+1)} r="1.3" fill="#55575a"/>
+        <line x1={rightX+4} y1={rightY+spacing*(index+1)} x2={rightX+54} y2={rightY+spacing*(index+1)} stroke="#c9c9c3" strokeWidth=".6"/>
+        <text x={rightX+61} y={rightY+4+spacing*(index+1)} fontSize="7" fill="#99999b" fontFamily="monospace">{String(layers.length-index).padStart(2,'0')}</text>
+        <text x={rightX+77} y={rightY+4+spacing*(index+1)} fontSize="14" fontWeight="700" fill="#343438">{layer.label}</text>
+      </g>)}
+      <circle cx={rightX} cy={rightY} r="1.3" fill="#55575a"/><line x1={rightX+4} y1={rightY} x2={rightX+54} y2={rightY} stroke="#c9c9c3" strokeWidth=".6"/>
+      <text x={rightX+61} y={rightY+5} fontSize="15" fontWeight="700" fill="#d66b4e">{screenLabel}</text>
+    </svg>
+  </div>;
+};

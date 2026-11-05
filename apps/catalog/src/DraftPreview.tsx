@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import {Player} from '@remotion/player';
 import type {PlayerRef} from '@remotion/player';
 import {ScreenshotFocusDraft} from '../../../packages/animations/src/drafts/ScreenshotFocusDraft';
-import {referenceVideo, screenshotExamples} from './draftReview';
+import {screenshotExamples} from './draftReview';
 
 const duration = 240;
 const fps = 30;
@@ -41,8 +41,8 @@ export const DraftPreview = () => {
     current.play();
   };
 
-  return <article className="draft-review" aria-label="截图窗口聚焦待验收预览">
-    <div className="draft-heading"><div><span className="draft-status">待验收</span><h3>截图窗口聚焦</h3><p>文档进入 → 重点高亮 → 轻推聚焦 → 保持画面</p></div><a href={referenceVideo} target="_blank" rel="noreferrer">查看原片 02:02–02:15 ↗</a></div>
+  return <article className="draft-review" aria-label="截图窗口自行设计实验">
+    <div className="draft-heading"><div><span className="draft-status">未采用实验</span><h3>截图窗口聚焦</h3><p>自行设计的动作，不是原片复刻。</p></div></div>
     <div className="draft-stage">
       <Player ref={player} component={ScreenshotFocusDraft} inputProps={example.props} compositionWidth={1280} compositionHeight={720} durationInFrames={duration} fps={fps} initialFrame={30} controls={false} loop={false} moveToBeginningWhenEnded={false} autoPlay={false} initiallyMuted clickToPlay={false} doubleClickToFullscreen={false} style={{width: '100%', aspectRatio: '16 / 9'}}/>
     </div>
@@ -53,6 +53,6 @@ export const DraftPreview = () => {
       <output aria-label="当前动画时间">{(frame / fps).toFixed(1)} / 8.0 秒</output>
       <label>更换示例 <select aria-label="更换示例" value={exampleId} onChange={(event) => {player.current?.pause(); setExampleId(event.target.value); played.current = false; player.current?.seekTo(30);}}>{screenshotExamples.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
     </div>
-    <p className="draft-note">参考原片的白色文档卡、浅纸底与重点引导；演示文档为本项目原创。当前是首版复刻，等待视觉验收，尚未作为正式素材开放。</p>
+    <p className="draft-note">原先的出处标注不成立，本实验已从素材库及待验收清单撤下。代码仅保留供追溯，不属于原片复刻或可用素材。</p>
   </article>;
 };
