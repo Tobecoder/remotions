@@ -16,7 +16,7 @@ export const tiltedPose: PlanePose = {x: 436, y: 53, ax: 189 / 360, ay: 99 / 360
 
 export const openingState = (time: number) => ({
   tilt: during(time, 2.55, 3.30),
-  chapter: during(time, 5.95, 6.15),
+  chapter: during(time, 5.65, 6.35),
   thumbnail: during(time, 8.50, 9.00),
   fan: during(time, 8.65, 9.18),
 });

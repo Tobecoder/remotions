@@ -7,5 +7,5 @@ export type {SceneThumbnailProps} from './reference-opening/SceneThumbnail';
 export {FanCardDeck} from './reference-opening/FanCardDeck';
 export type {FanCardDeckProps, FanCard} from './reference-opening/FanCardDeck';
 export {ChapterHeading} from './reference-opening/ChapterHeading';
-export type {ChapterHeadingProps, HeadingContent} from './reference-opening/ChapterHeading';
+export type {ChapterHeadingProps, HeadingContent, IntroHeadingContent} from './reference-opening/ChapterHeading';
 export type {PlanePose} from './reference-opening/motion';

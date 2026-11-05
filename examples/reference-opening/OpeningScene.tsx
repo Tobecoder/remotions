@@ -44,15 +44,6 @@ const ScreenContent=({time}:{time:number})=> {
   return <div style={{position:'relative',width:'100%',height:'100%',background:'#f8f8fc'}}>{moments.map((at,i)=><div key={i} style={{position:'absolute',inset:0,opacity:i===0?1:during(time,at,at+.09)}}><Texture name={`screen-${i}`}/></div>)}</div>;
 };
 
-const IntroTitle=({time}:{time:number})=>{
-  const out=during(time,5.75,5.95);
-  return <div style={{position:'absolute',left:48,top:132,width:270,height:145,overflow:'hidden',opacity:1-out}}><div style={{transform:`translateY(${-130*out}px)`}}>
-    <div style={{fontFamily:'monospace',fontSize:8,fontWeight:700,letterSpacing:2,color:'#ca6c4f',marginBottom:3}}>REMOTION 教程 · 第二期</div>
-    <div style={{fontSize:35,fontWeight:900,lineHeight:'42px',letterSpacing:-.65,color:'#27282d'}}>一条讲解视频的<br/>制作<span style={{color:'#ca6041'}}>全流程</span>拆解</div>
-    <div style={{marginTop:14,fontSize:13,fontWeight:600,color:'#929297'}}>以上期16分钟的视频为例 · 从脚本到成片</div>
-  </div></div>;
-};
-
 const Subtitle=({time}:{time:number})=>{
   const text=time<1.9?'我上期那条16分钟的讲解视频':time<4.5?'是怎么从脚本到成片的':time<5.8?'这期就拿它来复盘':time<8.6?'继续聊聊用Remotion制作视频的方法':'还有大家关心的Skill推荐';
   return <div style={{position:'absolute',left:0,right:0,bottom:20,display:'flex',justifyContent:'center'}}><div style={{padding:'5px 12px 6px',borderRadius:4,background:'#2b3241f2',boxShadow:'0 2px 4px #1b233519',color:'#fff',fontSize:15,fontWeight:700,lineHeight:'20px'}}>{text}</div></div>;
@@ -75,8 +66,13 @@ export const OpeningScene=()=>{
   return <AbsoluteFill style={{background:'#f5f6ef',overflow:'hidden',fontFamily:'"Microsoft YaHei", "Noto Sans CJK SC", sans-serif'}}>
     <div data-opening-scene style={{position:'absolute',width:800,height:450,transformOrigin:'0 0',transform:`scale(${width/800},${height/450})`,overflow:'hidden'}}>
       <PaperBackground time={time}/>
-      <IntroTitle time={time}/>
-      <div style={{opacity:state.chapter}}><ChapterHeading from={{number:'01 / 03',title:'制作方法',description:'从脚本到成片'}} to={{number:'02 / 03',title:'Skill 推荐',description:'大家最关心的'}} progress={state.thumbnail}/></div>
+      <ChapterHeading
+        intro={{eyebrow:'REMOTION 教程 · 第二期',title:<>一条讲解视频的<br/>制作<span style={{color:'#ca6041'}}>全流程</span>拆解</>,description:'以上期16分钟的视频为例 · 从脚本到成片'}}
+        introProgress={state.chapter}
+        from={{number:'01 / 03',title:'制作方法',description:'从脚本到成片'}}
+        to={{number:'02 / 03',title:'Skill 推荐',description:'大家最关心的'}}
+        progress={state.thumbnail}
+      />
       <div style={{position:'absolute',left:280,top:62,width:240,textAlign:'center',opacity:during(time,8.5,8.93)}}>
         <div style={{fontSize:8,fontWeight:700,letterSpacing:1.4,color:'#ce7053',marginBottom:7}}>这期聊三件事</div><div style={{fontSize:16,fontWeight:800,color:'#24272d'}}>一条讲解视频的制作全流程拆解</div>
       </div>

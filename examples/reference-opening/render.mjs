@@ -21,7 +21,7 @@ const shared={serveUrl,puppeteerInstance:browser,browserExecutable,port:3368,onB
 try {
   const [composition]=await getCompositions(serveUrl,{puppeteerInstance:browser,port:3368});
   assert.equal(composition.durationInFrames,300);assert.equal(composition.fps,30);
-  const frames=process.argv.includes('--quick')?[12,99,191,285]:[0,12,72,84,96,108,135,150,165,180,191,240,255,263,270,285,299,96];
+  const frames=process.argv.includes('--video-only')?[]:process.argv.includes('--quick')?[12,99,191,285]:[0,12,72,84,96,108,135,150,165,180,191,240,255,263,270,285,299,96];
   const reports=[];let repeat;
   for(let i=0;i<frames.length;i++){
     const frame=frames[i],file=path.join(out,`frame-${frame}${i===frames.length-1&&frame===96?'-repeat':''}.png`);

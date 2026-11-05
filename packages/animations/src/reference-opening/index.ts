@@ -8,6 +8,6 @@ export type {SceneThumbnailProps} from './SceneThumbnail';
 export {FanCardDeck} from './FanCardDeck';
 export type {FanCardDeckProps, FanCard} from './FanCardDeck';
 export {ChapterHeading} from './ChapterHeading';
-export type {ChapterHeadingProps, HeadingContent} from './ChapterHeading';
+export type {ChapterHeadingProps, HeadingContent, IntroHeadingContent} from './ChapterHeading';
 export type {PlanePose} from './motion';
 export {openingState, mixPose, frontPose, tiltedPose} from './motion';
