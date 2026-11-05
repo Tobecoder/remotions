@@ -1,6 +1,7 @@
 /** @vitest-environment jsdom */
-import {afterEach, describe, expect, it} from 'vitest';
+import {afterEach, describe, expect, it, vi} from 'vitest';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
+vi.mock('./DraftPreview', () => ({DraftPreview: () => <div>截图窗口聚焦待验收</div>}));
 import {App} from './App';
 
 afterEach(cleanup);
@@ -19,7 +20,7 @@ describe('empty library', () => {
       const name = tab.querySelector('span')!.textContent!;
       const panel = screen.getByRole('tabpanel');
       expect(panel.getAttribute('aria-labelledby')).toBe(tab.id);
-      expect(panel.textContent).toContain(`${name}正在整理中，后续组件会继续加入。`);
+      expect(panel.textContent).toContain(tab.id === 'category-layouts' ? '截图窗口聚焦待验收' : `${name}正在整理中，后续组件会继续加入。`);
       expect(tab.getAttribute('aria-selected')).toBe('true');
     }
   });

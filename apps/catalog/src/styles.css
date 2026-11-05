@@ -182,6 +182,26 @@ button:focus-visible, a:focus-visible, input:focus-visible, .upload-button:focus
 
 .footer { display: flex; justify-content: space-between; gap: 20px; padding: 30px 0 45px; border-top: 1px solid var(--el-border-color-lighter); color: var(--el-text-color-secondary); font-size: 14px; letter-spacing: 0.04em; }
 
+.draft-review { border: 1px solid var(--el-border-color-light); border-radius: 8px; overflow: hidden; }
+.draft-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 24px; }
+.draft-heading h3 { display: inline; margin: 0 0 0 12px; font-size: 22px; }
+.draft-heading p { margin: 12px 0 0; color: var(--el-text-color-regular); font-size: 14px; }
+.draft-heading a { color: var(--el-color-primary-dark-2); white-space: nowrap; font-size: 13px; }
+.draft-status { border: 1px solid #efd8a9; border-radius: 4px; padding: 4px 8px; font-size: 12px; color: #9c6d26; background: #fdf6e9; }
+.draft-stage { width: 100%; background: #f5f5ef; overflow: hidden; }
+.draft-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 16px 24px; background: var(--el-fill-color-lighter); }
+.draft-controls button, .draft-controls select { border: 1px solid var(--el-border-color); border-radius: 4px; background: #fff; color: var(--el-text-color-primary); padding: 8px 12px; }
+.draft-controls button:hover { border-color: var(--el-color-primary); color: var(--el-color-primary-dark-2); }
+.draft-controls input { flex: 1; min-width: 120px; accent-color: var(--el-color-primary); }
+.draft-controls output, .draft-controls label { font-size: 13px; white-space: nowrap; color: var(--el-text-color-regular); }
+.draft-note { margin: 0; padding: 0 24px 20px; font-size: 13px; line-height: 1.8; color: var(--el-text-color-secondary); }
+@media (max-width: 680px) {
+  .draft-heading { align-items: flex-start; flex-direction: column; padding: 16px; }
+  .draft-controls { padding: 16px; gap: 8px; }
+  .draft-controls input { order: 5; flex-basis: 100%; }
+  .draft-note { padding: 0 16px 16px; }
+}
+
 @media (min-width: 901px) {
   .hero .eyebrow, .overline { font-size: 16px; }
   .hero-stats { font-size: 15px; }

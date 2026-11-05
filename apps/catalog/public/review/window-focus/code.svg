@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760">
+  <rect width="1440" height="760" fill="white"/>
+  <g font-family="Microsoft YaHei, PingFang SC, sans-serif" fill="#25292d">
+    <text x="88" y="116" font-size="43" font-weight="700">02. 已经计算过，直接使用</text>
+    <text x="88" y="177" font-size="28" fill="#7a7d79">教程示例 / 动态规划</text>
+    <text x="88" y="263" font-size="30">把问题拆小，保存每个小问题的答案。</text>
+    <text x="88" y="356" font-size="34" font-family="Consolas, monospace">dp[0] = 1;</text>
+    <text x="88" y="412" font-size="34" font-family="Consolas, monospace">dp[1] = 1;</text>
+    <text x="88" y="490" font-size="34" font-family="Consolas, monospace">dp[i] = dp[i - 1] + dp[i - 2];</text>
+    <text x="88" y="584" font-size="30">同一个答案，可以成为后续计算的起点。</text>
+    <path d="M88 635H1352" stroke="#ebece8" stroke-width="2"/>
+    <text x="88" y="692" font-size="25" fill="#92958f">REMOTIONS / 原创演示文档</text>
+    <text x="1300" y="692" font-size="25" fill="#92958f">02</text>
+  </g>
+</svg>

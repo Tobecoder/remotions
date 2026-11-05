@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760">
+  <rect width="1440" height="760" fill="white"/>
+  <g fill="#25292d" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+    <text x="88" y="116" font-size="43" font-weight="700">01. 让素材服务于讲解</text>
+    <text x="88" y="177" font-size="28" fill="#7a7d79">制作笔记 / 素材准备</text>
+    <text x="88" y="276" font-size="32">一段讲解，只让观众关注一个清楚的变化。</text>
+    <text x="88" y="331" font-size="32">截图、文字和动作，需要围绕同一个重点组织。</text>
+    <text x="88" y="409" font-size="34" font-weight="600">先看完整画面，再把注意力引向关键段落。</text>
+    <text x="88" y="510" font-size="32">图像替换后，保留已经确认的运动与节奏。</text>
+    <text x="88" y="566" font-size="32">下一次制作，只需要更换内容和重点位置。</text>
+    <path d="M88 635H1352" stroke="#ebece8" stroke-width="2"/>
+    <text x="88" y="692" font-size="25" fill="#92958f">REMOTIONS / 原创演示文档</text>
+    <text x="1300" y="692" font-size="25" fill="#92958f">01</text>
+  </g>
+</svg>
