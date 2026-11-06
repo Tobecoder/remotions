@@ -18,7 +18,9 @@ export const BranchingPaths=({time,startAt=0,cards,fromLabel='想法',toLabel='�
   const paths=['M124 294 Q400 114 678 294','M124 294 Q400 244 678 294','M124 294 Q400 474 678 294'];
   // Alternate upper → lower → middle, keeping each stroke's original drawing speed.
   const routeStarts=[0,.7,.35];
-  const point=routePoint((t-4.1)/1.9),traceOpacity=during(t,4.1,4.25),result=during(t,6.25,6.65);
+  const travel=clamp((t-4.1)/1.9);
+  // A gentle speed arc: faster through the middle, softer on the final approach.
+  const point=routePoint(mix(travel,during(t,4.1,6),.5)),traceOpacity=during(t,4.1,4.25),result=during(t,6.25,6.65);
   return <div data-branching-paths style={{position:'absolute',inset:0,isolation:'isolate'}}>
     <svg width="800" height="450" viewBox="0 0 800 450" style={{position:'absolute',inset:0,overflow:'visible',zIndex:0}}>
       {paths.map((path,i)=><path key={path} data-branch-route={i} d={path} pathLength="1" strokeDasharray="1" strokeDashoffset={1-during(t,routeStarts[i],routeStarts[i]+.65)} stroke="#575c60" strokeWidth=".9" fill="none" opacity={mix(.8,.22,dim)}/>)}

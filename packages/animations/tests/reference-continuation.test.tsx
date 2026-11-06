@@ -124,6 +124,18 @@ describe('observed 11–20 second continuation',()=>{
     const resolved=pointAt(650).querySelector<HTMLElement>('[data-route-result]')!;
     expect(resolved.style.opacity).toBe('1');expect(resolved.textContent).toBe('启发 · 灵感');
     expect(pointAt(650).body.textContent).toContain('如果能让你收获一些启发或者灵感');
+    const distance=(start:number)=>{
+      let total=0,previous:{x:number;y:number}|undefined;
+      for(let frame=start;frame<=start+9;frame++){
+        const dot=pointAt(frame).querySelector('[data-route-dot]')!;
+        const current={x:Number(dot.getAttribute('cx')),y:Number(dot.getAttribute('cy'))};
+        if(previous)total+=Math.hypot(current.x-previous.x,current.y-previous.y);
+        previous=current;
+      }
+      return total;
+    };
+    // Equal frame windows: the middle should travel noticeably farther than the approach.
+    expect(distance(594)).toBeGreaterThan(distance(615)*1.3);
   });
   it('finishes with the first point archived and holds before any second-point content',()=>{
     const before=pointAt(709),middle=pointAt(722),end=pointAt(749);
