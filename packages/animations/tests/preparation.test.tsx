@@ -72,6 +72,8 @@ describe('preparation through the last frame before the breakdown title',()=>{
     for(const local of [0,10,24,30,38,48,75]){
       const film=at(1650+local);clock.frame=local;const demo=dom(<MaterialDemo id="agent-pipeline"/>);
       for(const selector of ['[data-agent-tile]','[data-agent-tool]','[data-agent-output]'])expect(Number(style(film,selector).opacity)).toBeCloseTo(Number(style(demo,selector).opacity),8);
+      expect(style(film,'[data-agent-cursor]').opacity).toBe([24,48,75].includes(local)?'0':'1');
+      expect(style(demo,'[data-agent-cursor]').opacity).toBe(style(film,'[data-agent-cursor]').opacity);
     }
   });
 });
