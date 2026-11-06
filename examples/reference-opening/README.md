@@ -1,8 +1,10 @@
-# 原片开头及第一点 · Remotion 复原候选
+# 原片开头到“开工之前” · Remotion 复原候选
 
 入口 `index.tsx`，1920×1080、30 FPS，无声。保留 `Reference-Opening-10s`（300 帧），新增 `Reference-Opening-20s`（600 帧）。前十秒动作与时间点见 [SHOTPLAN.md](./SHOTPLAN.md)，后续见 [11–20 秒拆解](./CONTINUATION-SHOTPLAN.md)。
 
 第一点已补到收束：`Reference-First-Point`（25 秒、750 帧），在第二点之前结束，后续工作暂停。结尾动作见 [第一点结尾拆解](./FIRST-POINT-SHOTPLAN.md)。
+
+按后续指示继续补完第二点：新增 `Reference-Before-Work`（52.5 秒、1575 帧），停在“开工之前 / 我会先准备这些素材”标题页，不展开后续素材卡。参考动作见 [第二点拆解](./SECOND-POINT-SHOTPLAN.md)。原有三种时长继续保留。
 
 ```powershell
 npx remotion studio examples/reference-opening/index.tsx --public-dir=examples/reference-opening/public --port=3004
@@ -15,15 +17,19 @@ node examples/reference-opening/render.mjs
 
 导出第一点完整版本：`node examples/reference-opening/render.mjs --first-point --video-only`；视频为 `.verification/reference-opening/reference-first-point.mp4`，报告为 `report-first-point.json`。
 
+导出当前完整版本：`node examples/reference-opening/render.mjs --before-work --video-only`；视频为 `.verification/reference-opening/reference-before-work.mp4`，报告为 `report-before-work.json`。
+
 输出 `.verification/reference-opening/reference-opening-10s.mp4` 及关键帧。先生成截图可加 `--stills`，快速四帧检查可再加 `--quick`。
 
-可复用组件位于 `packages/animations/src/reference-opening/`，现已按用户要求加入素材库，包入口公开导出十个组件及类型。目录独立演示与本场景复用同一套实现。
+可复用组件位于 `packages/animations/src/reference-opening/`，现已按用户要求加入素材库，包入口公开导出十六个组件及类型。目录独立演示与本场景复用同一套实现。
 
 预览服务启动后打开 http://localhost:3004/Reference-Opening-10s 。
 
 连续二十秒预览为 http://localhost:3004/Reference-Opening-20s 。续段新增「信息叠加 → 音效脉冲徽章」「叙事动画 → 章节卡总览」「叙事动画 → 多路径演示」三项素材。目录卡片用原创配图；案例使用观察截图中的 11 张小卡静态贴图（约 25 KB），没有使用整屏视频代替代码动画。
 
 第一点完整预览为 http://localhost:3004/Reference-First-Point 。补全路线光点到达结果、“启发 · 灵感”标签，最后使用新增「版式转场 → 小节收束」组件归档为顶部条目，停留到 25 秒。
+
+当前完整预览为 http://localhost:3004/Reference-Before-Work 。第二点新增六项组件；角色只使用两张静态姿态图，运动、绳子和姿态切换由代码控制，不声称复原了角色完整逐帧动画。五张文档小图及角色图由 `prepare-second-point-assets.py` 提取，全部七项共 123 KB，运行时不依赖原片页面。
 
 `ExplodedLayers` 的 `layers` 数组配置每层内容、标签、进入时间；`screen` 可传入任意 React 内容。`PerspectivePanel` 的姿态可替换，`SceneThumbnail` 的目标位置与比例可配置，`FanCardDeck` 的图片、文案、角度和间距可替换。动画不依赖进入时间或播放历史，逐帧与随机跳帧一致。
 

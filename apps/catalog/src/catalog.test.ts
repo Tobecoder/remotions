@@ -3,15 +3,16 @@ import {catalog, categories} from './catalog';
 import {draftMaterials} from './draftReview';
 
 describe('curated catalog', () => {
-  it('registers the ten standalone materials under their matching categories', () => {
-    expect(catalog).toHaveLength(10);
-    expect(new Set(catalog.map(item=>item.id)).size).toBe(10);
-    expect(catalog.filter(item=>item.category==='layouts').map(item=>item.component).sort()).toEqual(['PerspectivePanel','SceneThumbnail','FanCardDeck','SectionCollapse'].sort());
+  it('registers the sixteen standalone materials under their matching categories', () => {
+    expect(catalog).toHaveLength(16);
+    expect(new Set(catalog.map(item=>item.id)).size).toBe(16);
+    expect(catalog.filter(item=>item.category==='layouts').map(item=>item.component).sort()).toEqual(['PerspectivePanel','SceneThumbnail','FanCardDeck','SectionCollapse','DocumentFocusGallery'].sort());
     expect(catalog.find(item=>item.component==='ExplodedLayers')?.category).toBe('storytelling');
     expect(catalog.find(item=>item.component==='ChapterHeading')?.category).toBe('text-effects');
     expect(catalog.find(item=>item.component==='BlurredCollage')?.category).toBe('backgrounds');
     expect(catalog.find(item=>item.component==='AudioPulseBadge')?.category).toBe('overlays');
-    expect(catalog.filter(item=>item.category==='storytelling').map(item=>item.component).sort()).toEqual(['ExplodedLayers','ChapterCardRow','BranchingPaths'].sort());
+    expect(catalog.filter(item=>item.category==='storytelling').map(item=>item.component).sort()).toEqual(['ExplodedLayers','ChapterCardRow','BranchingPaths','TargetReticle','ConstraintSwitches','TetheredMotion','ConstraintRelease'].sort());
+    expect(catalog.find(item=>item.component==='RisingCurve')?.category).toBe('charts');
     for(const item of catalog){
       expect(categories.some(category=>category.id===item.category)).toBe(true);
       expect(item.posterFrame).toBeGreaterThan(0);

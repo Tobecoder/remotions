@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'document-focus-gallery' | 'constraint-release';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -16,6 +16,31 @@ export const categories: CatalogCategory[] = [
 ];
 
 export const catalog: CatalogItem[] = [
+  {id:'target-reticle',category:'storytelling',name:'靶心归位',component:'TargetReticle',description:'先留下偏心落点，再让准星归位，靶面缩至侧边',usage:'试错讲解 · 先做后调',durationInFrames:180,posterFrame:54,code:`import {TargetReticle} from '@remotions/animations';
+
+<TargetReticle time={frame / fps} shotLabel="先开枪" aimLabel="再瞄准" />`},
+  {id:'constraint-switches',category:'storytelling',name:'约束开关',component:'ConstraintSwitches',description:'开关依次关闭，并划掉暂时不加的约束',usage:'极简讲解 · 条件取舍',durationInFrames:210,posterFrame:185,code:`import {ConstraintSwitches} from '@remotions/animations';
+
+<ConstraintSwitches time={frame / fps + 2.2}
+  heading="极简主义先行" labels={['额外的 Skill','非必须的约束']} offLabel="先不加" />`},
+  {id:'tethered-motion',category:'storytelling',name:'绳索牵回',component:'TetheredMotion',description:'对象向前移动，被绳索牵住后切换姿态',usage:'约束比喻 · 偏离提醒',durationInFrames:120,posterFrame:80,code:`import {TetheredMotion} from '@remotions/animations';
+
+<TetheredMotion time={frame / fps}
+  running={<RunningImage />} caught={<CaughtImage />} label="跑偏了！" />`},
+  {id:'rising-curve',category:'charts',name:'曲线上升',component:'RisingCurve',description:'橙色曲线与面积同步向右上展开，端点沿线移动',usage:'趋势示意 · 能力变化',durationInFrames:105,posterFrame:75,code:`import {RisingCurve} from '@remotions/animations';
+
+// 概念趋势示意，不是实测数据图。
+<RisingCurve progress={progress} label="模型能力" title="越来越聪明" />`},
+  {id:'document-focus-gallery',category:'layouts',name:'文档聚焦',component:'DocumentFocusGallery',description:'文档卡片展开，背景虚化并突出前景引文',usage:'证据展示 · 引文强调',durationInFrames:150,posterFrame:105,code:`import {DocumentFocusGallery} from '@remotions/animations';
+
+<DocumentFocusGallery time={frame / fps}
+  documents={documents.map(item=>({id:item.id,content:<DocumentImage src={item.src} />}))}
+  focusContent={<YourQuote />} badge="重点说明" />`},
+  {id:'constraint-release',category:'storytelling',name:'限制解除',component:'ConstraintRelease',description:'窗口旁的限制标签逐个掉落，内容显现并放大',usage:'条件解除 · 结果揭示',durationInFrames:165,posterFrame:120,code:`import {ConstraintRelease} from '@remotions/animations';
+
+<ConstraintRelease time={frame / fps} content={<YourContent />}
+  tags={['必须一步一步 …','禁止使用 …','严格按照模板 …','每一帧都要 …','不允许 …','只能用 …']}
+  badge="惊喜" />`},
   {id:'section-collapse',category:'layouts',name:'小节收束',component:'SectionCollapse',description:'讲解画面缩进顶部摘要条，保留已讲完的小节',usage:'观点收尾 · 内容归档',durationInFrames:150,posterFrame:45,code:`import {SectionCollapse} from '@remotions/animations';
 
 // 将背景和底部字幕放在组件外；画布为 800 × 450。

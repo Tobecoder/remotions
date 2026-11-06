@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **10 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **16 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
@@ -14,6 +14,12 @@ Remotion 可复用动画组件，当前公开导出 **10 个**。旧组件及归
 | 叙事动画 | `ChapterCardRow` | 章节缩略卡上移、放大并排为总览 |
 | 叙事动画 | `BranchingPaths` | 多条素材路径、否定标签和选路强调 |
 | 版式转场 | `SectionCollapse` | 完整讲解画面缩进顶部已完成条目 |
+| 叙事动画 | `TargetReticle` | 偏心落点、准星归位及靶面移到侧边 |
+| 叙事动画 | `ConstraintSwitches` | 约束开关依次关闭、文字划线 |
+| 叙事动画 | `TetheredMotion` | 可替换对象前进、被绳索牵回并切换姿态 |
+| 数据图表 | `RisingCurve` | 概念趋势曲线、面积和端点同步展开 |
+| 版式转场 | `DocumentFocusGallery` | 五卡文档版式虚化后突出前景引文 |
+| 叙事动画 | `ConstraintRelease` | 约束标签掉落、窗口内容显现并放大 |
 
 ```tsx
 import {FanCardDeck} from '@remotions/animations';
@@ -54,3 +60,11 @@ const Gallery = () => {
 三条基础路线按“上 → 下 → 中”交替起笔，分别从 0、0.35、0.7 秒开始，单条绘制仍为 0.65 秒。卡片入场及后续选路不随此错峰调整而改变。
 
 `SectionCollapse` 接收 `children`、`progress`、`label`，可选 `number`（默认 `1`）及 `target={x,y,width,height}`（默认 `{x:49,y:47,width:150,height:37}`）。将讲解主体放在组件内部，纸底、字幕和其他导航放在外部；整个主体向摘要条缩小并淡去，保留已完成的小节名称。素材库和第一点案例均使用 0.75 秒的收束进度。
+
+`TargetReticle`、`ConstraintSwitches`、`TetheredMotion`、`DocumentFocusGallery`、`ConstraintRelease` 均接收 `time`（秒）和可选 `startAt`。靶心可替换 `shotLabel/aimLabel/color`；约束开关默认两行，可替换 `heading/labels/offLabel`，默认先后关闭时刻为相对 5.1、7.3 秒；目录演示整体提前 2.2 秒。
+
+`TetheredMotion` 的 `running` 和 `caught` 为 React 内容插槽，建议透明图片或 SVG；组件只负责运动与绳索，不生成角色逐帧肢体动画。约 1.35 秒切换姿态，避免两个姿态半透明重叠。
+
+`RisingCurve` 使用 `progress`（0–1）控制曲线、填充和端点，支持 `label/title/color`。曲线是概念趋势示意，不是实测数据图；同屏多实例使用独立渐变 ID。
+
+`DocumentFocusGallery` 的 `documents=[{id,content}]` 对应预设五卡布局，`focusContent` 为前景引文插槽，`caption` 和 `badge` 可替换；约 2.3–3 秒虚化背景并显示引文。`ConstraintRelease` 接收 `content`、默认六条 `tags` 和 `badge`；先展开标签，再掉落标签，2.3–2.8 秒显示窗口内容，3.3–3.8 秒放大窗口。内容均由调用方提供，不内置原片图片。
