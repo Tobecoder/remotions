@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'document-focus-gallery' | 'constraint-release';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'document-focus-gallery' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -16,6 +16,12 @@ export const categories: CatalogCategory[] = [
 ];
 
 export const catalog: CatalogItem[] = [
+  {id:'preparation-cards',category:'storytelling',name:'素材准备卡',component:'PreparationCards',description:'素材卡依次浮入，停留后汇入 Agent',usage:'制作准备 · 内容归集',durationInFrames:192,posterFrame:75,code:`import {PreparationCards} from '@remotions/animations';
+
+<PreparationCards time={frame / fps} cards={cards} />`},
+  {id:'agent-pipeline',category:'storytelling',name:'Agent 成片流程',component:'AgentPipeline',description:'Agent 显现，连接工具标签并展开成片窗口',usage:'工作流程 · 制作演示',durationInFrames:105,posterFrame:65,code:`import {AgentPipeline} from '@remotions/animations';
+
+<AgentPipeline time={frame / fps} output={<VideoPreview />} toolLabel="Remotion" />`},
   {id:'target-reticle',category:'storytelling',name:'靶心归位',component:'TargetReticle',description:'先留下偏心落点，再让准星归位，靶面缩至侧边',usage:'试错讲解 · 先做后调',durationInFrames:180,posterFrame:54,code:`import {TargetReticle} from '@remotions/animations';
 
 <TargetReticle time={frame / fps} shotLabel="先开枪" aimLabel="再瞄准" />`},

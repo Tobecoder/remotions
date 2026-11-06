@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **16 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **18 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
@@ -19,6 +19,8 @@ Remotion 可复用动画组件，当前公开导出 **16 个**。旧组件及归
 | 叙事动画 | `TetheredMotion` | 可替换对象前进、被绳索牵回并切换姿态 |
 | 数据图表 | `RisingCurve` | 概念趋势曲线、面积和端点同步展开 |
 | 版式转场 | `DocumentFocusGallery` | 五卡文档版式虚化后突出前景引文 |
+| 叙事动画 | `PreparationCards` | 四张素材卡依次浮入，停留后汇聚 |
+| 叙事动画 | `AgentPipeline` | Agent 显现，连接工具与成片窗口 |
 | 叙事动画 | `ConstraintRelease` | 约束标签掉落、窗口内容显现并放大 |
 
 ```tsx
@@ -72,6 +74,8 @@ const Gallery = () => {
 `constraintLabel` 默认是“约束”，在角色被牵住时从绳索中点向上弹出，并跟随绳子的形状和回拉位置；传入空字符串可隐藏。原来的 `label` 仍控制角色旁的“跑偏了！”提示。
 
 `DocumentFocusGallery` 的文档按顺序逐张进入：相对 0.1 秒起，每隔 0.4 秒一张，单张入场 0.3 秒。全部到齐后显示 `caption`，再开始聚焦前景引文；目录和成片共用时间线。
+
+`PreparationCards` 接收 `time/startAt/cards`，每项含 `id/title/artwork` 和可选 `description`；按四卡版式排列。相对 0.15 秒开始逐张入场，3.35–3.95 秒向 Agent 的位置汇聚并淡出。`AgentPipeline` 接收 `time/startAt/output`，以及可选的 `agentLabel/toolLabel`，先显现 Agent，再展开右侧输出窗口。目录的素材准备演示将两者串接，结尾保持成片窗口，避免停在空白帧。
 
 `RisingCurve` 使用 `progress`（0–1）控制曲线、填充和端点，支持 `label/title/color`。曲线是概念趋势示意，不是实测数据图；同屏多实例使用独立渐变 ID。
 

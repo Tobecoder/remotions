@@ -3,6 +3,8 @@ import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, Chapter
 import {pathCardLayout} from '../../../packages/animations/src/reference-opening/continuation-motion';
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
+import {PreparationCards,AgentPipeline} from '../../../packages/animations/src';
+import {PreparationArtwork} from './PreparationArtwork';
 
 const colors=['#405c81','#76a8b2','#c78661','#a99ac1','#cb9e66'];
 
@@ -48,6 +50,8 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
   const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig(),time=frame/fps;
   let content;
   switch(id){
+    case 'preparation-cards':content=<><PreparationCards time={time} cards={['脚本','配音','SRT','素材'].map((title,i)=>({id:String(i),title,artwork:<PreparationArtwork kind={i}/>}))}/><AgentPipeline time={time} startAt={3.4} output={<DemoDocument title="一条完整的讲解视频"/>}/></>;break;
+    case 'agent-pipeline':content=<AgentPipeline time={time} output={<DemoDocument title="一条完整的讲解视频"/>}/>;break;
     case 'target-reticle':content=<TargetReticle time={time}/>;break;
     case 'constraint-switches':content=<ConstraintSwitches time={time+2.2}/>;break;
     case 'tethered-motion':content=<TetheredMotion time={time} spriteSrc="/characters/runner-v2.png"/>;break;

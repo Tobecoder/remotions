@@ -22,9 +22,9 @@ afterAll(()=>vi.unstubAllGlobals());
 afterEach(()=>{cleanup();players.clear();});
 
 describe('classified material library', () => {
-  it('opens the five layout cards and shows sixteen materials without the withdrawn draft', () => {
+  it('opens the five layout cards and shows eighteen materials without the withdrawn draft', () => {
     const {container} = render(<App />);
-    expect(screen.getByTestId('material-count').textContent).toBe('16');
+    expect(screen.getByTestId('material-count').textContent).toBe('18');
     expect(container.querySelectorAll('[data-material-id]')).toHaveLength(5);
     expect(screen.getAllByRole('button', {name: /播放预览/})).toHaveLength(5);
     expect(screen.queryByText('截图窗口聚焦')).toBeNull();
