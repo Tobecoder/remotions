@@ -33,9 +33,18 @@ describe('observed 11–20 second continuation',()=>{
     }
   });
   it('collects three chapters before revealing the principles page and paths',()=>{
-    const sound=filmAt(334);
+    const sound=filmAt(314); // First frame with “音效怎么处理”; the handoff must already be complete.
     expect(sound.querySelector('[data-audio-pulse]')).not.toBeNull();
     expect(sound.body.textContent).toContain('音效怎么处理');
+    const titleRows=Array.from(sound.querySelector('[data-chapter-heading]')!.children);
+    const title=titleRows[1];
+    expect(title.children[0].textContent).toBe('Skill 推荐');
+    expect((title.children[0] as HTMLElement).style.transform).toBe('translateY(-58px)');
+    expect(title.children[1].textContent).toBe('音效处理');
+    expect((title.children[1] as HTMLElement).style.transform).toBe('translateY(0px)');
+    expect(Number(sound.querySelector<HTMLElement>('[data-audio-pulse]')!.parentElement!.parentElement!.style.opacity)).toBe(1);
+    const skillCard=Array.from(sound.querySelectorAll<HTMLElement>('[data-chapter-thumbnail]')).find(card=>card.style.left==='325px')!;
+    expect(Number(skillCard.style.opacity)).toBe(1);
     const overview=filmAt(385);
     expect(overview.querySelectorAll('[data-chapter-card]')).toHaveLength(3);
     expect(overview.body.textContent).toContain('展开具体内容之前');
