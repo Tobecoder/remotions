@@ -14,6 +14,7 @@ vi.mock('remotion',()=>({
 import {ScriptFilm} from '../../../examples/reference-opening/ScriptScene';
 import {PreparationFilm} from '../../../examples/reference-opening/PreparationScene';
 import {MaterialDemo} from '../../../apps/catalog/src/MaterialDemo';
+import {ScriptDocumentGuide} from '../../../examples/reference-opening/compositions/ScriptDocumentGuide';
 
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
 const at=(frame:number)=>{clock.frame=frame;return dom(<ScriptFilm/>);};
@@ -88,8 +89,7 @@ describe('script continuation through the requested 96-second boundary',()=>{
       expect(scene.querySelectorAll('[data-script-instruction-title]')).toHaveLength(1);
       expect(scene.querySelector('[data-script-instruction-title]')!.textContent).toBe('提示词 · 说明');
       expect(scene.querySelector('[data-script-list]')!.textContent).not.toContain('提示词');
-      clock.frame=frame-1854;
-      const demo=dom(<MaterialDemo id="script-document-guide"/>);
+      const demo=dom(<ScriptDocumentGuide time={(frame-1854)/30} chapterFrom={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}} document={<div/>}/>);
       const demoStyle=style(demo,'[data-script-instruction]');
       for(const key of ['left','top','opacity'] as const)expect(parseFloat(instruction[key])).toBeCloseTo(parseFloat(demoStyle[key]),7);
       expect(scale).toBeCloseTo(Number(demoStyle.transform.match(/scale\(([^)]+)\)/)![1]),7);
@@ -162,10 +162,8 @@ describe('script continuation through the requested 96-second boundary',()=>{
   });
   it('shares component timing with every standalone catalogue demo and is seek-stable',()=>{
     for(const [offset,id,selectors] of [
-      [1854,'script-document-guide',['[data-script-narration]','[data-script-highlight]','[data-script-list]']],
       [2211,'typewriter-comparison',['[data-writing-own]','[data-writing-ai]']],
       [2373,'card-spotlight',['[data-script-phase="preview"] [data-spotlight-panel]']],
-      [2604,'progress-race',['[data-race-row="0"]','[data-race-row="0"] [data-progress-fill]','[data-progress-status="waiting"]']],
     ] as const){
       for(const local of [0,12,45,75,108]){
         const film=at(offset+local);clock.frame=local;const demo=dom(<MaterialDemo id={id}/>);

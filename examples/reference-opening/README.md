@@ -29,7 +29,7 @@ node examples/reference-opening/render.mjs
 
 输出 `.verification/reference-opening/reference-opening-10s.mp4` 及关键帧。先生成截图可加 `--stills`，快速四帧检查可再加 `--quick`。
 
-可复用组件位于 `packages/animations/src/reference-opening/`，现已按用户要求加入素材库，包入口公开导出二十二个组件及类型。目录独立演示与本场景复用同一套实现。
+可复用组件位于 `packages/animations/src/reference-opening/`，包入口当前公开导出二十四个组件及类型。目录独立演示与本场景复用同一套独立动作；当前视频的固定组合编排位于本工程的 `compositions/`。
 
 预览服务启动后打开 http://localhost:3004/Reference-Opening-10s 。
 
@@ -42,6 +42,13 @@ node examples/reference-opening/render.mjs
 `ExplodedLayers` 的 `layers` 数组配置每层内容、标签、进入时间；`screen` 可传入任意 React 内容。`PerspectivePanel` 的姿态可替换，`SceneThumbnail` 的目标位置与比例可配置，`FanCardDeck` 的图片、文案、角度和间距可替换。动画不依赖进入时间或播放历史，逐帧与随机跳帧一致。
 
 静态贴图取自本次已观察的参考截图，限于显示器内部、文档、卡片图像。运行不需要原视频、截图目录或网络。`prepare-assets.py` 记录贴图提取坐标；无需在使用时执行。
+
+## 案例组合的归属
+
+- [脚本文档讲解](./compositions/ScriptDocumentGuide.tsx) 编排章节标题、文档滚动、高亮和说明收拢，使用库中的 `ChapterHeading/DocumentWindow/HighlightBox/CollapsingTitle`。保留原有停顿与切换时刻，`copy` 可替换案例文案。
+- [进度对比](./compositions/ProgressRace.tsx) 编排两条 `ProgressRow` 的快慢、转圈和计数。`eyebrow/countTo/phrases` 为案例配置。
+
+两者由 `ScriptScene` 在本工程内导入，已退出素材目录及组件包公开 API。移到其他视频时可参考其代码，也可直接使用独立动作重新编排。
 
 ## 验证边界
 

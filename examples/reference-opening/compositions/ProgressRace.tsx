@@ -1,5 +1,8 @@
-import {during} from './motion';
-import {ProgressRow,progressRowLayout} from './ProgressRow';
+import {during} from '../../../packages/animations/src/reference-opening/motion';
+import {ProgressRow} from '../../../packages/animations/src';
+
+// This scene's fixed layout and waiting position belong to the example, not the primitive API.
+const progressRowLayout={trackLeft:156,trackWidth:432,spinnerOffset:50,spinnerSize:48};
 
 export type ProgressRaceProps={time:number;startAt?:number;title?:string;eyebrow?:string;firstLabel?:string;secondLabel?:string;winnerLabel?:string;slowLabel?:string;countTo?:number;phrases?:readonly string[]};
 const defaultPhrases=['总的来说','换句话说','也就是说','值得注意的是'];

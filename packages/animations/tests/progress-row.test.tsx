@@ -2,7 +2,8 @@
 import type {ReactNode} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {describe,expect,it} from 'vitest';
-import {ProgressRow,ProgressRace} from '../src';
+import {ProgressRow} from '../src';
+import {ProgressRace} from '../../../examples/reference-opening/compositions/ProgressRace';
 
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
 

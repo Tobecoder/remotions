@@ -9,6 +9,7 @@ import {ExplodedLayers} from '../src';
 import {ScriptFilm} from '../../../examples/reference-opening/ScriptScene';
 import {OpeningScene} from '../../../examples/reference-opening/OpeningScene';
 import {MaterialDemo} from '../../../apps/catalog/src/MaterialDemo';
+import {ScriptDocumentGuide} from '../../../examples/reference-opening/compositions/ScriptDocumentGuide';
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
 const film=(frame:number)=>{clock.frame=frame;return dom(<ScriptFilm/>);};
 const style=(scene:Document,selector:string)=>scene.querySelector<HTMLElement>(selector)!.style;
@@ -34,7 +35,7 @@ describe('live content within approved panels',()=>{
     expect(style(stopped,'[data-document-scroll-content]').height).toBe('calc(100% + 233px)');
     expect(stopped.querySelectorAll('[data-script-pages] img')).toHaveLength(2);
     for(const local of [54,90,150,210,270]){
-      const actual=film(1854+local);clock.frame=local;const demo=dom(<MaterialDemo id="script-document-guide"/>);
+      const actual=film(1854+local),demo=dom(<ScriptDocumentGuide time={local/30} chapterFrom={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}} document={<div/>} scrollDistance={240}/>);
       expect(Number(actual.querySelector('[data-document-scroll-content]')!.getAttribute('data-scroll-progress'))).toBeCloseTo(Number(demo.querySelector('[data-document-scroll-content]')!.getAttribute('data-scroll-progress')),8);
     }
   });

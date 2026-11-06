@@ -1,7 +1,7 @@
 import type {HTMLAttributes,ReactNode} from 'react';
 import {clamp} from './motion';
 
-export const progressRowLayout={width:696,height:82,trackLeft:156,trackWidth:432,spinnerOffset:50,spinnerSize:48};
+const progressRowLayout={width:696,height:82,trackLeft:156,trackWidth:432,spinnerOffset:50,spinnerSize:48};
 export type ProgressRowProps=Omit<HTMLAttributes<HTMLDivElement>,'children'|'color'> & {
   label:ReactNode;progress:number;x?:number;y?:number;width?:number;color?:string;glow?:string;
   enterProgress?:number;status?:'none'|'complete'|'waiting';statusProgress?:number;

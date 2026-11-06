@@ -2,7 +2,8 @@
 import type {ReactNode} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {describe,expect,it} from 'vitest';
-import {DocumentWindow,HighlightBox,CollapsingTitle,ScriptDocumentGuide} from '../src';
+import {DocumentWindow,HighlightBox,CollapsingTitle} from '../src';
+import {ScriptDocumentGuide} from '../../../examples/reference-opening/compositions/ScriptDocumentGuide';
 
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
 
@@ -43,7 +44,7 @@ describe('independent document presentation parts',()=>{
     expect(end.querySelector('[data-document-window], [data-highlight-box]')).toBeNull();
     const remembered=render(.3);render(1);expect(render(.3)).toBe(remembered);
   });
-  it('keeps the original guide as a configurable composition of the standalone parts',()=>{
+  it('lets the example compose the standalone parts without exporting its fixed choreography',()=>{
     const scene=dom(<ScriptDocumentGuide time={9.6} document={<p>自定义内容</p>} copy={{narrationTitle:'讲稿',instructionTitle:'变量类型',documentTitle:'操作指南',summary:'整理知识'}}/>);
     expect(scene.querySelectorAll('[data-document-window]')).toHaveLength(1);
     expect(scene.querySelectorAll('[data-highlight-box]')).toHaveLength(1);

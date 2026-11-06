@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'document-focus-gallery' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'script-document-guide' | 'typewriter-comparison' | 'card-spotlight' | 'progress-race' | 'progress-row' | 'document-window' | 'highlight-box' | 'collapsing-title';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'document-focus-gallery' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'document-window' | 'highlight-box' | 'collapsing-title';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -30,11 +30,6 @@ export const catalog: CatalogItem[] = [
 <CollapsingTitle progress={progress} title="核心概念" lead="接下来说明"
   description="先展开讲清楚" compactDescription="归纳为一条要点"
   from={{x:140,y:220}} to={{x:100,y:120}} />`},
-  {id:'script-document-guide',category:'layouts',name:'脚本文档标注',component:'ScriptDocumentGuide',description:'章节标题切换到逐字稿，文档入场并标注画面说明',usage:'脚本讲解 · 文档说明',durationInFrames:390,posterFrame:345,code:`import {ScriptDocumentGuide} from '@remotions/animations';
-
-<ScriptDocumentGuide time={frame / fps}
-  chapterFrom={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}}
-  document={<LongScriptContent />} scrollDistance={240} />`},
   {id:'typewriter-comparison',category:'text-effects',name:'打字对照',component:'TypewriterComparison',description:'两段文案先后输入、校验和淡化，再收为左右栏',usage:'文案对照 · 观点表达',durationInFrames:210,posterFrame:115,code:`import {TypewriterComparison} from '@remotions/animations';
 
 <TypewriterComparison time={frame / fps} ownText={ownText} aiText={aiText} />`},
@@ -42,10 +37,6 @@ export const catalog: CatalogItem[] = [
 
 <CardSpotlight time={frame / fps} from={{x:420,y:175,width:320,height:66}}
   content={<Preview />} badge="重点说明" />`},
-  {id:'progress-race',category:'charts',name:'进度对比',component:'ProgressRace',description:'两行进度形成快慢对照，配合完成标记、转圈和计数',usage:'方案对比 · 流程示意',durationInFrames:300,posterFrame:230,code:`import {ProgressRace} from '@remotions/animations';
-
-// 动画示意，不代表真实测评数据。
-<ProgressRace time={frame / fps} firstLabel="方案 A" secondLabel="方案 B" />`},
   {id:'progress-row',category:'charts',name:'单条进度',component:'ProgressRow',description:'独立控制名称、进度和状态，可组合自己的流程与对比',usage:'任务进度 · 过程讲解',durationInFrames:180,posterFrame:115,code:`import {ProgressRow} from '@remotions/animations';
 
 // progress 为 0–1，由你的数据或动画时间控制。

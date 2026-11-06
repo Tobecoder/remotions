@@ -1,9 +1,6 @@
 import type {ReactNode} from 'react';
-import {during,mix} from './motion';
-import {ChapterHeading,type HeadingContent} from './ChapterHeading';
-import {DocumentWindow} from './DocumentWindow';
-import {HighlightBox} from './HighlightBox';
-import {CollapsingTitle} from './CollapsingTitle';
+import {during,mix} from '../../../packages/animations/src/reference-opening/motion';
+import {ChapterHeading,DocumentWindow,HighlightBox,CollapsingTitle,type HeadingContent} from '../../../packages/animations/src';
 
 export type ScriptDocumentGuideCopy={narrationTitle:string;narrationDescription:string;instructionLead:ReactNode;instructionTitle:ReactNode;instructionDescription:ReactNode;compactDescription:ReactNode;summary:ReactNode;documentTitle:ReactNode};
 export type ScriptDocumentGuideProps={time:number;startAt?:number;document:ReactNode;eyebrow?:string;chapterFrom?:HeadingContent;scrollDistance?:number;copy?:Partial<ScriptDocumentGuideCopy>};

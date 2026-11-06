@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **26 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **24 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
@@ -21,10 +21,8 @@ Remotion 可复用动画组件，当前公开导出 **26 个**。旧组件及归
 | 版式转场 | `DocumentFocusGallery` | 五卡文档版式虚化后突出前景引文 |
 | 叙事动画 | `PreparationCards` | 四张素材卡依次浮入，停留后汇聚 |
 | 叙事动画 | `AgentPipeline` | Agent 显现，连接工具与成片窗口 |
-| 版式转场 | `ScriptDocumentGuide` | 文档入场、提示段落标注和清单收拢 |
 | 文字特效 | `TypewriterComparison` | 两段文字逐字输入，再缩成左右栏 |
 | 版式转场 | `CardSpotlight` | 卡片放大到前景，讲解后回到原位 |
-| 数据图表 | `ProgressRace` | 进度快慢、完成标记、等待及计数示意 |
 | 数据图表 | `ProgressRow` | 独立进度、状态及附加内容，供自定义组合 |
 | 版式转场 | `DocumentWindow` | 独立文档窗口、入场与滚动 |
 | 信息叠加 | `HighlightBox` | 任意区域的展开高亮框 |
@@ -85,13 +83,9 @@ const Gallery = () => {
 
 `PreparationCards` 接收 `time/startAt/cards`，每项含 `id/title/artwork` 和可选 `description`；按四卡版式排列。相对 0.15 秒开始逐张入场，3.35–3.95 秒向 Agent 的位置汇聚并淡出。`AgentPipeline` 接收 `time/startAt/output`，以及可选的 `agentLabel/toolLabel`，先显现 Agent，再展开右侧输出窗口。目录的素材准备演示将两者串接，结尾保持成片窗口，避免停在空白帧。
 
-脚本讲解新组件均接收 `time/startAt`：`ScriptDocumentGuide` 的 `document` 插槽负责正文，组件负责窗口、标题、标注框与清单；`TypewriterComparison` 接收 `ownText/aiText` 及可选缩略图，先输入两段内容再收成两栏。`CardSpotlight` 的 `from` 是被放大内容的实际位置和尺寸（缩略图应传缩略图矩形，而非外层卡片），`fromRadius` 可匹配原有圆角，默认 10。`content` 可为 React 内容或接收放大进度的渲染函数，默认放大至 336×189，停留后回位，字号可随进度变化以避免拉伸文字。动态内容应与原缩略图使用同一时间值，避免放大或归位时重播。`ProgressRace` 可替换标题、两行名称、快慢标签，呈现示意进度与计数，不是实测图表。
-
-`ScriptDocumentGuide` 可传 `chapterFrom`（`number/title/description`）：先展示章节标题，完整停留 1.2 秒，再复用 `ChapterHeading` 原有的上下遮罩切换为“逐字稿”。文档在切换期间进入，后续讲解节奏整体从 1.8 秒后开始；不传该参数仍直接进入逐字稿。标题后续收为清单时使用等比缩放，不拉伸字形。
+`TypewriterComparison` 接收 `time/startAt`、`ownText/aiText` 及可选缩略图，先输入两段内容再收成两栏。`CardSpotlight` 的 `from` 是被放大内容的实际位置和尺寸（缩略图应传缩略图矩形，而非外层卡片），`fromRadius` 可匹配原有圆角，默认 10。`content` 可为 React 内容或接收放大进度的渲染函数，默认放大至 336×189，停留后回位，字号可随进度变化以避免拉伸文字。动态内容应与原缩略图使用同一时间值，避免放大或归位时重播。
 
 分层内部可以播放动态 React 内容：每层的 `content` 和顶部的 `screen` 可传 `(elapsed) => ReactNode`，`elapsed` 为该面板入场完成后的秒数，暂停或随机跳帧仍与画面一致。传普通 React 内容的原有用法保持。仓库演示和成片已接入正文与素材图滚动、装饰声波、字幕扫色和时间线播放头，面板姿态与进入时刻不变。声波是动画示意，不分析真实音频。
-
-长脚本可配置 `ScriptDocumentGuide scrollDistance={233}`，正文由 `document` 提供足够高度；默认 `0` 不滚动。窗口进入后停顿，再在局部 1–6.3 秒滚动对应距离，结束后保持并标注段落。案例将两张正文上下连续排列，不再靠两张短图交叠切换。
 
 `RisingCurve` 使用 `progress`（0–1）控制曲线、填充和端点，支持 `label/title/color`。曲线是概念趋势示意，不是实测数据图；同屏多实例使用独立渐变 ID。
 
@@ -104,8 +98,6 @@ const Gallery = () => {
   status={progress >= 1 ? 'complete' : 'waiting'} time={frame / fps}
   caption="收集并整理画面素材" value={Math.round(progress * 100) + '%'} />
 ```
-
-`ProgressRace` 保留原有双行对比及默认时间线，通过两个 `ProgressRow` 组合。`eyebrow/countTo/phrases` 可替换开头小字、计数上限和浮动短句；原有调用不需要改动。`RisingCurve` 的实现及调用保持。
 
 `DocumentWindow` 只负责窗口与正文展示。`children` 提供文档，`title` 提供标题栏；`enterProgress/scrollProgress` 均为 0–1，默认 1/0。`scrollDistance` 是正文需要滚动的像素数，正文应有相应长度。`x/y/width/height` 可设置窗口区域，尺寸最低 40px。`overlay` 是窗口内固定位置的叠加内容；需要随正文滚动的内容放进 `children`。组件没有内置时间线、章节或脚本文案。
 
@@ -120,6 +112,6 @@ const Gallery = () => {
 
 `CollapsingTitle` 接收 `title`、`progress`、起终点 `from/to`（均指标题正文左上角）及 `fontSize/compactFontSize`，同一标题持续显示并移动缩小。可传 `lead/description/compactDescription`，配合收拢切换说明；组件没有固定章节编号或业务文案，颜色可由标题 React 内容自行设置。
 
-`ScriptDocumentGuide` 保留为上述三种动作加 `ChapterHeading` 的组合模板，原有调用与默认时间线保持。可选 `copy` 配置 `narrationTitle/narrationDescription/instructionLead/instructionTitle/instructionDescription/compactDescription/summary/documentTitle`；单独取用窗口、高亮或文字动作时直接调用对应组件。
+固定讲解顺序、计数节奏和业务文案由视频工程编排。仓库原有的脚本文档讲解与快慢进度对比代码已迁入 `examples/reference-opening/compositions/`，不属于本包的导出或素材目录；可参考案例组合上述独立动作。
 
 `DocumentFocusGallery` 的 `documents=[{id,content}]` 对应预设五卡布局，`focusContent` 为前景引文插槽，`caption` 和 `badge` 可替换；约 2.3–3 秒虚化背景并显示引文。`ConstraintRelease` 接收 `content`、默认六条 `tags` 和 `badge`；先展开标签，再掉落标签，2.3–2.8 秒显示窗口内容，3.3–3.8 秒放大窗口。内容均由调用方提供，不内置原片图片。
