@@ -36,7 +36,7 @@ export type {PreparationCardsProps,PreparationCard} from './reference-opening/Pr
 export {AgentPipeline} from './reference-opening/AgentPipeline';
 export type {AgentPipelineProps} from './reference-opening/AgentPipeline';
 export {ScriptDocumentGuide} from './reference-opening/ScriptDocumentGuide';
-export type {ScriptDocumentGuideProps} from './reference-opening/ScriptDocumentGuide';
+export type {ScriptDocumentGuideProps,ScriptDocumentGuideCopy} from './reference-opening/ScriptDocumentGuide';
 export {TypewriterComparison} from './reference-opening/TypewriterComparison';
 export type {TypewriterComparisonProps} from './reference-opening/TypewriterComparison';
 export {CardSpotlight} from './reference-opening/CardSpotlight';
@@ -45,3 +45,9 @@ export {ProgressRace} from './reference-opening/ProgressRace';
 export type {ProgressRaceProps} from './reference-opening/ProgressRace';
 export {ProgressRow} from './reference-opening/ProgressRow';
 export type {ProgressRowProps} from './reference-opening/ProgressRow';
+export {DocumentWindow} from './reference-opening/DocumentWindow';
+export type {DocumentWindowProps} from './reference-opening/DocumentWindow';
+export {HighlightBox} from './reference-opening/HighlightBox';
+export type {HighlightBoxProps} from './reference-opening/HighlightBox';
+export {CollapsingTitle} from './reference-opening/CollapsingTitle';
+export type {CollapsingTitleProps,TitlePosition} from './reference-opening/CollapsingTitle';

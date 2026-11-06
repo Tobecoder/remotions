@@ -3,7 +3,7 @@ import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, Chapter
 import {pathCardLayout} from '../../../packages/animations/src/reference-opening/continuation-motion';
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
-import {PreparationCards,AgentPipeline,ScriptDocumentGuide,TypewriterComparison,CardSpotlight,ProgressRace,ProgressRow} from '../../../packages/animations/src';
+import {PreparationCards,AgentPipeline,ScriptDocumentGuide,TypewriterComparison,CardSpotlight,ProgressRace,ProgressRow,DocumentWindow,HighlightBox,CollapsingTitle} from '../../../packages/animations/src';
 import {PreparationArtwork} from './PreparationArtwork';
 import {PanelScroll,LiveWaveform,LiveTimeline,LiveCaptionLines} from '../../../packages/animations/src/reference-opening/LivePanelContent';
 import {NeuronPreview} from '../../../packages/animations/src/reference-opening/NeuronPreview';
@@ -64,6 +64,9 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
   const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig(),time=frame/fps;
   let content;
   switch(id){
+    case 'document-window':content=<DocumentWindow x={200} y={80} width={400} height={290} title="操作指南" enterProgress={during(time,0,.4)} scrollProgress={during(time,.8,4.4)} scrollDistance={240}><div style={{padding:'12px 24px',fontSize:10,lineHeight:'18px',color:'#484d55'}}><div style={{fontSize:15,fontWeight:700,marginBottom:10}}>把操作步骤整理清楚</div>{Array.from({length:20},(_,i)=><p key={i} style={{margin:'0 0 4px'}}>第 {i+1} 步：准备内容，核对信息，再展示当前要完成的操作。</p>)}</div></DocumentWindow>;break;
+    case 'highlight-box':content=<><div style={{position:'absolute',left:200,top:80,width:400,height:280,borderRadius:10,overflow:'hidden',boxShadow:'0 8px 17px #33363c1d'}}><DemoDocument title="需要关注的区域"/></div><HighlightBox progress={during(time,.5,1.2)} x={220} y={174} width={350} height={94} color="#409eff" shadowColor="#409eff22"/></>;break;
+    case 'collapsing-title':content=<CollapsingTitle progress={during(time,1.2,2.2)} title="核心概念" lead="接下来说明" description="先展开讲清楚" compactDescription="归纳为一条要点" from={{x:140,y:220}} to={{x:100,y:120}}/>;break;
     case 'script-document-guide':content=<ScriptDocumentGuide time={time} chapterFrom={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}} document={<DemoScriptDocument/>} scrollDistance={240}/>;break;
     case 'typewriter-comparison':content=<TypewriterComparison time={time} ownText={'先把问题讲清楚。\n再用一个例子展开。\n保留真实的经验与体会。'} aiText={'这是一个重要的时代。\n换句话说，值得注意的是，\n让我们一起探索更多可能。'} ownThumbnail={<PreparationArtwork kind={0}/>} aiThumbnail={<PathArtwork index={2}/>}/>;break;
     case 'card-spotlight':content=<SpotlightDemo time={time}/>;break;

@@ -26,16 +26,16 @@ describe('live content within approved panels',()=>{
   });
   it('scrolls real document pages continuously, then stops before drawing the annotation',()=>{
     const first=film(1980),later=film(2040),stopped=film(2118),held=film(2190);
-    const y=(scene:Document)=>Number(style(scene,'[data-script-scroll-content]').transform.match(/translateY\(([-\d.]+)px\)/)![1]);
+    const y=(scene:Document)=>Number(style(scene,'[data-document-scroll-content]').transform.match(/translateY\(([-\d.]+)px\)/)![1]);
     expect(y(first)).toBeLessThan(0);expect(y(later)).toBeLessThan(y(first));
     expect(y(stopped)).toBe(-233);expect(y(held)).toBe(-233);
     expect(style(stopped,'[data-script-highlight]').opacity).toBe('1');
-    expect(style(stopped,'[data-script-scroll-viewport]').overflow).toBe('hidden');
-    expect(style(stopped,'[data-script-scroll-content]').height).toBe('calc(100% + 233px)');
+    expect(style(stopped,'[data-document-scroll-viewport]').overflow).toBe('hidden');
+    expect(style(stopped,'[data-document-scroll-content]').height).toBe('calc(100% + 233px)');
     expect(stopped.querySelectorAll('[data-script-pages] img')).toHaveLength(2);
     for(const local of [54,90,150,210,270]){
       const actual=film(1854+local);clock.frame=local;const demo=dom(<MaterialDemo id="script-document-guide"/>);
-      expect(Number(actual.querySelector('[data-script-scroll-content]')!.getAttribute('data-scroll-progress'))).toBeCloseTo(Number(demo.querySelector('[data-script-scroll-content]')!.getAttribute('data-scroll-progress')),8);
+      expect(Number(actual.querySelector('[data-document-scroll-content]')!.getAttribute('data-scroll-progress'))).toBeCloseTo(Number(demo.querySelector('[data-document-scroll-content]')!.getAttribute('data-scroll-progress')),8);
     }
   });
   it('accepts static and live content without changing the panel poses or becoming dependent on play history',()=>{

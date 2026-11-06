@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **23 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **26 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
@@ -26,6 +26,9 @@ Remotion 可复用动画组件，当前公开导出 **23 个**。旧组件及归
 | 版式转场 | `CardSpotlight` | 卡片放大到前景，讲解后回到原位 |
 | 数据图表 | `ProgressRace` | 进度快慢、完成标记、等待及计数示意 |
 | 数据图表 | `ProgressRow` | 独立进度、状态及附加内容，供自定义组合 |
+| 版式转场 | `DocumentWindow` | 独立文档窗口、入场与滚动 |
+| 信息叠加 | `HighlightBox` | 任意区域的展开高亮框 |
+| 文字特效 | `CollapsingTitle` | 同一标题移动缩小为摘要条目 |
 | 叙事动画 | `ConstraintRelease` | 约束标签掉落、窗口内容显现并放大 |
 
 ```tsx
@@ -103,5 +106,20 @@ const Gallery = () => {
 ```
 
 `ProgressRace` 保留原有双行对比及默认时间线，通过两个 `ProgressRow` 组合。`eyebrow/countTo/phrases` 可替换开头小字、计数上限和浮动短句；原有调用不需要改动。`RisingCurve` 的实现及调用保持。
+
+`DocumentWindow` 只负责窗口与正文展示。`children` 提供文档，`title` 提供标题栏；`enterProgress/scrollProgress` 均为 0–1，默认 1/0。`scrollDistance` 是正文需要滚动的像素数，正文应有相应长度。`x/y/width/height` 可设置窗口区域，尺寸最低 40px。`overlay` 是窗口内固定位置的叠加内容；需要随正文滚动的内容放进 `children`。组件没有内置时间线、章节或脚本文案。
+
+`HighlightBox` 接收 `progress`（0–1）及父容器内的 `x/y/width/height`，控制高亮框展开；可设置 `color/shadowColor/radius/strokeWidth`。它可独立覆盖任意内容，也可作为文档窗口的 `overlay`。
+
+```tsx
+<DocumentWindow title="教程文档" scrollProgress={scroll} scrollDistance={240}
+  overlay={<HighlightBox progress={highlight} x={50} y={80} width={280} height={100} />}>
+  <YourDocument />
+</DocumentWindow>
+```
+
+`CollapsingTitle` 接收 `title`、`progress`、起终点 `from/to`（均指标题正文左上角）及 `fontSize/compactFontSize`，同一标题持续显示并移动缩小。可传 `lead/description/compactDescription`，配合收拢切换说明；组件没有固定章节编号或业务文案，颜色可由标题 React 内容自行设置。
+
+`ScriptDocumentGuide` 保留为上述三种动作加 `ChapterHeading` 的组合模板，原有调用与默认时间线保持。可选 `copy` 配置 `narrationTitle/narrationDescription/instructionLead/instructionTitle/instructionDescription/compactDescription/summary/documentTitle`；单独取用窗口、高亮或文字动作时直接调用对应组件。
 
 `DocumentFocusGallery` 的 `documents=[{id,content}]` 对应预设五卡布局，`focusContent` 为前景引文插槽，`caption` 和 `badge` 可替换；约 2.3–3 秒虚化背景并显示引文。`ConstraintRelease` 接收 `content`、默认六条 `tags` 和 `badge`；先展开标签，再掉落标签，2.3–2.8 秒显示窗口内容，3.3–3.8 秒放大窗口。内容均由调用方提供，不内置原片图片。

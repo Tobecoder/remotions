@@ -93,8 +93,8 @@ describe('script continuation through the requested 96-second boundary',()=>{
       const demoStyle=style(demo,'[data-script-instruction]');
       for(const key of ['left','top','opacity'] as const)expect(parseFloat(instruction[key])).toBeCloseTo(parseFloat(demoStyle[key]),7);
       expect(scale).toBeCloseTo(Number(demoStyle.transform.match(/scale\(([^)]+)\)/)![1]),7);
-      if(frame===2169){expect(scale).toBe(1);expect(instruction.left).toBe('49px');expect(instruction.top).toBe('199px');}
-      if(frame>=2184){expect(scale).toBe(.6);expect(instruction.left).toBe('75px');expect(parseFloat(instruction.top)+36*scale).toBeCloseTo(191,8);}
+      if(frame===2169){expect(scale).toBe(1);expect(instruction.left).toBe('49px');expect(instruction.top).toBe('235px');}
+      if(frame>=2184){expect(scale).toBe(.6);expect(instruction.left).toBe('75px');expect(parseFloat(instruction.top)).toBeCloseTo(191,8);}
     }
   });
   it('types the personal text first, then AI text, before collecting them into columns',()=>{

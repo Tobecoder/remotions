@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'document-focus-gallery' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'script-document-guide' | 'typewriter-comparison' | 'card-spotlight' | 'progress-race' | 'progress-row';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'document-focus-gallery' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'script-document-guide' | 'typewriter-comparison' | 'card-spotlight' | 'progress-race' | 'progress-row' | 'document-window' | 'highlight-box' | 'collapsing-title';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -16,6 +16,20 @@ export const categories: CatalogCategory[] = [
 ];
 
 export const catalog: CatalogItem[] = [
+  {id:'document-window',category:'layouts',name:'文档窗口',component:'DocumentWindow',description:'文档独立入场、滚动与停留，内容和进度由你提供',usage:'文档展示 · 教程演示',durationInFrames:180,posterFrame:105,code:`import {DocumentWindow} from '@remotions/animations';
+
+<DocumentWindow title="操作指南" scrollProgress={progress} scrollDistance={240}>
+  <YourDocument />
+</DocumentWindow>`},
+  {id:'highlight-box',category:'overlays',name:'区域高亮',component:'HighlightBox',description:'在任意画面区域展开高亮框，可独立控制位置和进度',usage:'重点标注 · 操作指引',durationInFrames:120,posterFrame:45,code:`import {HighlightBox} from '@remotions/animations';
+
+<HighlightBox progress={progress} x={220} y={174} width={350} height={94}
+  color="#409eff" shadowColor="#409eff22" />`},
+  {id:'collapsing-title',category:'text-effects',name:'标题收拢',component:'CollapsingTitle',description:'同一标题连续缩小并移动到摘要位置，说明文字配合切换',usage:'观点归纳 · 标题转条目',durationInFrames:135,posterFrame:75,code:`import {CollapsingTitle} from '@remotions/animations';
+
+<CollapsingTitle progress={progress} title="核心概念" lead="接下来说明"
+  description="先展开讲清楚" compactDescription="归纳为一条要点"
+  from={{x:140,y:220}} to={{x:100,y:120}} />`},
   {id:'script-document-guide',category:'layouts',name:'脚本文档标注',component:'ScriptDocumentGuide',description:'章节标题切换到逐字稿，文档入场并标注画面说明',usage:'脚本讲解 · 文档说明',durationInFrames:390,posterFrame:345,code:`import {ScriptDocumentGuide} from '@remotions/animations';
 
 <ScriptDocumentGuide time={frame / fps}

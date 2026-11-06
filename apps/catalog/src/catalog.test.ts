@@ -3,10 +3,10 @@ import {catalog, categories} from './catalog';
 import {draftMaterials} from './draftReview';
 
 describe('curated catalog', () => {
-  it('registers the twenty-three standalone materials under their matching categories', () => {
-    expect(catalog).toHaveLength(23);
-    expect(new Set(catalog.map(item=>item.id)).size).toBe(23);
-    expect(catalog.filter(item=>item.category==='layouts').map(item=>item.component).sort()).toEqual(['PerspectivePanel','SceneThumbnail','FanCardDeck','SectionCollapse','DocumentFocusGallery','ScriptDocumentGuide','CardSpotlight'].sort());
+  it('registers the twenty-six standalone materials under their matching categories', () => {
+    expect(catalog).toHaveLength(26);
+    expect(new Set(catalog.map(item=>item.id)).size).toBe(26);
+    expect(catalog.filter(item=>item.category==='layouts').map(item=>item.component).sort()).toEqual(['PerspectivePanel','SceneThumbnail','FanCardDeck','SectionCollapse','DocumentFocusGallery','ScriptDocumentGuide','CardSpotlight','DocumentWindow'].sort());
     expect(catalog.find(item=>item.component==='ExplodedLayers')?.category).toBe('storytelling');
     expect(catalog.find(item=>item.component==='ChapterHeading')?.category).toBe('text-effects');
     expect(catalog.find(item=>item.component==='BlurredCollage')?.category).toBe('backgrounds');
@@ -14,6 +14,8 @@ describe('curated catalog', () => {
     expect(catalog.filter(item=>item.category==='storytelling').map(item=>item.component).sort()).toEqual(['ExplodedLayers','ChapterCardRow','BranchingPaths','TargetReticle','ConstraintSwitches','TetheredMotion','ConstraintRelease','PreparationCards','AgentPipeline'].sort());
     expect(catalog.find(item=>item.component==='RisingCurve')?.category).toBe('charts');
     expect(catalog.find(item=>item.component==='ProgressRow')?.category).toBe('charts');
+    expect(catalog.find(item=>item.component==='HighlightBox')?.category).toBe('overlays');
+    expect(catalog.find(item=>item.component==='CollapsingTitle')?.category).toBe('text-effects');
     for(const item of catalog){
       expect(categories.some(category=>category.id===item.category)).toBe(true);
       expect(item.posterFrame).toBeGreaterThan(0);
