@@ -38,3 +38,12 @@ describe('complete chapter heading example',()=>{
     expect(end.children[1].textContent).toBe('Skill 推荐');
   });
 });
+
+describe('foreground focus example',()=>{
+  it('previews the foreground alone without background cards',()=>{
+    clock.frame=60;
+    const scene=new DOMParser().parseFromString(renderToStaticMarkup(<MaterialDemo id="focus-layer"/>),'text/html');
+    expect(scene.querySelector('[data-focus-foreground]')).not.toBeNull();
+    expect(scene.querySelector('[data-focus-background], [data-card-entrance]')).toBeNull();
+  });
+});

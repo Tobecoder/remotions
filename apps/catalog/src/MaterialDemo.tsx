@@ -26,7 +26,7 @@ const PathArtwork=({index}:{index:number})=><svg viewBox="0 0 160 90" width="100
 
 
 const GalleryDocument=({index}:{index:number})=><div style={{padding:16,boxSizing:'border-box',height:'100%',background:'#fff',color:'#30343e'}}><div style={{fontFamily:'monospace',fontSize:8,color:'#8d9296',marginBottom:8}}>REFERENCE / 0{index+1}</div><div style={{fontSize:19,fontWeight:800,marginBottom:13}}>{['从参考到方法','让结构更清楚','把证据放进画面','减少不必要的条件','重新组织信息'][index%5]}</div><div style={{height:40,background:colors[index%5]+'33',marginBottom:11}}/>{[95,78,88].map((w,i)=><div key={i} style={{width:`${w}%`,height:3,background:'#d8dde0',marginTop:5}}/>)}</div>;
-const GalleryQuote=()=> <div style={{padding:22}}><div style={{fontFamily:'monospace',fontSize:9,letterSpacing:2,color:'#8b9093'}}>REFERENCE · 关键说明</div><div style={{fontSize:25,fontWeight:800,color:'#30343e',margin:'13px 0'}}>用一张引文卡，把重点讲清楚。</div><div style={{height:2,background:'#ca704e',marginBottom:14}}/><div style={{fontSize:16,color:'#83888e'}}>背景保留证据，前景突出当前要说的话。</div></div>;
+const GalleryQuote=()=> <div style={{padding:22}}><div style={{fontFamily:'monospace',fontSize:9,letterSpacing:2,color:'#8b9093'}}>REFERENCE · 关键说明</div><div style={{fontSize:25,fontWeight:800,color:'#30343e',margin:'13px 0'}}>用一张引文卡，把重点讲清楚。</div><div style={{height:2,background:'#ca704e',marginBottom:14}}/><div style={{fontSize:16,color:'#83888e'}}>文字、图片或图表，都可以在这里突出展示。</div></div>;
 
 const PerspectiveDemo=({time}:{time:number})=><PerspectivePanel from={{x:220,y:114,ax:1,ay:0,bx:0,by:1}} to={{...tiltedPose,x:355,y:128}} progress={during(time,.45,2.1)} borderColor="#30343d" borderWidth={4}><DemoDocument/></PerspectivePanel>;
 
@@ -78,7 +78,7 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
     case 'tethered-motion':content=<TetheredMotion time={time} spriteSrc="/characters/runner-v2.png"/>;break;
     case 'rising-curve':content=<RisingCurve progress={during(time,.2,1.8)}/>;break;
     case 'card-entrance':content=<CardEntranceDemo time={time}/>;break;
-    case 'focus-layer':content=<FocusLayer progress={during(time,.6,1.4)} rect={{x:105,y:168,width:600,height:183}} background={<CardEntranceDemo time={5}/>} foreground={<GalleryQuote/>}/>;break;
+    case 'focus-layer':content=<FocusLayer progress={during(time,.6,1.4)} rect={{x:105,y:168,width:600,height:183}} foreground={<GalleryQuote/>}/>;break;
     case 'constraint-release':content=<><div style={{position:'absolute',left:49,top:116,fontSize:36,fontWeight:900,color:'#272a30'}}>减少限制，释放画面</div><ConstraintRelease time={time} content={<GalleryDocument index={0}/>}/></>;break;
     case 'section-collapse':content=<SectionCollapse progress={during(time,1.65,2.4)} label="没有标准答案"><div style={{position:'absolute',left:49,top:116,fontSize:36,fontWeight:900,color:'#272a30'}}>没有标准答案</div><BranchingPaths time={7} cards={pathCardLayout.map((layout,i)=>({...layout,id:`path-${i}`,content:<PathArtwork index={i}/>}))}/></SectionCollapse>;break;
     case 'audio-pulse-badge':content=<AudioPulseBadge time={time} x={400} y={225}/>;break;

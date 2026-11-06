@@ -32,6 +32,9 @@ describe('independent card entry and foreground focus',()=>{
     expect(foreground.textContent).toBe('重点内容');
     expect(scene.querySelector('[data-card-entrance], [data-gallery-badge]')).toBeNull();
     expect(scene.body.textContent).not.toContain('别拿老方法');
+    const foregroundOnly=dom(<FocusLayer progress={1} rect={rect} foreground={<strong>单独展示</strong>}/>);
+    expect(foregroundOnly.querySelector('[data-focus-background]')).toBeNull();
+    expect(foregroundOnly.querySelector('[data-focus-foreground]')!.textContent).toBe('单独展示');
   });
   it('supports custom focus styling and can seek without relying on prior playback',()=>{
     const node=(progress:number)=><FocusLayer progress={progress} rect={rect} blur={8} backgroundOpacity={.2} offset={{x:10,y:-20}} fromScale={.8} panelStyle={{background:'#111'}} background={<span/>} foreground="说明"/>;

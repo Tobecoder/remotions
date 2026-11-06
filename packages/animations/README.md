@@ -19,7 +19,7 @@ Remotion 可复用动画组件，当前公开导出 **25 个**。旧组件及归
 | 叙事动画 | `TetheredMotion` | 可替换对象前进、被绳索牵回并切换姿态 |
 | 数据图表 | `RisingCurve` | 概念趋势曲线、面积和端点同步展开 |
 | 版式转场 | `CardEntrance` | 独立卡片入场，外部安排位置、数量和进度 |
-| 版式转场 | `FocusLayer` | 任意背景虚化淡出并突出任意前景 |
+| 版式转场 | `FocusLayer` | 独立突出任意前景，可选背景虚化淡化 |
 | 叙事动画 | `PreparationCards` | 四张素材卡依次浮入，停留后汇聚 |
 | 叙事动画 | `AgentPipeline` | Agent 显现，连接工具与成片窗口 |
 | 文字特效 | `TypewriterComparison` | 两段文字逐字输入，再缩成左右栏 |
@@ -126,7 +126,7 @@ const Gallery = () => {
 
 `CardEntrance` 接收单张卡片的 `children`、`progress`（0–1）、`x/y/width/height`。`offset` 为入场前相对目标位置的偏移，默认 `{x:0,y:12}`；`rotation/background/borderRadius/boxShadow` 可调整样式。调用方可映射任意数量卡片，并逐张传入位置和进度；组件没有五卡布局或固定入场间隔。
 
-`FocusLayer` 接收 `progress`、`background`、`foreground` 和前景区域 `rect={x,y,width,height}`。`blur/backgroundOpacity` 控制聚焦完成时背景的模糊半径与透明度，默认 3px / 0.35；`offset/fromScale` 控制前景入场位移与起始缩放，默认 `{x:0,y:24}` / 0.96。`panelStyle` 可调整前景外观。背景和前景均为 React 内容，说明、标签和时间线由调用方提供。
+`FocusLayer` 接收 `progress`、`foreground` 和前景区域 `rect={x,y,width,height}`，可以只展示前景。`background` 可选，默认不创建背景层；传入时，`blur/backgroundOpacity` 控制聚焦完成时背景的模糊半径与透明度，默认 3px / 0.35。`offset/fromScale` 控制前景入场位移与起始缩放，默认 `{x:0,y:24}` / 0.96；`panelStyle` 可调整前景外观。说明、标签和时间线由调用方提供。
 
 ```tsx
 <CardEntrance progress={entry} x={60} y={100} width={220} height={150} rotation={-3}>
@@ -134,7 +134,9 @@ const Gallery = () => {
 </CardEntrance>
 
 <FocusLayer progress={focus} rect={{x:105,y:168,width:600,height:183}}
-  background={<YourScene />} foreground={<YourContent />} />
+  foreground={<YourContent />} />
 ```
+
+需要同时处理背景时，再传入 `background={<YourScene />}`；素材预览默认仅展示前景。
 
 `ConstraintRelease` 接收 `content`、默认六条 `tags` 和 `badge`；先展开标签，再掉落标签，2.3–2.8 秒显示窗口内容，3.3–3.8 秒放大窗口。内容均由调用方提供，不内置原片图片。

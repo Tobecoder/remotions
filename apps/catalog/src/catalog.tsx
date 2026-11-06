@@ -71,10 +71,10 @@ export const catalog: CatalogItem[] = [
   rotation={-3} offset={{x:0,y:12}}>
   <YourContent />
 </CardEntrance>`},
-  {id:'focus-layer',category:'layouts',name:'前景聚焦',component:'FocusLayer',description:'按进度虚化并淡化背景，突出任意前景内容',usage:'重点讲解 · 内容聚焦',durationInFrames:120,posterFrame:60,code:`import {FocusLayer} from '@remotions/animations';
+  {id:'focus-layer',category:'layouts',name:'前景聚焦',component:'FocusLayer',description:'按进度突出任意前景内容，背景虚化与淡化可选',usage:'重点讲解 · 内容聚焦',durationInFrames:120,posterFrame:60,code:`import {FocusLayer} from '@remotions/animations';
 
 <FocusLayer progress={progress} rect={{x:105,y:168,width:600,height:183}}
-  background={<YourScene />} foreground={<YourContent />} />`},
+  foreground={<YourContent />} />`},
   {id:'constraint-release',category:'storytelling',name:'限制解除',component:'ConstraintRelease',description:'窗口旁的限制标签逐个掉落，内容显现并放大',usage:'条件解除 · 结果揭示',durationInFrames:165,posterFrame:120,code:`import {ConstraintRelease} from '@remotions/animations';
 
 <ConstraintRelease time={frame / fps} content={<YourContent />}
