@@ -1,5 +1,6 @@
 import {AbsoluteFill,Img,staticFile,useCurrentFrame,useVideoConfig} from 'remotion';
-import {ConstraintRelease,ConstraintSwitches,DocumentFocusGallery,RisingCurve,SectionCollapse,TargetReticle,TetheredMotion} from '../../packages/animations/src';
+import {ConstraintRelease,ConstraintSwitches,RisingCurve,SectionCollapse,TargetReticle,TetheredMotion} from '../../packages/animations/src';
+import {DocumentFocusGallery} from './compositions/DocumentFocusGallery';
 import {during} from '../../packages/animations/src/reference-opening/motion';
 import {FirstPointScene} from './ContinuationScene';
 import {PaperBackground,Subtitle} from './OpeningScene';

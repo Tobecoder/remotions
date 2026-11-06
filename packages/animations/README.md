@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **24 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **25 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
@@ -18,7 +18,8 @@ Remotion 可复用动画组件，当前公开导出 **24 个**。旧组件及归
 | 叙事动画 | `ConstraintSwitches` | 约束开关依次关闭、文字划线 |
 | 叙事动画 | `TetheredMotion` | 可替换对象前进、被绳索牵回并切换姿态 |
 | 数据图表 | `RisingCurve` | 概念趋势曲线、面积和端点同步展开 |
-| 版式转场 | `DocumentFocusGallery` | 五卡文档版式虚化后突出前景引文 |
+| 版式转场 | `CardEntrance` | 独立卡片入场，外部安排位置、数量和进度 |
+| 版式转场 | `FocusLayer` | 任意背景虚化淡出并突出任意前景 |
 | 叙事动画 | `PreparationCards` | 四张素材卡依次浮入，停留后汇聚 |
 | 叙事动画 | `AgentPipeline` | Agent 显现，连接工具与成片窗口 |
 | 文字特效 | `TypewriterComparison` | 两段文字逐字输入，再缩成左右栏 |
@@ -69,7 +70,7 @@ const Gallery = () => {
 
 `SectionCollapse` 接收 `children`、`progress`、`label`，可选 `number`（默认 `1`）及 `target={x,y,width,height}`（默认 `{x:49,y:47,width:150,height:37}`）。将讲解主体放在组件内部，纸底、字幕和其他导航放在外部；整个主体向摘要条缩小并淡去，保留已完成的小节名称。素材库和第一点案例均使用 0.75 秒的收束进度。
 
-`TargetReticle`、`ConstraintSwitches`、`TetheredMotion`、`DocumentFocusGallery`、`ConstraintRelease` 均接收 `time`（秒）和可选 `startAt`。靶心可替换 `shotLabel/aimLabel/color`；约束开关默认两行，可替换 `heading/labels/offLabel`，默认先后关闭时刻为相对 5.1、7.3 秒；目录演示整体提前 2.2 秒。
+`TargetReticle`、`ConstraintSwitches`、`TetheredMotion`、`ConstraintRelease` 均接收 `time`（秒）和可选 `startAt`。靶心可替换 `shotLabel/aimLabel/color`；约束开关默认两行，可替换 `heading/labels/offLabel`，默认先后关闭时刻为相对 5.1、7.3 秒；目录演示整体提前 2.2 秒。
 
 `TargetReticle` 在相对 0.6 秒命中时加入短促衰减抖动，0.88 秒前归稳，再接原有 0.9 秒开始的准星归位。抖动只作用于靶面，不移动整页，也不改变后面的移位和缩放时间。
 
@@ -78,8 +79,6 @@ const Gallery = () => {
 也可用 `spriteSrc` 替代两个 React 插槽，提供 4×4 的透明图集：前 8 帧以 12 FPS 跑动循环，后 8 帧在牵住时以 18 FPS 播放一次后保持。仓库内置演示使用新生成的毛绒小熊，图集及动图位于 `assets/characters/runner-v2`，需将图集放进调用工程的静态资源目录。素材库与成片共用 `RunnerSprite` 的帧计算，避免 GIF 自行播放造成跳帧不同步。
 
 `constraintLabel` 默认是“约束”，在角色被牵住时从绳索中点向上弹出，并跟随绳子的形状和回拉位置；传入空字符串可隐藏。原来的 `label` 仍控制角色旁的“跑偏了！”提示。
-
-`DocumentFocusGallery` 的文档按顺序逐张进入：相对 0.1 秒起，每隔 0.4 秒一张，单张入场 0.3 秒。全部到齐后显示 `caption`，再开始聚焦前景引文；目录和成片共用时间线。
 
 `PreparationCards` 接收 `time/startAt/cards`，每项含 `id/title/artwork` 和可选 `description`；按四卡版式排列。相对 0.15 秒开始逐张入场，3.35–3.95 秒向 Agent 的位置汇聚并淡出。`AgentPipeline` 接收 `time/startAt/output`，以及可选的 `agentLabel/toolLabel`，先显现 Agent，再展开右侧输出窗口。目录的素材准备演示将两者串接，结尾保持成片窗口，避免停在空白帧。
 
@@ -123,6 +122,19 @@ const Gallery = () => {
 
 `CollapsingTitle` 接收 `title`、`progress`、起终点 `from/to`（均指标题正文左上角）及 `fontSize/compactFontSize`，同一标题持续显示并移动缩小。可传 `lead/description/compactDescription`，配合收拢切换说明；组件没有固定章节编号或业务文案，颜色可由标题 React 内容自行设置。
 
-固定讲解顺序、计数节奏和业务文案由视频工程编排。仓库原有的脚本文档讲解与快慢进度对比代码已迁入 `examples/reference-opening/compositions/`，不属于本包的导出或素材目录；可参考案例组合上述独立动作。
+固定讲解顺序、计数节奏和业务文案由视频工程编排。仓库原有的脚本文档讲解、快慢进度对比与五卡文档聚焦代码已迁入 `examples/reference-opening/compositions/`，不属于本包的导出或素材目录；可参考案例组合上述独立动作。
 
-`DocumentFocusGallery` 的 `documents=[{id,content}]` 对应预设五卡布局，`focusContent` 为前景引文插槽，`caption` 和 `badge` 可替换；约 2.3–3 秒虚化背景并显示引文。`ConstraintRelease` 接收 `content`、默认六条 `tags` 和 `badge`；先展开标签，再掉落标签，2.3–2.8 秒显示窗口内容，3.3–3.8 秒放大窗口。内容均由调用方提供，不内置原片图片。
+`CardEntrance` 接收单张卡片的 `children`、`progress`（0–1）、`x/y/width/height`。`offset` 为入场前相对目标位置的偏移，默认 `{x:0,y:12}`；`rotation/background/borderRadius/boxShadow` 可调整样式。调用方可映射任意数量卡片，并逐张传入位置和进度；组件没有五卡布局或固定入场间隔。
+
+`FocusLayer` 接收 `progress`、`background`、`foreground` 和前景区域 `rect={x,y,width,height}`。`blur/backgroundOpacity` 控制聚焦完成时背景的模糊半径与透明度，默认 3px / 0.35；`offset/fromScale` 控制前景入场位移与起始缩放，默认 `{x:0,y:24}` / 0.96。`panelStyle` 可调整前景外观。背景和前景均为 React 内容，说明、标签和时间线由调用方提供。
+
+```tsx
+<CardEntrance progress={entry} x={60} y={100} width={220} height={150} rotation={-3}>
+  <YourCard />
+</CardEntrance>
+
+<FocusLayer progress={focus} rect={{x:105,y:168,width:600,height:183}}
+  background={<YourScene />} foreground={<YourContent />} />
+```
+
+`ConstraintRelease` 接收 `content`、默认六条 `tags` 和 `badge`；先展开标签，再掉落标签，2.3–2.8 秒显示窗口内容，3.3–3.8 秒放大窗口。内容均由调用方提供，不内置原片图片。

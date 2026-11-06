@@ -29,7 +29,7 @@ node examples/reference-opening/render.mjs
 
 输出 `.verification/reference-opening/reference-opening-10s.mp4` 及关键帧。先生成截图可加 `--stills`，快速四帧检查可再加 `--quick`。
 
-可复用组件位于 `packages/animations/src/reference-opening/`，包入口当前公开导出二十四个组件及类型。目录独立演示与本场景复用同一套独立动作；当前视频的固定组合编排位于本工程的 `compositions/`。
+可复用组件位于 `packages/animations/src/reference-opening/`，包入口当前公开导出二十五个组件及类型。目录独立演示与本场景复用同一套独立动作；当前视频的固定组合编排位于本工程的 `compositions/`。
 
 预览服务启动后打开 http://localhost:3004/Reference-Opening-10s 。
 
@@ -48,6 +48,7 @@ node examples/reference-opening/render.mjs
 - [脚本文档讲解](./compositions/ScriptDocumentGuide.tsx) 编排章节标题、文档滚动、高亮和说明收拢，使用库中的 `ChapterHeading/DocumentWindow/HighlightBox/CollapsingTitle`。保留原有停顿与切换时刻，`copy` 可替换案例文案。
 - [进度对比](./compositions/ProgressRace.tsx) 编排两条 `ProgressRow` 的快慢、转圈和计数。`eyebrow/countTo/phrases` 为案例配置。
 - [卡片强调镜头](./compositions/SpotlightSequence.tsx) 计算放大、停留和缩回进度，调用 `CardSpotlight`，并在组件外绘制提示标签。保留原有成片节奏及标签位置。
+- [文档聚焦镜头](./compositions/DocumentFocusGallery.tsx) 安排五张文档的布局、逐张入场、说明出现及聚焦时刻，调用 `CardEntrance/FocusLayer`；引文与提示标签由案例提供。
 
 这些编排由 `ScriptScene` 在本工程内导入，不属于素材目录及组件包公开 API。移到其他视频时可参考其代码，也可直接使用独立动作重新编排。
 

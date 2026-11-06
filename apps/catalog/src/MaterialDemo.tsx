@@ -1,5 +1,5 @@
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, ChapterHeading, ConstraintRelease, ConstraintSwitches, DocumentFocusGallery, ExplodedLayers, FanCardDeck, PerspectivePanel, RisingCurve, SceneThumbnail, SectionCollapse, TargetReticle, TetheredMotion} from '../../../packages/animations/src';
+import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, ChapterHeading, ConstraintRelease, ConstraintSwitches, CardEntrance, FocusLayer, ExplodedLayers, FanCardDeck, PerspectivePanel, RisingCurve, SceneThumbnail, SectionCollapse, TargetReticle, TetheredMotion} from '../../../packages/animations/src';
 import {pathCardLayout} from '../../../packages/animations/src/reference-opening/continuation-motion';
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
@@ -29,6 +29,8 @@ const GalleryDocument=({index}:{index:number})=><div style={{padding:16,boxSizin
 const GalleryQuote=()=> <div style={{padding:22}}><div style={{fontFamily:'monospace',fontSize:9,letterSpacing:2,color:'#8b9093'}}>REFERENCE · 关键说明</div><div style={{fontSize:25,fontWeight:800,color:'#30343e',margin:'13px 0'}}>用一张引文卡，把重点讲清楚。</div><div style={{height:2,background:'#ca704e',marginBottom:14}}/><div style={{fontSize:16,color:'#83888e'}}>背景保留证据，前景突出当前要说的话。</div></div>;
 
 const PerspectiveDemo=({time}:{time:number})=><PerspectivePanel from={{x:220,y:114,ax:1,ay:0,bx:0,by:1}} to={{...tiltedPose,x:355,y:128}} progress={during(time,.45,2.1)} borderColor="#30343d" borderWidth={4}><DemoDocument/></PerspectivePanel>;
+
+const CardEntranceDemo=({time}:{time:number})=><>{Array.from({length:6},(_,i)=><CardEntrance key={i} progress={during(time,.15+i*.2,.6+i*.2)} x={60+(i%3)*240} y={65+Math.floor(i/3)*180} width={200} height={150} rotation={[-2,1,-1,2,-1,1][i]}><GalleryDocument index={i}/></CardEntrance>)}</>;
 
 const SpotlightDemo=({time}:{time:number})=>{
   const from=getAiComparisonThumbnailRect(time+5.4),progress=during(time,0,.4)*(1-during(time,3,3.5));
@@ -75,7 +77,8 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
     case 'constraint-switches':content=<ConstraintSwitches time={time+2.2}/>;break;
     case 'tethered-motion':content=<TetheredMotion time={time} spriteSrc="/characters/runner-v2.png"/>;break;
     case 'rising-curve':content=<RisingCurve progress={during(time,.2,1.8)}/>;break;
-    case 'document-focus-gallery':content=<DocumentFocusGallery time={time} documents={Array.from({length:5},(_,i)=>({id:String(i),content:<GalleryDocument index={i}/>}))} caption={<div style={{fontSize:25,fontWeight:800,color:'#30343e'}}>参考资料<br/><span style={{color:'#c77757'}}>突出重点</span></div>} focusContent={<GalleryQuote/>} badge="重点说明"/>;break;
+    case 'card-entrance':content=<CardEntranceDemo time={time}/>;break;
+    case 'focus-layer':content=<FocusLayer progress={during(time,.6,1.4)} rect={{x:105,y:168,width:600,height:183}} background={<CardEntranceDemo time={5}/>} foreground={<GalleryQuote/>}/>;break;
     case 'constraint-release':content=<><div style={{position:'absolute',left:49,top:116,fontSize:36,fontWeight:900,color:'#272a30'}}>减少限制，释放画面</div><ConstraintRelease time={time} content={<GalleryDocument index={0}/>}/></>;break;
     case 'section-collapse':content=<SectionCollapse progress={during(time,1.65,2.4)} label="没有标准答案"><div style={{position:'absolute',left:49,top:116,fontSize:36,fontWeight:900,color:'#272a30'}}>没有标准答案</div><BranchingPaths time={7} cards={pathCardLayout.map((layout,i)=>({...layout,id:`path-${i}`,content:<PathArtwork index={i}/>}))}/></SectionCollapse>;break;
     case 'audio-pulse-badge':content=<AudioPulseBadge time={time} x={400} y={225}/>;break;

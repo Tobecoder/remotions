@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'document-focus-gallery' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'document-window' | 'highlight-box' | 'collapsing-title';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'card-entrance' | 'focus-layer' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'document-window' | 'highlight-box' | 'collapsing-title';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -65,11 +65,16 @@ export const catalog: CatalogItem[] = [
 
 // 概念趋势示意，不是实测数据图。
 <RisingCurve progress={progress} label="模型能力" title="越来越聪明" />`},
-  {id:'document-focus-gallery',category:'layouts',name:'文档聚焦',component:'DocumentFocusGallery',description:'文档卡片展开，背景虚化并突出前景引文',usage:'证据展示 · 引文强调',durationInFrames:150,posterFrame:105,code:`import {DocumentFocusGallery} from '@remotions/animations';
+  {id:'card-entrance',category:'layouts',name:'卡片入场',component:'CardEntrance',description:'每张卡片独立控制位置、尺寸、方向和进度，自由安排数量与顺序',usage:'资料陈列 · 卡片展示',durationInFrames:120,posterFrame:65,code:`import {CardEntrance} from '@remotions/animations';
 
-<DocumentFocusGallery time={frame / fps}
-  documents={documents.map(item=>({id:item.id,content:<DocumentImage src={item.src} />}))}
-  focusContent={<YourQuote />} badge="重点说明" />`},
+<CardEntrance progress={progress} x={60} y={100} width={220} height={150}
+  rotation={-3} offset={{x:0,y:12}}>
+  <YourContent />
+</CardEntrance>`},
+  {id:'focus-layer',category:'layouts',name:'前景聚焦',component:'FocusLayer',description:'按进度虚化并淡化背景，突出任意前景内容',usage:'重点讲解 · 内容聚焦',durationInFrames:120,posterFrame:60,code:`import {FocusLayer} from '@remotions/animations';
+
+<FocusLayer progress={progress} rect={{x:105,y:168,width:600,height:183}}
+  background={<YourScene />} foreground={<YourContent />} />`},
   {id:'constraint-release',category:'storytelling',name:'限制解除',component:'ConstraintRelease',description:'窗口旁的限制标签逐个掉落，内容显现并放大',usage:'条件解除 · 结果揭示',durationInFrames:165,posterFrame:120,code:`import {ConstraintRelease} from '@remotions/animations';
 
 <ConstraintRelease time={frame / fps} content={<YourContent />}
