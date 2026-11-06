@@ -1,14 +1,18 @@
 import type {ReactNode} from 'react';
-import {during,mix} from './motion';
+import {clamp,mix} from './motion';
 
 export type SpotlightRect={x:number;y:number;width:number;height:number};
-export type CardSpotlightProps={time:number;startAt?:number;from:SpotlightRect;fromRadius?:number;content:ReactNode|((expanded:number)=>ReactNode);badge?:string};
-export const CardSpotlight=({time,startAt=0,from,fromRadius=10,content,badge}:CardSpotlightProps)=>{
-  const t=time-startAt,expanded=during(t,0,.4)*(1-during(t,3,3.5));
-  const x=mix(from.x,232,expanded),y=mix(from.y,138,expanded),width=mix(from.width,336,expanded),height=mix(from.height,189,expanded);
+export type CardSpotlightProps={progress:number;from:SpotlightRect;to:SpotlightRect;fromRadius?:number;toRadius?:number;dimColor?:string;dimOpacity?:number;content:ReactNode|((expanded:number)=>ReactNode)};
+const zeroRect:SpotlightRect={x:0,y:0,width:0,height:0};
+const finite=(value:number,fallback:number)=>Number.isFinite(value)?value:fallback;
+const safeRect=(rect:SpotlightRect,fallback:SpotlightRect=zeroRect):SpotlightRect=>({x:finite(rect.x,fallback.x),y:finite(rect.y,fallback.y),width:Math.max(0,finite(rect.width,fallback.width)),height:Math.max(0,finite(rect.height,fallback.height))});
+
+/** Caller-controlled geometry; narration, pauses and captions belong to the video. */
+export const CardSpotlight=({progress,from,to,fromRadius=10,toRadius=10,dimColor='#f5f6ef',dimOpacity=.88,content}:CardSpotlightProps)=>{
+  const expanded=clamp(progress),start=safeRect(from),end=safeRect(to,start);
+  const x=mix(start.x,end.x,expanded),y=mix(start.y,end.y,expanded),width=mix(start.width,end.width,expanded),height=mix(start.height,end.height,expanded);
   return <div data-card-spotlight style={{position:'absolute',inset:0,isolation:'isolate'}}>
-    <div data-spotlight-dimmer style={{position:'absolute',inset:0,background:'#f5f6ef',opacity:.88*expanded}}/>
-    <div data-spotlight-panel style={{position:'absolute',left:x,top:y,width,height,borderRadius:mix(fromRadius,10,expanded),overflow:'hidden',boxShadow:`0 ${5*expanded}px ${20*expanded}px #242b3320`}}>{typeof content==='function'?content(expanded):content}</div>
-    {badge&&<div data-spotlight-badge style={{position:'absolute',left:x,top:y+height+8,padding:'6px 12px',borderRadius:18,background:'#da7250',fontSize:13,fontWeight:700,color:'#fff',opacity:during(t,1.9,2.2)*(1-during(t,3,3.5))}}>{badge}</div>}
+    <div data-spotlight-dimmer style={{position:'absolute',inset:0,background:dimColor,opacity:clamp(dimOpacity)*expanded}}/>
+    <div data-spotlight-panel style={{position:'absolute',left:x,top:y,width,height,borderRadius:mix(Math.max(0,finite(fromRadius,10)),Math.max(0,finite(toRadius,10)),expanded),overflow:'hidden',boxShadow:`0 ${5*expanded}px ${20*expanded}px #242b3320`}}>{typeof content==='function'?content(expanded):content}</div>
   </div>;
 };

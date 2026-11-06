@@ -31,12 +31,12 @@ const GalleryQuote=()=> <div style={{padding:22}}><div style={{fontFamily:'monos
 const PerspectiveDemo=({time}:{time:number})=><PerspectivePanel from={{x:220,y:114,ax:1,ay:0,bx:0,by:1}} to={{...tiltedPose,x:355,y:128}} progress={during(time,.45,2.1)} borderColor="#30343d" borderWidth={4}><DemoDocument/></PerspectivePanel>;
 
 const SpotlightDemo=({time}:{time:number})=>{
-  const from=getAiComparisonThumbnailRect(time+5.4);
+  const from=getAiComparisonThumbnailRect(time+5.4),progress=during(time,0,.4)*(1-during(time,3,3.5));
   return <>
     <div style={{position:'absolute',left:49,top:122,fontSize:20,fontWeight:800,color:'#34383d'}}>从缩略图放大，讲完再归位</div>
     <div style={{position:'absolute',left:420,top:175,width:320,height:66,background:'#fff',borderRadius:9}}><div style={{position:'absolute',left:81,top:20,fontSize:15,fontWeight:700,color:'#34373d'}}>『Vibe 知识大赏』</div></div>
     <div data-spotlight-source-thumbnail style={{position:'absolute',left:from.x,top:from.y,width:from.width,height:from.height,borderRadius:3,overflow:'hidden'}}><NeuronPreview time={time}/></div>
-    <CardSpotlight time={time} from={from} fromRadius={3} content={<NeuronPreview time={time}/>} badge="讲完之后，回到原位"/>
+    <CardSpotlight progress={progress} from={from} to={{x:232,y:138,width:336,height:189}} fromRadius={3} content={<NeuronPreview time={time}/>} />
   </>;
 };
 

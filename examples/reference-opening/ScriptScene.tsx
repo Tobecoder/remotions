@@ -1,7 +1,8 @@
 import {AbsoluteFill,Img,staticFile,useCurrentFrame,useVideoConfig} from 'remotion';
-import {CardSpotlight,ExplodedLayers,TypewriterComparison} from '../../packages/animations/src';
+import {ExplodedLayers,TypewriterComparison} from '../../packages/animations/src';
 import {ProgressRace} from './compositions/ProgressRace';
 import {ScriptDocumentGuide} from './compositions/ScriptDocumentGuide';
+import {SpotlightSequence} from './compositions/SpotlightSequence';
 import {during,mix} from '../../packages/animations/src/reference-opening/motion';
 import {PaperBackground,Subtitle,ScriptPage,MaterialsPage,VoicePage,CaptionsPage,AnimationPage,ScreenContent} from './OpeningScene';
 import {PreparationFilm} from './PreparationScene';
@@ -38,8 +39,8 @@ export const ScriptScene=()=>{
         <TypewriterComparison time={time} startAt={73.7} ownText={ownText} aiText={aiText} ownThumbnail={<Img src={staticFile('textures/script-body-0.jpg')} style={cover}/>} aiThumbnail={<NeuronPreview time={time-79.1}/>}/>
         <div style={{position:'absolute',left:49,top:255,width:318,height:66,boxSizing:'border-box',padding:'16px 20px',borderRadius:9,background:'#fff',boxShadow:'0 7px 15px #30343e17',opacity:during(time,86.25,86.7)}}><div style={{fontSize:15,fontWeight:700,color:'#31363c'}}>分享经验与方法论</div><div style={{fontSize:8,marginTop:4,color:'#989b9d'}}>表达自己的真实体会</div></div>
       </div>
-      <div data-script-phase="preview" style={{position:'absolute',inset:0,opacity:time>=79.1&&time<82.9?1:0}}><CardSpotlight time={time} startAt={79.1} from={getAiComparisonThumbnailRect(time,73.7)} fromRadius={3} content={<NeuronPreview time={time-79.1}/>} badge="这种脚本，可以交给 AI 写"/></div>
-      <div data-script-phase="takeaway" style={{position:'absolute',inset:0,opacity:windowOpacity(time,83.1,86.9)}}><CardSpotlight time={time} startAt={83.1} from={{x:49,y:255,width:318,height:66}} content={p=><div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100%',fontWeight:900,fontSize:mix(17,43,p),whiteSpace:'nowrap',color:'#292c33'}}>经验 · 方法论</div>} badge="AI 写的根本没法看"/></div>
+      <div data-script-phase="preview" style={{position:'absolute',inset:0,opacity:time>=79.1&&time<82.9?1:0}}><SpotlightSequence time={time} startAt={79.1} from={getAiComparisonThumbnailRect(time,73.7)} fromRadius={3} content={<NeuronPreview time={time-79.1}/>} badge="这种脚本，可以交给 AI 写"/></div>
+      <div data-script-phase="takeaway" style={{position:'absolute',inset:0,opacity:windowOpacity(time,83.1,86.9)}}><SpotlightSequence time={time} startAt={83.1} from={{x:49,y:255,width:318,height:66}} content={p=><div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100%',fontWeight:900,fontSize:mix(17,43,p),whiteSpace:'nowrap',color:'#292c33'}}>经验 · 方法论</div>} badge="AI 写的根本没法看"/></div>
       <div data-script-phase="race" style={{position:'absolute',inset:0,opacity:windowOpacity(time,86.8,95.7)}}><ProgressRace time={time} startAt={86.8} title="AI 写脚本，谁更行？" firstLabel="Gemini" secondLabel="GPT" winnerLabel="一骑绝尘" slowLabel="差等生 · 车轱辘话水字数"/></div>
       <Subtitle time={time} text={subtitle}/>
     </div>

@@ -22,7 +22,7 @@ Remotion 可复用动画组件，当前公开导出 **24 个**。旧组件及归
 | 叙事动画 | `PreparationCards` | 四张素材卡依次浮入，停留后汇聚 |
 | 叙事动画 | `AgentPipeline` | Agent 显现，连接工具与成片窗口 |
 | 文字特效 | `TypewriterComparison` | 两段文字逐字输入，再缩成左右栏 |
-| 版式转场 | `CardSpotlight` | 卡片放大到前景，讲解后回到原位 |
+| 版式转场 | `CardSpotlight` | 进度控制卡片放大与归位 |
 | 数据图表 | `ProgressRow` | 独立进度、状态及附加内容，供自定义组合 |
 | 版式转场 | `DocumentWindow` | 独立文档窗口、入场与滚动 |
 | 信息叠加 | `HighlightBox` | 任意区域的展开高亮框 |
@@ -83,7 +83,18 @@ const Gallery = () => {
 
 `PreparationCards` 接收 `time/startAt/cards`，每项含 `id/title/artwork` 和可选 `description`；按四卡版式排列。相对 0.15 秒开始逐张入场，3.35–3.95 秒向 Agent 的位置汇聚并淡出。`AgentPipeline` 接收 `time/startAt/output`，以及可选的 `agentLabel/toolLabel`，先显现 Agent，再展开右侧输出窗口。目录的素材准备演示将两者串接，结尾保持成片窗口，避免停在空白帧。
 
-`TypewriterComparison` 接收 `time/startAt`、`ownText/aiText` 及可选缩略图，先输入两段内容再收成两栏。`CardSpotlight` 的 `from` 是被放大内容的实际位置和尺寸（缩略图应传缩略图矩形，而非外层卡片），`fromRadius` 可匹配原有圆角，默认 10。`content` 可为 React 内容或接收放大进度的渲染函数，默认放大至 336×189，停留后回位，字号可随进度变化以避免拉伸文字。动态内容应与原缩略图使用同一时间值，避免放大或归位时重播。
+`TypewriterComparison` 接收 `time/startAt`、`ownText/aiText` 及可选缩略图，先输入两段内容再收成两栏。
+
+`CardSpotlight` 由调用方提供 `progress`（0–1）、`from` 和 `to` 两个矩形（`x/y/width/height`）：0 在起点、1 在终点，进度从 1 降回 0 即归位。`from` 应匹配被放大内容的实际区域，例如卡片内的小缩略图；`to` 指定放大后的位置和尺寸。`fromRadius/toRadius` 默认为 10，可调整两端圆角；`dimColor/dimOpacity` 配置背景淡化，默认 `#f5f6ef` / `0.88`，透明度设为 0 可关闭。
+
+`content` 可为 React 内容或接收同一放大进度的渲染函数，字号可随进度变化以避免拉伸文字。动态内容与原缩略图使用同一时钟；组件只控制几何及淡化，不重置内容时间。停留时长、往返时间线和提示标签由视频工程编排，不再提供 `time/startAt/badge` 参数。
+
+```tsx
+<CardSpotlight progress={progress}
+  from={{x:435,y:187,width:54,height:42}}
+  to={{x:232,y:138,width:336,height:189}}
+  fromRadius={3} content={<YourContent />} />
+```
 
 分层内部可以播放动态 React 内容：每层的 `content` 和顶部的 `screen` 可传 `(elapsed) => ReactNode`，`elapsed` 为该面板入场完成后的秒数，暂停或随机跳帧仍与画面一致。传普通 React 内容的原有用法保持。仓库演示和成片已接入正文与素材图滚动、装饰声波、字幕扫色和时间线播放头，面板姿态与进入时刻不变。声波是动画示意，不分析真实音频。
 

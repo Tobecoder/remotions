@@ -33,10 +33,11 @@ export const catalog: CatalogItem[] = [
   {id:'typewriter-comparison',category:'text-effects',name:'打字对照',component:'TypewriterComparison',description:'两段文案先后输入、校验和淡化，再收为左右栏',usage:'文案对照 · 观点表达',durationInFrames:210,posterFrame:115,code:`import {TypewriterComparison} from '@remotions/animations';
 
 <TypewriterComparison time={frame / fps} ownText={ownText} aiText={aiText} />`},
-  {id:'card-spotlight',category:'layouts',name:'卡片放大回位',component:'CardSpotlight',description:'卡片放大到前景，背景淡化，强调后返回原位',usage:'案例展示 · 重点讲解',durationInFrames:150,posterFrame:72,code:`import {CardSpotlight} from '@remotions/animations';
+  {id:'card-spotlight',category:'layouts',name:'卡片放大回位',component:'CardSpotlight',description:'用进度控制卡片在起终点间放大与回位，可替换内容和目标区域',usage:'案例展示 · 重点讲解',durationInFrames:150,posterFrame:72,code:`import {CardSpotlight} from '@remotions/animations';
 
-<CardSpotlight time={frame / fps} from={{x:420,y:175,width:320,height:66}}
-  content={<Preview />} badge="重点说明" />`},
+// progress：0 在原位，1 在目标位置，回到 0 即归位。
+<CardSpotlight progress={progress} from={{x:435,y:187,width:54,height:42}}
+  to={{x:232,y:138,width:336,height:189}} fromRadius={3} content={<Preview />} />`},
   {id:'progress-row',category:'charts',name:'单条进度',component:'ProgressRow',description:'独立控制名称、进度和状态，可组合自己的流程与对比',usage:'任务进度 · 过程讲解',durationInFrames:180,posterFrame:115,code:`import {ProgressRow} from '@remotions/animations';
 
 // progress 为 0–1，由你的数据或动画时间控制。

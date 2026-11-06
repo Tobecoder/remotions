@@ -47,8 +47,9 @@ node examples/reference-opening/render.mjs
 
 - [脚本文档讲解](./compositions/ScriptDocumentGuide.tsx) 编排章节标题、文档滚动、高亮和说明收拢，使用库中的 `ChapterHeading/DocumentWindow/HighlightBox/CollapsingTitle`。保留原有停顿与切换时刻，`copy` 可替换案例文案。
 - [进度对比](./compositions/ProgressRace.tsx) 编排两条 `ProgressRow` 的快慢、转圈和计数。`eyebrow/countTo/phrases` 为案例配置。
+- [卡片强调镜头](./compositions/SpotlightSequence.tsx) 计算放大、停留和缩回进度，调用 `CardSpotlight`，并在组件外绘制提示标签。保留原有成片节奏及标签位置。
 
-两者由 `ScriptScene` 在本工程内导入，已退出素材目录及组件包公开 API。移到其他视频时可参考其代码，也可直接使用独立动作重新编排。
+这些编排由 `ScriptScene` 在本工程内导入，不属于素材目录及组件包公开 API。移到其他视频时可参考其代码，也可直接使用独立动作重新编排。
 
 ## 验证边界
 
