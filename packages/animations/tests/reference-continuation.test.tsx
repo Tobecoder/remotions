@@ -52,6 +52,14 @@ describe('observed 11–20 second continuation',()=>{
     const principles=filmAt(420);
     expect(Number(principles.querySelector<HTMLElement>('[data-principles-header]')!.style.opacity)).toBe(1);
     expect(Number(principles.querySelector<HTMLElement>('[data-route-endpoint]')!.style.opacity)).toBe(0);
+    const routeOffsets=(frame:number)=>Array.from(filmAt(frame).querySelectorAll('[data-branch-route]'),path=>Number(path.getAttribute('stroke-dashoffset')));
+    const early=routeOffsets(450);
+    expect(early[0]).toBeLessThan(1);expect(early[1]).toBe(1);expect(early[2]).toBe(1);
+    const staggered=routeOffsets(461);
+    expect(staggered[0]).toBeLessThan(staggered[2]);expect(staggered[2]).toBeLessThan(1);expect(staggered[1]).toBe(1);
+    const finishing=routeOffsets(474);
+    expect(finishing[0]).toBe(0);expect(finishing[2]).toBeLessThan(finishing[1]);expect(finishing[1]).toBeLessThan(1);
+    expect(routeOffsets(488)).toEqual([0,0,0]);
     expect(filmAt(510).querySelectorAll('[data-path-card]')).toHaveLength(11);
   });
   it('crosses out the answer, then highlights one route while retaining dimmed alternatives',()=>{
