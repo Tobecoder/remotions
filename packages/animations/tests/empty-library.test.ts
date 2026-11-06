@@ -2,7 +2,7 @@ import {describe, expect, it} from 'vitest';
 import * as animations from '../src';
 
 describe('curated animation library', () => {
-  it('exports only the six newly registered reusable components', () => {
-    expect(Object.keys(animations).sort()).toEqual(['PerspectivePanel','ExplodedLayers','SceneThumbnail','FanCardDeck','ChapterHeading','BlurredCollage'].sort());
+  it('exports only the nine newly registered reusable components', () => {
+    expect(Object.keys(animations).sort()).toEqual(['PerspectivePanel','ExplodedLayers','SceneThumbnail','FanCardDeck','ChapterHeading','BlurredCollage','AudioPulseBadge','ChapterCardRow','BranchingPaths'].sort());
   });
 });

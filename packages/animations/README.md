@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **6 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **9 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
@@ -10,6 +10,9 @@ Remotion 可复用动画组件，当前公开导出 **6 个**。旧组件及归�
 | 版式转场 | `FanCardDeck` | 图片、文档等卡片的扇形展开 |
 | 文字特效 | `ChapterHeading` | 编号、标题和说明的遮罩切换 |
 | 背景特效 | `BlurredCollage` | 静止纸纹上的虚化拼贴向左下漂移并淡出 |
+| 信息叠加 | `AudioPulseBadge` | 装饰波形图标及扩散细圆环 |
+| 叙事动画 | `ChapterCardRow` | 章节缩略卡上移、放大并排为总览 |
+| 叙事动画 | `BranchingPaths` | 多条素材路径、否定标签和选路强调 |
 
 ```tsx
 import {FanCardDeck} from '@remotions/animations';
@@ -38,3 +41,9 @@ const Gallery = () => {
 构建：`npm run build -w @remotions/animations`。旧代码可从 Git 历史查看。MIT 许可，见 LICENSE。
 
 `BlurredCollage` 接收 `time={frame / fps}` 和 `cards`，每项指定 `id`、`content`、`x`、`y`、`width`、`height`，可选 `rotation`。默认以每秒 `(-16, 8)` 个设计像素向左下移动，3–4.25 秒淡出；`startAt` 可以整体延后。默认纸纹是固定种子的静态 SVG 纹理，也可用 `paper={<Img ... />}` 替换。`drift`、`blur`、`opacity`、`fadeStart`、`fadeEnd` 可调整，但目录与十秒案例使用同一默认运动参数。纸纹不跟随图片墙移动或淡出。
+
+`AudioPulseBadge` 接收秒数 `time`，可配置 `progress`、中心 `x/y`、`size` 和强调 `color`。这是装饰性的音效示意图标，不分析音频，也不播放声音。
+
+`ChapterCardRow` 接收 `cards=[{id,title,description,content}]` 和 `progress`（0–1）。默认三张卡从下方小卡移动到居中大卡，插图、主标题和说明随布局一起移动。`content` 填满插图区域。原有 `SceneThumbnail` 新增可选 `number`，不传仍为 `01`。
+
+`BranchingPaths` 接收 `time`、可选整体开始 `startAt`，以及 `cards=[{id,content,x,y,width?,height?,rotation?,selected?,enterAt?}]`。每张卡默认 90×51，`selected` 标识最终保留的路径节点。默认前两秒展开，2.3 秒出现 `stamp`、2.85 秒划线、3.9 秒淡去；4.1–4.9 秒绘出强调路径并淡化其他卡。`fromLabel/toLabel/stamp/routeLabel` 均可替换。曲线路径为该参考结构，适用于一个起点与一个终点之间的多路解释。

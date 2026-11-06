@@ -1,6 +1,6 @@
-# 原片开头 10 秒 · Remotion 复原候选
+# 原片开头 20 秒 · Remotion 复原候选
 
-入口 `index.tsx`，1920×1080、30 FPS、300 帧，无声。参考动作与时间点见 [SHOTPLAN.md](./SHOTPLAN.md)。
+入口 `index.tsx`，1920×1080、30 FPS，无声。保留 `Reference-Opening-10s`（300 帧），新增 `Reference-Opening-20s`（600 帧）。前十秒动作与时间点见 [SHOTPLAN.md](./SHOTPLAN.md)，后续见 [11–20 秒拆解](./CONTINUATION-SHOTPLAN.md)。
 
 ```powershell
 npx remotion studio examples/reference-opening/index.tsx --public-dir=examples/reference-opening/public --port=3004
@@ -9,11 +9,15 @@ node examples/reference-opening/render.mjs
 
 只导出视频、跳过关键帧截图：`node examples/reference-opening/render.mjs --video-only`。
 
+导出完整二十秒：`node examples/reference-opening/render.mjs --20s --video-only`；视频为 `.verification/reference-opening/reference-opening-20s.mp4`，独立报告为 `report-20s.json`，不会覆盖十秒视频。
+
 输出 `.verification/reference-opening/reference-opening-10s.mp4` 及关键帧。先生成截图可加 `--stills`，快速四帧检查可再加 `--quick`。
 
-可复用组件位于 `packages/animations/src/reference-opening/`，现已按用户要求加入素材库，包入口公开导出六个组件及类型。目录独立演示与本场景复用同一套实现。
+可复用组件位于 `packages/animations/src/reference-opening/`，现已按用户要求加入素材库，包入口公开导出九个组件及类型。目录独立演示与本场景复用同一套实现。
 
 预览服务启动后打开 http://localhost:3004/Reference-Opening-10s 。
+
+连续二十秒预览为 http://localhost:3004/Reference-Opening-20s 。续段新增「信息叠加 → 音效脉冲徽章」「叙事动画 → 章节卡总览」「叙事动画 → 多路径演示」三项素材。目录卡片用原创配图；案例使用观察截图中的 11 张小卡静态贴图（约 25 KB），没有使用整屏视频代替代码动画。
 
 `ExplodedLayers` 的 `layers` 数组配置每层内容、标签、进入时间；`screen` 可传入任意 React 内容。`PerspectivePanel` 的姿态可替换，`SceneThumbnail` 的目标位置与比例可配置，`FanCardDeck` 的图片、文案、角度和间距可替换。动画不依赖进入时间或播放历史，逐帧与随机跳帧一致。
 

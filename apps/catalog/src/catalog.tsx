@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -16,6 +16,25 @@ export const categories: CatalogCategory[] = [
 ];
 
 export const catalog: CatalogItem[] = [
+  {id:'audio-pulse-badge',category:'overlays',name:'音效脉冲徽章',component:'AudioPulseBadge',description:'圆形波形图标与淡淡扩散的细圆环',usage:'音效说明 · 章节配图',durationInFrames:150,posterFrame:30,code:`import {AudioPulseBadge} from '@remotions/animations';
+
+// 装饰图标，不读取音频；800 × 450 设计坐标。
+<AudioPulseBadge time={frame / fps} x={400} y={225} size={96} />`},
+  {id:'chapter-card-row',category:'storytelling',name:'章节卡总览',component:'ChapterCardRow',description:'章节缩略卡向画面中间移动、放大并排展示',usage:'内容目录 · 章节回顾',durationInFrames:135,posterFrame:90,code:`import {ChapterCardRow} from '@remotions/animations';
+
+<ChapterCardRow progress={progress} cards={[
+  {id:'method',title:'制作方法',description:'从脚本到成片',content:<MethodPreview />},
+  {id:'skill',title:'Skill 推荐',description:'找素材 · 选零件',content:<SkillPreview />},
+  {id:'sound',title:'音效处理',description:'合成，不如找到',content:<SoundPreview />},
+]} />`},
+  {id:'branching-paths',category:'storytelling',name:'多路径演示',component:'BranchingPaths',description:'图片沿多条曲线展开，划掉标准答案后突出一条路径',usage:'思路讲解 · 方案对比',durationInFrames:240,posterFrame:165,code:`import {BranchingPaths} from '@remotions/animations';
+
+// 800 × 450 画布；前 2 秒展开，2.3 秒出现标签，4.1 秒开始突出路径。
+<BranchingPaths time={frame / fps} cards={[
+  {id:'start',x:210,y:314,selected:true,content:<FirstImage />},
+  {id:'middle',x:356,y:260,width:90,height:66,selected:true,content:<SecondImage />},
+  {id:'end',x:505,y:233,selected:true,content:<ThirdImage />},
+]} fromLabel="想法" toLabel="成片" stamp="标准答案" routeLabel="我摸索的一条路" />`},
   {id:'blurred-collage',category:'backgrounds',name:'虚化拼贴漂移',component:'BlurredCollage',description:'图片墙向左下缓慢漂移，淡出后留下静止纸纹',usage:'片头铺底 · 教程开场',durationInFrames:180,posterFrame:18,code:`import {BlurredCollage} from '@remotions/animations';
 import {Img, useCurrentFrame, useVideoConfig} from 'remotion';
 

@@ -1,5 +1,6 @@
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
-import {BlurredCollage, ChapterHeading, ExplodedLayers, FanCardDeck, PerspectivePanel, SceneThumbnail} from '../../../packages/animations/src';
+import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, ChapterHeading, ExplodedLayers, FanCardDeck, PerspectivePanel, SceneThumbnail} from '../../../packages/animations/src';
+import {pathCardLayout} from '../../../packages/animations/src/reference-opening/continuation-motion';
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
 
@@ -15,6 +16,8 @@ const DemoDocument=({title='把复杂内容讲清楚',kind=0}:{title?:string;kin
 const FanArtwork=({index}:{index:number})=><div style={{position:'relative',width:'100%',height:'100%',background:colors[index],overflow:'hidden'}}>
   <svg viewBox="0 0 100 130" width="100%" height="100%"><circle cx={25+index*10} cy="35" r="26" fill="#ffffff50"/><path d={`M-10 ${100-index*7}L${50+index*5} 45L120 140H-10Z`} fill="#ffffff27"/><path d="M0 125L100 70V130H0Z" fill="#00000012"/><text x="13" y="112" fill="#fff" fontSize="30" fontWeight="800" fontFamily="sans-serif">0{index+1}</text></svg>
 </div>;
+
+const PathArtwork=({index}:{index:number})=><svg viewBox="0 0 160 90" width="100%" height="100%" preserveAspectRatio="xMidYMid slice"><rect width="160" height="90" fill={colors[index%colors.length]}/><circle cx={45+index%3*25} cy="35" r="24" fill="#ffffff44"/><path d="M0 90L60 35L120 90Z" fill="#ffffff28"/><path d="M70 90L120 54L170 90Z" fill="#ffffff44"/><text x="12" y="76" fontSize="13" fontFamily="sans-serif" fill="#fff">{['构思','素材','实验','结果'][index%4]}</text></svg>;
 
 const PerspectiveDemo=({time}:{time:number})=><PerspectivePanel from={{x:220,y:114,ax:1,ay:0,bx:0,by:1}} to={{...tiltedPose,x:355,y:128}} progress={during(time,.45,2.1)} borderColor="#30343d" borderWidth={4}><DemoDocument/></PerspectivePanel>;
 
@@ -41,6 +44,9 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
   const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig(),time=frame/fps;
   let content;
   switch(id){
+    case 'audio-pulse-badge':content=<AudioPulseBadge time={time} x={400} y={225}/>;break;
+    case 'chapter-card-row':content=<ChapterCardRow progress={during(time,.5,1.35)} cards={['制作方法','Skill 推荐','音效处理'].map((title,i)=>({id:String(i),title,description:['从脚本到成片','找素材 · 选零件','合成，不如找到'][i],content:i===2?<div style={{position:'absolute',left:'50%',top:'50%'}}><AudioPulseBadge time={time} x={0} y={0} size={38}/></div>:<PathArtwork index={i}/>}))}/>;break;
+    case 'branching-paths':content=<><div style={{position:'absolute',left:49,top:90,fontSize:36,fontWeight:900,color:'#272a30'}}>没有标准答案</div><div style={{position:'absolute',left:49,top:143,fontSize:13,color:'#8f9296'}}>用画面讲清楚不同的选择</div><BranchingPaths time={time} cards={pathCardLayout.map((layout,i)=>({...layout,id:`path-${i}`,content:<PathArtwork index={i}/>}))}/></>;break;
     case 'blurred-collage':content=<BlurredCollage time={time} cards={[
       [-32,24,137,111,-5],[188,28,140,115,4],[328,-53,217,140,-3],[588,-36,207,106,5],[728,103,134,160,-4],[66,313,195,148,-7],[300,371,149,119,4],[500,335,215,147,-5],[604,270,124,82,3],
     ].map(([x,y,width,height,rotation],i)=>({id:String(i),x,y,width,height,rotation,content:<div style={{width:360,height:202.5,transformOrigin:'0 0',transform:`scale(${width/360},${height/202.5})`}}><DemoDocument title={['内容脚本','图片与画面','章节设计'][i%3]} kind={i%5}/></div>}))}/>;break;

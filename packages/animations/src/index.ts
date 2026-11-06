@@ -11,3 +11,9 @@ export type {ChapterHeadingProps, HeadingContent, IntroHeadingContent} from './r
 export type {PlanePose} from './reference-opening/motion';
 export {BlurredCollage} from './reference-opening/BlurredCollage';
 export type {BlurredCollageProps, CollageCard} from './reference-opening/BlurredCollage';
+export {AudioPulseBadge} from './reference-opening/AudioPulseBadge';
+export type {AudioPulseBadgeProps} from './reference-opening/AudioPulseBadge';
+export {ChapterCardRow} from './reference-opening/ChapterCardRow';
+export type {ChapterCardRowProps, ChapterCard} from './reference-opening/ChapterCardRow';
+export {BranchingPaths} from './reference-opening/BranchingPaths';
+export type {BranchingPathsProps, PathCard} from './reference-opening/BranchingPaths';
