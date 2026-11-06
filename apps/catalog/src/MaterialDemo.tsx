@@ -3,7 +3,7 @@ import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, Chapter
 import {pathCardLayout} from '../../../packages/animations/src/reference-opening/continuation-motion';
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
-import {PreparationCards,AgentPipeline} from '../../../packages/animations/src';
+import {PreparationCards,AgentPipeline,ScriptDocumentGuide,TypewriterComparison,CardSpotlight,ProgressRace} from '../../../packages/animations/src';
 import {PreparationArtwork} from './PreparationArtwork';
 
 const colors=['#405c81','#76a8b2','#c78661','#a99ac1','#cb9e66'];
@@ -24,6 +24,7 @@ const PathArtwork=({index}:{index:number})=><svg viewBox="0 0 160 90" width="100
 
 const GalleryDocument=({index}:{index:number})=><div style={{padding:16,boxSizing:'border-box',height:'100%',background:'#fff',color:'#30343e'}}><div style={{fontFamily:'monospace',fontSize:8,color:'#8d9296',marginBottom:8}}>REFERENCE / 0{index+1}</div><div style={{fontSize:19,fontWeight:800,marginBottom:13}}>{['从参考到方法','让结构更清楚','把证据放进画面','减少不必要的条件','重新组织信息'][index%5]}</div><div style={{height:40,background:colors[index%5]+'33',marginBottom:11}}/>{[95,78,88].map((w,i)=><div key={i} style={{width:`${w}%`,height:3,background:'#d8dde0',marginTop:5}}/>)}</div>;
 const GalleryQuote=()=> <div style={{padding:22}}><div style={{fontFamily:'monospace',fontSize:9,letterSpacing:2,color:'#8b9093'}}>REFERENCE · 关键说明</div><div style={{fontSize:25,fontWeight:800,color:'#30343e',margin:'13px 0'}}>用一张引文卡，把重点讲清楚。</div><div style={{height:2,background:'#ca704e',marginBottom:14}}/><div style={{fontSize:16,color:'#83888e'}}>背景保留证据，前景突出当前要说的话。</div></div>;
+const DemoScriptDocument=()=> <div style={{padding:'8px 24px',fontSize:8,lineHeight:'14px',color:'#484d55'}}><div style={{fontSize:11,fontWeight:700,marginBottom:12}}>一条讲解视频的脚本</div>{Array.from({length:12},(_,i)=><p key={i} style={{margin:'0 0 4px'}}>{i===2?'画面说明：把概念画出来，并让对象跟着讲解发生变化。':i===5?'动画备注：先停顿，再依次展示三个步骤，最后强调结论。':'从一个具体的问题开始，让内容、例子与画面一起帮助观众理解。'}</p>)}</div>;
 
 const PerspectiveDemo=({time}:{time:number})=><PerspectivePanel from={{x:220,y:114,ax:1,ay:0,bx:0,by:1}} to={{...tiltedPose,x:355,y:128}} progress={during(time,.45,2.1)} borderColor="#30343d" borderWidth={4}><DemoDocument/></PerspectivePanel>;
 
@@ -50,6 +51,10 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
   const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig(),time=frame/fps;
   let content;
   switch(id){
+    case 'script-document-guide':content=<ScriptDocumentGuide time={time} document={<DemoScriptDocument/>}/>;break;
+    case 'typewriter-comparison':content=<TypewriterComparison time={time} ownText={'先把问题讲清楚。\n再用一个例子展开。\n保留真实的经验与体会。'} aiText={'这是一个重要的时代。\n换句话说，值得注意的是，\n让我们一起探索更多可能。'} ownThumbnail={<PreparationArtwork kind={0}/>} aiThumbnail={<PathArtwork index={2}/>}/>;break;
+    case 'card-spotlight':content=<><div style={{position:'absolute',left:49,top:122,fontSize:20,fontWeight:800,color:'#34383d'}}>重点画面，向前展示</div><CardSpotlight time={time} from={{x:420,y:175,width:320,height:66}} content={<div style={{height:'100%',background:'#fff'}}><DemoDocument title="把重点放到前景" kind={2}/></div>} badge="讲完之后，回到原位"/></>;break;
+    case 'progress-race':content=<ProgressRace time={time}/>;break;
     case 'preparation-cards':content=<><PreparationCards time={time} cards={['脚本','配音','SRT','素材'].map((title,i)=>({id:String(i),title,artwork:<PreparationArtwork kind={i}/>}))}/><AgentPipeline time={time} startAt={3.4} output={<DemoDocument title="一条完整的讲解视频"/>}/></>;break;
     case 'agent-pipeline':content=<AgentPipeline time={time} output={<DemoDocument title="一条完整的讲解视频"/>}/>;break;
     case 'target-reticle':content=<TargetReticle time={time}/>;break;

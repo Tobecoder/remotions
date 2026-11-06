@@ -3,10 +3,10 @@ import {catalog, categories} from './catalog';
 import {draftMaterials} from './draftReview';
 
 describe('curated catalog', () => {
-  it('registers the eighteen standalone materials under their matching categories', () => {
-    expect(catalog).toHaveLength(18);
-    expect(new Set(catalog.map(item=>item.id)).size).toBe(18);
-    expect(catalog.filter(item=>item.category==='layouts').map(item=>item.component).sort()).toEqual(['PerspectivePanel','SceneThumbnail','FanCardDeck','SectionCollapse','DocumentFocusGallery'].sort());
+  it('registers the twenty-two standalone materials under their matching categories', () => {
+    expect(catalog).toHaveLength(22);
+    expect(new Set(catalog.map(item=>item.id)).size).toBe(22);
+    expect(catalog.filter(item=>item.category==='layouts').map(item=>item.component).sort()).toEqual(['PerspectivePanel','SceneThumbnail','FanCardDeck','SectionCollapse','DocumentFocusGallery','ScriptDocumentGuide','CardSpotlight'].sort());
     expect(catalog.find(item=>item.component==='ExplodedLayers')?.category).toBe('storytelling');
     expect(catalog.find(item=>item.component==='ChapterHeading')?.category).toBe('text-effects');
     expect(catalog.find(item=>item.component==='BlurredCollage')?.category).toBe('backgrounds');

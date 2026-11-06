@@ -11,9 +11,9 @@ import {PNG} from 'pngjs';
 const episode=path.dirname(fileURLToPath(import.meta.url));
 const root=path.resolve(episode,'../..');
 const out=path.join(root,'.verification/reference-opening');
-const preparation=process.argv.includes('--preparation'),beforeWork=process.argv.includes('--before-work'),firstPoint=process.argv.includes('--first-point'),extended=process.argv.includes('--20s');
-const duration=preparation?58:beforeWork?52.5:firstPoint?25:extended?20:10,totalFrames=duration*30;
-const compositionId=preparation?'Reference-Preparation':beforeWork?'Reference-Before-Work':firstPoint?'Reference-First-Point':extended?'Reference-Opening-20s':'Reference-Opening-10s';
+const script=process.argv.includes('--script'),preparation=process.argv.includes('--preparation'),beforeWork=process.argv.includes('--before-work'),firstPoint=process.argv.includes('--first-point'),extended=process.argv.includes('--20s');
+const duration=script?96:preparation?58:beforeWork?52.5:firstPoint?25:extended?20:10,totalFrames=duration*30;
+const compositionId=script?'Reference-Script-96s':preparation?'Reference-Preparation':beforeWork?'Reference-Before-Work':firstPoint?'Reference-First-Point':extended?'Reference-Opening-20s':'Reference-Opening-10s';
 await mkdir(out,{recursive:true});
 const serveUrl=await bundle({entryPoint:path.join(episode,'index.tsx'),publicDir:path.join(episode,'public'),outDir:path.join(out,'bundle')});
 const browserExecutable=process.env.REMOTION_BROWSER_EXECUTABLE||path.join(root,'.verification/browser/chrome-headless-shell.exe');
@@ -38,7 +38,7 @@ try {
   }
   let media;
   if(!process.argv.includes('--stills')){
-    const video=path.join(out,preparation?'reference-preparation.mp4':beforeWork?'reference-before-work.mp4':firstPoint?'reference-first-point.mp4':`reference-opening-${duration}s.mp4`);
+    const video=path.join(out,script?'reference-script-96s.mp4':preparation?'reference-preparation.mp4':beforeWork?'reference-before-work.mp4':firstPoint?'reference-first-point.mp4':`reference-opening-${duration}s.mp4`);
     await renderMedia({...shared,composition,codec:'h264',crf:18,pixelFormat:'yuv420p',outputLocation:video,concurrency:3,onProgress:({progress})=>{if(progress===1)console.log('MP4 rendered');}});
     const ffprobe=path.join(root,'node_modules/@remotion/compositor-win32-x64-msvc/ffprobe.exe');
     media=JSON.parse(execFileSync(ffprobe,['-v','error','-count_frames','-show_entries','stream=codec_name,width,height,r_frame_rate,nb_read_frames,duration','-show_entries','format=duration,size','-of','json',video],{encoding:'utf8'}));
@@ -46,5 +46,5 @@ try {
     assert.equal(media.streams[0].width,1920);assert.equal(media.streams[0].height,1080);
   }
   assert.equal(errors.length,0,errors.join('\n'));
-  await writeFile(path.join(out,preparation?'report-preparation.json':beforeWork?'report-before-work.json':firstPoint?'report-first-point.json':extended?'report-20s.json':'report.json'),JSON.stringify({duration,width:1920,height:1080,fps:30,errors,media,frames:reports},null,2));
+  await writeFile(path.join(out,script?'report-script.json':preparation?'report-preparation.json':beforeWork?'report-before-work.json':firstPoint?'report-first-point.json':extended?'report-20s.json':'report.json'),JSON.stringify({duration,width:1920,height:1080,fps:30,errors,media,frames:reports},null,2));
 }finally{await browser.close({silent:true});}

@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'document-focus-gallery' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'document-focus-gallery' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'script-document-guide' | 'typewriter-comparison' | 'card-spotlight' | 'progress-race';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -16,6 +16,20 @@ export const categories: CatalogCategory[] = [
 ];
 
 export const catalog: CatalogItem[] = [
+  {id:'script-document-guide',category:'layouts',name:'脚本文档标注',component:'ScriptDocumentGuide',description:'文档入场，逐项讲解并框出画面说明，最后归为清单',usage:'脚本讲解 · 文档说明',durationInFrames:360,posterFrame:315,code:`import {ScriptDocumentGuide} from '@remotions/animations';
+
+<ScriptDocumentGuide time={frame / fps} document={<ScriptContent />} />`},
+  {id:'typewriter-comparison',category:'text-effects',name:'打字对照',component:'TypewriterComparison',description:'两段文案先后输入、校验和淡化，再收为左右栏',usage:'文案对照 · 观点表达',durationInFrames:210,posterFrame:115,code:`import {TypewriterComparison} from '@remotions/animations';
+
+<TypewriterComparison time={frame / fps} ownText={ownText} aiText={aiText} />`},
+  {id:'card-spotlight',category:'layouts',name:'卡片放大回位',component:'CardSpotlight',description:'卡片放大到前景，背景淡化，强调后返回原位',usage:'案例展示 · 重点讲解',durationInFrames:150,posterFrame:72,code:`import {CardSpotlight} from '@remotions/animations';
+
+<CardSpotlight time={frame / fps} from={{x:420,y:175,width:320,height:66}}
+  content={<Preview />} badge="重点说明" />`},
+  {id:'progress-race',category:'charts',name:'进度对比',component:'ProgressRace',description:'两行进度形成快慢对照，配合完成标记、转圈和计数',usage:'方案对比 · 流程示意',durationInFrames:300,posterFrame:230,code:`import {ProgressRace} from '@remotions/animations';
+
+// 动画示意，不代表真实测评数据。
+<ProgressRace time={frame / fps} firstLabel="方案 A" secondLabel="方案 B" />`},
   {id:'preparation-cards',category:'storytelling',name:'素材准备卡',component:'PreparationCards',description:'素材卡依次浮入，停留后汇入 Agent',usage:'制作准备 · 内容归集',durationInFrames:192,posterFrame:75,code:`import {PreparationCards} from '@remotions/animations';
 
 <PreparationCards time={frame / fps} cards={cards} />`},

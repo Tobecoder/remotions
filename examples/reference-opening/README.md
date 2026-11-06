@@ -1,6 +1,10 @@
-# 原片开头到素材准备完成 · Remotion 复原候选
+# 原片开头到 1:36 · Remotion 复原候选
 
-最新入口为 http://localhost:3004/Reference-Preparation ，58 秒、1740 帧；补齐四张素材卡、汇入 Agent、连接 Remotion 并展示成片，停在“接下来 / 细拆上期的每个环节”标题出现之前。51.6 秒前复用已确认片段，原有四个 Composition 保留。新增「叙事动画 → 素材准备卡」「叙事动画 → Agent 成片流程」，共十八项；动作见 [素材准备拆解](PREPARATION-SHOTPLAN.md)。
+最新入口为 http://localhost:3004/Reference-Script-96s ，96 秒、2880 帧。58 秒前直接复用既有成片，续段见 [脚本章节拆解](SCRIPT-SHOTPLAN.md)。新增「版式转场 → 脚本文档标注、卡片放大回位」「文字特效 → 打字对照」「数据图表 → 进度对比」，共二十二项。停止在“还是重点聊两个大家比较关心的问题”，不进入后面的两个问题。
+
+导出：`node examples/reference-opening/render.mjs --script --video-only`，文件 `.verification/reference-opening/reference-script-96s.mp4`、报告 `report-script.json`。新段落只增加两张静态文档正文，共 53,257 字节；正文标注、打字、卡片放大回位、神经元和计数、进度快慢全部由代码实现。模型对比复原原片观点，仅是动画示意，不是独立实测。
+
+此前入口 http://localhost:3004/Reference-Preparation 为 58 秒、1740 帧，素材准备阶段结束；原有五个 Composition 均保留。此前动作见 [素材准备拆解](PREPARATION-SHOTPLAN.md)。
 
 导出：`node examples/reference-opening/render.mjs --preparation --video-only`，文件 `.verification/reference-opening/reference-preparation.mp4`、报告 `report-preparation.json`。案例仅新增四张小图标贴图，共 21,247 字节；卡片、Agent、连接和窗口均为代码动画，目录演示用原创 SVG 图标。毛绒小熊已由新生成的 16 帧图集替代早期两张参考角色图。
 
@@ -25,7 +29,7 @@ node examples/reference-opening/render.mjs
 
 输出 `.verification/reference-opening/reference-opening-10s.mp4` 及关键帧。先生成截图可加 `--stills`，快速四帧检查可再加 `--quick`。
 
-可复用组件位于 `packages/animations/src/reference-opening/`，现已按用户要求加入素材库，包入口公开导出十八个组件及类型。目录独立演示与本场景复用同一套实现。
+可复用组件位于 `packages/animations/src/reference-opening/`，现已按用户要求加入素材库，包入口公开导出二十二个组件及类型。目录独立演示与本场景复用同一套实现。
 
 预览服务启动后打开 http://localhost:3004/Reference-Opening-10s 。
 
