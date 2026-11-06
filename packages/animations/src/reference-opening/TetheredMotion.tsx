@@ -7,7 +7,8 @@ export const TetheredMotion=({time,startAt=0,running,caught,label='跑偏了！'
   const t=time-startAt,move=during(t,0,1.4),catchProgress=during(t,1.15,1.55);
   const pull=during(t,1.4,1.72),taut=during(t,1.15,1.4),settleTime=t-1.72;
   const settle=settleTime>0&&settleTime<.5?Math.sin(settleTime*24)*Math.exp(-settleTime*10)*4*(1-during(settleTime,.35,.5)):0;
-  const x=mix(60,554,move)-34*pull+settle,bob=-(Math.sin(Math.max(0,t)*18)**2)*8*(1-catchProgress);
+  const pullDistance=72;
+  const x=mix(60,520+pullDistance,move)-pullDistance*pull+settle,bob=-(Math.sin(Math.max(0,t)*18)**2)*8*(1-catchProgress);
   const lean=-6*Math.sin(Math.PI*during(t,1.35,1.72)),angle=lean*Math.PI/180;
   // Keep the rope attached to the same point as the actor leans around its waist.
   const ropeX=x-36*Math.cos(angle),ropeY=320+bob-36*Math.sin(angle);

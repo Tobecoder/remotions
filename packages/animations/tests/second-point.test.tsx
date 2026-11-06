@@ -74,10 +74,11 @@ describe('second point through the before-work title',()=>{
     const x=(frame:number)=>parseFloat(actor(frame).style.left);
     expect(Number(at(1032).querySelector('[data-tether-rope]')!.getAttribute('data-taut'))).toBeLessThan(1);
     expect(at(1044).querySelector('[data-tether-rope]')!.getAttribute('data-taut')).toBe('1');
-    expect(x(1044)-x(1050)).toBeGreaterThan(15);
+    expect(x(1044)-x(1050)).toBeGreaterThan(45);
     expect(x(1050)).toBeGreaterThan(x(1054));
     expect(actor(1048).style.transform).not.toBe('rotate(0deg)');
     expect(x(1069)).toBeCloseTo(446,8);
+    expect(x(1044)-x(1069)).toBeCloseTo(72,8);
     expect(actor(1069).style.top).toBe('205px');
     const rope=at(1069).querySelector('[data-tether-rope] path')!;
     expect(rope.getAttribute('d')).toBe('M62 306 Q273 313 484 320');
