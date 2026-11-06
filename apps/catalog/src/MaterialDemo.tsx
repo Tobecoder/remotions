@@ -51,7 +51,7 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
   const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig(),time=frame/fps;
   let content;
   switch(id){
-    case 'script-document-guide':content=<ScriptDocumentGuide time={time} document={<DemoScriptDocument/>}/>;break;
+    case 'script-document-guide':content=<ScriptDocumentGuide time={time} chapterFrom={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}} document={<DemoScriptDocument/>}/>;break;
     case 'typewriter-comparison':content=<TypewriterComparison time={time} ownText={'先把问题讲清楚。\n再用一个例子展开。\n保留真实的经验与体会。'} aiText={'这是一个重要的时代。\n换句话说，值得注意的是，\n让我们一起探索更多可能。'} ownThumbnail={<PreparationArtwork kind={0}/>} aiThumbnail={<PathArtwork index={2}/>}/>;break;
     case 'card-spotlight':content=<><div style={{position:'absolute',left:49,top:122,fontSize:20,fontWeight:800,color:'#34383d'}}>重点画面，向前展示</div><CardSpotlight time={time} from={{x:420,y:175,width:320,height:66}} content={<div style={{height:'100%',background:'#fff'}}><DemoDocument title="把重点放到前景" kind={2}/></div>} badge="讲完之后，回到原位"/></>;break;
     case 'progress-race':content=<ProgressRace time={time}/>;break;

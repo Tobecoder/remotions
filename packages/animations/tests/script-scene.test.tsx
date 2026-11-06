@@ -45,13 +45,30 @@ describe('script continuation through the requested 96-second boundary',()=>{
       expect(style(scene,'[data-script-stack]').opacity).toBe('1');
       expect(scene.querySelectorAll('[data-script-stack] [data-layer-label]')).toHaveLength(5);
       for(const label of scene.querySelectorAll('[data-script-stack] [data-layer-label]'))expect(label.getAttribute('opacity')).toBe('1');
-      expect(style(scene,'[data-script-phase="document"]').opacity).toBe('0');
+      expect(style(scene,'[data-script-window]').opacity).toBe('0');
+    }
+  });
+  it('uses one continuously visible ChapterHeading to slide from script to narration',()=>{
+    for(const frame of [1899,1902,1908,1914,1920]){
+      const scene=at(frame),header=scene.querySelector<HTMLElement>('[data-script-chapter]')!;
+      expect(header.style.opacity).toBe('1');
+      const headings=header.querySelectorAll<HTMLElement>('[data-chapter-heading]');
+      expect(headings).toHaveLength(1);
+      const title=headings[0].children[1] as HTMLElement;
+      expect(title.children[0].textContent).toBe('脚本');
+      expect(title.children[1].textContent).toBe('逐字稿');
+      const oldOffset=Number((title.children[0] as HTMLElement).style.transform.match(/translateY\(([-\d.]+)px\)/)![1]);
+      const newOffset=Number((title.children[1] as HTMLElement).style.transform.match(/translateY\(([-\d.]+)px\)/)![1]);
+      expect(newOffset-oldOffset).toBeCloseTo(58,8);
+      if(frame===1899)expect(newOffset).toBeCloseTo(58,8);
+      if(frame===1908){expect(newOffset).toBeGreaterThan(0);expect(newOffset).toBeLessThan(58);}
+      if(frame===1920)expect(newOffset).toBeCloseTo(0,8);
     }
   });
   it('shrinks the narration heading, reveals the visual instructions and highlights the document',()=>{
     const narration=at(1940),instructions=at(2058),highlight=at(2118),list=at(2196);
-    expect(Number(style(narration,'[data-script-narration]').fontSize.replace('px',''))).toBe(42);
-    expect(style(instructions,'[data-script-narration]').fontSize).toBe('18px');
+    expect(style(narration,'[data-script-narration]').transform).toBe('scale(1)');
+    expect(Number(style(instructions,'[data-script-narration]').transform.match(/scale\(([^)]+)\)/)![1])).toBeCloseTo(18/42,8);
     expect(style(instructions,'[data-script-instruction]').opacity).toBe('1');
     expect(style(instructions,'[data-script-highlight]').opacity).toBe('0');
     expect(style(highlight,'[data-script-highlight]').opacity).toBe('1');
@@ -96,7 +113,7 @@ describe('script continuation through the requested 96-second boundary',()=>{
   });
   it('shares component timing with every standalone catalogue demo and is seek-stable',()=>{
     for(const [offset,id,selectors] of [
-      [1908,'script-document-guide',['[data-script-narration]','[data-script-highlight]','[data-script-list]']],
+      [1854,'script-document-guide',['[data-script-narration]','[data-script-highlight]','[data-script-list]']],
       [2211,'typewriter-comparison',['[data-writing-own]','[data-writing-ai]']],
       [2373,'card-spotlight',['[data-script-phase="preview"] [data-spotlight-panel]']],
       [2604,'progress-race',['[data-race-row="0"]','[data-race-bar="0"]','[data-race-spinner]']],

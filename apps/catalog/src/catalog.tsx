@@ -16,9 +16,11 @@ export const categories: CatalogCategory[] = [
 ];
 
 export const catalog: CatalogItem[] = [
-  {id:'script-document-guide',category:'layouts',name:'脚本文档标注',component:'ScriptDocumentGuide',description:'文档入场，逐项讲解并框出画面说明，最后归为清单',usage:'脚本讲解 · 文档说明',durationInFrames:360,posterFrame:315,code:`import {ScriptDocumentGuide} from '@remotions/animations';
+  {id:'script-document-guide',category:'layouts',name:'脚本文档标注',component:'ScriptDocumentGuide',description:'章节标题切换到逐字稿，文档入场并标注画面说明',usage:'脚本讲解 · 文档说明',durationInFrames:390,posterFrame:345,code:`import {ScriptDocumentGuide} from '@remotions/animations';
 
-<ScriptDocumentGuide time={frame / fps} document={<ScriptContent />} />`},
+<ScriptDocumentGuide time={frame / fps}
+  chapterFrom={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}}
+  document={<ScriptContent />} />`},
   {id:'typewriter-comparison',category:'text-effects',name:'打字对照',component:'TypewriterComparison',description:'两段文案先后输入、校验和淡化，再收为左右栏',usage:'文案对照 · 观点表达',durationInFrames:210,posterFrame:115,code:`import {TypewriterComparison} from '@remotions/animations';
 
 <TypewriterComparison time={frame / fps} ownText={ownText} aiText={aiText} />`},

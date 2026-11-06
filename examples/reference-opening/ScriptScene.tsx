@@ -1,6 +1,6 @@
 import {useId} from 'react';
 import {AbsoluteFill,Img,staticFile,useCurrentFrame,useVideoConfig} from 'remotion';
-import {CardSpotlight,ChapterHeading,ExplodedLayers,ProgressRace,ScriptDocumentGuide,TypewriterComparison} from '../../packages/animations/src';
+import {CardSpotlight,ExplodedLayers,ProgressRace,ScriptDocumentGuide,TypewriterComparison} from '../../packages/animations/src';
 import {during,mix} from '../../packages/animations/src/reference-opening/motion';
 import {PaperBackground,Subtitle} from './OpeningScene';
 import {PreparationFilm} from './PreparationScene';
@@ -49,8 +49,7 @@ export const ScriptScene=()=>{
       <div data-script-stack style={{position:'absolute',inset:0,opacity:windowOpacity(time,58,63.6)}}>
         <ExplodedLayers time={time} startAt={57.6} layers={['音效','制作视频和 Skill','旁白和 SRT','素材','脚本'].map((label,i)=>({id:String(i),label,content:<OverviewLayer index={i}/>}))} screen={<Img src={staticFile('textures/screen-0.jpg')} style={cover}/>}/>
       </div>
-      <div data-script-chapter style={{position:'absolute',inset:0,opacity:during(time,61.8,62.1)*(1-during(time,63.3,63.6))}}><ChapterHeading x={49} y={124} from={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}} to={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}} progress={0}/></div>
-      <div data-script-phase="document" style={{position:'absolute',inset:0,opacity:windowOpacity(time,63.6,73.8)}}><ScriptDocumentGuide time={time} startAt={63.6} document={<ScriptPages time={time}/>}/></div>
+      <div data-script-phase="document" style={{position:'absolute',inset:0,opacity:windowOpacity(time,61.8,73.8)}}><ScriptDocumentGuide time={time} startAt={61.8} chapterFrom={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}} document={<ScriptPages time={time}/>}/></div>
       <div data-script-phase="comparison" style={{position:'absolute',inset:0,opacity:windowOpacity(time,73.7,87)}}>
         <TypewriterComparison time={time} startAt={73.7} ownText={ownText} aiText={aiText} ownThumbnail={<Img src={staticFile('textures/script-body-0.jpg')} style={cover}/>} aiThumbnail={<NeuronPreview time={3}/>}/>
         <div style={{position:'absolute',left:49,top:255,width:318,height:66,boxSizing:'border-box',padding:'16px 20px',borderRadius:9,background:'#fff',boxShadow:'0 7px 15px #30343e17',opacity:during(time,86.25,86.7)}}><div style={{fontSize:15,fontWeight:700,color:'#31363c'}}>分享经验与方法论</div><div style={{fontSize:8,marginTop:4,color:'#989b9d'}}>表达自己的真实体会</div></div>

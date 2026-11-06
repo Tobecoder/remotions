@@ -83,6 +83,8 @@ const Gallery = () => {
 
 脚本讲解新组件均接收 `time/startAt`：`ScriptDocumentGuide` 的 `document` 插槽负责正文，组件负责窗口、标题、标注框与清单；`TypewriterComparison` 接收 `ownText/aiText` 及可选缩略图，先输入两段内容再收成两栏。`CardSpotlight` 的 `from` 是原位置，`content` 可为 React 内容或接收放大进度的渲染函数，默认放大至 336×189，停留后回位，字号可随进度变化以避免拉伸文字。`ProgressRace` 可替换标题、两行名称、快慢标签，呈现示意进度与计数，不是实测图表。
 
+`ScriptDocumentGuide` 可传 `chapterFrom`（`number/title/description`）：先展示章节标题，完整停留 1.2 秒，再复用 `ChapterHeading` 原有的上下遮罩切换为“逐字稿”。文档在切换期间进入，后续讲解节奏整体从 1.8 秒后开始；不传该参数仍直接进入逐字稿。标题后续收为清单时使用等比缩放，不拉伸字形。
+
 `RisingCurve` 使用 `progress`（0–1）控制曲线、填充和端点，支持 `label/title/color`。曲线是概念趋势示意，不是实测数据图；同屏多实例使用独立渐变 ID。
 
 `DocumentFocusGallery` 的 `documents=[{id,content}]` 对应预设五卡布局，`focusContent` 为前景引文插槽，`caption` 和 `badge` 可替换；约 2.3–3 秒虚化背景并显示引文。`ConstraintRelease` 接收 `content`、默认六条 `tags` 和 `badge`；先展开标签，再掉落标签，2.3–2.8 秒显示窗口内容，3.3–3.8 秒放大窗口。内容均由调用方提供，不内置原片图片。
