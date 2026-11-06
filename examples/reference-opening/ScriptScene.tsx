@@ -1,9 +1,10 @@
-import {useId} from 'react';
 import {AbsoluteFill,Img,staticFile,useCurrentFrame,useVideoConfig} from 'remotion';
 import {CardSpotlight,ExplodedLayers,ProgressRace,ScriptDocumentGuide,TypewriterComparison} from '../../packages/animations/src';
 import {during,mix} from '../../packages/animations/src/reference-opening/motion';
 import {PaperBackground,Subtitle,ScriptPage,MaterialsPage,VoicePage,CaptionsPage,AnimationPage,ScreenContent} from './OpeningScene';
 import {PreparationFilm} from './PreparationScene';
+import {NeuronPreview} from '../../packages/animations/src/reference-opening/NeuronPreview';
+import {getAiComparisonThumbnailRect} from '../../packages/animations/src/reference-opening/TypewriterComparison';
 
 const cover={width:'100%',height:'100%',objectFit:'cover' as const,display:'block'};
 const windowOpacity=(time:number,start:number,end:number)=>during(time,start,start+.3)*(1-during(time,end-.3,end));
@@ -11,22 +12,6 @@ const ownText='我上期那条 16 分钟的讲解视频，\n是怎么从脚本�
 const aiText='在当今快速发展的时代，\n值得注意的是，\n这不仅仅是……更是……\n赋能 · 闭环 · 抓手\n让我们一起探索吧！';
 
 const ScriptPages=()=> <div data-script-pages style={{position:'absolute',inset:0}}>{[0,1].map(i=><Img key={i} src={staticFile(`textures/script-body-${i}.jpg`)} style={{...cover,position:'absolute',left:0,top:`${i*50}%`,height:'50%'}}/>)}</div>;
-
-/** Original code illustration inside the sample video card, not a reference clip. */
-const NeuronPreview=({time}:{time:number})=>{
-  const id=`neuron-${useId().replace(/:/g,'')}`,t=Math.max(0,time);
-  const count=t<.6?'':t<1?'1':t<1.5?'50':t<2?'8400万':t<2.5?'390亿':'860亿';
-  return <svg data-neuron-preview width="100%" height="100%" viewBox="0 0 336 189" preserveAspectRatio="xMidYMid meet" style={{display:'block',background:'#080e1b'}}>
-    <defs><radialGradient id={id}><stop stopColor="#17294a"/><stop offset="1" stopColor="#060b16"/></radialGradient></defs><rect width="336" height="189" fill={`url(#${id})`}/>
-    {Array.from({length:28},(_,i)=>{
-      const angle=i*2.399963,x=168+Math.cos(angle)*(25+(i%8)*18),y=88+Math.sin(angle)*(15+(i%6)*12),r=1+(i%3)*.6;
-      return <g key={i} opacity={mix(.15,.7,during(t,.1+i*.025,.7+i*.025))*(.8+.2*Math.sin(t*2+i))} stroke="#9caed7" strokeWidth=".55"><circle cx={x} cy={y} r={r} fill="#6c8bb8"/>{Array.from({length:5},(_,n)=>{const a=n*Math.PI*.4+i,len=8+(n+i)%4*4;return <path key={n} d={`M${x} ${y}l${Math.cos(a)*len} ${Math.sin(a)*len}m${-Math.cos(a)*len*.35} ${-Math.sin(a)*len*.35}l${Math.cos(a+.7)*len*.4} ${Math.sin(a+.7)*len*.4}`} fill="none"/>;})}</g>;
-    })}
-    <text data-neuron-count x="168" y="99" textAnchor="middle" fill="#f1f4ff" fontFamily="Georgia,serif" fontSize="32">{count}</text>
-    {count&&<text x="168" y="115" textAnchor="middle" fill="#afbdd3" fontSize="6" letterSpacing="2">人脑中的神经元</text>}
-    <text x="168" y="172" textAnchor="middle" fill="#d9dfeb" fontSize="7">在每个人的大脑里……</text>
-  </svg>;
-};
 
 const OverviewLayer=({index,time}:{index:number;time:number})=>index===4?<ScriptPage time={time}/>:index===3?<MaterialsPage time={time}/>:index===2?<CaptionsPage time={time}/>:index===1?<AnimationPage time={time}/>:<VoicePage time={time}/>;
 
@@ -48,10 +33,10 @@ export const ScriptScene=()=>{
       </div>
       <div data-script-phase="document" style={{position:'absolute',inset:0,opacity:windowOpacity(time,61.8,73.8)}}><ScriptDocumentGuide time={time} startAt={61.8} chapterFrom={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}} document={<ScriptPages/>} scrollDistance={233}/></div>
       <div data-script-phase="comparison" style={{position:'absolute',inset:0,opacity:windowOpacity(time,73.7,87)}}>
-        <TypewriterComparison time={time} startAt={73.7} ownText={ownText} aiText={aiText} ownThumbnail={<Img src={staticFile('textures/script-body-0.jpg')} style={cover}/>} aiThumbnail={<NeuronPreview time={3}/>}/>
+        <TypewriterComparison time={time} startAt={73.7} ownText={ownText} aiText={aiText} ownThumbnail={<Img src={staticFile('textures/script-body-0.jpg')} style={cover}/>} aiThumbnail={<NeuronPreview time={time-79.1}/>}/>
         <div style={{position:'absolute',left:49,top:255,width:318,height:66,boxSizing:'border-box',padding:'16px 20px',borderRadius:9,background:'#fff',boxShadow:'0 7px 15px #30343e17',opacity:during(time,86.25,86.7)}}><div style={{fontSize:15,fontWeight:700,color:'#31363c'}}>分享经验与方法论</div><div style={{fontSize:8,marginTop:4,color:'#989b9d'}}>表达自己的真实体会</div></div>
       </div>
-      <div data-script-phase="preview" style={{position:'absolute',inset:0,opacity:windowOpacity(time,79.1,82.9)}}><CardSpotlight time={time} startAt={79.1} from={{x:420,y:175,width:320,height:66}} content={<NeuronPreview time={time-79.1}/>} badge="这种脚本，可以交给 AI 写"/></div>
+      <div data-script-phase="preview" style={{position:'absolute',inset:0,opacity:time>=79.1&&time<82.9?1:0}}><CardSpotlight time={time} startAt={79.1} from={getAiComparisonThumbnailRect(time,73.7)} fromRadius={3} content={<NeuronPreview time={time-79.1}/>} badge="这种脚本，可以交给 AI 写"/></div>
       <div data-script-phase="takeaway" style={{position:'absolute',inset:0,opacity:windowOpacity(time,83.1,86.9)}}><CardSpotlight time={time} startAt={83.1} from={{x:49,y:255,width:318,height:66}} content={p=><div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100%',fontWeight:900,fontSize:mix(17,43,p),whiteSpace:'nowrap',color:'#292c33'}}>经验 · 方法论</div>} badge="AI 写的根本没法看"/></div>
       <div data-script-phase="race" style={{position:'absolute',inset:0,opacity:windowOpacity(time,86.8,95.7)}}><ProgressRace time={time} startAt={86.8} title="AI 写脚本，谁更行？" firstLabel="Gemini" secondLabel="GPT" winnerLabel="一骑绝尘" slowLabel="差等生 · 车轱辘话水字数"/></div>
       <Subtitle time={time} text={subtitle}/>

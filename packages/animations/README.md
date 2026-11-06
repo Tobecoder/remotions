@@ -81,7 +81,7 @@ const Gallery = () => {
 
 `PreparationCards` 接收 `time/startAt/cards`，每项含 `id/title/artwork` 和可选 `description`；按四卡版式排列。相对 0.15 秒开始逐张入场，3.35–3.95 秒向 Agent 的位置汇聚并淡出。`AgentPipeline` 接收 `time/startAt/output`，以及可选的 `agentLabel/toolLabel`，先显现 Agent，再展开右侧输出窗口。目录的素材准备演示将两者串接，结尾保持成片窗口，避免停在空白帧。
 
-脚本讲解新组件均接收 `time/startAt`：`ScriptDocumentGuide` 的 `document` 插槽负责正文，组件负责窗口、标题、标注框与清单；`TypewriterComparison` 接收 `ownText/aiText` 及可选缩略图，先输入两段内容再收成两栏。`CardSpotlight` 的 `from` 是原位置，`content` 可为 React 内容或接收放大进度的渲染函数，默认放大至 336×189，停留后回位，字号可随进度变化以避免拉伸文字。`ProgressRace` 可替换标题、两行名称、快慢标签，呈现示意进度与计数，不是实测图表。
+脚本讲解新组件均接收 `time/startAt`：`ScriptDocumentGuide` 的 `document` 插槽负责正文，组件负责窗口、标题、标注框与清单；`TypewriterComparison` 接收 `ownText/aiText` 及可选缩略图，先输入两段内容再收成两栏。`CardSpotlight` 的 `from` 是被放大内容的实际位置和尺寸（缩略图应传缩略图矩形，而非外层卡片），`fromRadius` 可匹配原有圆角，默认 10。`content` 可为 React 内容或接收放大进度的渲染函数，默认放大至 336×189，停留后回位，字号可随进度变化以避免拉伸文字。动态内容应与原缩略图使用同一时间值，避免放大或归位时重播。`ProgressRace` 可替换标题、两行名称、快慢标签，呈现示意进度与计数，不是实测图表。
 
 `ScriptDocumentGuide` 可传 `chapterFrom`（`number/title/description`）：先展示章节标题，完整停留 1.2 秒，再复用 `ChapterHeading` 原有的上下遮罩切换为“逐字稿”。文档在切换期间进入，后续讲解节奏整体从 1.8 秒后开始；不传该参数仍直接进入逐字稿。标题后续收为清单时使用等比缩放，不拉伸字形。
 

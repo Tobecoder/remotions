@@ -6,6 +6,8 @@ import type {MaterialId} from './catalog';
 import {PreparationCards,AgentPipeline,ScriptDocumentGuide,TypewriterComparison,CardSpotlight,ProgressRace} from '../../../packages/animations/src';
 import {PreparationArtwork} from './PreparationArtwork';
 import {PanelScroll,LiveWaveform,LiveTimeline,LiveCaptionLines} from '../../../packages/animations/src/reference-opening/LivePanelContent';
+import {NeuronPreview} from '../../../packages/animations/src/reference-opening/NeuronPreview';
+import {getAiComparisonThumbnailRect} from '../../../packages/animations/src/reference-opening/TypewriterComparison';
 
 const colors=['#405c81','#76a8b2','#c78661','#a99ac1','#cb9e66'];
 
@@ -28,6 +30,16 @@ const GalleryQuote=()=> <div style={{padding:22}}><div style={{fontFamily:'monos
 const DemoScriptDocument=()=> <div style={{padding:'8px 24px',fontSize:8,lineHeight:'14px',color:'#484d55'}}><div style={{fontSize:11,fontWeight:700,marginBottom:12}}>一条讲解视频的脚本</div>{Array.from({length:24},(_,i)=><p key={i} style={{margin:'0 0 4px'}}>{i===15?'画面说明：把概念画出来，并让对象跟着讲解发生变化。':i===18?'动画备注：先停顿，再依次展示三个步骤，最后强调结论。':'从一个具体的问题开始，让内容、例子与画面一起帮助观众理解。'}</p>)}</div>;
 
 const PerspectiveDemo=({time}:{time:number})=><PerspectivePanel from={{x:220,y:114,ax:1,ay:0,bx:0,by:1}} to={{...tiltedPose,x:355,y:128}} progress={during(time,.45,2.1)} borderColor="#30343d" borderWidth={4}><DemoDocument/></PerspectivePanel>;
+
+const SpotlightDemo=({time}:{time:number})=>{
+  const from=getAiComparisonThumbnailRect(time+5.4);
+  return <>
+    <div style={{position:'absolute',left:49,top:122,fontSize:20,fontWeight:800,color:'#34383d'}}>从缩略图放大，讲完再归位</div>
+    <div style={{position:'absolute',left:420,top:175,width:320,height:66,background:'#fff',borderRadius:9}}><div style={{position:'absolute',left:81,top:20,fontSize:15,fontWeight:700,color:'#34373d'}}>『Vibe 知识大赏』</div></div>
+    <div data-spotlight-source-thumbnail style={{position:'absolute',left:from.x,top:from.y,width:from.width,height:from.height,borderRadius:3,overflow:'hidden'}}><NeuronPreview time={time}/></div>
+    <CardSpotlight time={time} from={from} fromRadius={3} content={<NeuronPreview time={time}/>} badge="讲完之后，回到原位"/>
+  </>;
+};
 
 const LayersDemo=({time}:{time:number})=><ExplodedLayers time={time} front={{x:220,y:94,ax:1,ay:0,bx:0,by:1}} pose={{...tiltedPose,x:291}} screen={elapsed=><DemoDocument title="一条完整的讲解视频" kind={3} time={elapsed}/>} layers={[
   {id:'animation',label:'动画',content:elapsed=><DemoDocument title="逐帧编排" kind={3} time={elapsed}/>},
@@ -54,7 +66,7 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
   switch(id){
     case 'script-document-guide':content=<ScriptDocumentGuide time={time} chapterFrom={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}} document={<DemoScriptDocument/>} scrollDistance={240}/>;break;
     case 'typewriter-comparison':content=<TypewriterComparison time={time} ownText={'先把问题讲清楚。\n再用一个例子展开。\n保留真实的经验与体会。'} aiText={'这是一个重要的时代。\n换句话说，值得注意的是，\n让我们一起探索更多可能。'} ownThumbnail={<PreparationArtwork kind={0}/>} aiThumbnail={<PathArtwork index={2}/>}/>;break;
-    case 'card-spotlight':content=<><div style={{position:'absolute',left:49,top:122,fontSize:20,fontWeight:800,color:'#34383d'}}>重点画面，向前展示</div><CardSpotlight time={time} from={{x:420,y:175,width:320,height:66}} content={<div style={{height:'100%',background:'#fff'}}><DemoDocument title="把重点放到前景" kind={2}/></div>} badge="讲完之后，回到原位"/></>;break;
+    case 'card-spotlight':content=<SpotlightDemo time={time}/>;break;
     case 'progress-race':content=<ProgressRace time={time}/>;break;
     case 'preparation-cards':content=<><PreparationCards time={time} cards={['脚本','配音','SRT','素材'].map((title,i)=>({id:String(i),title,artwork:<PreparationArtwork kind={i}/>}))}/><AgentPipeline time={time} startAt={3.4} output={<DemoDocument title="一条完整的讲解视频"/>}/></>;break;
     case 'agent-pipeline':content=<AgentPipeline time={time} output={<DemoDocument title="一条完整的讲解视频"/>}/>;break;

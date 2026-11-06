@@ -108,7 +108,7 @@ describe('script continuation through the requested 96-second boundary',()=>{
     expect(style(compact,'[data-writing-ai]').height).toBe('66px');
   });
   it('expands each spotlight and returns it without stretching the headline',()=>{
-    for(const [middle,end,index,left,top] of [[2400,2481,0,420,175],[2520,2600,1,49,255]]){
+    for(const [middle,end,index,left,top] of [[2400,2481,0,435,187],[2520,2600,1,49,255]]){
       const expanded=at(middle).querySelectorAll<HTMLElement>('[data-spotlight-panel]')[index];
       const returned=at(end).querySelectorAll<HTMLElement>('[data-spotlight-panel]')[index];
       expect(expanded.style.width).toBe('336px');expect(expanded.style.height).toBe('189px');
@@ -116,6 +116,33 @@ describe('script continuation through the requested 96-second boundary',()=>{
       expect(expanded.style.transform).toBe('');
     }
     expect(at(2463).querySelector('[data-script-phase="preview"] [data-neuron-count]')!.textContent).toBe('860亿');
+  });
+  it('enlarges the black preview directly from the thumbnail and returns to that thumbnail',()=>{
+    for(const frame of [2373,2478,2484]){
+      const scene=at(frame),card=style(scene,'[data-writing-ai]'),panel=style(scene,'[data-script-phase="preview"] [data-spotlight-panel]');
+      expect(parseFloat(panel.left)).toBeCloseTo(parseFloat(card.left)+15,7);
+      expect(parseFloat(panel.top)).toBeCloseTo(parseFloat(card.top)+(parseFloat(card.height)-42)/2,7);
+      expect(panel.width).toBe('54px');expect(panel.height).toBe('42px');expect(panel.borderRadius).toBe('3px');
+      expect(style(scene,'[data-script-phase="preview"]').opacity).toBe('1');
+    }
+    for(const frame of [2374,2375,2376])expect(style(at(frame),'[data-script-phase="preview"]').opacity).toBe('1');
+  });
+  it('keeps one continuous neuron counter across the thumbnail, enlargement and return',()=>{
+    let previous=0;
+    for(const frame of [2364,2372,2373,2374,2385,2394,2405,2406,2417,2418,2432,2447,2450,2460,2477,2478,2487,2490]){
+      const scene=at(frame),thumbnail=scene.querySelector('[data-writing-ai] [data-neuron-preview]')!,spotlight=scene.querySelector('[data-script-phase="preview"] [data-neuron-preview]')!;
+      expect(thumbnail.querySelector('[data-neuron-count]')!.textContent).toBe(spotlight.querySelector('[data-neuron-count]')!.textContent);
+      expect(thumbnail.getAttribute('data-neuron-value')).not.toBeNull();
+      const value=Number(thumbnail.getAttribute('data-neuron-value'));
+      expect(value).toBe(Number(spotlight.getAttribute('data-neuron-value')));
+      expect(value).toBeGreaterThanOrEqual(previous);previous=value;
+    }
+    const valueAt=(frame:number)=>Number(at(frame).querySelector('[data-writing-ai] [data-neuron-preview]')!.getAttribute('data-neuron-value'));
+    for(const frame of [2405,2417,2432]){
+      const delta=valueAt(frame+1)-valueAt(frame);
+      expect(delta).toBeGreaterThan(0);expect(delta).toBeLessThan(5_000_000_000);
+    }
+    expect(valueAt(2478)).toBe(86_000_000_000);
   });
   it('finishes the first progress row while the second continues spinning and counting',()=>{
     const finished=at(2730),later=at(2790),latest=at(2835);
