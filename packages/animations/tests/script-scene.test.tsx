@@ -73,7 +73,29 @@ describe('script continuation through the requested 96-second boundary',()=>{
     expect(style(instructions,'[data-script-highlight]').opacity).toBe('0');
     expect(style(highlight,'[data-script-highlight]').opacity).toBe('1');
     expect(style(list,'[data-script-list]').opacity).toBe('1');
-    expect(style(list,'[data-script-instruction]').opacity).toBe('0');
+    expect(style(list,'[data-script-instruction]').opacity).toBe('1');
+  });
+  it('shrinks the same instruction title into the second list item instead of replacing it',()=>{
+    let previousScale=1,previousLeft=49;
+    for(const frame of [2169,2172,2175,2178,2181,2184,2196]){
+      const scene=at(frame),instruction=style(scene,'[data-script-instruction]');
+      expect(instruction.opacity).toBe('1');
+      expect(instruction.transform).toMatch(/^scale\(/);
+      const scale=Number(instruction.transform.match(/scale\(([^)]+)\)/)![1]);
+      expect(scale).toBeLessThanOrEqual(previousScale);
+      expect(parseFloat(instruction.left)).toBeGreaterThanOrEqual(previousLeft);
+      previousScale=scale;previousLeft=parseFloat(instruction.left);
+      expect(scene.querySelectorAll('[data-script-instruction-title]')).toHaveLength(1);
+      expect(scene.querySelector('[data-script-instruction-title]')!.textContent).toBe('提示词 · 说明');
+      expect(scene.querySelector('[data-script-list]')!.textContent).not.toContain('提示词');
+      clock.frame=frame-1854;
+      const demo=dom(<MaterialDemo id="script-document-guide"/>);
+      const demoStyle=style(demo,'[data-script-instruction]');
+      for(const key of ['left','top','opacity'] as const)expect(parseFloat(instruction[key])).toBeCloseTo(parseFloat(demoStyle[key]),7);
+      expect(scale).toBeCloseTo(Number(demoStyle.transform.match(/scale\(([^)]+)\)/)![1]),7);
+      if(frame===2169){expect(scale).toBe(1);expect(instruction.left).toBe('49px');expect(instruction.top).toBe('199px');}
+      if(frame>=2184){expect(scale).toBe(.6);expect(instruction.left).toBe('75px');expect(parseFloat(instruction.top)+36*scale).toBeCloseTo(191,8);}
+    }
   });
   it('types the personal text first, then AI text, before collecting them into columns',()=>{
     const early=at(2223),later=at(2250),ai=at(2300),compact=at(2380);
