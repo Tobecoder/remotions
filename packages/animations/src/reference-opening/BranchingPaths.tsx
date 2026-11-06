@@ -1,15 +1,22 @@
 import type {ReactNode} from 'react';
-import {during,mix} from './motion';
+import {clamp,during,mix} from './motion';
 
 export type PathCard={id:string;content:ReactNode;x:number;y:number;width?:number;height?:number;rotation?:number;selected?:boolean;enterAt?:number};
-export type BranchingPathsProps={time:number;startAt?:number;cards:readonly PathCard[];fromLabel?:string;toLabel?:string;stamp?:string;routeLabel?:string;};
+export type BranchingPathsProps={time:number;startAt?:number;cards:readonly PathCard[];fromLabel?:string;toLabel?:string;stamp?:string;routeLabel?:string;resultLabel?:string;};
+
+const cubic=(a:number,b:number,c:number,d:number,p:number)=>(1-p)**3*a+3*(1-p)**2*p*b+3*(1-p)*p*p*c+p**3*d;
+const routePoint=(progress:number)=>{
+  const p=clamp(progress)*2;
+  return p<=1?{x:cubic(124,205,287,400,p),y:cubic(294,388,348,294,p)}:{x:cubic(400,513,580,678,p-1),y:cubic(294,240,206,294,p-1)};
+};
 
 /** Several routes converge on a result; cross out a single answer, then emphasize one route. */
-export const BranchingPaths=({time,startAt=0,cards,fromLabel='想法',toLabel='成片',stamp='标准答案',routeLabel='我摸索的一条路'}:BranchingPathsProps)=>{
+export const BranchingPaths=({time,startAt=0,cards,fromLabel='想法',toLabel='成片',stamp='标准答案',routeLabel='我摸索的一条路',resultLabel='启发 · 灵感'}:BranchingPathsProps)=>{
   const t=time-startAt;
   const reveal=during(t,0,.65),highlight=during(t,4.1,4.9);
   const dim=during(t,4.1,4.7),stampIn=during(t,2.3,2.6),strike=during(t,2.85,3.15),stampOut=during(t,3.9,4.3);
   const paths=['M124 294 Q400 114 678 294','M124 294 Q400 244 678 294','M124 294 Q400 474 678 294'];
+  const point=routePoint((t-4.1)/1.9),traceOpacity=during(t,4.1,4.25),result=during(t,6.25,6.65);
   return <div data-branching-paths style={{position:'absolute',inset:0}}>
     <svg width="800" height="450" viewBox="0 0 800 450" style={{position:'absolute',inset:0,overflow:'visible'}}>
       {paths.map((path,i)=><path key={path} data-branch-route={i} d={path} pathLength="1" strokeDasharray="1" strokeDashoffset={1-reveal} stroke="#575c60" strokeWidth=".9" fill="none" opacity={mix(.8,.22,dim)}/>)}
@@ -27,5 +34,7 @@ export const BranchingPaths=({time,startAt=0,cards,fromLabel='想法',toLabel='�
       {stamp}<div data-answer-strike style={{position:'absolute',left:16,right:16,top:'50%',height:2,background:'#d97053',transformOrigin:'left',transform:`scaleX(${strike})`}}/>
     </div>
     <div data-route-label style={{position:'absolute',left:494,top:127,borderRadius:18,padding:'6px 10px',border:'1px solid #e1d8cc',background:'#fffffff0',fontSize:12,fontWeight:700,color:'#cc6b4b',boxShadow:'0 4px 9px #30343e10',opacity:dim,transform:`translateY(${mix(5,0,dim)}px)`}}>{routeLabel}</div>
+    <svg data-route-tracer width="800" height="450" viewBox="0 0 800 450" style={{position:'absolute',inset:0,overflow:'visible',opacity:traceOpacity}} aria-hidden="true"><circle cx={point.x} cy={point.y} r="11" fill="#de704d" opacity=".14"/><circle data-route-dot cx={point.x} cy={point.y} r="6" fill="#df704b" stroke="#efae85" strokeWidth="2"/></svg>
+    <div data-route-result style={{position:'absolute',left:628,top:348,padding:'5px 10px',borderRadius:18,background:'#da704e',color:'#fff',fontSize:12,fontWeight:700,boxShadow:'0 3px 7px #d16b4c44',opacity:result,transform:`translateY(${mix(5,0,result)}px)`}}>{resultLabel}</div>
   </div>;
 };

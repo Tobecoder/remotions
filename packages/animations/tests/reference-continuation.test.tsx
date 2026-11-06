@@ -11,12 +11,13 @@ vi.mock('remotion',()=>({
   AbsoluteFill:({children,style}:{children?:ReactNode;style?:CSSProperties})=><div style={style}>{children}</div>,
   Img:({src,style}:{src:string;style?:CSSProperties})=><img src={src} style={style}/>,
 }));
-import {Opening20Scene} from '../../../examples/reference-opening/ContinuationScene';
+import {FirstPointScene,Opening20Scene} from '../../../examples/reference-opening/ContinuationScene';
 import {OpeningScene} from '../../../examples/reference-opening/OpeningScene';
 import {MaterialDemo} from '../../../apps/catalog/src/MaterialDemo';
 
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
 const filmAt=(frame:number)=>{clock.frame=frame;return dom(<Opening20Scene/>);};
+const pointAt=(frame:number)=>{clock.frame=frame;return dom(<FirstPointScene/>);};
 const styles=(doc:Document,selector:string)=>Array.from(doc.querySelectorAll(selector),el=>el.getAttribute('style'));
 // Subtracting a film start offset can differ from a local frame time by machine epsilon.
 const rounded=(value:string|null)=>value?.replace(/-?\d+\.\d{7,}/g,n=>String(Number(Number(n).toFixed(6))));
@@ -71,7 +72,7 @@ describe('observed 11–20 second continuation',()=>{
       const film=filmAt(447+localFrame);
       clock.frame=localFrame;
       const catalog=dom(<MaterialDemo id="branching-paths"/>);
-      expect(styles(film,'[data-path-card], [data-path-outline], [data-answer-stamp], [data-answer-strike], [data-route-label]').map(rounded)).toEqual(styles(catalog,'[data-path-card], [data-path-outline], [data-answer-stamp], [data-answer-strike], [data-route-label]').map(rounded));
+      expect(styles(film,'[data-path-card], [data-path-outline], [data-answer-stamp], [data-answer-strike], [data-route-label], [data-route-tracer], [data-route-result]').map(rounded)).toEqual(styles(catalog,'[data-path-card], [data-path-outline], [data-answer-stamp], [data-answer-strike], [data-route-label], [data-route-tracer], [data-route-result]').map(rounded));
       for(const selector of ['[data-branch-route]','[data-selected-route]']){
         const geometry=(doc:Document)=>Array.from(doc.querySelectorAll(selector),el=>['d','stroke-dashoffset','opacity'].map(attr=>rounded(el.getAttribute(attr))));
         expect(geometry(film)).toEqual(geometry(catalog));
@@ -95,6 +96,41 @@ describe('observed 11–20 second continuation',()=>{
         expect(parseFloat(card.style.left)+parseFloat(card.style.width)).toBeLessThanOrEqual(800);
         expect(parseFloat(card.style.top)+parseFloat(card.style.height)).toBeLessThanOrEqual(450);
       }
+    }
+  });
+  it('moves the light forward to the result before revealing the inspiration label',()=>{
+    let previousX=0;
+    for(const frame of [571,590,610,627,640]){
+      const document=pointAt(frame),dot=document.querySelector('[data-route-dot]')!;
+      const x=Number(dot.getAttribute('cx'));
+      expect(x).toBeGreaterThanOrEqual(previousX);previousX=x;
+      if(frame>=627){expect(x).toBeCloseTo(678,7);expect(Number(dot.getAttribute('cy'))).toBeCloseTo(294,7);}
+    }
+    expect(pointAt(620).querySelector<HTMLElement>('[data-route-result]')!.style.opacity).toBe('0');
+    const resolved=pointAt(650).querySelector<HTMLElement>('[data-route-result]')!;
+    expect(resolved.style.opacity).toBe('1');expect(resolved.textContent).toBe('启发 · 灵感');
+    expect(pointAt(650).body.textContent).toContain('如果能让你收获一些启发或者灵感');
+  });
+  it('finishes with the first point archived and holds before any second-point content',()=>{
+    const before=pointAt(709),middle=pointAt(722),end=pointAt(749);
+    expect(before.querySelector<HTMLElement>('[data-section-collapse-scene]')!.style.opacity).toBe('1');
+    expect(before.querySelector<HTMLElement>('[data-section-bookmark]')!.style.opacity).toBe('0');
+    const middleBookmark=Number(middle.querySelector<HTMLElement>('[data-section-bookmark]')!.style.opacity);
+    expect(middleBookmark).toBeGreaterThan(0);expect(middleBookmark).toBeLessThan(1);
+    expect(end.querySelector<HTMLElement>('[data-section-collapse-scene]')!.style.opacity).toBe('0');
+    const bookmark=end.querySelector<HTMLElement>('[data-section-bookmark]')!;
+    expect(bookmark.style.opacity).toBe('1');expect(bookmark.textContent).toBe('1没有标准答案');
+    expect(bookmark.style.left).toBe('49px');expect(bookmark.style.top).toBe('47px');
+    expect(end.body.textContent).toContain('那这期分享就值得了');
+    expect(end.body.textContent).not.toMatch(/先开枪|后瞄准|第二/);
+    expect(styles(pointAt(732),'[data-section-collapse-scene], [data-section-bookmark]')).toEqual(styles(end,'[data-section-collapse-scene], [data-section-bookmark]'));
+  });
+  it('shares the final collapse motion with its independent library material',()=>{
+    for(const frame of [709,711,720,728,732,749]){
+      const film=pointAt(frame);
+      clock.frame=frame-660;
+      const catalog=dom(<MaterialDemo id="section-collapse"/>);
+      expect(styles(film,'[data-section-collapse-scene], [data-section-bookmark]').map(rounded)).toEqual(styles(catalog,'[data-section-collapse-scene], [data-section-bookmark]').map(rounded));
     }
   });
 });

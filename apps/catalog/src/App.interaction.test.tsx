@@ -22,11 +22,11 @@ afterAll(()=>vi.unstubAllGlobals());
 afterEach(()=>{cleanup();players.clear();});
 
 describe('classified material library', () => {
-  it('opens the three layout cards and shows nine materials without the withdrawn draft', () => {
+  it('opens the four layout cards and shows ten materials without the withdrawn draft', () => {
     const {container} = render(<App />);
-    expect(screen.getByTestId('material-count').textContent).toBe('09');
-    expect(container.querySelectorAll('[data-material-id]')).toHaveLength(3);
-    expect(screen.getAllByRole('button', {name: /播放预览/})).toHaveLength(3);
+    expect(screen.getByTestId('material-count').textContent).toBe('10');
+    expect(container.querySelectorAll('[data-material-id]')).toHaveLength(4);
+    expect(screen.getAllByRole('button', {name: /播放预览/})).toHaveLength(4);
     expect(screen.queryByText('截图窗口聚焦')).toBeNull();
     expect(screen.queryByText(/查看原片/)).toBeNull();
   });

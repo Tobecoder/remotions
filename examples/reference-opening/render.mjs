@@ -11,7 +11,9 @@ import {PNG} from 'pngjs';
 const episode=path.dirname(fileURLToPath(import.meta.url));
 const root=path.resolve(episode,'../..');
 const out=path.join(root,'.verification/reference-opening');
-const extended=process.argv.includes('--20s'),duration=extended?20:10,totalFrames=duration*30;
+const firstPoint=process.argv.includes('--first-point'),extended=process.argv.includes('--20s');
+const duration=firstPoint?25:extended?20:10,totalFrames=duration*30;
+const compositionId=firstPoint?'Reference-First-Point':extended?'Reference-Opening-20s':'Reference-Opening-10s';
 await mkdir(out,{recursive:true});
 const serveUrl=await bundle({entryPoint:path.join(episode,'index.tsx'),publicDir:path.join(episode,'public'),outDir:path.join(out,'bundle')});
 const browserExecutable=process.env.REMOTION_BROWSER_EXECUTABLE||path.join(root,'.verification/browser/chrome-headless-shell.exe');
@@ -21,9 +23,9 @@ const errors=[];
 const shared={serveUrl,puppeteerInstance:browser,browserExecutable,port:3368,onBrowserLog:log=>{if(log.type==='error')errors.push(log.text);}};
 try {
   const compositions=await getCompositions(serveUrl,{puppeteerInstance:browser,port:3368});
-  const composition=compositions.find(item=>item.id===(extended?'Reference-Opening-20s':'Reference-Opening-10s'));
+  const composition=compositions.find(item=>item.id===compositionId);
   assert(composition);assert.equal(composition.durationInFrames,totalFrames);assert.equal(composition.fps,30);
-  const frames=process.argv.includes('--video-only')?[]:process.argv.includes('--quick')?(extended?[299,335,375,599]:[12,99,191,285]):extended?[299,300,315,330,345,360,385,405,450,480,520,550,575,599]:[0,12,72,84,96,108,135,150,165,180,191,240,255,263,270,285,299,96];
+  const frames=process.argv.includes('--video-only')?[]:process.argv.includes('--quick')?(firstPoint?[599,630,720,749]:extended?[299,335,375,599]:[12,99,191,285]):firstPoint?[299,314,385,510,548,599,615,630,660,690,711,720,732,749]:extended?[299,300,315,330,345,360,385,405,450,480,520,550,575,599]:[0,12,72,84,96,108,135,150,165,180,191,240,255,263,270,285,299,96];
   const reports=[];let repeat;
   for(let i=0;i<frames.length;i++){
     const frame=frames[i],file=path.join(out,`frame-${frame}${i===frames.length-1&&frame===96?'-repeat':''}.png`);
@@ -36,7 +38,7 @@ try {
   }
   let media;
   if(!process.argv.includes('--stills')){
-    const video=path.join(out,`reference-opening-${duration}s.mp4`);
+    const video=path.join(out,firstPoint?'reference-first-point.mp4':`reference-opening-${duration}s.mp4`);
     await renderMedia({...shared,composition,codec:'h264',crf:18,pixelFormat:'yuv420p',outputLocation:video,concurrency:3,onProgress:({progress})=>{if(progress===1)console.log('MP4 rendered');}});
     const ffprobe=path.join(root,'node_modules/@remotion/compositor-win32-x64-msvc/ffprobe.exe');
     media=JSON.parse(execFileSync(ffprobe,['-v','error','-count_frames','-show_entries','stream=codec_name,width,height,r_frame_rate,nb_read_frames,duration','-show_entries','format=duration,size','-of','json',video],{encoding:'utf8'}));
@@ -44,5 +46,5 @@ try {
     assert.equal(media.streams[0].width,1920);assert.equal(media.streams[0].height,1080);
   }
   assert.equal(errors.length,0,errors.join('\n'));
-  await writeFile(path.join(out,extended?'report-20s.json':'report.json'),JSON.stringify({duration,width:1920,height:1080,fps:30,errors,media,frames:reports},null,2));
+  await writeFile(path.join(out,firstPoint?'report-first-point.json':extended?'report-20s.json':'report.json'),JSON.stringify({duration,width:1920,height:1080,fps:30,errors,media,frames:reports},null,2));
 }finally{await browser.close({silent:true});}

@@ -1,5 +1,5 @@
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, ChapterHeading, ExplodedLayers, FanCardDeck, PerspectivePanel, SceneThumbnail} from '../../../packages/animations/src';
+import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, ChapterHeading, ExplodedLayers, FanCardDeck, PerspectivePanel, SceneThumbnail, SectionCollapse} from '../../../packages/animations/src';
 import {pathCardLayout} from '../../../packages/animations/src/reference-opening/continuation-motion';
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
@@ -44,6 +44,7 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
   const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig(),time=frame/fps;
   let content;
   switch(id){
+    case 'section-collapse':content=<SectionCollapse progress={during(time,1.65,2.4)} label="没有标准答案"><div style={{position:'absolute',left:49,top:116,fontSize:36,fontWeight:900,color:'#272a30'}}>没有标准答案</div><BranchingPaths time={7} cards={pathCardLayout.map((layout,i)=>({...layout,id:`path-${i}`,content:<PathArtwork index={i}/>}))}/></SectionCollapse>;break;
     case 'audio-pulse-badge':content=<AudioPulseBadge time={time} x={400} y={225}/>;break;
     case 'chapter-card-row':content=<ChapterCardRow progress={during(time,.5,1.35)} cards={['制作方法','Skill 推荐','音效处理'].map((title,i)=>({id:String(i),title,description:['从脚本到成片','找素材 · 选零件','合成，不如找到'][i],content:i===2?<div style={{position:'absolute',left:'50%',top:'50%'}}><AudioPulseBadge time={time} x={0} y={0} size={38}/></div>:<PathArtwork index={i}/>}))}/>;break;
     case 'branching-paths':content=<><div style={{position:'absolute',left:49,top:90,fontSize:36,fontWeight:900,color:'#272a30'}}>没有标准答案</div><div style={{position:'absolute',left:49,top:143,fontSize:13,color:'#8f9296'}}>用画面讲清楚不同的选择</div><BranchingPaths time={time} cards={pathCardLayout.map((layout,i)=>({...layout,id:`path-${i}`,content:<PathArtwork index={i}/>}))}/></>;break;

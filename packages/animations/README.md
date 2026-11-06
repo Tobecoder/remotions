@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **9 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **10 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
@@ -13,6 +13,7 @@ Remotion 可复用动画组件，当前公开导出 **9 个**。旧组件及归�
 | 信息叠加 | `AudioPulseBadge` | 装饰波形图标及扩散细圆环 |
 | 叙事动画 | `ChapterCardRow` | 章节缩略卡上移、放大并排为总览 |
 | 叙事动画 | `BranchingPaths` | 多条素材路径、否定标签和选路强调 |
+| 版式转场 | `SectionCollapse` | 完整讲解画面缩进顶部已完成条目 |
 
 ```tsx
 import {FanCardDeck} from '@remotions/animations';
@@ -47,3 +48,7 @@ const Gallery = () => {
 `ChapterCardRow` 接收 `cards=[{id,title,description,content}]` 和 `progress`（0–1）。默认三张卡从下方小卡移动到居中大卡，插图、主标题和说明随布局一起移动。`content` 填满插图区域。原有 `SceneThumbnail` 新增可选 `number`，不传仍为 `01`。
 
 `BranchingPaths` 接收 `time`、可选整体开始 `startAt`，以及 `cards=[{id,content,x,y,width?,height?,rotation?,selected?,enterAt?}]`。每张卡默认 90×51，`selected` 标识最终保留的路径节点。默认前两秒展开，2.3 秒出现 `stamp`、2.85 秒划线、3.9 秒淡去；4.1–4.9 秒绘出强调路径并淡化其他卡。`fromLabel/toLabel/stamp/routeLabel` 均可替换。曲线路径为该参考结构，适用于一个起点与一个终点之间的多路解释。
+
+选路后的光点在 4.1–6 秒沿同一条曲线前进，到终点保持；6.25–6.65 秒显示 `resultLabel`（默认“启发 · 灵感”）。这些时间均相对 `startAt`，支持随机跳帧。
+
+`SectionCollapse` 接收 `children`、`progress`、`label`，可选 `number`（默认 `1`）及 `target={x,y,width,height}`（默认 `{x:49,y:47,width:150,height:37}`）。将讲解主体放在组件内部，纸底、字幕和其他导航放在外部；整个主体向摘要条缩小并淡去，保留已完成的小节名称。素材库和第一点案例均使用 0.75 秒的收束进度。

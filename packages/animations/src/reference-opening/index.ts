@@ -19,3 +19,5 @@ export {ChapterCardRow} from './ChapterCardRow';
 export type {ChapterCardRowProps, ChapterCard} from './ChapterCardRow';
 export {BranchingPaths} from './BranchingPaths';
 export type {BranchingPathsProps, PathCard} from './BranchingPaths';
+export {SectionCollapse} from './SectionCollapse';
+export type {SectionCollapseProps} from './SectionCollapse';

@@ -17,3 +17,5 @@ export {ChapterCardRow} from './reference-opening/ChapterCardRow';
 export type {ChapterCardRowProps, ChapterCard} from './reference-opening/ChapterCardRow';
 export {BranchingPaths} from './reference-opening/BranchingPaths';
 export type {BranchingPathsProps, PathCard} from './reference-opening/BranchingPaths';
+export {SectionCollapse} from './reference-opening/SectionCollapse';
+export type {SectionCollapseProps} from './reference-opening/SectionCollapse';

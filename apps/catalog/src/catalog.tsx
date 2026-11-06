@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -16,6 +16,12 @@ export const categories: CatalogCategory[] = [
 ];
 
 export const catalog: CatalogItem[] = [
+  {id:'section-collapse',category:'layouts',name:'小节收束',component:'SectionCollapse',description:'讲解画面缩进顶部摘要条，保留已讲完的小节',usage:'观点收尾 · 内容归档',durationInFrames:150,posterFrame:45,code:`import {SectionCollapse} from '@remotions/animations';
+
+// 将背景和底部字幕放在组件外；画布为 800 × 450。
+<SectionCollapse progress={progress} label="没有标准答案" number="1">
+  <YourExplanation />
+</SectionCollapse>`},
   {id:'audio-pulse-badge',category:'overlays',name:'音效脉冲徽章',component:'AudioPulseBadge',description:'圆形波形图标与淡淡扩散的细圆环',usage:'音效说明 · 章节配图',durationInFrames:150,posterFrame:30,code:`import {AudioPulseBadge} from '@remotions/animations';
 
 // 装饰图标，不读取音频；800 × 450 设计坐标。
@@ -27,7 +33,7 @@ export const catalog: CatalogItem[] = [
   {id:'skill',title:'Skill 推荐',description:'找素材 · 选零件',content:<SkillPreview />},
   {id:'sound',title:'音效处理',description:'合成，不如找到',content:<SoundPreview />},
 ]} />`},
-  {id:'branching-paths',category:'storytelling',name:'多路径演示',component:'BranchingPaths',description:'图片沿多条曲线展开，划掉标准答案后突出一条路径',usage:'思路讲解 · 方案对比',durationInFrames:240,posterFrame:165,code:`import {BranchingPaths} from '@remotions/animations';
+  {id:'branching-paths',category:'storytelling',name:'多路径演示',component:'BranchingPaths',description:'图片沿曲线展开、强调一条路线，光点到达结果',usage:'思路讲解 · 方案对比',durationInFrames:240,posterFrame:165,code:`import {BranchingPaths} from '@remotions/animations';
 
 // 800 × 450 画布；前 2 秒展开，2.3 秒出现标签，4.1 秒开始突出路径。
 <BranchingPaths time={frame / fps} cards={[
