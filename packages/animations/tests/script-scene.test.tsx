@@ -36,8 +36,16 @@ describe('script continuation through the requested 96-second boundary',()=>{
     expect(style(document,'[data-script-phase="document"]').opacity).toBe('1');
     expect(style(document,'[data-script-phase="overview"]').opacity).toBe('0');
   });
+  it('holds the chapter alone for a readable beat without overlapping the stack or document',()=>{
+    for(const frame of [1863,1872,1881,1890,1899]){
+      const scene=at(frame);
+      expect(Number(style(scene,'[data-script-chapter]').opacity)).toBeCloseTo(1,8);
+      expect(style(scene,'[data-script-phase="overview"]').opacity).toBe('0');
+      expect(style(scene,'[data-script-phase="document"]').opacity).toBe('0');
+    }
+  });
   it('shrinks the narration heading, reveals the visual instructions and highlights the document',()=>{
-    const narration=at(1940),instructions=at(2040),highlight=at(2100),list=at(2178);
+    const narration=at(1940),instructions=at(2058),highlight=at(2118),list=at(2196);
     expect(Number(style(narration,'[data-script-narration]').fontSize.replace('px',''))).toBe(42);
     expect(style(instructions,'[data-script-narration]').fontSize).toBe('18px');
     expect(style(instructions,'[data-script-instruction]').opacity).toBe('1');
@@ -83,7 +91,7 @@ describe('script continuation through the requested 96-second boundary',()=>{
   });
   it('shares component timing with every standalone catalogue demo and is seek-stable',()=>{
     for(const [offset,id,selectors] of [
-      [1890,'script-document-guide',['[data-script-narration]','[data-script-highlight]','[data-script-list]']],
+      [1908,'script-document-guide',['[data-script-narration]','[data-script-highlight]','[data-script-list]']],
       [2211,'typewriter-comparison',['[data-writing-own]','[data-writing-ai]']],
       [2373,'card-spotlight',['[data-script-phase="preview"] [data-spotlight-panel]']],
       [2604,'progress-race',['[data-race-row="0"]','[data-race-bar="0"]','[data-race-spinner]']],
