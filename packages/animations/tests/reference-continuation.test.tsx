@@ -64,6 +64,12 @@ describe('observed 11–20 second continuation',()=>{
     const nodes=Array.from(chosen.querySelectorAll<HTMLElement>('[data-path-card]'));
     expect(nodes.filter(node=>Number(node.style.opacity)===1)).toHaveLength(3);
     expect(nodes.filter(node=>Number(node.style.opacity)<.3)).toHaveLength(8);
+    const selected=nodes.filter(node=>node.dataset.pathSelected==='true'),background=nodes.filter(node=>node.dataset.pathSelected==='false');
+    const backgroundLayer=Math.max(...background.map(node=>Number(node.style.zIndex)));
+    for(const node of selected)expect(Number(node.style.zIndex)).toBeGreaterThan(backgroundLayer);
+    expect(chosen.querySelector<HTMLElement>('[data-branching-paths]')!.style.isolation).toBe('isolate');
+    expect(Number(chosen.querySelector<HTMLElement>('[data-route-tracer]')!.style.zIndex)).toBeGreaterThan(Math.max(...selected.map(node=>Number(node.style.zIndex))));
+    expect(Array.from(answer.querySelectorAll<HTMLElement>('[data-path-card]')).every(node=>Number(node.style.zIndex)===1)).toBe(true);
     expect(Number(chosen.querySelector('[data-selected-route]')!.getAttribute('stroke-dashoffset'))).toBeLessThan(.02);
     expect(chosen.querySelector<HTMLElement>('[data-route-label]')!.style.opacity).toBe('1');
   });
