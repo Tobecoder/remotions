@@ -60,7 +60,7 @@ describe('second point through the before-work title',()=>{
   });
   it('moves the actor forward, catches it with the rope and shows only one pose',()=>{
     let previous=-Infinity;
-    for(const frame of [1002,1014,1026,1038,1050]){
+    for(const frame of [1002,1014,1026,1038,1044]){
       const document=at(frame),actor=document.querySelector<HTMLElement>('[data-tether-actor]')!;
       const x=parseFloat(actor.style.left);expect(x).toBeGreaterThanOrEqual(previous);previous=x;
       expect(actor.querySelectorAll('img')).toHaveLength(1);
@@ -68,6 +68,31 @@ describe('second point through the before-work title',()=>{
     const caught=at(1050);
     expect(caught.querySelector('[data-tether-actor] img')!.getAttribute('src')).toContain('runner-caught.png');
     expect(caught.querySelector('[data-tether-rope]')!.getAttribute('opacity')).toBe('1');
+  });
+  it('tightens the rope before pulling the actor back, then settles at the original position',()=>{
+    const actor=(frame:number)=>at(frame).querySelector<HTMLElement>('[data-tether-actor]')!;
+    const x=(frame:number)=>parseFloat(actor(frame).style.left);
+    expect(Number(at(1032).querySelector('[data-tether-rope]')!.getAttribute('data-taut'))).toBeLessThan(1);
+    expect(at(1044).querySelector('[data-tether-rope]')!.getAttribute('data-taut')).toBe('1');
+    expect(x(1044)-x(1050)).toBeGreaterThan(15);
+    expect(x(1050)).toBeGreaterThan(x(1054));
+    expect(actor(1048).style.transform).not.toBe('rotate(0deg)');
+    expect(x(1069)).toBeCloseTo(446,8);
+    expect(actor(1069).style.top).toBe('205px');
+    const rope=at(1069).querySelector('[data-tether-rope] path')!;
+    expect(rope.getAttribute('d')).toBe('M62 306 Q273 313 484 320');
+    for(const frame of [1032,1044,1050,1054,1069]){
+      const film=at(frame);clock.frame=frame-1002;
+      const demo=dom(<MaterialDemo id="tethered-motion"/>);
+      const filmActor=film.querySelector<HTMLElement>('[data-tether-actor]')!,demoActor=demo.querySelector<HTMLElement>('[data-tether-actor]')!;
+      for(const key of ['left','top'] as const)expect(parseFloat(filmActor.style[key])).toBeCloseTo(parseFloat(demoActor.style[key]),8);
+      const numbers=(value:string)=>Array.from(value.matchAll(/-?\d+(?:\.\d+)?(?:e[+-]?\d+)?/g),match=>Number(match[0]));
+      const filmPose=numbers(filmActor.style.transform),demoPose=numbers(demoActor.style.transform);
+      filmPose.forEach((value,index)=>expect(value).toBeCloseTo(demoPose[index],8));
+      const filmRope=numbers(film.querySelector('[data-tether-rope] path')!.getAttribute('d')!),demoRope=numbers(demo.querySelector('[data-tether-rope] path')!.getAttribute('d')!);
+      expect(filmRope).toHaveLength(demoRope.length);
+      filmRope.forEach((value,index)=>expect(value).toBeCloseTo(demoRope[index],8));
+    }
   });
   it('moves the growth tip up and right and keeps multiple gradient instances independent',()=>{
     let previous={x:0,y:450};
