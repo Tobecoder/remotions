@@ -45,3 +45,5 @@ export {CardSpotlight} from './CardSpotlight';
 export type {CardSpotlightProps,SpotlightRect} from './CardSpotlight';
 export {ProgressRace} from './ProgressRace';
 export type {ProgressRaceProps} from './ProgressRace';
+export {ProgressRow} from './ProgressRow';
+export type {ProgressRowProps} from './ProgressRow';

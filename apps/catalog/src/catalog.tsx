@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'document-focus-gallery' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'script-document-guide' | 'typewriter-comparison' | 'card-spotlight' | 'progress-race';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'document-focus-gallery' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'script-document-guide' | 'typewriter-comparison' | 'card-spotlight' | 'progress-race' | 'progress-row';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -32,6 +32,12 @@ export const catalog: CatalogItem[] = [
 
 // 动画示意，不代表真实测评数据。
 <ProgressRace time={frame / fps} firstLabel="方案 A" secondLabel="方案 B" />`},
+  {id:'progress-row',category:'charts',name:'单条进度',component:'ProgressRow',description:'独立控制名称、进度和状态，可组合自己的流程与对比',usage:'任务进度 · 过程讲解',durationInFrames:180,posterFrame:115,code:`import {ProgressRow} from '@remotions/animations';
+
+// progress 为 0–1，由你的数据或动画时间控制。
+<ProgressRow label="素材准备" progress={progress} color="#409eff"
+  status={progress >= 1 ? 'complete' : 'waiting'} time={frame / fps}
+  caption="收集并整理画面素材" value={Math.round(progress * 100) + '%'} />`},
   {id:'preparation-cards',category:'storytelling',name:'素材准备卡',component:'PreparationCards',description:'素材卡依次浮入，停留后汇入 Agent',usage:'制作准备 · 内容归集',durationInFrames:192,posterFrame:75,code:`import {PreparationCards} from '@remotions/animations';
 
 <PreparationCards time={frame / fps} cards={cards} />`},

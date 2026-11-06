@@ -43,3 +43,5 @@ export {CardSpotlight} from './reference-opening/CardSpotlight';
 export type {CardSpotlightProps,SpotlightRect} from './reference-opening/CardSpotlight';
 export {ProgressRace} from './reference-opening/ProgressRace';
 export type {ProgressRaceProps} from './reference-opening/ProgressRace';
+export {ProgressRow} from './reference-opening/ProgressRow';
+export type {ProgressRowProps} from './reference-opening/ProgressRow';

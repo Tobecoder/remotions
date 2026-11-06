@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **22 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **23 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
@@ -25,6 +25,7 @@ Remotion 可复用动画组件，当前公开导出 **22 个**。旧组件及归
 | 文字特效 | `TypewriterComparison` | 两段文字逐字输入，再缩成左右栏 |
 | 版式转场 | `CardSpotlight` | 卡片放大到前景，讲解后回到原位 |
 | 数据图表 | `ProgressRace` | 进度快慢、完成标记、等待及计数示意 |
+| 数据图表 | `ProgressRow` | 独立进度、状态及附加内容，供自定义组合 |
 | 叙事动画 | `ConstraintRelease` | 约束标签掉落、窗口内容显现并放大 |
 
 ```tsx
@@ -90,5 +91,17 @@ const Gallery = () => {
 长脚本可配置 `ScriptDocumentGuide scrollDistance={233}`，正文由 `document` 提供足够高度；默认 `0` 不滚动。窗口进入后停顿，再在局部 1–6.3 秒滚动对应距离，结束后保持并标注段落。案例将两张正文上下连续排列，不再靠两张短图交叠切换。
 
 `RisingCurve` 使用 `progress`（0–1）控制曲线、填充和端点，支持 `label/title/color`。曲线是概念趋势示意，不是实测数据图；同屏多实例使用独立渐变 ID。
+
+`ProgressRow` 是独立的单条进度：`label`、`progress`（0–1）和 `color` 由调用方提供，组件不会自动推进或生成数字。`status` 可选 `none`、`waiting`、`complete`，`time` 只驱动等待图标旋转；等待图标默认跟随进度，也可用 `markerProgress` 单独指定位置。`enterProgress/statusProgress` 控制入场和状态显隐，默认均为 1。`x/y/width` 调整位置与尺寸，默认 696×82，内建内容随宽度等比调整。
+
+`caption`、`annotation`、`value` 和 `children` 接收 React 内容，分别用于轨道下方说明、等待标注、右侧数值和自定义内容；计数规则和业务文案留给调用方。`badge` 替换完成标记，默认勾号。
+
+```tsx
+<ProgressRow label="素材准备" progress={progress} color="#409eff"
+  status={progress >= 1 ? 'complete' : 'waiting'} time={frame / fps}
+  caption="收集并整理画面素材" value={Math.round(progress * 100) + '%'} />
+```
+
+`ProgressRace` 保留原有双行对比及默认时间线，通过两个 `ProgressRow` 组合。`eyebrow/countTo/phrases` 可替换开头小字、计数上限和浮动短句；原有调用不需要改动。`RisingCurve` 的实现及调用保持。
 
 `DocumentFocusGallery` 的 `documents=[{id,content}]` 对应预设五卡布局，`focusContent` 为前景引文插槽，`caption` 和 `badge` 可替换；约 2.3–3 秒虚化背景并显示引文。`ConstraintRelease` 接收 `content`、默认六条 `tags` 和 `badge`；先展开标签，再掉落标签，2.3–2.8 秒显示窗口内容，3.3–3.8 秒放大窗口。内容均由调用方提供，不内置原片图片。

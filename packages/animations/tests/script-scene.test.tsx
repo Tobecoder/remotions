@@ -146,12 +146,12 @@ describe('script continuation through the requested 96-second boundary',()=>{
   });
   it('finishes the first progress row while the second continues spinning and counting',()=>{
     const finished=at(2730),later=at(2790),latest=at(2835);
-    expect(style(finished,'[data-race-bar="0"]').width).toBe('100%');
-    expect(style(finished,'[data-race-winner]').opacity).toBe('1');
-    expect(style(later,'[data-race-bar="1"]').width).not.toBe('100%');
+    expect(style(finished,'[data-race-row="0"] [data-progress-fill]').width).toBe('100%');
+    expect(style(finished,'[data-progress-status="complete"]').opacity).toBe('1');
+    expect(style(later,'[data-race-row="1"] [data-progress-fill]').width).not.toBe('100%');
     const count=(scene:Document)=>Number(scene.querySelector('[data-race-count]')!.textContent!.replace(/,/g,''));
     expect(count(latest)).toBeGreaterThan(count(later));
-    expect(style(latest,'[data-race-spinner]').transform).not.toBe(style(later,'[data-race-spinner]').transform);
+    expect(style(latest,'[data-progress-status="waiting"]').transform).not.toBe(style(later,'[data-progress-status="waiting"]').transform);
   });
   it('ends on paper and the requested question subtitle at 1:36',()=>{
     const end=at(2879);
@@ -165,7 +165,7 @@ describe('script continuation through the requested 96-second boundary',()=>{
       [1854,'script-document-guide',['[data-script-narration]','[data-script-highlight]','[data-script-list]']],
       [2211,'typewriter-comparison',['[data-writing-own]','[data-writing-ai]']],
       [2373,'card-spotlight',['[data-script-phase="preview"] [data-spotlight-panel]']],
-      [2604,'progress-race',['[data-race-row="0"]','[data-race-bar="0"]','[data-race-spinner]']],
+      [2604,'progress-race',['[data-race-row="0"]','[data-race-row="0"] [data-progress-fill]','[data-progress-status="waiting"]']],
     ] as const){
       for(const local of [0,12,45,75,108]){
         const film=at(offset+local);clock.frame=local;const demo=dom(<MaterialDemo id={id}/>);
