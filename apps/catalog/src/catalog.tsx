@@ -20,7 +20,7 @@ export const catalog: CatalogItem[] = [
 
 <ScriptDocumentGuide time={frame / fps}
   chapterFrom={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}}
-  document={<ScriptContent />} />`},
+  document={<LongScriptContent />} scrollDistance={240} />`},
   {id:'typewriter-comparison',category:'text-effects',name:'打字对照',component:'TypewriterComparison',description:'两段文案先后输入、校验和淡化，再收为左右栏',usage:'文案对照 · 观点表达',durationInFrames:210,posterFrame:115,code:`import {TypewriterComparison} from '@remotions/animations';
 
 <TypewriterComparison time={frame / fps} ownText={ownText} aiText={aiText} />`},

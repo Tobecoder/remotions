@@ -2,13 +2,14 @@ import {useId, type ReactNode} from 'react';
 import {PerspectivePanel} from './PerspectivePanel';
 import {clamp, during, explodedLayerTiming, frontPose, mix, mixPose, tiltedPose, type PlanePose} from './motion';
 
-export type ExplodedLayer = {id:string;label:string;content:ReactNode;enterAt?:number;duration?:number};
+export type ExplodedPanelContent=ReactNode|((elapsed:number)=>ReactNode);
+export type ExplodedLayer = {id:string;label:string;content:ExplodedPanelContent;enterAt?:number;duration?:number};
 export type ExplodedLayersProps = {
   time: number;
   startAt?: number;
   tiltProgress?: number;
   layers: readonly ExplodedLayer[];
-  screen: ReactNode;
+  screen: ExplodedPanelContent;
   screenLabel?: string;
   spacing?: number;
   labelOpacity?: number;
@@ -36,16 +37,17 @@ export const ExplodedLayers = ({time,startAt=0,tiltProgress:rawTilt,layers,scree
     const from=isBase?front:{...pose,y:y+18};
     const to={...pose,y:y+mix(18,0,progress)};
     const current=mixPose(from,to,progress);
-    return {layer,progress,from,to,leftX:current.x+current.bx*panelHeight-4,leftY:current.y+current.by*panelHeight+3,rightX:current.x+current.ax*panelWidth+9,rightY:current.y+current.ay*panelWidth-1};
+    const contentTime=Math.max(0,localTime-(isBase?explodedLayerTiming.tiltEnd:enterAt+(layer.duration??explodedLayerTiming.duration)));
+    return {layer,progress,from,to,contentTime,leftX:current.x+current.bx*panelHeight-4,leftY:current.y+current.by*panelHeight+3,rightX:current.x+current.ax*panelWidth+9,rightY:current.y+current.ay*panelWidth-1};
   });
   const screenLabelProgress=during(tiltProgress,.75,1);
   return <div data-exploded-layers style={{position:'absolute',inset:0}}>
     <div style={{position:'absolute',left:front.x+panelWidth*.436,top:front.y+panelHeight,width:46,height:48,opacity:1-during(tiltProgress,0,.55),transformOrigin:'top',transform:`scaleY(${mix(1,0.3,tiltProgress)})`}}>
       <svg viewBox="0 0 46 48" width="46" height="48"><defs><linearGradient id={metalId}><stop stopColor="#b9bdc2"/><stop offset=".5" stopColor="#f5f6f7"/><stop offset="1" stopColor="#a5aab0"/></linearGradient></defs><path d="M17 0H30L33 37L43 41Q46 44 40 46H5Q0 44 4 41L14 37Z" fill={`url(#${metalId})`}/><ellipse cx="23" cy="45" rx="23" ry="2" fill="#c2c4c6"/></svg>
     </div>
-    {[...anchors].reverse().map(({layer,progress,from,to})=><PerspectivePanel key={layer.id} width={panelWidth} height={panelHeight} from={from} to={to} progress={progress} style={{opacity:progress}}>{layer.content}</PerspectivePanel>)}
+    {[...anchors].reverse().map(({layer,progress,from,to,contentTime})=><PerspectivePanel key={layer.id} width={panelWidth} height={panelHeight} from={from} to={to} progress={progress} style={{opacity:progress}}><div data-layer-content={layer.id} style={{position:'relative',width:'100%',height:'100%'}}>{typeof layer.content==='function'?layer.content(contentTime):layer.content}</div></PerspectivePanel>)}
     <PerspectivePanel width={panelWidth} height={panelHeight} from={front} to={pose} progress={tiltProgress} borderColor="#303238" borderWidth={4.5} radius={mix(8,3,tiltProgress)} shadow={tiltProgress<0.5}>
-      {screen}
+      <div data-stack-screen-content style={{position:'relative',width:'100%',height:'100%'}}>{typeof screen==='function'?screen(Math.max(0,localTime-explodedLayerTiming.tiltEnd)):screen}</div>
     </PerspectivePanel>
     <svg width={canvasWidth} height={canvasHeight} style={{position:'absolute',inset:0,overflow:'visible',opacity:clamp(labelOpacity)}}>
       <line x1={leftX} y1={leftY} x2={leftX} y2={leftY+spacing*layers.length} stroke="#cfc6bb" strokeDasharray="2 3" strokeWidth=".7" opacity={screenLabelProgress}/>

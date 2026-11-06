@@ -2,10 +2,11 @@ import type {ReactNode} from 'react';
 import {during,mix} from './motion';
 import {ChapterHeading,type HeadingContent} from './ChapterHeading';
 
-export type ScriptDocumentGuideProps={time:number;startAt?:number;document:ReactNode;eyebrow?:string;chapterFrom?:HeadingContent};
-export const ScriptDocumentGuide=({time,startAt=0,document,eyebrow='01 · 脚本里写什么',chapterFrom}:ScriptDocumentGuideProps)=>{
+export type ScriptDocumentGuideProps={time:number;startAt?:number;document:ReactNode;eyebrow?:string;chapterFrom?:HeadingContent;scrollDistance?:number};
+export const ScriptDocumentGuide=({time,startAt=0,document,eyebrow='01 · 脚本里写什么',chapterFrom,scrollDistance=0}:ScriptDocumentGuideProps)=>{
   const elapsed=time-startAt,t=elapsed-(chapterFrom?1.8:0),enter=during(t,0,.4),small=during(t,3.5,4.2),list=during(t,8.7,9.2),highlight=during(t,6.3,6.9);
   const heading={number:eyebrow,title:'逐字稿',description:'旁白念的每一句'},scale=mix(1,18/42,small);
+  const distance=Math.max(0,Number.isFinite(scrollDistance)?scrollDistance:0),scroll=during(t,1,6.3);
   return <div data-script-guide style={{position:'absolute',inset:0}}>
     <div style={{position:'absolute',left:49,top:90,fontSize:9,letterSpacing:2,fontWeight:700,color:'#c87559',opacity:small}}>{eyebrow}</div>
     <div style={{position:'absolute',left:49,top:136,width:19,height:19,borderRadius:'50%',background:'#d66b4e',color:'#fff',fontSize:11,lineHeight:'19px',textAlign:'center',opacity:small}}>1</div>
@@ -17,7 +18,7 @@ export const ScriptDocumentGuide=({time,startAt=0,document,eyebrow='01 · 脚本
     <div style={{position:'absolute',left:49,top:267,borderRadius:18,padding:'6px 13px',fontSize:12,fontWeight:700,color:'#fff',background:'#d87552',opacity:during(t,9,9.4)}}>都要写进脚本</div>
     <div data-script-window style={{position:'absolute',left:316,top:105,width:445,height:272,background:'#fff',borderRadius:10,overflow:'hidden',boxShadow:'0 8px 17px #33363c1d',opacity:enter,transform:`translateX(${mix(24,0,enter)}px)`}}>
       <div style={{height:25,borderBottom:'1px solid #eeeeec',display:'flex',alignItems:'center',gap:4,padding:'0 9px',boxSizing:'border-box'}}>{['#ee8e7f','#e9c675','#9cb49b'].map(color=><span key={color} style={{width:5,height:5,borderRadius:'50%',background:color}}/>)}<span style={{marginLeft:6,color:'#8c8f93',fontFamily:'monospace',fontSize:7}}>脚本 · 上期 Remotion 视频</span></div>
-      <div style={{position:'absolute',left:9,right:9,top:30,bottom:9,overflow:'hidden'}}>{document}</div>
+      <div data-script-scroll-viewport style={{position:'absolute',left:9,right:9,top:30,bottom:9,overflow:'hidden'}}><div data-script-scroll-content data-scroll-progress={scroll} style={{position:'relative',width:'100%',height:`calc(100% + ${distance}px)`,transform:`translateY(${-distance*scroll}px)`}}>{document}</div></div>
       <div data-script-highlight style={{position:'absolute',left:118,top:64,width:219,height:160,border:'1.5px solid #d87552',borderRadius:6,boxShadow:'0 0 0 3px #dd80531b',boxSizing:'border-box',opacity:highlight,transform:`scaleX(${highlight})`,transformOrigin:'0 0'}}/>
     </div>
   </div>;

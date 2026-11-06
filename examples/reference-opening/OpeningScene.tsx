@@ -1,6 +1,7 @@
 import {AbsoluteFill, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BlurredCollage, ChapterHeading, ExplodedLayers, FanCardDeck, SceneThumbnail, openingState} from '../../packages/animations/src/reference-opening';
 import {during, mix, openingLayerStartAt, openingMethodCueAt} from '../../packages/animations/src/reference-opening/motion';
+import {PanelScroll,LiveWaveform,LiveTimeline,LiveCaptionLines} from '../../packages/animations/src/reference-opening/LivePanelContent';
 
 const texture=(name:string)=>staticFile(`textures/${name}.jpg`);
 const imageStyle={width:'100%',height:'100%',objectFit:'cover' as const,display:'block'};
@@ -15,29 +16,29 @@ export const PaperBackground=({time}:{time:number}) => {
   }/>;
 };
 
-const ScriptPage=()=> <Texture name="script"/>;
+export const ScriptPage=({time=0}:{time?:number})=> <PanelScroll time={time}><Texture name="script"/></PanelScroll>;
 
-const MaterialsPage=()=> <div style={{height:'100%',background:'#fff',padding:13,boxSizing:'border-box'}}>
+export const MaterialsPage=({time=0}:{time?:number})=> <div style={{height:'100%',background:'#fff',padding:13,boxSizing:'border-box'}}>
   <div style={{fontSize:10,fontWeight:800,marginBottom:10}}>素材 · 用画面把内容讲清楚</div>
-  <div style={{display:'flex',gap:9,height:124}}>{[0,1,4].map(i=><div key={i} style={{flex:1,overflow:'hidden',borderRadius:2}}><Texture name={`skill-${i}`}/></div>)}</div>
+  <div style={{display:'flex',gap:9,height:124}}>{[0,1,4].map((i,index)=><div key={i} style={{flex:1,overflow:'hidden',borderRadius:2}}><PanelScroll time={time-index*.2} distance={12}><Texture name={`skill-${i}`}/></PanelScroll></div>)}</div>
   <div style={{display:'flex',gap:7,marginTop:11}}>{['画面参考','内容素材','示例演示'].map(t=><div key={t} style={{fontSize:6,background:'#f6f4ed',padding:'4px 12px',color:'#777'}}>{t}</div>)}</div>
 </div>;
 
-const VoicePage=()=> <div style={{height:'100%',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center'}}>
-  <svg width="310" height="104" viewBox="0 0 310 104"><line x1="0" x2="310" y1="52" y2="52" stroke="#d7d7d4"/>{Array.from({length:155},(_,i)=>{const envelope=(Math.sin(i*.121)**2*.55+Math.sin(i*.043)**8*.45)*Math.sin(Math.PI*i/154);const height=4+envelope*91;return <rect key={i} x={i*2} y={52-height/2} width="1.2" height={height} fill="#35383b"/>;})}</svg>
+export const VoicePage=({time=0}:{time?:number})=> <div style={{height:'100%',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center'}}>
+  <LiveWaveform time={time}/>
 </div>;
 
-const CaptionsPage=()=> <div style={{height:'100%',background:'#fff',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:12}}>
-  {['我上期那条16分钟的讲解视频','是怎么从脚本到成片的'].map(text=><div key={text} style={{fontSize:16,fontWeight:700,color:'white',padding:'7px 12px',borderRadius:3,background:'#303540'}}>{text}</div>)}
+export const CaptionsPage=({time=0}:{time?:number})=> <div style={{height:'100%',background:'#fff'}}>
+  <LiveCaptionLines time={time} lines={['我上期那条16分钟的讲解视频','是怎么从脚本到成片的']}/>
 </div>;
 
-const AnimationPage=()=> <div style={{height:'100%',background:'linear-gradient(115deg,#fff 20%,#fff8e9 78%,#fff 100%)',padding:18,boxSizing:'border-box'}}>
+export const AnimationPage=({time=0}:{time?:number})=> <div style={{height:'100%',background:'linear-gradient(115deg,#fff 20%,#fff8e9 78%,#fff 100%)',padding:18,boxSizing:'border-box'}}>
   <div style={{fontSize:10,fontWeight:700,marginBottom:15}}>Animation · 逐帧编排</div>
-  <svg width="320" height="116" viewBox="0 0 320 116"><path d="M12 93C90 93 95 35 160 35S250 93 307 93" fill="none" stroke="#9da3a5" strokeWidth=".8"/><line x1="12" x2="307" y1="94" y2="94" stroke="#686d70" strokeWidth="1"/>{Array.from({length:9},(_,i)=><g key={i}><path d={`M${14+i*36},90l4 4-4 4-4-4Z`} fill={i%2?'#3d4146':'#e37651'}/><line x1={14+i*36} x2={14+i*36} y1="94" y2={97+i%3*2} stroke="#51565c" strokeWidth=".7"/></g>)}</svg>
+  <LiveTimeline time={time}/>
 </div>;
 
 /** Contents can be replaced independently of the camera/stack animation. */
-const ScreenContent=({time}:{time:number})=> {
+export const ScreenContent=({time}:{time:number})=> {
   const moments=[0,.9,1.8,3.05,3.9,4.7,5.8,6.7,7.6];
   let current=0;
   moments.forEach((at,index)=>{if(time>=at)current=index;});
@@ -53,11 +54,11 @@ const skillNames=['lemo-opuscar','huashu-slides','illustration','handdraw','og-s
 
 export const OpeningMethodVisual=({time,labelOpacity=1-during(time,8.5,8.83)}:{time:number;labelOpacity?:number})=>{
   const layers=[
-    {id:'animation',label:'动画',content:<AnimationPage/>},
-    {id:'captions',label:'字幕',content:<CaptionsPage/>},
-    {id:'voice',label:'配音',content:<VoicePage/>},
-    {id:'materials',label:'素材',content:<MaterialsPage/>},
-    {id:'script',label:'脚本',content:<ScriptPage/>},
+    {id:'animation',label:'动画',content:(elapsed:number)=><AnimationPage time={elapsed}/>},
+    {id:'captions',label:'字幕',content:(elapsed:number)=><CaptionsPage time={elapsed}/>},
+    {id:'voice',label:'配音',content:(elapsed:number)=><VoicePage time={elapsed}/>},
+    {id:'materials',label:'素材',content:(elapsed:number)=><MaterialsPage time={elapsed}/>},
+    {id:'script',label:'脚本',content:(elapsed:number)=><ScriptPage time={elapsed}/>},
   ];
   return <ExplodedLayers time={time} startAt={openingLayerStartAt} layers={layers} screen={<ScreenContent time={time}/>} labelOpacity={labelOpacity}/>;
 };
