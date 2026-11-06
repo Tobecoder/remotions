@@ -42,6 +42,14 @@ describe('second point through the before-work title',()=>{
     expect(Number(shot.querySelector('[data-target-crosshair]')!.getAttribute('opacity'))).toBeCloseTo(0,10);
     expect(centered.querySelector('[data-target-crosshair]')!.getAttribute('transform')).toBe('translate(0 0)');
     expect(settled.querySelector('[data-target-face]')!.getAttribute('transform')).toBe('translate(199 277) scale(0.78)');
+    const recoil=(frame:number)=>at(frame).querySelector('[data-target-impact]')!.getAttribute('transform');
+    expect(recoil(767)).toBe('translate(0 0) rotate(0)');
+    const first=recoil(769)!,second=recoil(770)!;
+    const offset=(transform:string)=>Number(transform.match(/translate\(([-\d.e+]+)/)![1]);
+    expect(Math.abs(offset(first))).toBeGreaterThan(1);
+    expect(offset(first)*offset(second)).toBeLessThan(0);
+    expect(recoil(777)).toBe('translate(0 0) rotate(0)');
+    expect(recoil(769)).toBe(first); // A random seek must not change the recoil.
   });
   it('closes the switches in sequence and strikes only the completed rows',()=>{
     const first=at(924),rows=first.querySelectorAll<HTMLElement>('[data-constraint-switch]');

@@ -63,6 +63,8 @@ const Gallery = () => {
 
 `TargetReticle`、`ConstraintSwitches`、`TetheredMotion`、`DocumentFocusGallery`、`ConstraintRelease` 均接收 `time`（秒）和可选 `startAt`。靶心可替换 `shotLabel/aimLabel/color`；约束开关默认两行，可替换 `heading/labels/offLabel`，默认先后关闭时刻为相对 5.1、7.3 秒；目录演示整体提前 2.2 秒。
 
+`TargetReticle` 在相对 0.6 秒命中时加入短促衰减抖动，0.88 秒前归稳，再接原有 0.9 秒开始的准星归位。抖动只作用于靶面，不移动整页，也不改变后面的移位和缩放时间。
+
 `TetheredMotion` 的 `running` 和 `caught` 为 React 内容插槽，建议透明图片或 SVG；组件只负责运动与绳索，不生成角色逐帧肢体动画。约 1.35 秒切换姿态，避免两个姿态半透明重叠。
 
 `RisingCurve` 使用 `progress`（0–1）控制曲线、填充和端点，支持 `label/title/color`。曲线是概念趋势示意，不是实测数据图；同屏多实例使用独立渐变 ID。
