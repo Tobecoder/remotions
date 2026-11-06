@@ -1,6 +1,6 @@
 import {AbsoluteFill, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {BlurredCollage, ChapterHeading, ExplodedLayers, FanCardDeck, SceneThumbnail, openingState} from '../../packages/animations/src/reference-opening';
-import {during, mix, openingLayerStartAt} from '../../packages/animations/src/reference-opening/motion';
+import {during, mix, openingLayerStartAt, openingMethodCueAt} from '../../packages/animations/src/reference-opening/motion';
 
 const texture=(name:string)=>staticFile(`textures/${name}.jpg`);
 const imageStyle={width:'100%',height:'100%',objectFit:'cover' as const,display:'block'};
@@ -45,7 +45,7 @@ const ScreenContent=({time}:{time:number})=> {
 };
 
 const Subtitle=({time}:{time:number})=>{
-  const text=time<1.9?'我上期那条16分钟的讲解视频':time<4.5?'是怎么从脚本到成片的':time<5.8?'这期就拿它来复盘':time<8.6?'继续聊聊用Remotion制作视频的方法':'还有大家关心的Skill推荐';
+  const text=time<openingMethodCueAt?'我上期那条16分钟的讲解视频':time<4.5?'是怎么从脚本到成片的':time<5.8?'这期就拿它来复盘':time<8.6?'继续聊聊用Remotion制作视频的方法':'还有大家关心的Skill推荐';
   return <div style={{position:'absolute',left:0,right:0,bottom:20,display:'flex',justifyContent:'center'}}><div style={{padding:'5px 12px 6px',borderRadius:4,background:'#2b3241f2',boxShadow:'0 2px 4px #1b233519',color:'#fff',fontSize:15,fontWeight:700,lineHeight:'20px'}}>{text}</div></div>;
 };
 

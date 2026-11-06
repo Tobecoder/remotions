@@ -14,14 +14,25 @@ vi.mock('remotion',()=>({
 import {OpeningScene} from '../../../examples/reference-opening/OpeningScene';
 
 describe('opening title handoff at the actual scene call site',()=>{
-  it('does not fade both titles to near-invisible between the two supplied layouts',()=>{
+  it('hands off to the method heading at the script-to-film subtitle without a gap or jump',()=>{
     const coverage=[];
     const offsets=[];
-    for(let frame=169;frame<=193;frame++){
+    for(let frame=56;frame<=79;frame++){
       clock.frame=frame;
       const document=new DOMParser().parseFromString(renderToStaticMarkup(<OpeningScene/>),'text/html');
       const intro=document.querySelector<HTMLElement>('[data-title-layer="intro"]')!;
       const chapter=document.querySelector<HTMLElement>('[data-title-layer="chapter"]')!;
+      if(frame===56)expect(Number(intro.style.opacity)).toBe(1);
+      if(frame===67){
+        expect(document.body.textContent).toContain('是怎么从脚本到成片的');
+        expect(Number(chapter.style.opacity)).toBeGreaterThan(.4);
+        expect(Number(chapter.style.opacity)).toBeLessThan(.6);
+      }
+      if(frame>=78){
+        expect(Number(intro.style.opacity)).toBe(0);
+        expect(Number(chapter.style.opacity)).toBe(1);
+        expect(chapter.textContent).toContain('制作方法');
+      }
       coverage.push(Number(intro.style.opacity||1)+Number(chapter.style.opacity||1));
       const transform=document.querySelector<HTMLElement>('[data-title-motion="intro"]')!.style.transform;
       const match=transform.match(/translateY\((-?[\d.]+)px\)|translate3d\(0,\s*(-?[\d.]+)px/);

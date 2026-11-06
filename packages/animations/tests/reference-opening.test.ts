@@ -2,10 +2,12 @@ import {describe,expect,it} from 'vitest';
 import {during,frontPose,mixPose,openingState,tiltedPose} from '../src/reference-opening/motion';
 
 describe('reference opening choreography',()=>{
-  it('separates the monitor tilt, chapter switch and thumbnail transition',()=>{
+  it('enters the method heading with the script-to-film cue before the later thumbnail transition',()=>{
     expect(openingState(0)).toEqual({tilt:0,chapter:0,thumbnail:0,fan:0});
     expect(openingState(4).tilt).toBe(1);
-    expect(openingState(4).chapter).toBe(0);
+    expect(openingState(1.9).chapter).toBe(0);
+    expect(openingState(2.6).chapter).toBe(1);
+    expect(openingState(4).chapter).toBe(1);
     expect(openingState(7).thumbnail).toBe(0);
     expect(openingState(9.5)).toEqual({tilt:1,chapter:1,thumbnail:1,fan:1});
   });
