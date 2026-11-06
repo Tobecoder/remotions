@@ -124,6 +124,24 @@ describe('second point through the before-work title',()=>{
       expect(film.querySelector('img')!.getAttribute('style')).toBe(demo.querySelector('img')!.getAttribute('style'));
     }
   });
+  it('pops the constraint text from the rope when it catches and follows the rope during the pull',()=>{
+    const annotation=(frame:number)=>at(frame).querySelector('[data-tether-constraint]')!;
+    expect(annotation(1043).getAttribute('opacity')).toBe('0');
+    expect(annotation(1048).getAttribute('opacity')).toBe('1');
+    expect(annotation(1048).textContent).toBe('约束');
+    const numbers=(value:string)=>Array.from(value.matchAll(/-?\d+(?:\.\d+)?(?:e[+-]?\d+)?/g),match=>Number(match[0]));
+    expect(numbers(annotation(1050).getAttribute('transform')!)[2]).toBeGreaterThan(1);
+    for(const frame of [1058,1076,1103]){
+      const scene=at(frame),rope=numbers(scene.querySelector('[data-tether-rope] path')!.getAttribute('d')!);
+      const label=scene.querySelector('[data-tether-constraint]')!,position=numbers(label.getAttribute('transform')!);
+      expect(position[0]).toBeCloseTo((rope[0]+2*rope[2]+rope[4])/4,8);
+      expect(position[1]).toBeCloseTo((rope[1]+2*rope[3]+rope[5])/4-22,8);
+      expect(position[2]).toBe(1);
+      clock.frame=frame-1002;
+      const demo=dom(<MaterialDemo id="tethered-motion"/>).querySelector('[data-tether-constraint]')!;
+      numbers(demo.getAttribute('transform')!).forEach((value,index)=>expect(value).toBeCloseTo(position[index],8));
+    }
+  });
   it('continues to support custom running and caught content without a sprite atlas',()=>{
     const custom=(time:number)=>dom(<TetheredMotion time={time} running={<span>custom run</span>} caught={<span>custom brace</span>}/>);
     expect(custom(.5).querySelector('[data-tether-actor]')!.textContent).toBe('custom run');

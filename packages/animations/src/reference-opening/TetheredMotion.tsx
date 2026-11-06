@@ -2,11 +2,11 @@ import type {ReactNode} from 'react';
 import {during,mix} from './motion';
 import {RunnerSprite} from './RunnerSprite';
 
-export type TetheredMotionProps={time:number;startAt?:number;label?:string}&(
+export type TetheredMotionProps={time:number;startAt?:number;label?:string;constraintLabel?:string}&(
   {spriteSrc:string;running?:never;caught?:never}|{spriteSrc?:undefined;running:ReactNode;caught:ReactNode}
 );
 
-export const TetheredMotion=({time,startAt=0,running,caught,spriteSrc,label='跑偏了！'}:TetheredMotionProps)=>{
+export const TetheredMotion=({time,startAt=0,running,caught,spriteSrc,label='跑偏了！',constraintLabel='约束'}:TetheredMotionProps)=>{
   const t=time-startAt,move=during(t,0,1.4),catchProgress=during(t,1.15,1.55);
   const pull=during(t,1.9,3),taut=during(t,1.15,1.4),settleTime=t-3;
   const settle=settleTime>0&&settleTime<.35?Math.sin(settleTime*20)*Math.exp(-settleTime*12)*2*(1-during(settleTime,.2,.35)):0;
@@ -19,9 +19,14 @@ export const TetheredMotion=({time,startAt=0,running,caught,spriteSrc,label='跑
   // Tension reduces the sag without turning the rope into a rigid straight line.
   const sag=18+24*(1-taut)+10*pull+settle*.4;
   const rope=`M62 306 Q${(62+ropeX)/2} ${(306+ropeY)/2+sag} ${ropeX} ${ropeY}`;
+  const pop=during(t,1.4,1.75),popScale=mix(.6,1.12,during(t,1.4,1.58))-.12*during(t,1.58,1.8);
+  const textX=(62+ropeX)/2,textY=(306+ropeY)/2+sag/2-22*pop;
   return <div data-tethered-motion style={{position:'absolute',inset:0}}>
     <svg width="800" height="450" style={{position:'absolute',inset:0,overflow:'visible'}}><path d="M54 252H750" stroke="#a5a9a4" strokeWidth=".8" strokeDasharray="6 7"/>
       <g data-tether-rope data-taut={taut} opacity={during(t,.95,1.3)}><path d={rope} fill="none" stroke="#8f6342" strokeWidth="6"/><path d={rope} fill="none" stroke="#d7ac7b" strokeWidth="3.5"/><path d={rope} fill="none" stroke="#966b4b" strokeWidth="2" strokeDasharray="1 3"/></g>
+      {constraintLabel&&<g data-tether-constraint opacity={during(t,1.4,1.53)} transform={`translate(${textX} ${textY}) scale(${popScale})`}>
+        <text textAnchor="middle" dominantBaseline="central" fontSize="17" fontWeight="800" letterSpacing="3" fill="#8f6342" stroke="#f5f6ef" strokeWidth="3" paintOrder="stroke">{constraintLabel}</text>
+      </g>}
     </svg>
     <div data-tether-actor style={{position:'absolute',left:x-74,top:205+bob,width:148,height:146,transform:`rotate(${lean}deg)`,transformOrigin:'74px 115px'}}>
       {spriteSrc?<RunnerSprite src={spriteSrc} time={catchProgress<.5?t:t-1.35} pose={catchProgress<.5?'running':'caught'}/>:catchProgress<.5?running:caught}
