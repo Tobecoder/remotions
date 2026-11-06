@@ -57,7 +57,7 @@ const Gallery = () => {
 
 `AudioPulseBadge` 接收秒数 `time`，可配置 `progress`、中心 `x/y`、`size` 和强调 `color`。这是装饰性的音效示意图标，不分析音频，也不播放声音。
 
-`ChapterCardRow` 接收 `cards=[{id,title,description,content}]` 和 `progress`（0–1）。默认三张卡从下方小卡移动到居中大卡，插图、主标题和说明随布局一起移动。`content` 填满插图区域。原有 `SceneThumbnail` 新增可选 `number`，不传仍为 `01`。
+`ChapterCardRow` 接收 `cards=[{id,title,description,content}]` 和 `progress`（0–1）。默认三张卡从下方小卡移动到居中大卡，插图、主标题和说明随布局一起移动。`content` 填满插图区域，也可以使用 `({width,height,progress}) => ReactNode`，根据实际插图区域尺寸对齐内容；原有静态内容写法保持兼容。原有 `SceneThumbnail` 新增可选 `number`，不传仍为 `01`。
 
 `BranchingPaths` 接收 `time`、可选整体开始 `startAt`，以及 `cards=[{id,content,x,y,width?,height?,rotation?,selected?,enterAt?}]`。每张卡默认 90×51，`selected` 标识最终保留的路径节点。默认前两秒展开，2.3 秒出现 `stamp`、2.85 秒划线、3.9 秒淡去；4.1–4.9 秒绘出强调路径并淡化其他卡。`fromLabel/toLabel/stamp/routeLabel` 均可替换。曲线路径为该参考结构，适用于一个起点与一个终点之间的多路解释。
 

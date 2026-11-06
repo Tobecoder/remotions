@@ -1,5 +1,5 @@
 import {AbsoluteFill,Img,staticFile,useCurrentFrame,useVideoConfig} from 'remotion';
-import {AudioPulseBadge,BranchingPaths,ChapterCardRow,ChapterHeading,SceneThumbnail,SectionCollapse} from '../../packages/animations/src';
+import {AudioPulseBadge,BranchingPaths,ChapterCardRow,ChapterHeading,SceneThumbnail,SectionCollapse,type ChapterCardViewport} from '../../packages/animations/src';
 import {pathCardLayout} from '../../packages/animations/src/reference-opening/continuation-motion';
 import {during,mix} from '../../packages/animations/src/reference-opening/motion';
 import {OpeningMethodVisual,OpeningScene,OpeningSkillVisual,PaperBackground,Subtitle} from './OpeningScene';
@@ -9,11 +9,14 @@ const sound={number:'03 / 03',title:'音效处理',description:'合成，不如�
 // Finish entering the sound chapter before its subtitle starts.
 const soundCueAt=10.45;
 
-const Miniature=({kind,progress=0,time}:{kind:'method'|'skill'|'sound';progress?:number;time:number})=>{
+const Miniature=({kind,progress,time,width,height}:{kind:'method'|'skill'|'sound';time:number}&ChapterCardViewport)=>{
   const starts={method:{x:-42,y:-15,scale:.23},skill:{x:-92,y:-33,scale:.3},sound:{x:-72,y:-33,scale:.28}};
-  const from=starts[kind],scale=mix(from.scale,kind==='method'?.34:kind==='skill'?.4:.48,progress);
-  const x=mix(from.x,kind==='method'?-69:kind==='skill'?-115:-140,progress),y=mix(from.y,kind==='method'?-10:-46,progress);
-  return <div style={{position:'absolute',width:800,height:450,transformOrigin:'0 0',transform:`translate(${x}px,${y}px) scale(${scale})`}}>
+  const from=starts[kind],endScale=kind==='method'?.34:kind==='skill'?.4:.48,scale=mix(from.scale,endScale,progress);
+  // Center the artwork, not its much larger 800x450 source canvas.
+  const anchor=kind==='skill'?{x:470,y:207.2}:{x:470,y:184};
+  const endX=kind==='method'?-69:width/2-anchor.x*endScale,endY=kind==='method'?-10:height/2-anchor.y*endScale;
+  const x=mix(from.x,endX,progress),y=mix(from.y,endY,progress);
+  return <div data-chapter-miniature={kind} style={{position:'absolute',width:800,height:450,transformOrigin:'0 0',transform:`translate(${x}px,${y}px) scale(${scale})`}}>
     {kind==='method'?<OpeningMethodVisual time={10}/>:kind==='skill'?<OpeningSkillVisual time={10}/>:<AudioPulseBadge time={time}/>}
   </div>;
 };
@@ -33,7 +36,7 @@ export const ContinuationScene=()=>{
   const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig(),time=frame/fps;
   const collect=during(time,12,12.85),overviewOut=1-during(time,13.15,13.5);
   const text=time<soundCueAt?'还有大家关心的Skill推荐':time<11.8?'音效怎么处理':time<13.2?'展开具体内容之前':time<15?'我想先分享两点：第一':time<17.2?'用代码做动画没有固定套路':time<19?'更没有什么标准答案':time<20.8?'我分享自己摸索的一些方法':time<23.65?'如果能让你收获一些启发或者灵感':'那这期分享就值得了';
-  const cardContent=(kind:'method'|'skill'|'sound')=><Miniature kind={kind} progress={collect} time={time}/>;
+  const cardContent=(kind:'method'|'skill'|'sound')=>(viewport:ChapterCardViewport)=><Miniature kind={kind} time={time} {...viewport}/>;
   const pathCards=pathCardLayout.map((layout,i)=>({...layout,id:`path-${i}`,content:<Img src={staticFile(`textures/path-${i}.jpg`)} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>}));
   return <AbsoluteFill style={{background:'#f5f6ef',overflow:'hidden',fontFamily:'"Microsoft YaHei", "Noto Sans CJK SC", sans-serif'}}>
     <div data-continuation-scene style={{position:'absolute',width:800,height:450,transformOrigin:'0 0',transform:`scale(${width/800},${height/450})`,overflow:'hidden'}}>

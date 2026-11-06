@@ -16,7 +16,7 @@ export type {BlurredCollageProps, CollageCard} from './BlurredCollage';
 export {AudioPulseBadge} from './AudioPulseBadge';
 export type {AudioPulseBadgeProps} from './AudioPulseBadge';
 export {ChapterCardRow} from './ChapterCardRow';
-export type {ChapterCardRowProps, ChapterCard} from './ChapterCardRow';
+export type {ChapterCardRowProps, ChapterCard,ChapterCardViewport} from './ChapterCardRow';
 export {BranchingPaths} from './BranchingPaths';
 export type {BranchingPathsProps, PathCard} from './BranchingPaths';
 export {SectionCollapse} from './SectionCollapse';
