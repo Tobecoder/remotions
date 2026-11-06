@@ -5,14 +5,16 @@ export type TetheredMotionProps={time:number;startAt?:number;running:ReactNode;c
 
 export const TetheredMotion=({time,startAt=0,running,caught,label='跑偏了！'}:TetheredMotionProps)=>{
   const t=time-startAt,move=during(t,0,1.4),catchProgress=during(t,1.15,1.55);
-  const pull=during(t,1.4,1.72),taut=during(t,1.15,1.4),settleTime=t-1.72;
-  const settle=settleTime>0&&settleTime<.5?Math.sin(settleTime*24)*Math.exp(-settleTime*10)*4*(1-during(settleTime,.35,.5)):0;
+  const pull=during(t,1.9,3),taut=during(t,1.15,1.4),settleTime=t-3;
+  const settle=settleTime>0&&settleTime<.35?Math.sin(settleTime*20)*Math.exp(-settleTime*12)*2*(1-during(settleTime,.2,.35)):0;
   const pullDistance=72;
-  const x=mix(60,520+pullDistance,move)-pullDistance*pull+settle,bob=-(Math.sin(Math.max(0,t)*18)**2)*8*(1-catchProgress);
-  const lean=-6*Math.sin(Math.PI*during(t,1.35,1.72)),angle=lean*Math.PI/180;
+  const x=mix(60,520+pullDistance,move)-pullDistance*pull+settle,bob=-(Math.sin(Math.max(0,t)*18)**2)*8*(1-taut);
+  const lean=-6*taut*(1-during(t,2.75,3)),angle=lean*Math.PI/180;
   // Keep the rope attached to the same point as the actor leans around its waist.
   const ropeX=x-36*Math.cos(angle),ropeY=320+bob-36*Math.sin(angle);
-  const rope=`M62 306 Q${(62+ropeX)/2} ${(306+ropeY)/2+32*(1-taut)} ${ropeX} ${ropeY}`;
+  // Tension reduces the sag without turning the rope into a rigid straight line.
+  const sag=18+24*(1-taut)+10*pull+settle*.4;
+  const rope=`M62 306 Q${(62+ropeX)/2} ${(306+ropeY)/2+sag} ${ropeX} ${ropeY}`;
   return <div data-tethered-motion style={{position:'absolute',inset:0}}>
     <svg width="800" height="450" style={{position:'absolute',inset:0,overflow:'visible'}}><path d="M54 252H750" stroke="#a5a9a4" strokeWidth=".8" strokeDasharray="6 7"/>
       <g data-tether-rope data-taut={taut} opacity={during(t,.95,1.3)}><path d={rope} fill="none" stroke="#8f6342" strokeWidth="6"/><path d={rope} fill="none" stroke="#d7ac7b" strokeWidth="3.5"/><path d={rope} fill="none" stroke="#966b4b" strokeWidth="2" strokeDasharray="1 3"/></g>

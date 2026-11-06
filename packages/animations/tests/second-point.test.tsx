@@ -69,20 +69,31 @@ describe('second point through the before-work title',()=>{
     expect(caught.querySelector('[data-tether-actor] img')!.getAttribute('src')).toContain('runner-caught.png');
     expect(caught.querySelector('[data-tether-rope]')!.getAttribute('opacity')).toBe('1');
   });
-  it('tightens the rope before pulling the actor back, then settles at the original position',()=>{
+  it('holds the caught actor before a slow pullback while keeping the rope curved',()=>{
     const actor=(frame:number)=>at(frame).querySelector<HTMLElement>('[data-tether-actor]')!;
     const x=(frame:number)=>parseFloat(actor(frame).style.left);
     expect(Number(at(1032).querySelector('[data-tether-rope]')!.getAttribute('data-taut'))).toBeLessThan(1);
     expect(at(1044).querySelector('[data-tether-rope]')!.getAttribute('data-taut')).toBe('1');
-    expect(x(1044)-x(1050)).toBeGreaterThan(45);
-    expect(x(1050)).toBeGreaterThan(x(1054));
+    for(const frame of [1050,1058,1059]){
+      expect(x(frame)).toBeCloseTo(x(1044),8);
+      expect(actor(frame).style.top).toBe(actor(1044).style.top);
+      expect(actor(frame).style.transform).toBe(actor(1044).style.transform);
+    }
+    expect(x(1059)-x(1065)).toBeGreaterThan(0);
+    expect(x(1059)-x(1065)).toBeLessThan(12);
+    expect(x(1065)).toBeGreaterThan(x(1076));
+    expect(x(1076)).toBeGreaterThan(x(1089));
+    expect(x(1089)).toBeGreaterThan(x(1092));
     expect(actor(1048).style.transform).not.toBe('rotate(0deg)');
-    expect(x(1069)).toBeCloseTo(446,8);
-    expect(x(1044)-x(1069)).toBeCloseTo(72,8);
-    expect(actor(1069).style.top).toBe('205px');
-    const rope=at(1069).querySelector('[data-tether-rope] path')!;
-    expect(rope.getAttribute('d')).toBe('M62 306 Q273 313 484 320');
-    for(const frame of [1032,1044,1050,1054,1069]){
+    expect(x(1103)).toBeCloseTo(446,8);
+    expect(x(1044)-x(1103)).toBeCloseTo(72,8);
+    expect(actor(1103).style.top).toBe('205px');
+    for(const frame of [1044,1058,1076,1092,1103]){
+      const path=at(frame).querySelector('[data-tether-rope] path')!.getAttribute('d')!;
+      const points=Array.from(path.matchAll(/-?\d+(?:\.\d+)?(?:e[+-]?\d+)?/g),match=>Number(match[0]));
+      expect(points[3]-(points[1]+points[5])/2).toBeGreaterThanOrEqual(18-1e-8);
+    }
+    for(const frame of [1032,1044,1050,1058,1065,1076,1089,1103]){
       const film=at(frame);clock.frame=frame-1002;
       const demo=dom(<MaterialDemo id="tethered-motion"/>);
       const filmActor=film.querySelector<HTMLElement>('[data-tether-actor]')!,demoActor=demo.querySelector<HTMLElement>('[data-tether-actor]')!;
