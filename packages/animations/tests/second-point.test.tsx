@@ -159,6 +159,22 @@ describe('second point through the before-work title',()=>{
     const ids=Array.from(two.querySelectorAll('linearGradient'),gradient=>gradient.id);
     expect(new Set(ids).size).toBe(2);
   });
+  it('reveals documents one at a time before showing the caption and focusing the quote',()=>{
+    for(const [frame,count] of [[1206,1],[1218,2],[1230,3],[1242,4],[1254,5]]){
+      const scene=at(frame),cards=Array.from(scene.querySelectorAll<HTMLElement>('[data-focus-document]'));
+      expect(cards.filter(card=>Number(card.style.opacity)>.999)).toHaveLength(count);
+      expect(cards.slice(count).every(card=>Number(card.style.opacity)===0)).toBe(true);
+      expect(Number(scene.querySelector<HTMLElement>('[data-document-focus]')!.style.opacity)).toBe(0);
+      expect(Number(scene.querySelector<HTMLElement>('[data-document-caption]')!.style.opacity)).toBeCloseTo(0,8);
+    }
+    const secondEntering=at(1212).querySelectorAll<HTMLElement>('[data-focus-document]');
+    expect(Number(secondEntering[1].style.opacity)).toBeGreaterThan(0);
+    expect(Number(secondEntering[1].style.opacity)).toBeLessThan(1);
+    expect(secondEntering[0].style.opacity).toBe('1');
+    expect(Array.from(secondEntering).slice(2).every(card=>card.style.opacity==='0')).toBe(true);
+    expect(at(1262).querySelector<HTMLElement>('[data-document-caption]')!.style.opacity).toBe('1');
+    expect(Number(at(1267).querySelector<HTMLElement>('[data-document-focus]')!.style.opacity)).toBeGreaterThan(0);
+  });
   it('focuses the quote over blurred documents, then drops constraints before revealing the result',()=>{
     const gallery=at(1230),focused=at(1305);
     expect(gallery.querySelectorAll('[data-focus-document]')).toHaveLength(5);
@@ -173,9 +189,9 @@ describe('second point through the before-work title',()=>{
     expect(released.querySelector<HTMLElement>('[data-release-badge]')!.style.opacity).toBe('1');
   });
   it('shares gallery timing with the catalog and stops on the before-work title',()=>{
-    for(const localFrame of [0,30,69,80,96,105]){
+    for(const localFrame of [0,12,24,36,48,60,68,69,80,96,105]){
       const film=at(1194+localFrame);clock.frame=localFrame;const catalog=dom(<MaterialDemo id="document-focus-gallery"/>);
-      expect(styles(film,'[data-document-background], [data-focus-document], [data-document-focus]').map(rounded)).toEqual(styles(catalog,'[data-document-background], [data-focus-document], [data-document-focus]').map(rounded));
+      expect(styles(film,'[data-document-background], [data-focus-document], [data-document-caption], [data-document-focus]').map(rounded)).toEqual(styles(catalog,'[data-document-background], [data-focus-document], [data-document-caption], [data-document-focus]').map(rounded));
     }
     const end=at(1574),title=end.querySelector<HTMLElement>('[data-before-work]')!;
     expect(title.style.opacity).toBe('1');expect(title.textContent).toBe('开工之前我会先准备这些素材');
