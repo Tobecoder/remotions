@@ -1,0 +1,22 @@
+{
+  "atlasSize": [
+    1256,
+    1256
+  ],
+  "columns": 4,
+  "rows": 4,
+  "frameCount": 16,
+  "runFrames": [
+    0,
+    7
+  ],
+  "runFps": 12,
+  "braceFrames": [
+    8,
+    15
+  ],
+  "braceFps": 18,
+  "sha256": "7843e80cfbcb596195d9fc1e2f39c79b63f61d4ba87cc7627b0e0aab239bb76f",
+  "alphaPreserved": true,
+  "gifBackground": "#f5f6ef"
+}

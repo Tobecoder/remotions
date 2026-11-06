@@ -67,6 +67,8 @@ const Gallery = () => {
 
 `TetheredMotion` 的 `running` 和 `caught` 为 React 内容插槽，建议透明图片或 SVG；组件只负责运动与绳索，不生成角色逐帧肢体动画。约 1.35 秒切换姿态，避免两个姿态半透明重叠。1.4 秒牵住角色，停顿至 1.9 秒，再用 1.1 秒慢慢回拉 72px 并归稳；最终停留位置保持。绳索端点跟随角色，受力时收紧但始终保留弧度，回拉时逐渐放松。
 
+也可用 `spriteSrc` 替代两个 React 插槽，提供 4×4 的透明图集：前 8 帧以 12 FPS 跑动循环，后 8 帧在牵住时以 18 FPS 播放一次后保持。仓库内置演示使用新生成的毛绒小熊，图集及动图位于 `assets/characters/runner-v2`，需将图集放进调用工程的静态资源目录。素材库与成片共用 `RunnerSprite` 的帧计算，避免 GIF 自行播放造成跳帧不同步。
+
 `RisingCurve` 使用 `progress`（0–1）控制曲线、填充和端点，支持 `label/title/color`。曲线是概念趋势示意，不是实测数据图；同屏多实例使用独立渐变 ID。
 
 `DocumentFocusGallery` 的 `documents=[{id,content}]` 对应预设五卡布局，`focusContent` 为前景引文插槽，`caption` 和 `badge` 可替换；约 2.3–3 秒虚化背景并显示引文。`ConstraintRelease` 接收 `content`、默认六条 `tags` 和 `badge`；先展开标签，再掉落标签，2.3–2.8 秒显示窗口内容，3.3–3.8 秒放大窗口。内容均由调用方提供，不内置原片图片。

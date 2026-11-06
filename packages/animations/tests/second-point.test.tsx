@@ -14,7 +14,7 @@ vi.mock('remotion',()=>({
 import {BeforeWorkScene} from '../../../examples/reference-opening/SecondPointScene';
 import {FirstPointScene} from '../../../examples/reference-opening/ContinuationScene';
 import {MaterialDemo} from '../../../apps/catalog/src/MaterialDemo';
-import {RisingCurve} from '../src';
+import {RisingCurve,TetheredMotion} from '../src';
 
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
 const at=(frame:number)=>{clock.frame=frame;return dom(<BeforeWorkScene/>);};
@@ -66,7 +66,8 @@ describe('second point through the before-work title',()=>{
       expect(actor.querySelectorAll('img')).toHaveLength(1);
     }
     const caught=at(1050);
-    expect(caught.querySelector('[data-tether-actor] img')!.getAttribute('src')).toContain('runner-caught.png');
+    expect(caught.querySelector('[data-tether-actor] img')!.getAttribute('src')).toContain('characters/runner-v2.png');
+    expect(caught.querySelector('[data-runner-sprite]')!.getAttribute('data-pose')).toBe('caught');
     expect(caught.querySelector('[data-tether-rope]')!.getAttribute('opacity')).toBe('1');
   });
   it('holds the caught actor before a slow pullback while keeping the rope curved',()=>{
@@ -105,6 +106,29 @@ describe('second point through the before-work title',()=>{
       expect(filmRope).toHaveLength(demoRope.length);
       filmRope.forEach((value,index)=>expect(value).toBeCloseTo(demoRope[index],8));
     }
+  });
+  it('animates a run cycle, plays the brace once and holds it during the slow pull',()=>{
+    const sprite=(frame:number)=>at(frame).querySelector<HTMLElement>('[data-runner-sprite]')!;
+    expect(sprite(1002).dataset.spriteFrame).toBe('0');
+    expect(sprite(1022).dataset.spriteFrame).toBe('0');
+    expect(new Set([1002,1005,1008,1011].map(frame=>sprite(frame).dataset.spriteFrame)).size).toBe(4);
+    expect(sprite(1043).dataset.pose).toBe('caught');
+    expect(sprite(1043).dataset.spriteFrame).toBe('8');
+    expect(Number(sprite(1050).dataset.spriteFrame)).toBeGreaterThan(8);
+    for(const frame of [1056,1059,1065,1089,1103])expect(sprite(frame).dataset.spriteFrame).toBe('15');
+    const seek=sprite(1050).outerHTML;at(1103);expect(sprite(1050).outerHTML).toBe(seek);
+    for(const frame of [1002,1008,1043,1050,1056,1089]){
+      const film=sprite(frame);clock.frame=frame-1002;
+      const demo=dom(<MaterialDemo id="tethered-motion"/>).querySelector<HTMLElement>('[data-runner-sprite]')!;
+      expect(film.dataset.spriteFrame).toBe(demo.dataset.spriteFrame);
+      expect(film.querySelector('img')!.getAttribute('style')).toBe(demo.querySelector('img')!.getAttribute('style'));
+    }
+  });
+  it('continues to support custom running and caught content without a sprite atlas',()=>{
+    const custom=(time:number)=>dom(<TetheredMotion time={time} running={<span>custom run</span>} caught={<span>custom brace</span>}/>);
+    expect(custom(.5).querySelector('[data-tether-actor]')!.textContent).toBe('custom run');
+    expect(custom(2).querySelector('[data-tether-actor]')!.textContent).toBe('custom brace');
+    expect(custom(2).querySelector('[data-runner-sprite]')).toBeNull();
   });
   it('moves the growth tip up and right and keeps multiple gradient instances independent',()=>{
     let previous={x:0,y:450};

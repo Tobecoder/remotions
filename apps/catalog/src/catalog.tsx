@@ -23,10 +23,10 @@ export const catalog: CatalogItem[] = [
 
 <ConstraintSwitches time={frame / fps + 2.2}
   heading="极简主义先行" labels={['额外的 Skill','非必须的约束']} offLabel="先不加" />`},
-  {id:'tethered-motion',category:'storytelling',name:'绳索牵回',component:'TetheredMotion',description:'对象向前移动，被绳索牵住后切换姿态',usage:'约束比喻 · 偏离提醒',durationInFrames:120,posterFrame:80,code:`import {TetheredMotion} from '@remotions/animations';
+  {id:'tethered-motion',category:'storytelling',name:'绳索牵回',component:'TetheredMotion',description:'角色逐帧跑动，牵住停顿后慢慢回拉',usage:'约束比喻 · 偏离提醒',durationInFrames:120,posterFrame:80,code:`import {TetheredMotion} from '@remotions/animations';
 
 <TetheredMotion time={frame / fps}
-  running={<RunningImage />} caught={<CaughtImage />} label="跑偏了！" />`},
+  spriteSrc="/characters/runner-v2.png" label="跑偏了！" />`},
   {id:'rising-curve',category:'charts',name:'曲线上升',component:'RisingCurve',description:'橙色曲线与面积同步向右上展开，端点沿线移动',usage:'趋势示意 · 能力变化',durationInFrames:105,posterFrame:75,code:`import {RisingCurve} from '@remotions/animations';
 
 // 概念趋势示意，不是实测数据图。
