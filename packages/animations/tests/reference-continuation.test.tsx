@@ -112,21 +112,36 @@ describe('observed 11–20 second continuation',()=>{
       }
     }
   });
-  it('centers the skill artwork and sound badge within the settled card illustration areas',()=>{
-    for(const frame of [386,390,394]){
+  it('centers the skill artwork and sound badge from the first small card through the settled overview',()=>{
+    for(const frame of [359,360,365,370,375,380,386,390,394]){
       const scene=filmAt(frame);
       for(const [kind,anchor,expectedScale] of [['skill',{x:470,y:207.2},.4],['sound',{x:470,y:184},.48]] as const){
         const card=scene.querySelector<HTMLElement>(`[data-chapter-card="${kind}"]`)!;
-        const viewportWidth=parseFloat(card.style.width)-14,viewportHeight=parseFloat(card.style.height)-8-48;
+        const [top,,bottom]=card.querySelector<HTMLElement>('[data-chapter-illustration]')!.style.inset.split(/\s+/).map(value=>parseFloat(value));
+        const viewportWidth=parseFloat(card.style.width)-14,viewportHeight=parseFloat(card.style.height)-top-bottom;
         const miniature=card.querySelector<HTMLElement>('[data-chapter-miniature]')!;
         const [,x,y,scale]=miniature.style.transform.match(/translate\(([-\d.]+)px,([-\d.]+)px\) scale\(([-\d.]+)\)/)!.map(Number);
-        expect(scale).toBe(expectedScale);
+        if(frame>=386)expect(scale).toBe(expectedScale);
         expect(x+anchor.x*scale).toBeCloseTo(viewportWidth/2,8);
         expect(y+anchor.y*scale).toBeCloseTo(viewportHeight/2,8);
         const halfWidth=kind==='skill'?200*scale:96*scale,halfHeight=kind==='skill'?81.2*scale:96*scale;
         expect(viewportWidth/2-halfWidth).toBeGreaterThanOrEqual(0);
         expect(viewportHeight/2-halfHeight).toBeGreaterThanOrEqual(0);
       }
+    }
+  });
+  it('lands the shrinking artwork directly at the small-card position without another alignment move',()=>{
+    const arriving=filmAt(358.5-1e-8).querySelectorAll<HTMLElement>('[data-chapter-thumbnail-content]');
+    const collected=filmAt(359);
+    for(const [index,kind] of [[1,'skill'],[2,'sound']] as const){
+      const card=collected.querySelector<HTMLElement>(`[data-chapter-card="${kind}"]`)!;
+      const miniature=card.querySelector<HTMLElement>('[data-chapter-miniature]')!;
+      const read=(transform:string)=>transform.match(/translate\(([-\d.]+)px,([-\d.]+)px\) scale\(([-\d.]+)\)/)!.slice(1).map(Number);
+      const [arrivalX,arrivalY,arrivalScale]=read(arriving[index].style.transform);
+      const [x,y,scale]=read(miniature.style.transform);
+      expect(arrivalX).toBeCloseTo(parseFloat(card.style.left)+7+x,5);
+      expect(arrivalY).toBeCloseTo(parseFloat(card.style.top)+3+y,5);
+      expect(arrivalScale).toBeCloseTo(scale,5);
     }
   });
   it('moves the light forward to the result before revealing the inspiration label',()=>{

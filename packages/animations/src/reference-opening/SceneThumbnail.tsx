@@ -8,7 +8,7 @@ export const SceneThumbnail = ({children,progress,target={x:120,y:298,scale:.23}
   const p=clamp(progress);
   return <>
     <div data-chapter-thumbnail style={{position:'absolute',left:card.x,top:card.y,width:card.width,height:card.height,borderRadius:10,background:'#ffffffbd',boxShadow:'0 8px 16px #2c303012',opacity:p}}/>
-    <div style={{position:'absolute',inset:0,transformOrigin:'0 0',transform:`translate(${target.x*p}px,${target.y*p}px) scale(${mix(1,target.scale,p)})`}}>{children}</div>
+    <div data-chapter-thumbnail-content style={{position:'absolute',inset:0,transformOrigin:'0 0',transform:`translate(${target.x*p}px,${target.y*p}px) scale(${mix(1,target.scale,p)})`}}>{children}</div>
     <div style={{position:'absolute',left:card.x,top:card.y+card.height-20,width:card.width,textAlign:'center',fontSize:6,color:'#5e6065',opacity:p}}><span style={{color:'#c77055',fontFamily:'monospace',fontSize:5,marginRight:4}}>{number}</span>{caption}</div>
   </>;
 };

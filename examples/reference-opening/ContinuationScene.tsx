@@ -9,13 +9,21 @@ const sound={number:'03 / 03',title:'音效处理',description:'合成，不如�
 // Finish entering the sound chapter before its subtitle starts.
 const soundCueAt=10.45;
 
+const artworkAnchors={skill:{x:470,y:207.2},sound:{x:470,y:184}};
+const artworkPosition=(kind:keyof typeof artworkAnchors,width:number,height:number,scale:number)=>({
+  x:width/2-artworkAnchors[kind].x*scale,
+  y:height/2-artworkAnchors[kind].y*scale,
+});
+// Land directly at the same centered position used by the overview's small cards.
+const thumbnailTarget=(kind:keyof typeof artworkAnchors,cardX:number,scale:number)=>{
+  const position=artworkPosition(kind,153-14,92-3-28,scale);
+  return {x:cardX+7+position.x,y:310+3+position.y,scale};
+};
+
 const Miniature=({kind,progress,time,width,height}:{kind:'method'|'skill'|'sound';time:number}&ChapterCardViewport)=>{
-  const starts={method:{x:-42,y:-15,scale:.23},skill:{x:-92,y:-33,scale:.3},sound:{x:-72,y:-33,scale:.28}};
-  const from=starts[kind],endScale=kind==='method'?.34:kind==='skill'?.4:.48,scale=mix(from.scale,endScale,progress);
-  // Center the artwork, not its much larger 800x450 source canvas.
-  const anchor=kind==='skill'?{x:470,y:207.2}:{x:470,y:184};
-  const endX=kind==='method'?-69:width/2-anchor.x*endScale,endY=kind==='method'?-10:height/2-anchor.y*endScale;
-  const x=mix(from.x,endX,progress),y=mix(from.y,endY,progress);
+  const startScale={method:.23,skill:.3,sound:.28}[kind],endScale=kind==='method'?.34:kind==='skill'?.4:.48,scale=mix(startScale,endScale,progress);
+  // Keep the artwork centered throughout collection, without a second alignment move.
+  const {x,y}=kind==='method'?{x:mix(-42,-69,progress),y:mix(-15,-10,progress)}:artworkPosition(kind,width,height,scale);
   return <div data-chapter-miniature={kind} style={{position:'absolute',width:800,height:450,transformOrigin:'0 0',transform:`translate(${x}px,${y}px) scale(${scale})`}}>
     {kind==='method'?<OpeningMethodVisual time={10}/>:kind==='skill'?<OpeningSkillVisual time={10}/>:<AudioPulseBadge time={time}/>}
   </div>;
@@ -48,8 +56,8 @@ export const ContinuationScene=()=>{
         {time<11.95?<>
           <div style={{position:'absolute',inset:0,opacity:1-during(time,11.35,11.85)}}><ChapterHeading from={skill} to={sound} progress={during(time,10,soundCueAt)}/></div>
           <SceneThumbnail progress={1}><OpeningMethodVisual time={10}/></SceneThumbnail>
-          <SceneThumbnail progress={during(time,10,soundCueAt)} target={{x:240,y:280,scale:.3}} card={{x:325,y:310,width:153,height:92}} number="02" caption="Skill 推荐"><OpeningSkillVisual time={10}/></SceneThumbnail>
-          <div style={{position:'absolute',inset:0,opacity:during(time,10.1,soundCueAt)}}><SceneThumbnail progress={during(time,11.35,11.95)} target={{x:430,y:280,scale:.28}} card={{x:495,y:310,width:153,height:92}} number="03" caption="音效处理"><AudioPulseBadge time={time}/></SceneThumbnail></div>
+          <SceneThumbnail progress={during(time,10,soundCueAt)} target={thumbnailTarget('skill',325,.3)} card={{x:325,y:310,width:153,height:92}} number="02" caption="Skill 推荐"><OpeningSkillVisual time={10}/></SceneThumbnail>
+          <div style={{position:'absolute',inset:0,opacity:during(time,10.1,soundCueAt)}}><SceneThumbnail progress={during(time,11.35,11.95)} target={thumbnailTarget('sound',495,.28)} card={{x:495,y:310,width:153,height:92}} number="03" caption="音效处理"><AudioPulseBadge time={time}/></SceneThumbnail></div>
         </>:<ChapterCardRow progress={collect} cards={[
           {id:'method',title:'制作方法',description:'从脚本到成片',content:cardContent('method')},
           {id:'skill',title:'Skill 推荐',description:'找素材 · 选零件',content:cardContent('skill')},
