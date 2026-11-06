@@ -31,16 +31,20 @@ describe('script continuation through the requested 96-second boundary',()=>{
     const overview=at(1830),chapter=at(1887),document=at(1950);
     expect(style(overview,'[data-script-phase="overview"]').opacity).toBe('1');
     expect(overview.querySelectorAll('[data-layer-label]')).toHaveLength(5);
-    expect(overview.querySelector('[data-script-phase="overview"]')!.textContent).toContain('音效');
+    expect(overview.querySelector('[data-script-stack]')!.textContent).toContain('音效');
     expect(Number(style(chapter,'[data-script-chapter]').opacity)).toBeGreaterThan(0);
     expect(style(document,'[data-script-phase="document"]').opacity).toBe('1');
     expect(style(document,'[data-script-phase="overview"]').opacity).toBe('0');
+    expect(style(document,'[data-script-stack]').opacity).toBe('0');
   });
-  it('holds the chapter alone for a readable beat without overlapping the stack or document',()=>{
+  it('holds the chapter with its complete layer stack while keeping the old heading and document hidden',()=>{
     for(const frame of [1863,1872,1881,1890,1899]){
       const scene=at(frame);
       expect(Number(style(scene,'[data-script-chapter]').opacity)).toBeCloseTo(1,8);
       expect(style(scene,'[data-script-phase="overview"]').opacity).toBe('0');
+      expect(style(scene,'[data-script-stack]').opacity).toBe('1');
+      expect(scene.querySelectorAll('[data-script-stack] [data-layer-label]')).toHaveLength(5);
+      for(const label of scene.querySelectorAll('[data-script-stack] [data-layer-label]'))expect(label.getAttribute('opacity')).toBe('1');
       expect(style(scene,'[data-script-phase="document"]').opacity).toBe('0');
     }
   });
@@ -86,6 +90,7 @@ describe('script continuation through the requested 96-second boundary',()=>{
   it('ends on paper and the requested question subtitle at 1:36',()=>{
     const end=at(2879);
     for(const phase of end.querySelectorAll<HTMLElement>('[data-script-phase]'))expect(Number(phase.style.opacity)).toBe(0);
+    expect(style(end,'[data-script-stack]').opacity).toBe('0');
     expect(end.querySelector('[data-script-scene]')!.lastElementChild!.textContent).toBe('还是重点聊两个大家比较关心的问题');
     expect(end.querySelector('[data-next-question]')).toBeNull();
   });

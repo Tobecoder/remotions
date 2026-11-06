@@ -45,6 +45,8 @@ export const ScriptScene=()=>{
       <PaperBackground time={time}/>
       <div data-script-phase="overview" style={{position:'absolute',inset:0,opacity:windowOpacity(time,58,61.8)}}>
         <div style={{position:'absolute',left:49,top:55,opacity:1-during(time,61.4,61.8)}}><div style={{fontSize:9,letterSpacing:2,fontWeight:700,color:'#ce7556',marginBottom:8}}>接下来</div><div style={{fontSize:31,lineHeight:'37px',fontWeight:900,color:'#292c33'}}>细拆上期的<br/>每个环节</div></div>
+      </div>
+      <div data-script-stack style={{position:'absolute',inset:0,opacity:windowOpacity(time,58,63.6)}}>
         <ExplodedLayers time={time} startAt={57.6} layers={['音效','制作视频和 Skill','旁白和 SRT','素材','脚本'].map((label,i)=>({id:String(i),label,content:<OverviewLayer index={i}/>}))} screen={<Img src={staticFile('textures/screen-0.jpg')} style={cover}/>}/>
       </div>
       <div data-script-chapter style={{position:'absolute',inset:0,opacity:during(time,61.8,62.1)*(1-during(time,63.3,63.6))}}><ChapterHeading x={49} y={124} from={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}} to={{number:'CHAPTER 01 / 06',title:'脚本',description:'逐字稿 · 素材备注 · 动画备注'}} progress={0}/></div>
