@@ -60,11 +60,34 @@ const Gallery = () => {
 
 `ChapterCardRow` 接收 `cards=[{id,title,description,content}]` 和 `progress`（0–1）。默认三张卡从下方小卡移动到居中大卡，插图、主标题和说明随布局一起移动。`content` 填满插图区域，也可以使用 `({width,height,progress}) => ReactNode`，根据实际插图区域尺寸对齐内容；原有静态内容写法保持兼容。
 
-`BranchingPaths` 接收 `time`、可选整体开始 `startAt`，以及 `cards=[{id,content,x,y,width?,height?,rotation?,selected?,enterAt?}]`。每张卡默认 90×51，`selected` 标识最终保留的路径节点。默认前两秒展开，2.3 秒出现 `stamp`、2.85 秒划线、3.9 秒淡去；4.1–4.9 秒绘出强调路径并淡化其他卡。`fromLabel/toLabel/stamp/routeLabel` 均可替换。曲线路径为该参考结构，适用于一个起点与一个终点之间的多路解释。
+`BranchingPaths` 接收 `time`、可选整体开始 `startAt`，以及 `cards=[{id,content,x,y,width?,height?,rotation?,selected?,enterAt?}]`。每张卡默认 90×51。未提供新路线配置时保留原参考结构和 `selected` 卡片标记：前两秒展开，2.3 秒出现 `stamp`、2.85 秒划线、3.9 秒淡去；4.1–4.9 秒绘出强调路径并淡化其他卡。
 
 选路后的光点在 4.1–6 秒沿同一条曲线前进，中段较快、接近终点时温和放慢，到终点保持；6.25–6.65 秒显示 `resultLabel`（默认“启发 · 灵感”）。这些时间均相对 `startAt`，支持随机跳帧。
 
 三条基础路线按“上 → 下 → 中”交替起笔，分别从 0、0.35、0.7 秒开始，单条绘制仍为 0.65 秒。卡片入场及后续选路不随此错峰调整而改变。
+
+自定义路线使用 `routes=[{id,path,cardIds?,enterAt?,duration?}]`，`path` 是一条连续 SVG 路径。`selectedRoute` 指定路线 id，高亮线与光点使用该路径本身，关联的 `cardIds` 控制哪些卡片保留、高亮和位于前景。卡片位置仍由 `x/y/width/height` 控制，`cardIds` 不会自动移动卡片；安排路径时应让它经过相应卡片。显式选路后不再读取旧的 `card.selected`，避免高亮到另一条路线的节点。
+
+```tsx
+<BranchingPaths time={frame / fps} cards={[
+  {id:'a',x:355,y:154.5,content:<FirstImage />},
+  {id:'b',x:355,y:314.5,content:<SecondImage />},
+]} routes={[
+  {id:'upper',path:'M100 260 Q400 100 700 260',cardIds:['a']},
+  {id:'lower',path:'M100 260 Q400 420 700 260',cardIds:['b']},
+]} selectedRoute="upper" fromLabel="问题" toLabel="结果"
+  stamp={false} routeLabel="选定方案" resultLabel={false}
+  timing={{selectAt:1.5,travelDuration:2}} />
+```
+
+- 起终点默认从第一条自定义路线读取；也可指定 `from/to={x,y}`，坐标以 800×450 为设计画布。所有路线必须连接同一起点与终点。未提供 `routes` 时，修改起终点会同步旋转/缩放原曲线与光点轨迹，卡片继续使用调用方坐标。
+- 自定义路线默认不自动选中，需显式指定 `selectedRoute`；`selectedRoute={false}` 只展示多路与卡片，不做选路、淡化或光点展示。原三条基础路线也可通过 `upper/middle/lower` 指定选择；需要关联节点时提供相应 `routes/cardIds`。
+- `stamp={false}` 关闭整个盖章划线阶段；`routeLabel={false}` 和 `resultLabel={false}` 分别关闭路线提示、结果标签。空字符串同样不会生成空框。关闭阶段不会自动压缩其他阶段的时间。
+- `timing.stampAt` 平移整个盖章划线阶段，默认 `2.3`；`selectAt` 控制选路、淡化及光点开始，默认 `4.1`；`travelDuration` 控制光点行进时长，默认 `1.9`；`resultAt` 单独指定结果标签开始时刻，默认在选路线条和光点都完成后再等 `0.25` 秒。时间均相对组件的 `startAt`，零行进时长直接到达终点。
+- 每条自定义路线的 `enterAt` 默认按列表顺序相隔 `0.35` 秒，绘制 `duration` 默认 `0.65` 秒，可独立配置。`positions={stamp:{x,y},routeLabel:{x,y},resultLabel:{x,y}}` 可覆盖提示的左上角位置；省略时随起终点布局调整。标题和结果文案仍需保持原来的短句长度，其他布局自行验收。
+- 显式空路线列表不会补回原路线，也不显示盖章提示；无效 SVG、多子路径、重合起终点、端点不一致、重复 id、无效选路或缺失卡片引用会明确报错。非有限时序回退默认值，负绘制/行进时长按零处理。
+
+[多路径演示与小节收束完整范例](../../examples/component-examples/content-collapse/README.md) 复用现有的 11 秒镜头：多路径讲解结束后收成摘要。两个动作入口共享同一份预览，完整范例数量仍为七份。
 
 `ContentCollapse` 接收任意 `children`、`progress`（0–1）和目标 `to={x,y,scale}`；可选起点 `from`（默认 `{x:0,y:0,scale:1}`）及 `opacity`（默认 `1`）。坐标以内容容器左上角为原点，位置和缩放随进度插值；没有内置淡出、编号、文案或摘要条，显隐由调用方独立控制。支持 `style/className` 等容器属性。原 `SectionCollapse` 及其专属类型已退出公开入口，编号与摘要条组合保存在案例工程。
 

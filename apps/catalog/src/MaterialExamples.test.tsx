@@ -41,6 +41,16 @@ describe('full examples associated with a standalone material',()=>{
     expect(panel.querySelector('.example-guide')!.getAttribute('href')).toBe('/examples/section-collapse.md');
     fireEvent.click(toggle);expect(container.querySelector('video')).toBeNull();
   });
+  it('reuses the existing section example for the complete multi-route explanation and collapse',()=>{
+    const {container}=render(<MaterialExamples materialId="branching-paths"/>);
+    const toggle=screen.getByRole('button',{name:'查看完整范例 · 小节收束'});
+    fireEvent.click(toggle);
+    const panel=screen.getByRole('region',{name:'小节收束完整范例'});
+    expect(panel.querySelector('video')!.getAttribute('src')).toBe('/examples/section-collapse.mp4');
+    expect(panel.textContent).toContain('多路径讲解完成后');expect(panel.textContent).toContain('11 秒');
+    expect(panel.querySelector('code')!.textContent).toContain('component={SectionCollapseExample}');
+    fireEvent.click(toggle);expect(container.querySelector('video')).toBeNull();
+  });
   it('shares the chapter thumbnail handoff across collapse and heading without replacing the summary example',()=>{
     const {container,rerender}=render(<MaterialExamples materialId="content-collapse"/>);
     for(const materialId of ['content-collapse','chapter-heading'] as const){

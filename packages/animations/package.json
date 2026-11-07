@@ -37,5 +37,8 @@
     "react": "^19.0.0",
     "remotion": "4.0.537"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@remotion/paths": "4.0.537"
+  }
 }

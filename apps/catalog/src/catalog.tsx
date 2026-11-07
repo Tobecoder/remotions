@@ -100,14 +100,20 @@ export const catalog: CatalogItem[] = [
   {id:'skill',title:'Skill 推荐',description:'找素材 · 选零件',content:<SkillPreview />},
   {id:'sound',title:'音效处理',description:'合成，不如找到',content:<SoundPreview />},
 ]} />`},
-  {id:'branching-paths',category:'storytelling',name:'多路径演示',component:'BranchingPaths',description:'图片沿曲线展开、强调一条路线，光点到达结果',usage:'思路讲解 · 方案对比',durationInFrames:240,posterFrame:165,code:`import {BranchingPaths} from '@remotions/animations';
+  {id:'branching-paths',category:'storytelling',name:'多路径演示',component:'BranchingPaths',description:'可配置多条路线和关联卡片，高亮线与光点沿同一路径前进',usage:'思路讲解 · 方案对比',durationInFrames:240,posterFrame:165,code:`import {BranchingPaths} from '@remotions/animations';
 
-// 800 × 450 画布；前 2 秒展开，2.3 秒出现标签，4.1 秒开始突出路径。
+// 800 × 450 设计画布；cardIds 将所选路线和卡片高亮关联。
 <BranchingPaths time={frame / fps} cards={[
-  {id:'start',x:210,y:314,selected:true,content:<FirstImage />},
-  {id:'middle',x:356,y:260,width:90,height:66,selected:true,content:<SecondImage />},
-  {id:'end',x:505,y:233,selected:true,content:<ThirdImage />},
-]} fromLabel="想法" toLabel="成片" stamp="标准答案" routeLabel="我摸索的一条路" />`},
+  {id:'a',x:355,y:154.5,content:<FirstImage />},
+  {id:'b',x:355,y:314.5,content:<SecondImage />},
+]} routes={[
+  {id:'upper',path:'M100 260 Q400 100 700 260',cardIds:['a']},
+  {id:'lower',path:'M100 260 Q400 420 700 260',cardIds:['b']},
+]} selectedRoute="upper" fromLabel="问题" toLabel="结果"
+  stamp={false} routeLabel="选定方案" resultLabel={false}
+  timing={{selectAt:1.5,travelDuration:2}} />
+
+// 不传 routes 时保留原版；stamp/routeLabel/resultLabel 可分别关闭。`},
   {id:'blurred-collage',category:'backgrounds',name:'虚化拼贴漂移',component:'BlurredCollage',description:'图片墙向左下缓慢漂移，淡出后留下静止纸纹',usage:'片头铺底 · 教程开场',durationInFrames:180,posterFrame:18,code:`import {BlurredCollage} from '@remotions/animations';
 import {Img, useCurrentFrame, useVideoConfig} from 'remotion';
 

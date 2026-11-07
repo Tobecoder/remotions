@@ -33,6 +33,7 @@ describe('complete example registry',()=>{
     expect(getMaterialExamples('progress-row').map(example=>example.id)).toEqual(['progress-row-comparison']);
     expect(getMaterialExamples('card-spotlight').map(example=>example.id)).toEqual(['card-spotlight-return']);
     expect(getMaterialExamples('content-collapse').map(example=>example.id)).toEqual(['section-collapse','scene-thumbnail','preparation-cards']);
+    expect(getMaterialExamples('branching-paths').map(example=>example.id)).toEqual(['section-collapse']);
     expect(getMaterialExamples('chapter-heading').map(example=>example.id)).toEqual(['scene-thumbnail']);
     expect(getMaterialExamples('card-entrance').map(example=>example.id)).toEqual(['document-focus-gallery','preparation-cards']);
     expect(getMaterialExamples('focus-layer').map(example=>example.id)).toEqual(['document-focus-gallery']);

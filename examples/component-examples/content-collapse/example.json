@@ -1,8 +1,8 @@
 {
   "id": "section-collapse",
-  "materialIds": ["content-collapse"],
+  "materialIds": ["content-collapse", "branching-paths"],
   "name": "小节收束",
-  "description": "讲解画面向左上角缩小淡出，编号摘要条随之显现，保留已经讲完的小节。",
+  "description": "多路径讲解完成后，画面向左上角缩小淡出，编号摘要条显现，保留已完成的小节。",
   "useCases": ["观点讲完后的归档", "小节回顾", "连续讲解中的摘要导航"],
   "replaceable": ["完整场景内容（静态或逐帧动画）", "小节名称和编号", "默认演示的标题与路径文案"],
   "preserve": ["讲解完成后再收拢的顺序", "原左上方向、落点和 0.06 缩放终点", "原 0.75 秒收拢与主体淡出节奏", "摘要条渐显并保持的衔接"],

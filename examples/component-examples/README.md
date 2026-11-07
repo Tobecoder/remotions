@@ -8,7 +8,7 @@
 | `DocumentWindow` / `HighlightBox` / `CollapsingTitle` · 文档窗口、区域高亮、标题收拢 | 脚本文档讲解 | [使用说明](./script-document/README.md) · [入口](./script-document/index.tsx) | 待用户确认 |
 | `CardSpotlight` · 卡片放大回位 | 卡片放大回位 | [使用说明](./card-spotlight/README.md) · [入口](./card-spotlight/index.tsx) | 待用户确认 |
 | `CardEntrance` / `FocusLayer` · 卡片入场、前景聚焦 | 文档聚焦 | [使用说明](./document-focus/README.md) · [入口](./document-focus/index.tsx) | 待用户确认 |
-| `ContentCollapse` · 内容收拢 | 小节收束 | [使用说明](./content-collapse/README.md) · [入口](./content-collapse/index.tsx) | 待用户确认 |
+| `ContentCollapse` / `BranchingPaths` · 内容收拢、多路径演示 | 小节收束 | [使用说明](./content-collapse/README.md) · [入口](./content-collapse/index.tsx) | 待用户确认 |
 | `ContentCollapse` / `ChapterHeading` · 内容收拢、章节标题切换 | 章节缩略卡 | [使用说明](./scene-thumbnail/README.md) · [入口](./scene-thumbnail/index.tsx) | 待用户确认 |
 | `CardEntrance` / `ContentCollapse` / `AgentPipeline` · 卡片入场、内容收拢、Agent 成片流程 | 素材准备卡 | [使用说明](./preparation-cards/README.md) · [入口](./preparation-cards/index.tsx) | 待用户确认 |
 

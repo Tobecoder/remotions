@@ -16,7 +16,7 @@ export type {AudioPulseBadgeProps} from './AudioPulseBadge';
 export {ChapterCardRow} from './ChapterCardRow';
 export type {ChapterCardRowProps, ChapterCard,ChapterCardViewport} from './ChapterCardRow';
 export {BranchingPaths} from './BranchingPaths';
-export type {BranchingPathsProps, PathCard} from './BranchingPaths';
+export type {BranchingPathsProps,PathCard,BranchPoint,BranchRoute,BranchingPathsTiming,BranchingPathsPositions} from './BranchingPaths';
 export {ContentCollapse} from './ContentCollapse';
 export type {ContentCollapseProps,ContentCollapsePose} from './ContentCollapse';
 export {TargetReticle} from './TargetReticle';

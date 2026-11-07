@@ -2,6 +2,8 @@
 
 本范例直接调用原案例 `SectionCollapse`，由它组合 `ContentCollapse` 与编号摘要条。保留原第一点向左上角缩小、主体淡出、摘要渐显的方向、落点和相对节奏；默认演示沿用原 `BranchingPaths` 及卡片布局，缩略内容换成无外部依赖的示意图。新范例入口与示例内容待用户确认。
 
+内容收拢与多路径演示共享这份完整预览：先展示多条路线、强调一条路线并让光点到达结果，再把讲完的内容收成摘要。关联入口不新增或复制动画。
+
 ## 什么时候使用
 
 适合一个观点讲完后，把整段画面收成短摘要，给后续内容留出空间。范例展示完整的「讲解 → 收拢 → 归档保持」，不是只演示缩小动作。
@@ -51,10 +53,12 @@ const MySection=()=> <SectionCollapseExample
 
 `YourScene` 的根容器应填满 800×450 设计区域。其动画可使用回调提供的秒数；子组件直接读取 Remotion 帧时，读到的也是同一范例时钟，不会在收拢开始时重置。默认收拢在 8.75 秒开始，应让被替换内容在此之前完成讲解；更长的内容先调整案例编排再验收。
 
+需要自定义路线、选择其他节点或关闭盖章划线时，可用 `content={time=><BranchingPaths time={time} cards={cards} routes={routes} selectedRoute="upper" stamp={false} />}` 替换讲解部分，继续复用原收拢动作。路线、时间、提示位置的配置见 [组件说明](../../../packages/animations/README.md)；本范例的默认画面仍保留原路径与阶段。
+
 入口：[index.tsx](./index.tsx)。默认内容与时长：[example.json](./example.json)。原组合：[SectionCollapse.tsx](../../reference-opening/compositions/SectionCollapse.tsx)。基础动作：[ContentCollapse.tsx](../../../packages/animations/src/reference-opening/ContentCollapse.tsx)。
 
 ## 预览维护
 
 从仓库根目录运行 `node examples/component-examples/content-collapse/render.mjs`，由共享流程导出完整 MP4、封面和说明。修改内容或编排后重新导出预览；机器检查通过不代替视觉确认。
 
-素材站入口：版式转场 → 内容收拢 → 查看完整范例 · 小节收束。
+素材站入口：版式转场 → 内容收拢，或叙事动画 → 多路径演示 → 查看完整范例 · 小节收束。
