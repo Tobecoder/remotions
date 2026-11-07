@@ -1,0 +1,33 @@
+{
+  "id": "progress-row-comparison",
+  "materialId": "progress-row",
+  "name": "进度对比",
+  "description": "两条进度依次入场，展示快速完成与持续等待的对照，保留徽章、转圈和连续计数。",
+  "useCases": ["两种方案对比", "处理效率示意", "任务完成节奏讲解"],
+  "replaceable": ["标题与上方短句", "两行名称", "完成和等待说明", "计数终值与下方短语"],
+  "preserve": ["上下两行布局与快慢对照", "依次入场、先完成再展示等待的顺序", "进度填充与转圈中心对齐", "徽章、旋转和计数的相对节奏"],
+  "reviewStatus": "pending",
+  "composition": {"id": "Example-ProgressRow-Comparison", "width": 1280, "height": 720, "fps": 30, "durationInFrames": 270, "posterFrame": 225},
+  "source": {
+    "entry": "examples/component-examples/progress-row/index.tsx",
+    "component": "examples/component-examples/progress-row/Example.tsx",
+    "exportName": "ProgressRowExample",
+    "implementation": "examples/reference-opening/compositions/ProgressRace.tsx",
+    "guide": "examples/component-examples/progress-row/README.md"
+  },
+  "preview": {
+    "video": "/examples/progress-row-comparison.mp4",
+    "poster": "/examples/progress-row-comparison.jpg",
+    "guide": "/examples/progress-row-comparison.md"
+  },
+  "defaultProps": {
+    "title": "两种方案，哪种更快？",
+    "eyebrow": "非要推荐一个",
+    "firstLabel": "方案 A",
+    "secondLabel": "方案 B",
+    "winnerLabel": "快速完成",
+    "slowLabel": "仍在处理中",
+    "countTo": 6000,
+    "phrases": ["总的来说", "换句话说", "也就是说", "值得注意的是"]
+  }
+}

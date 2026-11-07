@@ -46,7 +46,7 @@ node examples/reference-opening/render.mjs
 ## 案例组合的归属
 
 - [脚本文档讲解](./compositions/ScriptDocumentGuide.tsx) 编排章节标题、文档滚动、高亮和说明收拢，使用库中的 `ChapterHeading/DocumentWindow/HighlightBox/CollapsingTitle`。保留原有停顿与切换时刻，`copy` 可替换案例文案。
-- [进度对比](./compositions/ProgressRace.tsx) 编排两条 `ProgressRow` 的快慢、转圈和计数。`eyebrow/countTo/phrases` 为案例配置。
+- [进度对比](./compositions/ProgressRace.tsx) 编排两条 `ProgressRow` 的快慢、转圈和计数。`eyebrow/countTo/phrases` 为案例配置；[完整范例](../component-examples/progress-row/README.md) 提供独立入口、替换说明和同源预览。
 - [卡片强调镜头](./compositions/SpotlightSequence.tsx) 计算放大、停留和缩回进度，调用 `CardSpotlight`，并在组件外绘制提示标签。保留原有成片节奏及标签位置。
 - [文档聚焦镜头](./compositions/DocumentFocusGallery.tsx) 安排五张文档的布局、逐张入场、说明出现及聚焦时刻，调用 `CardEntrance/FocusLayer`；引文与提示标签由案例提供。
 - [小节收束](./compositions/SectionCollapse.tsx) 使用 `ContentCollapse` 收拢内容，并安排编号、摘要条及显隐。保持缩放终点 `0.06`，第一点在 23.65–24.4 秒收至 `(49,47)`，第二点在 50.3–51 秒收至 `(208,47)`；条目尺寸、文案和淡出进度属于案例配置。

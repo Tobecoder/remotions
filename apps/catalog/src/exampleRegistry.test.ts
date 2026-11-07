@@ -1,0 +1,33 @@
+import {existsSync,readFileSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {describe,expect,it} from 'vitest';
+import {catalog} from './catalog';
+import {getExampleUsage,materialExamples} from './exampleRegistry';
+
+const repository=new URL('../../../',import.meta.url);
+const local=(path:string)=>fileURLToPath(new URL(path,repository));
+
+describe('complete example registry',()=>{
+  it('links a real material to its original composition, copy settings and usage guide',()=>{
+    expect(materialExamples).toHaveLength(1);
+    expect(new Set(materialExamples.map(example=>example.id)).size).toBe(materialExamples.length);
+    for(const example of materialExamples){
+      expect(catalog.some(item=>item.id===example.materialId)).toBe(true);
+      for(const key of ['entry','component','implementation','guide'] as const)expect(existsSync(local(example.source[key]))).toBe(true);
+      expect(readFileSync(local(example.source.component),'utf8')).toContain("from '../../reference-opening/compositions/ProgressRace'");
+      expect(example.composition.durationInFrames).toBeGreaterThan(example.composition.posterFrame);
+      expect(example.composition.posterFrame).toBeGreaterThan(0);
+      expect(example.composition.width/example.composition.height).toBe(16/9);
+      expect(example.replaceable.length).toBeGreaterThan(0);expect(example.preserve.length).toBeGreaterThan(0);
+      expect(['pending','approved']).toContain(example.reviewStatus);
+      expect(getExampleUsage(example)).toContain(example.source.exportName);
+    }
+  });
+  it('ships the example preview and guide used by the material card',()=>{
+    for(const example of materialExamples)for(const asset of Object.values(example.preview)){
+      expect(asset).toMatch(/^\/examples\/[a-z0-9-]+\.(mp4|jpg|md)$/);
+      expect(existsSync(local(`apps/catalog/public${asset}`))).toBe(true);
+    }
+    for(const example of materialExamples)expect(readFileSync(local(`apps/catalog/public${example.preview.guide}`),'utf8')).toBe(readFileSync(local(example.source.guide),'utf8'));
+  });
+});

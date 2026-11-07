@@ -2,6 +2,7 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 import {Player, type PlayerRef} from '@remotion/player';
 import {MaterialDemo} from './MaterialDemo';
 import type {CatalogItem} from './catalog';
+import {MaterialExamples} from './MaterialExamples';
 
 export const MaterialCard=({item}:{item:CatalogItem})=>{
   const player=useRef<PlayerRef>(null);
@@ -26,6 +27,6 @@ export const MaterialCard=({item}:{item:CatalogItem})=>{
       onClick={()=>{if(playing)stop();else start();lastPointer.current=null;}}>
       <Player ref={player} component={MaterialDemo} inputProps={{id:item.id}} compositionWidth={800} compositionHeight={450} durationInFrames={item.durationInFrames} fps={30} initialFrame={item.posterFrame} controls={false} autoPlay={false} loop={false} initiallyMuted moveToBeginningWhenEnded={false} clickToPlay={false} doubleClickToFullscreen={false} style={{width:'100%',aspectRatio:'16 / 9',pointerEvents:'none'}}/>
     </button>
-    <div className="material-body"><div className="material-title"><h3>{item.name}</h3><span>{item.usage}</span></div><p>{item.description}</p><details className="material-code"><summary>查看用法</summary><pre><code>{item.code}</code></pre></details></div>
+    <div className="material-body"><div className="material-title"><h3>{item.name}</h3><span>{item.usage}</span></div><p>{item.description}</p><details className="material-code"><summary>查看用法</summary><pre><code>{item.code}</code></pre></details><MaterialExamples materialId={item.id}/></div>
   </article>;
 };

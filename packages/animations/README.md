@@ -107,6 +107,8 @@ const Gallery = () => {
 
 `caption`、`annotation`、`value` 和 `children` 接收 React 内容，分别用于轨道下方说明、等待标注、右侧数值和自定义内容；计数规则和业务文案留给调用方。`badge` 替换完成标记，默认勾号。
 
+需要完整的两行快慢对照时，参考 [单条进度 → 进度对比完整范例](../../examples/component-examples/progress-row/README.md)。范例使用原 `ProgressRace` 组合，列出可替换内容与保留节奏；素材站的单条进度卡片提供 9 秒完整预览。组合继续位于案例工程，不作为本包公开组件导出。
+
 ```tsx
 <ProgressRow label="素材准备" progress={progress} color="#409eff"
   status={progress >= 1 ? 'complete' : 'waiting'} time={frame / fps}

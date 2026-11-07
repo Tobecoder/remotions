@@ -193,6 +193,17 @@ button:focus-visible, a:focus-visible, input:focus-visible, .upload-button:focus
 .material-title span { font-size: 14px; line-height: 1.6; color: var(--el-text-color-secondary); text-align: right; margin-left: auto; }
 .material-body p { margin: 8px 0 14px; color: var(--el-text-color-regular); font-size: 16px; line-height: 1.7; }
 .material-code summary { width: fit-content; cursor: pointer; color: var(--el-color-primary-dark-2); font-size: 13px; }
+.material-example { margin-top: 12px; }
+.example-toggle { padding: 0; border: 0; background: none; color: var(--el-color-primary-dark-2); font-size: 13px; text-align: left; }
+.example-content { margin-top: 12px; padding-top: 14px; border-top: 1px solid var(--el-border-color-light); }
+.example-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.example-heading strong { font-size: 16px; }
+.example-heading span { color: var(--el-text-color-secondary); font-size: 12px; }
+.example-content video { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 6px; background: #f5f6ef; }
+.example-content p, .example-content dl { font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.example-content dt { margin-top: 8px; font-weight: 700; }
+.example-content dd { margin: 2px 0 10px; color: var(--el-text-color-regular); }
+.example-guide { display: inline-block; margin-top: 10px; color: var(--el-color-primary-dark-2); font-size: 13px; }
 .material-code pre { margin-bottom: 0; max-height: 320px; overflow: auto; padding: 14px; border: 1px solid var(--el-border-color-light); border-radius: 4px; background: var(--el-fill-color-lighter); font-size: 12px; line-height: 1.7; }
 @media (max-width: 1180px) { .material-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
 @media (max-width: 680px) { .material-grid { grid-template-columns: minmax(0,1fr); } }
