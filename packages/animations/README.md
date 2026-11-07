@@ -13,7 +13,7 @@ Remotion 可复用动画组件，当前公开导出 **23 个**。旧组件及归
 | 叙事动画 | `ChapterCardRow` | 章节缩略卡上移、放大并排为总览 |
 | 叙事动画 | `BranchingPaths` | 多条素材路径、否定标签和选路强调 |
 | 版式转场 | `ContentCollapse` | 任意内容移动缩小到指定位置，显隐独立控制 |
-| 叙事动画 | `TargetReticle` | 偏心落点、准星归位及靶面移到侧边 |
+| 叙事动画 | `TargetReticle` | 偏心落点、准星归位，可缩到指定位置或保持原位 |
 | 叙事动画 | `ConstraintSwitches` | 约束开关依次关闭、文字划线 |
 | 叙事动画 | `TetheredMotion` | 可替换对象前进、被绳索牵回并切换姿态 |
 | 数据图表 | `RisingCurve` | 概念趋势曲线、面积和端点同步展开 |
@@ -83,6 +83,19 @@ const Gallery = () => {
 `TargetReticle`、`ConstraintSwitches`、`TetheredMotion`、`ConstraintRelease` 均接收 `time`（秒）和可选 `startAt`。靶心可替换 `shotLabel/aimLabel/color`；约束开关默认两行，可替换 `heading/labels/offLabel`，默认先后关闭时刻为相对 5.1、7.3 秒；目录演示整体提前 2.2 秒。
 
 `TargetReticle` 在相对 0.6 秒命中时加入短促衰减抖动，0.88 秒前归稳，再接原有 0.9 秒开始的准星归位。抖动只作用于靶面，不移动整页，也不改变后面的移位和缩放时间。
+
+`move` 控制后续移位，未传时保留原成片效果：相对 1.8–3.4 秒从中心 `(400,277)` 缩到 `(199,277)`，最终比例 `0.78`。传 `move={false}` 时只完成命中、抖动与准星归位，靶面保持在原中心，标签保持显示。
+
+```tsx
+// 2.5 秒开始，用 1 秒缩到右侧的指定位置；到达后保持。
+<TargetReticle time={frame / fps} startAt={0}
+  move={{startAt:2.5,duration:1,to:{x:620,y:210,scale:0.65}}} />
+
+// 不移位。
+<TargetReticle time={frame / fps} move={false} />
+```
+
+`move.startAt/duration` 单位为秒，开始时刻相对于组件的 `startAt`；`to.x/y` 是 800×450 设计画布上的目标靶心坐标，`to.scale` 为目标比例。省略配置字段时沿用原默认值，`to` 若提供则需同时指定 `x/y`，`scale` 可省略。标签随移位开始淡出，最长持续 0.4 秒；关闭移位时不淡出。`duration=0` 在指定时刻直接到位，负时长按 0 处理；非有限参数回退到默认值，负比例按 0 处理。新目标位置与时间可自行编排并验收，原成片调用无需修改。
 
 `TetheredMotion` 的 `running` 和 `caught` 为 React 内容插槽，建议透明图片或 SVG；组件只负责运动与绳索，不生成角色逐帧肢体动画。约 1.35 秒切换姿态，避免两个姿态半透明重叠。1.4 秒牵住角色，停顿至 1.9 秒，再用 1.1 秒慢慢回拉 72px 并归稳；最终停留位置保持。绳索端点跟随角色，受力时收紧但始终保留弧度，回拉时逐渐放松。
 

@@ -1,19 +1,26 @@
 import {useId} from 'react';
 import {during,mix} from './motion';
 
-export type TargetReticleProps={time:number;startAt?:number;color?:string;shotLabel?:string;aimLabel?:string};
+export type TargetReticleMove={startAt?:number;duration?:number;to?:{x:number;y:number;scale?:number}};
+export type TargetReticleProps={time:number;startAt?:number;color?:string;shotLabel?:string;aimLabel?:string;move?:false|TargetReticleMove};
+const finite=(value:number|undefined,fallback:number)=>value!==undefined&&Number.isFinite(value)?value:fallback;
 
-export const TargetReticle=({time,startAt=0,color='#dc704d',shotLabel='先开枪',aimLabel='再瞄准'}:TargetReticleProps)=>{
-  const t=time-startAt,enter=during(t,0,.4),move=during(t,1.8,3.4),aim=during(t,.9,1.6);
-  const x=mix(400,199,move),scale=mix(1,.78,move),labels=during(t,.8,1.2)*(1-during(t,1.8,2.2));
+export const TargetReticle=({time,startAt=0,color='#dc704d',shotLabel='先开枪',aimLabel='再瞄准',move:moveOptions={}}:TargetReticleProps)=>{
+  const t=time-startAt,enter=during(t,0,.4),aim=during(t,.9,1.6);
+  const config:TargetReticleMove=moveOptions===false?{}:moveOptions;
+  const moveStart=finite(config.startAt,1.8),duration=Math.max(0,finite(config.duration,3.4-1.8));
+  const move=moveOptions===false?0:duration===0?Number(t>=moveStart):during(t,moveStart,moveStart+duration);
+  const labelOut=moveOptions===false?0:duration===0?move:during(t,moveStart,moveStart+Math.min(.4,duration));
+  const x=mix(400,finite(config.to?.x,199),move),y=mix(277,finite(config.to?.y,277),move);
+  const scale=mix(1,Math.max(0,finite(config.to?.scale,.78)),move),labels=during(t,.8,1.2)*(1-labelOut);
   const impact=t-.6;
   const recoil=impact>0&&impact<.28?Math.sin(impact*75)*Math.exp(-impact*13)*(1-during(impact,.2,.28)):0;
   const id=`target-${useId().replace(/:/g,'')}`;
   return <div data-target-reticle style={{position:'absolute',inset:0,opacity:enter}}>
     <svg width="800" height="450" style={{position:'absolute',inset:0,overflow:'visible'}}>
       <defs><filter id={id} x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="5" stdDeviation="5" floodOpacity=".15"/></filter></defs>
-      <path d={`M-10 385L${x+47*scale} ${277-34*scale}`} pathLength="1" strokeDasharray="1" strokeDashoffset={1-during(t,.1,.6)} stroke={color} strokeWidth="1.2" opacity={1-during(t,.85,1.5)}/>
-      <g data-target-face transform={`translate(${x} 277) scale(${scale*(.92+.08*enter)})`}>
+      <path d={`M-10 385L${x+47*scale} ${y-34*scale}`} pathLength="1" strokeDasharray="1" strokeDashoffset={1-during(t,.1,.6)} stroke={color} strokeWidth="1.2" opacity={1-during(t,.85,1.5)}/>
+      <g data-target-face transform={`translate(${x} ${y}) scale(${scale*(.92+.08*enter)})`}>
         <g data-target-impact transform={`translate(${recoil*8} ${recoil*-4}) rotate(${recoil*.8})`}>
         <circle r="103" fill="#fff" filter={`url(#${id})`}/>
         {[100,80,60,40,20].map((r,i)=><circle key={r} r={r} fill={i%2?'#fafafa':'#ededf0'} stroke="#333840" strokeWidth=".8"/>)}

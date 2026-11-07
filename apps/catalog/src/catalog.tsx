@@ -47,9 +47,14 @@ export const catalog: CatalogItem[] = [
   {id:'agent-pipeline',category:'storytelling',name:'Agent 成片流程',component:'AgentPipeline',description:'Agent 显现，连接工具标签并展开成片窗口',usage:'工作流程 · 制作演示',durationInFrames:105,posterFrame:65,code:`import {AgentPipeline} from '@remotions/animations';
 
 <AgentPipeline time={frame / fps} output={<VideoPreview />} toolLabel="Remotion" />`},
-  {id:'target-reticle',category:'storytelling',name:'靶心归位',component:'TargetReticle',description:'先留下偏心落点，再让准星归位，靶面缩至侧边',usage:'试错讲解 · 先做后调',durationInFrames:180,posterFrame:54,code:`import {TargetReticle} from '@remotions/animations';
+  {id:'target-reticle',category:'storytelling',name:'靶心归位',component:'TargetReticle',description:'先留下偏心落点，再让准星归位，可缩到指定位置或保持原位',usage:'试错讲解 · 先做后调',durationInFrames:180,posterFrame:54,code:`import {TargetReticle} from '@remotions/animations';
 
-<TargetReticle time={frame / fps} shotLabel="先开枪" aimLabel="再瞄准" />`},
+// 不移动：完成命中、抖动与准星归位后保持在中间。
+<TargetReticle time={frame / fps} move={false} />
+
+// 缩到任意目标中心，时间相对于组件 startAt。
+<TargetReticle time={frame / fps} shotLabel="先开枪" aimLabel="再瞄准"
+  move={{startAt:2.5,duration:1,to:{x:620,y:210,scale:0.65}}} />`},
   {id:'constraint-switches',category:'storytelling',name:'约束开关',component:'ConstraintSwitches',description:'开关依次关闭，并划掉暂时不加的约束',usage:'极简讲解 · 条件取舍',durationInFrames:210,posterFrame:185,code:`import {ConstraintSwitches} from '@remotions/animations';
 
 <ConstraintSwitches time={frame / fps + 2.2}

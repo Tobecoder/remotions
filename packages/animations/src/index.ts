@@ -18,7 +18,7 @@ export type {BranchingPathsProps, PathCard} from './reference-opening/BranchingP
 export {ContentCollapse} from './reference-opening/ContentCollapse';
 export type {ContentCollapseProps,ContentCollapsePose} from './reference-opening/ContentCollapse';
 export {TargetReticle} from './reference-opening/TargetReticle';
-export type {TargetReticleProps} from './reference-opening/TargetReticle';
+export type {TargetReticleProps,TargetReticleMove} from './reference-opening/TargetReticle';
 export {ConstraintSwitches} from './reference-opening/ConstraintSwitches';
 export type {ConstraintSwitchesProps} from './reference-opening/ConstraintSwitches';
 export {TetheredMotion} from './reference-opening/TetheredMotion';

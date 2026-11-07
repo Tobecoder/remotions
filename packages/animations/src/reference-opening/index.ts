@@ -20,7 +20,7 @@ export type {BranchingPathsProps, PathCard} from './BranchingPaths';
 export {ContentCollapse} from './ContentCollapse';
 export type {ContentCollapseProps,ContentCollapsePose} from './ContentCollapse';
 export {TargetReticle} from './TargetReticle';
-export type {TargetReticleProps} from './TargetReticle';
+export type {TargetReticleProps,TargetReticleMove} from './TargetReticle';
 export {ConstraintSwitches} from './ConstraintSwitches';
 export type {ConstraintSwitchesProps} from './ConstraintSwitches';
 export {TetheredMotion} from './TetheredMotion';
