@@ -92,6 +92,8 @@ const Gallery = () => {
 
 `content` 可为 React 内容或接收同一放大进度的渲染函数，字号可随进度变化以避免拉伸文字。动态内容与原缩略图使用同一时钟；组件只控制几何及淡化，不重置内容时间。停留时长、往返时间线和提示标签由视频工程编排，不再提供 `time/startAt/badge` 参数。
 
+[卡片放大回位完整范例](../../examples/component-examples/card-spotlight/README.md) 直接使用原 `SpotlightSequence`，提供缩略图、放大、停留说明和归位的 4 秒完整预览。可替换静态或动态内容，来源与前景共用时间；范例仍保存在案例工程。
+
 ```tsx
 <CardSpotlight progress={progress}
   from={{x:435,y:187,width:54,height:42}}

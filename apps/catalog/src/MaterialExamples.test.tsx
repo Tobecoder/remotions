@@ -29,6 +29,16 @@ describe('full examples associated with a standalone material',()=>{
     const {container}=render(<MaterialExamples materialId="perspective-panel"/>);
     expect(container.querySelector('button,video')).toBeNull();
   });
+  it('opens the complete spotlight sequence with its return and content-replacement guidance',()=>{
+    render(<MaterialExamples materialId="card-spotlight"/>);
+    fireEvent.click(screen.getByRole('button',{name:'查看完整范例 · 卡片放大回位'}));
+    const panel=screen.getByRole('region',{name:'卡片放大回位完整范例'});
+    expect(panel.querySelector('video')!.getAttribute('src')).toBe('/examples/card-spotlight-return.mp4');
+    expect(panel.textContent).toContain('4 秒');
+    expect(panel.textContent).toContain('放大内容或随时间更新的画面');
+    expect(panel.textContent).toContain('来源缩略图和前景内容使用同一时间');
+    expect(panel.querySelector('code')!.textContent).toContain('component={CardSpotlightExample}');
+  });
   it('opens the same complete document explanation from each of its linked materials',()=>{
     const {container,rerender}=render(<MaterialExamples materialId="document-window"/>);
     for(const materialId of ['document-window','highlight-box','collapsing-title'] as const){

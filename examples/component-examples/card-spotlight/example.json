@@ -1,0 +1,29 @@
+{
+  "id": "card-spotlight-return",
+  "materialIds": ["card-spotlight"],
+  "name": "卡片放大回位",
+  "description": "从原缩略图放大到前景，淡化背景并展示说明，停留后回到同一位置；动态内容连续播放。",
+  "useCases": ["图片和案例放大", "动态内容重点讲解", "展示后回到原有版面"],
+  "replaceable": ["上方标题", "来源卡片的名称和说明", "放大内容或随时间更新的画面", "停留时出现的提示标签"],
+  "preserve": ["从实际缩略图位置放大并返回原位", "放大、停留、缩回及背景淡化的相对节奏", "来源缩略图和前景内容使用同一时间", "说明标签随前景位置移动并淡出"],
+  "reviewStatus": "pending",
+  "composition": {"id": "Example-CardSpotlight-Return", "width": 1280, "height": 720, "fps": 30, "durationInFrames": 120, "posterFrame": 66},
+  "source": {
+    "entry": "examples/component-examples/card-spotlight/index.tsx",
+    "component": "examples/component-examples/card-spotlight/Example.tsx",
+    "exportName": "CardSpotlightExample",
+    "implementation": "examples/reference-opening/compositions/SpotlightSequence.tsx",
+    "guide": "examples/component-examples/card-spotlight/README.md"
+  },
+  "preview": {
+    "video": "/examples/card-spotlight-return.mp4",
+    "poster": "/examples/card-spotlight-return.jpg",
+    "guide": "/examples/card-spotlight-return.md"
+  },
+  "defaultProps": {
+    "title": "从缩略图放大，讲完再归位",
+    "sourceTitle": "动态内容示例",
+    "sourceDescription": "缩略图与放大画面共用时间",
+    "badge": "讲完后，回到原位"
+  }
+}
