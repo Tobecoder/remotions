@@ -1,0 +1,36 @@
+{
+  "id": "section-collapse",
+  "materialIds": ["content-collapse"],
+  "name": "小节收束",
+  "description": "讲解画面向左上角缩小淡出，编号摘要条随之显现，保留已经讲完的小节。",
+  "useCases": ["观点讲完后的归档", "小节回顾", "连续讲解中的摘要导航"],
+  "replaceable": ["完整场景内容（静态或逐帧动画）", "小节名称和编号", "默认演示的标题与路径文案"],
+  "preserve": ["讲解完成后再收拢的顺序", "原左上方向、落点和 0.06 缩放终点", "原 0.75 秒收拢与主体淡出节奏", "摘要条渐显并保持的衔接"],
+  "reviewStatus": "pending",
+  "composition": {"id": "Example-Section-Collapse", "width": 1280, "height": 720, "fps": 30, "durationInFrames": 330, "posterFrame": 225},
+  "source": {
+    "entry": "examples/component-examples/content-collapse/index.tsx",
+    "component": "examples/component-examples/content-collapse/Example.tsx",
+    "exportName": "SectionCollapseExample",
+    "implementation": "examples/reference-opening/compositions/SectionCollapse.tsx",
+    "guide": "examples/component-examples/content-collapse/README.md"
+  },
+  "preview": {
+    "video": "/examples/section-collapse.mp4",
+    "poster": "/examples/section-collapse.jpg",
+    "guide": "/examples/section-collapse.md"
+  },
+  "defaultProps": {
+    "label": "没有标准答案",
+    "number": "1",
+    "copy": {
+      "eyebrow": "第一",
+      "description": "用代码做动画，没有固定套路",
+      "fromLabel": "想法",
+      "toLabel": "成片",
+      "stamp": "标准答案",
+      "routeLabel": "我摸索的一条路",
+      "resultLabel": "启发 · 灵感"
+    }
+  }
+}

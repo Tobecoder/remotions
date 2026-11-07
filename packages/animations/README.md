@@ -68,6 +68,8 @@ const Gallery = () => {
 
 `ContentCollapse` 接收任意 `children`、`progress`（0–1）和目标 `to={x,y,scale}`；可选起点 `from`（默认 `{x:0,y:0,scale:1}`）及 `opacity`（默认 `1`）。坐标以内容容器左上角为原点，位置和缩放随进度插值；没有内置淡出、编号、文案或摘要条，显隐由调用方独立控制。支持 `style/className` 等容器属性。原 `SectionCollapse` 及其专属类型已退出公开入口，编号与摘要条组合保存在案例工程。
 
+[小节收束完整范例](../../examples/component-examples/content-collapse/README.md) 直接使用原 `SectionCollapse`，展示完整场景讲解、左上收拢淡出与编号摘要保持。11 秒预览支持替换整段静态或动态内容、小节名称和编号，沿用原收拢方向、落点及 0.75 秒节奏。
+
 ```tsx
 <ContentCollapse progress={progress} to={{x:60,y:45,scale:0.3}}>
   <YourContent />

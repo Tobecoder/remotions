@@ -29,6 +29,18 @@ describe('full examples associated with a standalone material',()=>{
     const {container}=render(<MaterialExamples materialId="perspective-panel"/>);
     expect(container.querySelector('button,video')).toBeNull();
   });
+  it('opens the whole section, collapse and summary hold from the independent collapse action',()=>{
+    const {container}=render(<MaterialExamples materialId="content-collapse"/>);
+    const toggle=screen.getByRole('button',{name:'查看完整范例 · 小节收束'});
+    fireEvent.click(toggle);
+    const panel=screen.getByRole('region',{name:'小节收束完整范例'});
+    expect(panel.querySelector('video')!.getAttribute('src')).toBe('/examples/section-collapse.mp4');
+    expect(panel.textContent).toContain('11 秒');expect(panel.textContent).toContain('待确认');
+    expect(panel.textContent).toContain('完整场景内容（静态或逐帧动画）');
+    expect(panel.querySelector('code')!.textContent).toContain('component={SectionCollapseExample}');
+    expect(panel.querySelector('.example-guide')!.getAttribute('href')).toBe('/examples/section-collapse.md');
+    fireEvent.click(toggle);expect(container.querySelector('video')).toBeNull();
+  });
   it('opens the complete spotlight sequence with its return and content-replacement guidance',()=>{
     render(<MaterialExamples materialId="card-spotlight"/>);
     fireEvent.click(screen.getByRole('button',{name:'查看完整范例 · 卡片放大回位'}));
