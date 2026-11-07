@@ -54,4 +54,17 @@ describe('full examples associated with a standalone material',()=>{
       expect(container.querySelector('video')).toBeNull();
     }
   });
+  it('shares one gallery and focus preview between card entry and foreground focus',()=>{
+    const {container,rerender}=render(<MaterialExamples materialId="card-entrance"/>);
+    for(const materialId of ['card-entrance','focus-layer'] as const){
+      rerender(<MaterialExamples materialId={materialId}/>);
+      const toggle=screen.getByRole('button',{name:'查看完整范例 · 文档聚焦'});
+      fireEvent.click(toggle);
+      const panel=screen.getByRole('region',{name:'文档聚焦完整范例'});
+      expect(panel.querySelector('video')!.getAttribute('src')).toBe('/examples/document-focus-gallery.mp4');
+      expect(panel.querySelector('code')!.textContent).toContain('component={DocumentFocusExample}');
+      expect(panel.textContent).toContain('6 秒');expect(panel.textContent).toContain('资料卡标题和摘要');
+      fireEvent.click(toggle);expect(container.querySelector('video')).toBeNull();
+    }
+  });
 });

@@ -1,10 +1,11 @@
 import progressComparison from '../../../examples/component-examples/progress-row/example.json';
 import scriptDocument from '../../../examples/component-examples/script-document/example.json';
 import cardSpotlight from '../../../examples/component-examples/card-spotlight/example.json';
+import documentFocus from '../../../examples/component-examples/document-focus/example.json';
 import type {MaterialId} from './catalog';
 
 export type MaterialExample=Omit<typeof progressComparison,'defaultProps'> & {defaultProps:Readonly<Record<string,unknown>>};
-export const materialExamples:readonly MaterialExample[]=[progressComparison,scriptDocument,cardSpotlight];
+export const materialExamples:readonly MaterialExample[]=[progressComparison,scriptDocument,cardSpotlight,documentFocus];
 export const getMaterialExamples=(materialId:MaterialId)=>materialExamples.filter(example=>example.materialIds.includes(materialId));
 
 export const getExampleUsage=(example:MaterialExample)=>`import {Composition} from 'remotion';

@@ -48,7 +48,7 @@ node examples/reference-opening/render.mjs
 - [脚本文档讲解](./compositions/ScriptDocumentGuide.tsx) 编排章节标题、文档滚动、高亮和说明收拢，使用库中的 `ChapterHeading/DocumentWindow/HighlightBox/CollapsingTitle`。保留原有停顿与切换时刻，`copy` 可替换案例文案；[完整范例](../component-examples/script-document/README.md) 提供可替换正文、独立入口及共享预览。
 - [进度对比](./compositions/ProgressRace.tsx) 编排两条 `ProgressRow` 的快慢、转圈和计数。`eyebrow/countTo/phrases` 为案例配置；[完整范例](../component-examples/progress-row/README.md) 提供独立入口、替换说明和同源预览。
 - [卡片强调镜头](./compositions/SpotlightSequence.tsx) 计算放大、停留和缩回进度，调用 `CardSpotlight`，并在组件外绘制提示标签。保留原有成片节奏及标签位置；[完整范例](../component-examples/card-spotlight/README.md) 提供同源放大/归位预览及同步内容替换说明。
-- [文档聚焦镜头](./compositions/DocumentFocusGallery.tsx) 安排五张文档的布局、逐张入场、说明出现及聚焦时刻，调用 `CardEntrance/FocusLayer`；引文与提示标签由案例提供。
+- [文档聚焦镜头](./compositions/DocumentFocusGallery.tsx) 安排五张文档的布局、逐张入场、说明出现及聚焦时刻，调用 `CardEntrance/FocusLayer`；引文与提示标签由案例提供。[完整范例](../component-examples/document-focus/README.md) 提供同源预览、可替换文档与前景内容，以及原五卡布局的使用边界。
 - [小节收束](./compositions/SectionCollapse.tsx) 使用 `ContentCollapse` 收拢内容，并安排编号、摘要条及显隐。保持缩放终点 `0.06`，第一点在 23.65–24.4 秒收至 `(49,47)`，第二点在 50.3–51 秒收至 `(208,47)`；条目尺寸、文案和淡出进度属于案例配置。
 - [章节缩略卡](./compositions/SceneThumbnail.tsx) 使用 `ContentCollapse` 缩小原场景，并绘制底板、编号和说明。保留原三张卡的目标位置、比例和章节衔接；原 `target/card/caption/number` 配置仅用于本案例组合。
 - [素材准备卡](./compositions/PreparationCards.tsx) 用 `CardEntrance` 处理单卡浮入、透明度和 `0.92→1` 缩放，用 `ContentCollapse` 汇聚缩小。四卡排布、错峰入场、旋转归正、停留及 Agent 接力时间由案例安排：相对 0.15 秒起逐张入场，3.35–3.95 秒收至 `(251,168)`，3.65 秒起淡出。

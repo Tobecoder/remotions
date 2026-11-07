@@ -149,4 +149,6 @@ const Gallery = () => {
 
 需要同时处理背景时，再传入 `background={<YourScene />}`；素材预览默认仅展示前景。
 
+[文档聚焦完整范例](../../examples/component-examples/document-focus/README.md) 由原 `DocumentFocusGallery` 组合 `CardEntrance/FocusLayer`，展示资料卡逐张入场、背景淡化虚化和前景要点显现的 6 秒完整镜头。资料、说明及前景内容可替换，两个动作卡片共享同一份范例。
+
 `ConstraintRelease` 接收 `content`、默认六条 `tags` 和 `badge`；先展开标签，再掉落标签，2.3–2.8 秒显示窗口内容，3.3–3.8 秒放大窗口。内容均由调用方提供，不内置原片图片。

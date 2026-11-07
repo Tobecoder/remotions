@@ -1,0 +1,42 @@
+{
+  "id": "document-focus-gallery",
+  "materialIds": ["card-entrance", "focus-layer"],
+  "name": "文档聚焦",
+  "description": "资料卡逐张入场，说明随后出现；背景淡化虚化，当前要点在前景清楚展示。",
+  "useCases": ["资料展开与重点讲解", "引用内容强调", "多份材料归纳"],
+  "replaceable": ["资料卡标题和摘要", "自定义图片或文档卡片", "资料旁的说明文案", "前景重点内容与提示标签"],
+  "preserve": ["卡片逐张入场、说明随后出现的顺序", "原五卡布局和轻微倾斜", "背景虚化淡化与前景同步显现", "前景停留及标签出现的相对节奏"],
+  "reviewStatus": "pending",
+  "composition": {"id": "Example-DocumentFocus-Gallery", "width": 1280, "height": 720, "fps": 30, "durationInFrames": 180, "posterFrame": 105},
+  "source": {
+    "entry": "examples/component-examples/document-focus/index.tsx",
+    "component": "examples/component-examples/document-focus/Example.tsx",
+    "exportName": "DocumentFocusExample",
+    "implementation": "examples/reference-opening/compositions/DocumentFocusGallery.tsx",
+    "guide": "examples/component-examples/document-focus/README.md"
+  },
+  "preview": {
+    "video": "/examples/document-focus-gallery.mp4",
+    "poster": "/examples/document-focus-gallery.jpg",
+    "guide": "/examples/document-focus-gallery.md"
+  },
+  "defaultProps": {
+    "badge": "聚焦当前要点",
+    "copy": {
+      "captionLead": "参考资料",
+      "captionTitle": "围绕问题",
+      "captionEmphasis": "整理重点",
+      "focusLead": "当前要点",
+      "focusText": "先把参考资料逐张展开，给出必要的上下文；再让背景淡化，将正在讲解的要点清楚地放到前景。",
+      "detailLead": "讲解备注",
+      "detailText": "资料可以替换，动作顺序与相对节奏沿用原镜头。"
+    },
+    "cards": [
+      {"id": "source-1", "label": "参考 / 01", "title": "提出具体问题", "body": "先说明需要理解的对象与问题。"},
+      {"id": "source-2", "label": "参考 / 02", "title": "整理关键证据", "body": "将引用材料与讲解内容一一对应。"},
+      {"id": "source-3", "label": "参考 / 03", "title": "对应画面内容", "body": "让画面中的信息服务当前论点。"},
+      {"id": "source-4", "label": "参考 / 04", "title": "保留必要步骤", "body": "按顺序保留理解问题所需的步骤。"},
+      {"id": "source-5", "label": "参考 / 05", "title": "归纳清楚结论", "body": "最后用清楚的表述收束当前小节。"}
+    ]
+  }
+}
