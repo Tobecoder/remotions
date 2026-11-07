@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'card-entrance' | 'focus-layer' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'document-window' | 'highlight-box' | 'collapsing-title';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'card-entrance' | 'focus-layer' | 'tethered-motion' | 'rising-curve' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'document-window' | 'highlight-box' | 'collapsing-title';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -139,16 +139,6 @@ export const Background = () => <BlurredCollage
     {id:'script',label:'脚本',content:<Script />},
   ]}
 />`},
-  {id:'scene-thumbnail',category:'layouts',name:'章节缩略卡',component:'SceneThumbnail',description:'将完整场景缩小，收进下一节的章节卡',usage:'章节衔接 · 内容回顾',durationInFrames:150,posterFrame:105,code:`import {SceneThumbnail} from '@remotions/animations';
-
-<SceneThumbnail
-  progress={progress}
-  target={{x:56,y:265,scale:.28}}
-  card={{x:58,y:265,width:224,height:145}}
-  caption="上一章节"
->
-  <PreviousScene />
-</SceneThumbnail>`},
   {id:'fan-card-deck',category:'layouts',name:'扇形卡组',component:'FanCardDeck',description:'多张图片卡片依次展开成扇形',usage:'素材展示 · 工具推荐',durationInFrames:100,posterFrame:65,code:`import {FanCardDeck} from '@remotions/animations';
 
 <FanCardDeck

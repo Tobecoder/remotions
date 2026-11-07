@@ -3,8 +3,6 @@ export {PerspectivePanel} from './PerspectivePanel';
 export type {PerspectivePanelProps} from './PerspectivePanel';
 export {ExplodedLayers} from './ExplodedLayers';
 export type {ExplodedLayersProps, ExplodedLayer,ExplodedPanelContent} from './ExplodedLayers';
-export {SceneThumbnail} from './SceneThumbnail';
-export type {SceneThumbnailProps} from './SceneThumbnail';
 export {FanCardDeck} from './FanCardDeck';
 export type {FanCardDeckProps, FanCard} from './FanCardDeck';
 export {ChapterHeading} from './ChapterHeading';

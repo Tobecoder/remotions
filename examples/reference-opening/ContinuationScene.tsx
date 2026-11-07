@@ -1,5 +1,6 @@
 import {AbsoluteFill,Img,staticFile,useCurrentFrame,useVideoConfig} from 'remotion';
-import {AudioPulseBadge,BranchingPaths,ChapterCardRow,ChapterHeading,SceneThumbnail,type ChapterCardViewport} from '../../packages/animations/src';
+import {AudioPulseBadge,BranchingPaths,ChapterCardRow,ChapterHeading,type ChapterCardViewport} from '../../packages/animations/src';
+import {SceneThumbnail} from './compositions/SceneThumbnail';
 import {SectionCollapse} from './compositions/SectionCollapse';
 import {pathCardLayout} from '../../packages/animations/src/reference-opening/continuation-motion';
 import {during,mix} from '../../packages/animations/src/reference-opening/motion';

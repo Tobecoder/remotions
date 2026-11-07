@@ -1,5 +1,5 @@
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, ChapterHeading, ConstraintRelease, ConstraintSwitches, CardEntrance, FocusLayer, ExplodedLayers, FanCardDeck, PerspectivePanel, RisingCurve, SceneThumbnail, ContentCollapse, TargetReticle, TetheredMotion} from '../../../packages/animations/src';
+import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, ChapterHeading, ConstraintRelease, ConstraintSwitches, CardEntrance, FocusLayer, ExplodedLayers, FanCardDeck, PerspectivePanel, RisingCurve, ContentCollapse, TargetReticle, TetheredMotion} from '../../../packages/animations/src';
 import {pathCardLayout} from '../../../packages/animations/src/reference-opening/continuation-motion';
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
@@ -50,16 +50,6 @@ const LayersDemo=({time}:{time:number})=><ExplodedLayers time={time} front={{x:2
   {id:'script',label:'脚本',content:elapsed=><PanelScroll time={elapsed}><DemoDocument title="从一个清楚的问题开始"/></PanelScroll>},
 ]}/>;
 
-const ThumbnailDemo=({time}:{time:number})=>{
-  const p=during(time,1.1,2.5);
-  return <>
-    <SceneThumbnail progress={p} target={{x:56,y:265,scale:.28}} card={{x:58,y:265,width:224,height:145}} caption="制作方法">
-      <div style={{position:'absolute',inset:0,background:'#f5f6ef',padding:70,boxSizing:'border-box'}}><div style={{color:'#ba7657',fontSize:12,letterSpacing:3}}>01 / 制作方法</div><div style={{fontSize:50,fontWeight:800,margin:'20px 0',color:'#30323a'}}>从脚本到成片</div><div style={{display:'flex',gap:18}}>{['脚本','素材','动画'].map((label,i)=><div key={label} style={{width:172,height:105,border:'1px solid #dfe2df',borderRadius:8,background:'#fff',padding:18,boxShadow:'0 6px 15px #3a3e4210'}}><div style={{fontSize:12,color:colors[i]}}>0{i+1}</div><div style={{fontSize:24,fontWeight:700,marginTop:14}}>{label}</div></div>)}</div></div>
-    </SceneThumbnail>
-    <div style={{position:'absolute',left:350,top:135,opacity:during(p,.4,1),transform:`translateY(${(1-p)*14}px)`}}><div style={{color:'#ba7657',fontSize:12,letterSpacing:3}}>02 / 下一章节</div><div style={{fontSize:40,fontWeight:800,marginTop:20,color:'#30323a'}}>接着讲下一件事</div><div style={{fontSize:16,color:'#8d9096',marginTop:17}}>上一节，留在画面里。</div></div>
-  </>;
-};
-
 /** Every card mounts one standalone material, independently of the ten-second scene. */
 export const MaterialDemo=({id}:{id:MaterialId})=>{
   const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig(),time=frame/fps;
@@ -89,7 +79,6 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
     ].map(([x,y,width,height,rotation],i)=>({id:String(i),x,y,width,height,rotation,content:<div style={{width:360,height:202.5,transformOrigin:'0 0',transform:`scale(${width/360},${height/202.5})`}}><DemoDocument title={['内容脚本','图片与画面','章节设计'][i%3]} kind={i%5}/></div>}))}/>;break;
     case 'perspective-panel':content=<PerspectiveDemo time={time}/>;break;
     case 'exploded-layers':content=<LayersDemo time={time}/>;break;
-    case 'scene-thumbnail':content=<ThumbnailDemo time={time}/>;break;
     case 'fan-card-deck':content=<FanCardDeck x={156} y={114} cardWidth={112} cardHeight={166} spread={94} progress={during(time,.2,1.7)} cards={['脚本','画面','配音','字幕','动画'].map((caption,i)=>({id:caption,caption,content:<FanArtwork index={i}/>}))}/>;break;
     case 'chapter-heading':content=<><div style={{position:'absolute',left:160,top:139,height:150,width:2,background:'#ce705340'}}/><ChapterHeading
       x={195} y={135}

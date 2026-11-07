@@ -1,5 +1,6 @@
 import {AbsoluteFill, Img, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {BlurredCollage, ChapterHeading, ExplodedLayers, FanCardDeck, SceneThumbnail, openingState} from '../../packages/animations/src/reference-opening';
+import {BlurredCollage, ChapterHeading, ExplodedLayers, FanCardDeck, openingState} from '../../packages/animations/src/reference-opening';
+import {SceneThumbnail} from './compositions/SceneThumbnail';
 import {during, mix, openingLayerStartAt, openingMethodCueAt} from '../../packages/animations/src/reference-opening/motion';
 import {PanelScroll,LiveWaveform,LiveTimeline,LiveCaptionLines} from '../../packages/animations/src/reference-opening/LivePanelContent';
 

@@ -2,8 +2,6 @@ export {PerspectivePanel} from './reference-opening/PerspectivePanel';
 export type {PerspectivePanelProps} from './reference-opening/PerspectivePanel';
 export {ExplodedLayers} from './reference-opening/ExplodedLayers';
 export type {ExplodedLayersProps, ExplodedLayer,ExplodedPanelContent} from './reference-opening/ExplodedLayers';
-export {SceneThumbnail} from './reference-opening/SceneThumbnail';
-export type {SceneThumbnailProps} from './reference-opening/SceneThumbnail';
 export {FanCardDeck} from './reference-opening/FanCardDeck';
 export type {FanCardDeckProps, FanCard} from './reference-opening/FanCardDeck';
 export {ChapterHeading} from './reference-opening/ChapterHeading';

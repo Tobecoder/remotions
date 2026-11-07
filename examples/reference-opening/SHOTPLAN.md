@@ -20,7 +20,7 @@
 
 - `PerspectivePanel`：任意子内容的正面/等距透视投影，姿态可插值。
 - `ExplodedLayers`：可替换内容、名称、进入时间和间距的分层结构。
-- `SceneThumbnail`：任意场景连续缩为章节缩略卡。
+- `ContentCollapse`：任意内容连续移动缩小；案例内 `SceneThumbnail` 组合卡片底板、编号和说明，形成章节缩略卡。
 - `FanCardDeck`：任意图片与文案的扇形卡组。
 - `ChapterHeading`：章节编号、标题、副标题的遮罩切换。
 - `BlurredCollage`：静止纸纹底、向左下缓慢漂移的虚化图片墙及淡出。

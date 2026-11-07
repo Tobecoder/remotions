@@ -29,7 +29,7 @@ node examples/reference-opening/render.mjs
 
 输出 `.verification/reference-opening/reference-opening-10s.mp4` 及关键帧。先生成截图可加 `--stills`，快速四帧检查可再加 `--quick`。
 
-可复用组件位于 `packages/animations/src/reference-opening/`，包入口当前公开导出二十五个组件及类型。目录独立演示与本场景复用同一套独立动作；当前视频的固定组合编排位于本工程的 `compositions/`。
+可复用组件位于 `packages/animations/src/reference-opening/`，包入口当前公开导出二十四个组件及类型。目录独立演示与本场景复用同一套独立动作；当前视频的固定组合编排位于本工程的 `compositions/`。
 
 预览服务启动后打开 http://localhost:3004/Reference-Opening-10s 。
 
@@ -39,7 +39,7 @@ node examples/reference-opening/render.mjs
 
 第二点的独立预览为 http://localhost:3004/Reference-Before-Work 。第二点新增六项组件；早期使用的两张角色静态图现已更换为原创毛绒小熊的 16 帧图集，位移、绳索和序列帧均由代码控制。五张文档小图仍由 `prepare-second-point-assets.py` 提取，运行时不依赖原片页面。
 
-`ExplodedLayers` 的 `layers` 数组配置每层内容、标签、进入时间；`screen` 可传入任意 React 内容。`PerspectivePanel` 的姿态可替换，`SceneThumbnail` 的目标位置与比例可配置，`FanCardDeck` 的图片、文案、角度和间距可替换。动画不依赖进入时间或播放历史，逐帧与随机跳帧一致。
+`ExplodedLayers` 的 `layers` 数组配置每层内容、标签、进入时间；`screen` 可传入任意 React 内容。`PerspectivePanel` 的姿态、`ContentCollapse` 的收拢位置与比例，以及 `FanCardDeck` 的图片、文案、角度和间距均可替换。动画不依赖进入时间或播放历史，逐帧与随机跳帧一致。
 
 静态贴图取自本次已观察的参考截图，限于显示器内部、文档、卡片图像。运行不需要原视频、截图目录或网络。`prepare-assets.py` 记录贴图提取坐标；无需在使用时执行。
 
@@ -50,8 +50,9 @@ node examples/reference-opening/render.mjs
 - [卡片强调镜头](./compositions/SpotlightSequence.tsx) 计算放大、停留和缩回进度，调用 `CardSpotlight`，并在组件外绘制提示标签。保留原有成片节奏及标签位置。
 - [文档聚焦镜头](./compositions/DocumentFocusGallery.tsx) 安排五张文档的布局、逐张入场、说明出现及聚焦时刻，调用 `CardEntrance/FocusLayer`；引文与提示标签由案例提供。
 - [小节收束](./compositions/SectionCollapse.tsx) 使用 `ContentCollapse` 收拢内容，并安排编号、摘要条及显隐。保持缩放终点 `0.06`，第一点在 23.65–24.4 秒收至 `(49,47)`，第二点在 50.3–51 秒收至 `(208,47)`；条目尺寸、文案和淡出进度属于案例配置。
+- [章节缩略卡](./compositions/SceneThumbnail.tsx) 使用 `ContentCollapse` 缩小原场景，并绘制底板、编号和说明。保留原三张卡的目标位置、比例和章节衔接；原 `target/card/caption/number` 配置仅用于本案例组合。
 
-这些编排由 `ScriptScene`、`ContinuationScene`、`SecondPointScene` 在本工程内导入，不属于素材目录及组件包公开 API。移到其他视频时可参考其代码，也可直接使用独立动作重新编排。
+这些编排由 `OpeningScene`、`ScriptScene`、`ContinuationScene`、`SecondPointScene` 在本工程内导入，不属于素材目录及组件包公开 API。移到其他视频时可参考其代码，也可直接使用独立动作重新编排。
 
 ## 验证边界
 
