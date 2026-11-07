@@ -29,8 +29,6 @@ export {RisingCurve} from './RisingCurve';
 export type {RisingCurveProps} from './RisingCurve';
 export {ConstraintRelease} from './ConstraintRelease';
 export type {ConstraintReleaseProps} from './ConstraintRelease';
-export {PreparationCards} from './PreparationCards';
-export type {PreparationCardsProps,PreparationCard} from './PreparationCards';
 export {AgentPipeline} from './AgentPipeline';
 export type {AgentPipelineProps} from './AgentPipeline';
 export {TypewriterComparison} from './TypewriterComparison';

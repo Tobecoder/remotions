@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'card-entrance' | 'focus-layer' | 'tethered-motion' | 'rising-curve' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'document-window' | 'highlight-box' | 'collapsing-title';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'card-entrance' | 'focus-layer' | 'tethered-motion' | 'rising-curve' | 'constraint-release' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'document-window' | 'highlight-box' | 'collapsing-title';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -44,9 +44,6 @@ export const catalog: CatalogItem[] = [
 <ProgressRow label="素材准备" progress={progress} color="#409eff"
   status={progress >= 1 ? 'complete' : 'waiting'} time={frame / fps}
   caption="收集并整理画面素材" value={Math.round(progress * 100) + '%'} />`},
-  {id:'preparation-cards',category:'storytelling',name:'素材准备卡',component:'PreparationCards',description:'素材卡依次浮入，停留后汇入 Agent',usage:'制作准备 · 内容归集',durationInFrames:192,posterFrame:75,code:`import {PreparationCards} from '@remotions/animations';
-
-<PreparationCards time={frame / fps} cards={cards} />`},
   {id:'agent-pipeline',category:'storytelling',name:'Agent 成片流程',component:'AgentPipeline',description:'Agent 显现，连接工具标签并展开成片窗口',usage:'工作流程 · 制作演示',durationInFrames:105,posterFrame:65,code:`import {AgentPipeline} from '@remotions/animations';
 
 <AgentPipeline time={frame / fps} output={<VideoPreview />} toolLabel="Remotion" />`},

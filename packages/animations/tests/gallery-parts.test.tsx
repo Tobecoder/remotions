@@ -23,6 +23,18 @@ describe('independent card entry and foreground focus',()=>{
     expect(cards[0].style.opacity).toBe('0');expect(cards[5].style.opacity).toBe('1');
     expect(cards[5].style.left).toBe('570px');
   });
+  it('supports a custom entry scale while keeping the default entry transform unchanged',()=>{
+    const content=(progress:number)=><CardEntrance progress={progress} x={20} y={30} width={132} height={166} offset={{x:0,y:36}} fromScale={.5} rotation={6}>卡片</CardEntrance>;
+    const start=dom(content(0)).querySelector<HTMLElement>('[data-card-entrance]')!;
+    const middle=dom(content(.5)).querySelector<HTMLElement>('[data-card-entrance]')!;
+    const end=dom(content(1)).querySelector<HTMLElement>('[data-card-entrance]')!;
+    expect(start.style.transform).toBe('translateY(36px) scale(0.5) rotate(6deg)');
+    expect(middle.style.transform).toBe('translateY(18px) scale(0.75) rotate(6deg)');
+    expect(middle.style.opacity).toBe('0.5');
+    expect(end.style.transform).toBe('translateY(0px) scale(1) rotate(6deg)');
+    const unchanged=dom(<CardEntrance progress={.5} x={0} y={0} width={132} height={166}>默认</CardEntrance>);
+    expect(unchanged.querySelector<HTMLElement>('[data-card-entrance]')!.style.transform).toBe('translateY(6px) rotate(0deg)');
+  });
   it('focuses arbitrary content without requiring document cards or a fixed caption',()=>{
     const scene=dom(<FocusLayer progress={.5} rect={rect} background={<span>任意背景</span>} foreground={<strong>重点内容</strong>}/>);
     const background=scene.querySelector<HTMLElement>('[data-focus-background]')!,foreground=scene.querySelector<HTMLElement>('[data-focus-foreground]')!;
@@ -47,7 +59,7 @@ describe('independent card entry and foreground focus',()=>{
   });
   it('clamps progress and avoids non-finite geometry for both standalone actions',()=>{
     for(const progress of [-1,NaN,2]){
-      const scene=dom(<><CardEntrance progress={progress} x={NaN} y={Infinity} width={-10} height={50} offset={{x:Infinity,y:NaN}}>卡片</CardEntrance><FocusLayer progress={progress} rect={{x:NaN,y:Infinity,width:-100,height:80}} blur={Infinity} fromScale={NaN} background="背景" foreground="重点"/></>);
+      const scene=dom(<><CardEntrance progress={progress} x={NaN} y={Infinity} width={-10} height={50} offset={{x:Infinity,y:NaN}} fromScale={NaN}>卡片</CardEntrance><FocusLayer progress={progress} rect={{x:NaN,y:Infinity,width:-100,height:80}} blur={Infinity} fromScale={NaN} background="背景" foreground="重点"/></>);
       expect(scene.body.innerHTML).not.toMatch(/NaN|Infinity/);
       expect(scene.querySelector<HTMLElement>('[data-card-entrance]')!.style.opacity).toBe(progress===2?'1':'0');
       expect(scene.querySelector<HTMLElement>('[data-focus-foreground]')!.style.width).toBe('0px');

@@ -22,9 +22,9 @@ afterAll(()=>vi.unstubAllGlobals());
 afterEach(()=>{cleanup();players.clear();});
 
 describe('classified material library', () => {
-  it('opens the seven layout cards and shows twenty-four materials without the fixed compositions', () => {
+  it('opens the seven layout cards and shows twenty-three materials without the fixed compositions', () => {
     const {container} = render(<App />);
-    expect(screen.getByTestId('material-count').textContent).toBe('24');
+    expect(screen.getByTestId('material-count').textContent).toBe('23');
     expect(container.querySelectorAll('[data-material-id]')).toHaveLength(7);
     expect(screen.getAllByRole('button', {name: /播放预览/})).toHaveLength(7);
     expect(screen.queryByText('章节缩略卡')).toBeNull();

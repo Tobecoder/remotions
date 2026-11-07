@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **24 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **23 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
@@ -19,7 +19,6 @@ Remotion 可复用动画组件，当前公开导出 **24 个**。旧组件及归
 | 数据图表 | `RisingCurve` | 概念趋势曲线、面积和端点同步展开 |
 | 版式转场 | `CardEntrance` | 独立卡片入场，外部安排位置、数量和进度 |
 | 版式转场 | `FocusLayer` | 独立突出任意前景，可选背景虚化淡化 |
-| 叙事动画 | `PreparationCards` | 四张素材卡依次浮入，停留后汇聚 |
 | 叙事动画 | `AgentPipeline` | Agent 显现，连接工具与成片窗口 |
 | 文字特效 | `TypewriterComparison` | 两段文字逐字输入，再缩成左右栏 |
 | 版式转场 | `CardSpotlight` | 进度控制卡片放大与归位 |
@@ -85,7 +84,7 @@ const Gallery = () => {
 
 `constraintLabel` 默认是“约束”，在角色被牵住时从绳索中点向上弹出，并跟随绳子的形状和回拉位置；传入空字符串可隐藏。原来的 `label` 仍控制角色旁的“跑偏了！”提示。
 
-`PreparationCards` 接收 `time/startAt/cards`，每项含 `id/title/artwork` 和可选 `description`；按四卡版式排列。相对 0.15 秒开始逐张入场，3.35–3.95 秒向 Agent 的位置汇聚并淡出。`AgentPipeline` 接收 `time/startAt/output`，以及可选的 `agentLabel/toolLabel`，先显现 Agent，再展开右侧输出窗口。目录的素材准备演示将两者串接，结尾保持成片窗口，避免停在空白帧。
+`AgentPipeline` 接收 `time/startAt/output`，以及可选的 `agentLabel/toolLabel`，先显现 Agent，再展开右侧输出窗口。目录独立演示该流程；素材卡入场及汇聚由案例使用 `CardEntrance/ContentCollapse` 编排。
 
 `TypewriterComparison` 接收 `time/startAt`、`ownText/aiText` 及可选缩略图，先输入两段内容再收成两栏。
 
@@ -127,9 +126,9 @@ const Gallery = () => {
 
 `CollapsingTitle` 接收 `title`、`progress`、起终点 `from/to`（均指标题正文左上角）及 `fontSize/compactFontSize`，同一标题持续显示并移动缩小。可传 `lead/description/compactDescription`，配合收拢切换说明；组件没有固定章节编号或业务文案，颜色可由标题 React 内容自行设置。
 
-固定讲解顺序、计数节奏和业务文案由视频工程编排。仓库原有的脚本文档讲解、快慢进度对比、五卡文档聚焦、小节摘要和章节缩略卡代码已迁入 `examples/reference-opening/compositions/`，不属于本包的导出或素材目录；可参考案例组合上述独立动作。`SceneThumbnail` 及其专属类型已退出公开入口，案例使用 `ContentCollapse` 配合卡片底板、编号和说明完成原有效果。
+固定讲解顺序、计数节奏和业务文案由视频工程编排。仓库原有的脚本文档讲解、快慢进度对比、五卡文档聚焦、小节摘要、章节缩略卡和四卡素材准备代码已迁入 `examples/reference-opening/compositions/`，不属于本包的导出或素材目录；可参考案例组合上述独立动作。`SceneThumbnail`、`PreparationCards` 及其专属类型已退出公开入口，案例使用独立动作配合底板、编号和文案完成原有效果。
 
-`CardEntrance` 接收单张卡片的 `children`、`progress`（0–1）、`x/y/width/height`。`offset` 为入场前相对目标位置的偏移，默认 `{x:0,y:12}`；`rotation/background/borderRadius/boxShadow` 可调整样式。调用方可映射任意数量卡片，并逐张传入位置和进度；组件没有五卡布局或固定入场间隔。
+`CardEntrance` 接收单张卡片的 `children`、`progress`（0–1）、`x/y/width/height`。`offset` 为入场前相对目标位置的偏移，默认 `{x:0,y:12}`；`fromScale` 控制起始缩放并随入场回到 `1`，默认 `1` 保持原有大小不变。`rotation/background/borderRadius/boxShadow` 可调整样式。调用方可映射任意数量卡片，并逐张传入位置和进度；组件没有五卡布局或固定入场间隔。
 
 `FocusLayer` 接收 `progress`、`foreground` 和前景区域 `rect={x,y,width,height}`，可以只展示前景。`background` 可选，默认不创建背景层；传入时，`blur/backgroundOpacity` 控制聚焦完成时背景的模糊半径与透明度，默认 3px / 0.35。`offset/fromScale` 控制前景入场位移与起始缩放，默认 `{x:0,y:24}` / 0.96；`panelStyle` 可调整前景外观。说明、标签和时间线由调用方提供。
 

@@ -3,7 +3,7 @@ import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, Chapter
 import {pathCardLayout} from '../../../packages/animations/src/reference-opening/continuation-motion';
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
-import {PreparationCards,AgentPipeline,TypewriterComparison,CardSpotlight,ProgressRow,DocumentWindow,HighlightBox,CollapsingTitle} from '../../../packages/animations/src';
+import {AgentPipeline,TypewriterComparison,CardSpotlight,ProgressRow,DocumentWindow,HighlightBox,CollapsingTitle} from '../../../packages/animations/src';
 import {PreparationArtwork} from './PreparationArtwork';
 import {PanelScroll,LiveWaveform,LiveTimeline,LiveCaptionLines} from '../../../packages/animations/src/reference-opening/LivePanelContent';
 import {NeuronPreview} from '../../../packages/animations/src/reference-opening/NeuronPreview';
@@ -61,7 +61,6 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
     case 'typewriter-comparison':content=<TypewriterComparison time={time} ownText={'先把问题讲清楚。\n再用一个例子展开。\n保留真实的经验与体会。'} aiText={'这是一个重要的时代。\n换句话说，值得注意的是，\n让我们一起探索更多可能。'} ownThumbnail={<PreparationArtwork kind={0}/>} aiThumbnail={<PathArtwork index={2}/>}/>;break;
     case 'card-spotlight':content=<SpotlightDemo time={time}/>;break;
     case 'progress-row':{const progress=during(time,.4,4.4);content=<ProgressRow label="素材准备" progress={progress} color="#409eff" time={time} status={progress>=1?'complete':'waiting'} caption={<span style={{fontSize:11,color:'#7c8593'}}>收集并整理画面素材</span>} value={`${Math.round(progress*100)}%`}/>;break;}
-    case 'preparation-cards':content=<><PreparationCards time={time} cards={['脚本','配音','SRT','素材'].map((title,i)=>({id:String(i),title,artwork:<PreparationArtwork kind={i}/>}))}/><AgentPipeline time={time} startAt={3.4} output={<DemoDocument title="一条完整的讲解视频"/>}/></>;break;
     case 'agent-pipeline':content=<AgentPipeline time={time} output={<DemoDocument title="一条完整的讲解视频"/>}/>;break;
     case 'target-reticle':content=<TargetReticle time={time}/>;break;
     case 'constraint-switches':content=<ConstraintSwitches time={time+2.2}/>;break;

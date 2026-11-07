@@ -14,10 +14,13 @@ vi.mock('remotion',()=>({
 import {PreparationFilm} from '../../../examples/reference-opening/PreparationScene';
 import {BeforeWorkScene} from '../../../examples/reference-opening/SecondPointScene';
 import {MaterialDemo} from '../../../apps/catalog/src/MaterialDemo';
+import {PreparationCards} from '../../../examples/reference-opening/compositions/PreparationCards';
 
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
 const at=(frame:number)=>{clock.frame=frame;return dom(<PreparationFilm/>);};
 const style=(scene:Document,selector:string)=>scene.querySelector<HTMLElement>(selector)!.style;
+const cardOpacity=(card:HTMLElement)=>Number(card.style.opacity)*Number(card.parentElement!.style.opacity);
+const transformValues=(element:HTMLElement)=>element.style.transform.match(/-?\d+(?:\.\d+)?(?:e[+-]?\d+)?/g)!.map(Number);
 
 describe('preparation through the last frame before the breakdown title',()=>{
   it('keeps the accepted prefix and all existing motion before 51.6 seconds',()=>{
@@ -40,10 +43,10 @@ describe('preparation through the last frame before the breakdown title',()=>{
   });
   it('collects the cards at the Agent while the Agent becomes visible',()=>{
     const before=at(1650),collecting=at(1659),finished=at(1668);
-    const left=(scene:Document)=>Array.from(scene.querySelectorAll<HTMLElement>('[data-preparation-card]'),el=>parseFloat(el.style.left));
+    const left=(scene:Document)=>Array.from(scene.querySelectorAll<HTMLElement>('[data-preparation-card-motion]'),el=>transformValues(el)[0]);
     expect(Math.max(...left(collecting))-Math.min(...left(collecting))).toBeLessThan(Math.max(...left(before))-Math.min(...left(before)));
     expect(Number(style(collecting,'[data-agent-tile]').opacity)).toBeGreaterThan(0);
-    for(const card of finished.querySelectorAll<HTMLElement>('[data-preparation-card]'))expect(card.style.opacity).toBe('0');
+    for(const card of finished.querySelectorAll<HTMLElement>('[data-preparation-card]'))expect(cardOpacity(card)).toBe(0);
     expect(style(finished,'[data-agent-tile]').opacity).toBe('1');
     expect(left(finished).every(x=>x===251)).toBe(true);
   });
@@ -59,14 +62,21 @@ describe('preparation through the last frame before the breakdown title',()=>{
     expect(end.body.textContent).not.toContain('细拆上期');
     expect(end.body.textContent).not.toContain('接下来');
   });
-  it('uses the component defaults for both catalogue and film timelines',()=>{
+  it('reuses independent actions in the case sequence and keeps the Agent catalog timeline aligned',()=>{
     for(const local of [0,9,18,30,45,90,103,115,120]){
       const film=at(1548+local);clock.frame=local;
-      const demo=dom(<MaterialDemo id="preparation-cards"/>);
+      const sequence=dom(<PreparationCards time={local/30} cards={['脚本','配音','SRT','素材'].map((title,i)=>({id:String(i),title,artwork:<span/>}))}/>);
       const actual=Array.from(film.querySelectorAll<HTMLElement>('[data-preparation-card]'));
-      const expected=Array.from(demo.querySelectorAll<HTMLElement>('[data-preparation-card]'));
+      const expected=Array.from(sequence.querySelectorAll<HTMLElement>('[data-preparation-card]'));
       actual.forEach((card,i)=>{
-        for(const key of ['left','top','opacity'] as const)expect(parseFloat(card.style[key])).toBeCloseTo(parseFloat(expected[i].style[key]),8);
+        expect(card.hasAttribute('data-card-entrance')).toBe(true);
+        expect(card.parentElement!.hasAttribute('data-content-collapse')).toBe(true);
+        expect(cardOpacity(card)).toBeCloseTo(cardOpacity(expected[i]),8);
+        for(const [a,b] of [[card,expected[i]],[card.parentElement!,expected[i].parentElement!]]){
+          const values=transformValues(a),reference=transformValues(b);
+          expect(values).toHaveLength(reference.length);
+          values.forEach((value,j)=>expect(value).toBeCloseTo(reference[j],8));
+        }
       });
     }
     for(const local of [0,10,24,30,38,48,75]){

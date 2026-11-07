@@ -1,5 +1,6 @@
 import {AbsoluteFill,Img,staticFile,useCurrentFrame,useVideoConfig} from 'remotion';
-import {AgentPipeline,PreparationCards} from '../../packages/animations/src';
+import {AgentPipeline} from '../../packages/animations/src';
+import {PreparationCards} from './compositions/PreparationCards';
 import {during} from '../../packages/animations/src/reference-opening/motion';
 import {PaperBackground,Subtitle} from './OpeningScene';
 import {BeforeWorkScene} from './SecondPointScene';

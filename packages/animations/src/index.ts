@@ -27,8 +27,6 @@ export {RisingCurve} from './reference-opening/RisingCurve';
 export type {RisingCurveProps} from './reference-opening/RisingCurve';
 export {ConstraintRelease} from './reference-opening/ConstraintRelease';
 export type {ConstraintReleaseProps} from './reference-opening/ConstraintRelease';
-export {PreparationCards} from './reference-opening/PreparationCards';
-export type {PreparationCardsProps,PreparationCard} from './reference-opening/PreparationCards';
 export {AgentPipeline} from './reference-opening/AgentPipeline';
 export type {AgentPipelineProps} from './reference-opening/AgentPipeline';
 export {TypewriterComparison} from './reference-opening/TypewriterComparison';
