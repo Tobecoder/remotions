@@ -70,6 +70,8 @@ const Gallery = () => {
 
 [小节收束完整范例](../../examples/component-examples/content-collapse/README.md) 直接使用原 `SectionCollapse`，展示完整场景讲解、左上收拢淡出与编号摘要保持。11 秒预览支持替换整段静态或动态内容、小节名称和编号，沿用原收拢方向、落点及 0.75 秒节奏。
 
+[章节缩略卡完整范例](../../examples/component-examples/scene-thumbnail/README.md) 由原 `SceneThumbnail` 配合 `ChapterHeading`，将上一节插图缩入底部卡片并同步切入下一节。4 秒预览支持替换前后标题、两节插图、编号说明及总览文案；与小节收束分别保留，两处动作卡片共享此范例。
+
 ```tsx
 <ContentCollapse progress={progress} to={{x:60,y:45,scale:0.3}}>
   <YourContent />

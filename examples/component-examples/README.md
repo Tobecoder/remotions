@@ -9,6 +9,7 @@
 | `CardSpotlight` · 卡片放大回位 | 卡片放大回位 | [使用说明](./card-spotlight/README.md) · [入口](./card-spotlight/index.tsx) | 待用户确认 |
 | `CardEntrance` / `FocusLayer` · 卡片入场、前景聚焦 | 文档聚焦 | [使用说明](./document-focus/README.md) · [入口](./document-focus/index.tsx) | 待用户确认 |
 | `ContentCollapse` · 内容收拢 | 小节收束 | [使用说明](./content-collapse/README.md) · [入口](./content-collapse/index.tsx) | 待用户确认 |
+| `ContentCollapse` / `ChapterHeading` · 内容收拢、章节标题切换 | 章节缩略卡 | [使用说明](./scene-thumbnail/README.md) · [入口](./scene-thumbnail/index.tsx) | 待用户确认 |
 
 本站完整范例预览产物位于 `apps/catalog/public/examples/`，由对应案例的导出脚本生成。素材站仅引用范例元数据和预览文件，不另写案例动画，也不将固定组合重新导出为通用组件。
 

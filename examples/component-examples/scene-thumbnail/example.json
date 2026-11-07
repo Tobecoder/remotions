@@ -1,0 +1,30 @@
+{
+  "id": "scene-thumbnail",
+  "materialIds": ["content-collapse", "chapter-heading"],
+  "name": "章节缩略卡",
+  "description": "上一节插图连续缩入底部卡片，标题同步切换，下一节内容随后展开。",
+  "useCases": ["章节衔接", "上一节内容回顾", "连续教程的段落切换"],
+  "replaceable": ["前后两节标题与说明", "上一节插图及下一节内容", "缩略卡编号和说明", "顶部总览短文案"],
+  "preserve": ["旧插图缩入底部卡片的方向和落点", "0.5 秒缩小与标题同步切换", "下一节稍后展开的原有节奏", "缩略卡底板、编号和说明随进度渐显"],
+  "reviewStatus": "pending",
+  "composition": {"id": "Example-Scene-Thumbnail", "width": 1280, "height": 720, "fps": 30, "durationInFrames": 120, "posterFrame": 75},
+  "source": {
+    "entry": "examples/component-examples/scene-thumbnail/index.tsx",
+    "component": "examples/component-examples/scene-thumbnail/Example.tsx",
+    "exportName": "SceneThumbnailExample",
+    "implementation": "examples/reference-opening/compositions/SceneThumbnail.tsx",
+    "guide": "examples/component-examples/scene-thumbnail/README.md"
+  },
+  "preview": {
+    "video": "/examples/scene-thumbnail.mp4",
+    "poster": "/examples/scene-thumbnail.jpg",
+    "guide": "/examples/scene-thumbnail.md"
+  },
+  "defaultProps": {
+    "from": {"number": "01 / 03", "title": "制作方法", "description": "从脚本到成片"},
+    "to": {"number": "02 / 03", "title": "Skill 推荐", "description": "大家最关心的"},
+    "caption": "从脚本到成片",
+    "number": "01",
+    "overview": {"eyebrow": "这期聊三件事", "title": "一条讲解视频的制作全流程拆解"}
+  }
+}

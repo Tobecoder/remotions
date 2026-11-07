@@ -50,7 +50,7 @@ node examples/reference-opening/render.mjs
 - [卡片强调镜头](./compositions/SpotlightSequence.tsx) 计算放大、停留和缩回进度，调用 `CardSpotlight`，并在组件外绘制提示标签。保留原有成片节奏及标签位置；[完整范例](../component-examples/card-spotlight/README.md) 提供同源放大/归位预览及同步内容替换说明。
 - [文档聚焦镜头](./compositions/DocumentFocusGallery.tsx) 安排五张文档的布局、逐张入场、说明出现及聚焦时刻，调用 `CardEntrance/FocusLayer`；引文与提示标签由案例提供。[完整范例](../component-examples/document-focus/README.md) 提供同源预览、可替换文档与前景内容，以及原五卡布局的使用边界。
 - [小节收束](./compositions/SectionCollapse.tsx) 使用 `ContentCollapse` 收拢内容，并安排编号、摘要条及显隐。保持缩放终点 `0.06`，第一点在 23.65–24.4 秒收至 `(49,47)`，第二点在 50.3–51 秒收至 `(208,47)`；条目尺寸、文案和淡出进度属于案例配置。[完整范例](../component-examples/content-collapse/README.md) 保留第一点原收束动作，提供完整场景替换、编号摘要及归档停留的独立预览。
-- [章节缩略卡](./compositions/SceneThumbnail.tsx) 使用 `ContentCollapse` 缩小原场景，并绘制底板、编号和说明。保留原三张卡的目标位置、比例和章节衔接；原 `target/card/caption/number` 配置仅用于本案例组合。
+- [章节缩略卡](./compositions/SceneThumbnail.tsx) 使用 `ContentCollapse` 缩小原场景，并绘制底板、编号和说明。保留原三张卡的目标位置、比例和章节衔接；原 `target/card/caption/number` 配置仅用于本案例组合。[完整范例](../component-examples/scene-thumbnail/README.md) 保留首个缩略卡的落点、标题同步切换和下一节卡组展开，提供前后插图与文案替换说明。
 - [素材准备卡](./compositions/PreparationCards.tsx) 用 `CardEntrance` 处理单卡浮入、透明度和 `0.92→1` 缩放，用 `ContentCollapse` 汇聚缩小。四卡排布、错峰入场、旋转归正、停留及 Agent 接力时间由案例安排：相对 0.15 秒起逐张入场，3.35–3.95 秒收至 `(251,168)`，3.65 秒起淡出。
 
 这些编排由 `OpeningScene`、`ScriptScene`、`ContinuationScene`、`SecondPointScene`、`PreparationScene` 在本工程内导入，不属于素材目录及组件包公开 API。移到其他视频时可参考其代码，也可直接使用独立动作重新编排。

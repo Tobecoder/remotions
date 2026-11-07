@@ -41,6 +41,21 @@ describe('full examples associated with a standalone material',()=>{
     expect(panel.querySelector('.example-guide')!.getAttribute('href')).toBe('/examples/section-collapse.md');
     fireEvent.click(toggle);expect(container.querySelector('video')).toBeNull();
   });
+  it('shares the chapter thumbnail handoff across collapse and heading without replacing the summary example',()=>{
+    const {container,rerender}=render(<MaterialExamples materialId="content-collapse"/>);
+    for(const materialId of ['content-collapse','chapter-heading'] as const){
+      rerender(<MaterialExamples materialId={materialId}/>);
+      expect(container.querySelectorAll('[data-material-example]')).toHaveLength(materialId==='content-collapse'?2:1);
+      const toggle=screen.getByRole('button',{name:'查看完整范例 · 章节缩略卡'});
+      fireEvent.click(toggle);
+      const panel=screen.getByRole('region',{name:'章节缩略卡完整范例'});
+      expect(panel.querySelector('video')!.getAttribute('src')).toBe('/examples/scene-thumbnail.mp4');
+      expect(panel.textContent).toContain('4 秒');expect(panel.textContent).toContain('前后两节标题与说明');
+      expect(panel.querySelector('code')!.textContent).toContain('component={SceneThumbnailExample}');
+      expect(panel.querySelector('.example-guide')!.getAttribute('href')).toBe('/examples/scene-thumbnail.md');
+      fireEvent.click(toggle);expect(container.querySelector('video')).toBeNull();
+    }
+  });
   it('opens the complete spotlight sequence with its return and content-replacement guidance',()=>{
     render(<MaterialExamples materialId="card-spotlight"/>);
     fireEvent.click(screen.getByRole('button',{name:'查看完整范例 · 卡片放大回位'}));
