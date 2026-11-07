@@ -4,7 +4,7 @@ import {pathCardLayout} from '../../../packages/animations/src/reference-opening
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
 import {AgentPipeline,TypewriterComparison,CardSpotlight,ProgressRow,DocumentWindow,HighlightBox,CollapsingTitle} from '../../../packages/animations/src';
-import {PreparationArtwork} from './PreparationArtwork';
+import {PreparationArtwork} from '../../../packages/animations/src/reference-opening/PreparationArtwork';
 import {PanelScroll,LiveWaveform,LiveTimeline,LiveCaptionLines} from '../../../packages/animations/src/reference-opening/LivePanelContent';
 import {NeuronPreview} from '../../../packages/animations/src/reference-opening/NeuronPreview';
 import {getAiComparisonThumbnailRect} from '../../../packages/animations/src/reference-opening/TypewriterComparison';

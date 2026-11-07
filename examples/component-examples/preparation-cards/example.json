@@ -1,0 +1,40 @@
+{
+  "id": "preparation-cards",
+  "materialIds": ["card-entrance", "content-collapse", "agent-pipeline"],
+  "name": "素材准备卡",
+  "description": "四张素材卡依次浮入并停留，缩小汇聚到 Agent，随后连接工具并展开成片窗口。",
+  "useCases": ["制作准备说明", "资料汇集", "输入素材到成片的流程演示"],
+  "replaceable": ["卡片名称和说明", "默认插图或自定义素材", "标题和 Agent、工具名称", "静态或动态输出画面"],
+  "preserve": ["四卡原有排布、错峰浮入和阅读停顿", "旋转归正与缩小汇聚的方向、落点", "汇聚淡出与 Agent 显现的接力时刻", "连接线、工具名称及成片窗口的出现顺序"],
+  "reviewStatus": "pending",
+  "composition": {"id": "Example-Preparation-Cards", "width": 1280, "height": 720, "fps": 30, "durationInFrames": 192, "posterFrame": 75},
+  "source": {
+    "entry": "examples/component-examples/preparation-cards/index.tsx",
+    "component": "examples/component-examples/preparation-cards/Example.tsx",
+    "exportName": "PreparationCardsExample",
+    "implementation": "examples/reference-opening/compositions/PreparationCards.tsx",
+    "guide": "examples/component-examples/preparation-cards/README.md"
+  },
+  "preview": {
+    "video": "/examples/preparation-cards.mp4",
+    "poster": "/examples/preparation-cards.jpg",
+    "guide": "/examples/preparation-cards.md"
+  },
+  "defaultProps": {
+    "agentLabel": "Agent",
+    "toolLabel": "Remotion",
+    "cards": [
+      {"id": "0", "title": "脚本", "kind": 0},
+      {"id": "1", "title": "配音", "kind": 1},
+      {"id": "2", "title": "SRT", "kind": 2},
+      {"id": "3", "title": "素材", "description": "（截图 / 录屏 / 小动画）", "kind": 3}
+    ],
+    "copy": {
+      "eyebrow": "开工之前",
+      "title": "我会先准备这些素材",
+      "outputEyebrow": "REMOTIONS / EXAMPLE",
+      "outputTitle": "一条完整的讲解视频",
+      "outputDescription": "把内容、画面和节奏组织成完整镜头。"
+    }
+  }
+}

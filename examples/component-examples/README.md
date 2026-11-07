@@ -10,6 +10,9 @@
 | `CardEntrance` / `FocusLayer` · 卡片入场、前景聚焦 | 文档聚焦 | [使用说明](./document-focus/README.md) · [入口](./document-focus/index.tsx) | 待用户确认 |
 | `ContentCollapse` · 内容收拢 | 小节收束 | [使用说明](./content-collapse/README.md) · [入口](./content-collapse/index.tsx) | 待用户确认 |
 | `ContentCollapse` / `ChapterHeading` · 内容收拢、章节标题切换 | 章节缩略卡 | [使用说明](./scene-thumbnail/README.md) · [入口](./scene-thumbnail/index.tsx) | 待用户确认 |
+| `CardEntrance` / `ContentCollapse` / `AgentPipeline` · 卡片入场、内容收拢、Agent 成片流程 | 素材准备卡 | [使用说明](./preparation-cards/README.md) · [入口](./preparation-cards/index.tsx) | 待用户确认 |
+
+本轮已拆分的七组组合均已补齐独立入口、完整预览和替换说明；新范例的视觉验收状态仍以上表为准。
 
 本站完整范例预览产物位于 `apps/catalog/public/examples/`，由对应案例的导出脚本生成。素材站仅引用范例元数据和预览文件，不另写案例动画，也不将固定组合重新导出为通用组件。
 

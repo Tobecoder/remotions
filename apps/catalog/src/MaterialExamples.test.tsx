@@ -45,7 +45,7 @@ describe('full examples associated with a standalone material',()=>{
     const {container,rerender}=render(<MaterialExamples materialId="content-collapse"/>);
     for(const materialId of ['content-collapse','chapter-heading'] as const){
       rerender(<MaterialExamples materialId={materialId}/>);
-      expect(container.querySelectorAll('[data-material-example]')).toHaveLength(materialId==='content-collapse'?2:1);
+      expect(container.querySelectorAll('[data-material-example]')).toHaveLength(materialId==='content-collapse'?3:1);
       const toggle=screen.getByRole('button',{name:'查看完整范例 · 章节缩略卡'});
       fireEvent.click(toggle);
       const panel=screen.getByRole('region',{name:'章节缩略卡完整范例'});
@@ -91,6 +91,20 @@ describe('full examples associated with a standalone material',()=>{
       expect(panel.querySelector('video')!.getAttribute('src')).toBe('/examples/document-focus-gallery.mp4');
       expect(panel.querySelector('code')!.textContent).toContain('component={DocumentFocusExample}');
       expect(panel.textContent).toContain('6 秒');expect(panel.textContent).toContain('资料卡标题和摘要');
+      fireEvent.click(toggle);expect(container.querySelector('video')).toBeNull();
+    }
+  });
+  it('opens the same complete preparation-to-output example from all three associated materials',()=>{
+    const {container,rerender}=render(<MaterialExamples materialId="card-entrance"/>);
+    for(const materialId of ['card-entrance','content-collapse','agent-pipeline'] as const){
+      rerender(<MaterialExamples materialId={materialId}/>);
+      const toggle=screen.getByRole('button',{name:'查看完整范例 · 素材准备卡'});
+      fireEvent.click(toggle);
+      const panel=screen.getByRole('region',{name:'素材准备卡完整范例'});
+      expect(panel.querySelector('video')!.getAttribute('src')).toBe('/examples/preparation-cards.mp4');
+      expect(panel.textContent).toContain('6.4 秒');expect(panel.textContent).toContain('卡片名称和说明');
+      expect(panel.querySelector('code')!.textContent).toContain('component={PreparationCardsExample}');
+      expect(panel.querySelector('.example-guide')!.getAttribute('href')).toBe('/examples/preparation-cards.md');
       fireEvent.click(toggle);expect(container.querySelector('video')).toBeNull();
     }
   });

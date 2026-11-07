@@ -4,10 +4,11 @@ import cardSpotlight from '../../../examples/component-examples/card-spotlight/e
 import documentFocus from '../../../examples/component-examples/document-focus/example.json';
 import sectionCollapse from '../../../examples/component-examples/content-collapse/example.json';
 import sceneThumbnail from '../../../examples/component-examples/scene-thumbnail/example.json';
+import preparationCards from '../../../examples/component-examples/preparation-cards/example.json';
 import type {MaterialId} from './catalog';
 
 export type MaterialExample=Omit<typeof progressComparison,'defaultProps'> & {defaultProps:Readonly<Record<string,unknown>>};
-export const materialExamples:readonly MaterialExample[]=[progressComparison,scriptDocument,cardSpotlight,documentFocus,sectionCollapse,sceneThumbnail];
+export const materialExamples:readonly MaterialExample[]=[progressComparison,scriptDocument,cardSpotlight,documentFocus,sectionCollapse,sceneThumbnail,preparationCards];
 export const getMaterialExamples=(materialId:MaterialId)=>materialExamples.filter(example=>example.materialIds.includes(materialId));
 
 export const getExampleUsage=(example:MaterialExample)=>`import {Composition} from 'remotion';

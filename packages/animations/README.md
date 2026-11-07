@@ -72,6 +72,8 @@ const Gallery = () => {
 
 [章节缩略卡完整范例](../../examples/component-examples/scene-thumbnail/README.md) 由原 `SceneThumbnail` 配合 `ChapterHeading`，将上一节插图缩入底部卡片并同步切入下一节。4 秒预览支持替换前后标题、两节插图、编号说明及总览文案；与小节收束分别保留，两处动作卡片共享此范例。
 
+[素材准备卡完整范例](../../examples/component-examples/preparation-cards/README.md) 直接使用原 `PreparationCards`，展示四卡错峰入场、停留、汇聚及 `AgentPipeline` 接力输出的 6.4 秒完整流程。卡片内容、默认/自定义插图、标题与输出画面可替换，卡片入场、内容收拢及 Agent 成片流程共享同一范例。
+
 ```tsx
 <ContentCollapse progress={progress} to={{x:60,y:45,scale:0.3}}>
   <YourContent />

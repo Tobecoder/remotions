@@ -1,6 +1,6 @@
 import {useId} from 'react';
 
-/** Original, replaceable illustrations for the standalone component demos. */
+/** Shared illustrations for material demos and examples; not part of the public motion API. */
 export const PreparationArtwork=({kind}:{kind:number})=>{
   const id=`preparation-${useId().replace(/:/g,'')}`;
   return <svg width="110" height="110" viewBox="0 0 110 110">
