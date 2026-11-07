@@ -6,8 +6,8 @@ describe('curated catalog', () => {
   it('registers the twenty-five standalone materials under their matching categories', () => {
     expect(catalog).toHaveLength(25);
     expect(new Set(catalog.map(item=>item.id)).size).toBe(25);
-    expect(catalog.filter(item=>item.category==='layouts').map(item=>item.component).sort()).toEqual(['PerspectivePanel','SceneThumbnail','FanCardDeck','SectionCollapse','CardSpotlight','DocumentWindow','CardEntrance','FocusLayer'].sort());
-    expect(catalog.some(item=>['ScriptDocumentGuide','ProgressRace','DocumentFocusGallery'].includes(item.component))).toBe(false);
+    expect(catalog.filter(item=>item.category==='layouts').map(item=>item.component).sort()).toEqual(['PerspectivePanel','SceneThumbnail','FanCardDeck','ContentCollapse','CardSpotlight','DocumentWindow','CardEntrance','FocusLayer'].sort());
+    expect(catalog.some(item=>['ScriptDocumentGuide','ProgressRace','DocumentFocusGallery','SectionCollapse'].includes(item.component))).toBe(false);
     expect(catalog.find(item=>item.component==='ExplodedLayers')?.category).toBe('storytelling');
     expect(catalog.find(item=>item.component==='ChapterHeading')?.category).toBe('text-effects');
     expect(catalog.find(item=>item.component==='BlurredCollage')?.category).toBe('backgrounds');

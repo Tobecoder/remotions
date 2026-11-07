@@ -14,6 +14,8 @@ vi.mock('remotion',()=>({
 import {FirstPointScene,Opening20Scene} from '../../../examples/reference-opening/ContinuationScene';
 import {OpeningScene} from '../../../examples/reference-opening/OpeningScene';
 import {MaterialDemo} from '../../../apps/catalog/src/MaterialDemo';
+import {ContentCollapse} from '../src';
+import {during} from '../src/reference-opening/motion';
 
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
 const filmAt=(frame:number)=>{clock.frame=frame;return dom(<Opening20Scene/>);};
@@ -183,12 +185,14 @@ describe('observed 11–20 second continuation',()=>{
     expect(end.body.textContent).not.toMatch(/先开枪|后瞄准|第二/);
     expect(styles(pointAt(732),'[data-section-collapse-scene], [data-section-bookmark]')).toEqual(styles(end,'[data-section-collapse-scene], [data-section-bookmark]'));
   });
-  it('shares the final collapse motion with its independent library material',()=>{
+  it('uses the standalone collapse action while the case owns its summary entry',()=>{
     for(const frame of [709,711,720,728,732,749]){
       const film=pointAt(frame);
-      clock.frame=frame-660;
-      const catalog=dom(<MaterialDemo id="section-collapse"/>);
-      expect(styles(film,'[data-section-collapse-scene], [data-section-bookmark]').map(rounded)).toEqual(styles(catalog,'[data-section-collapse-scene], [data-section-bookmark]').map(rounded));
+      const progress=during(frame/30,23.65,24.4);
+      const library=dom(<ContentCollapse progress={progress} to={{x:49,y:47,scale:.06}} opacity={1-during(progress,.65,1)}>任意内容</ContentCollapse>);
+      expect(styles(film,'[data-content-collapse]').map(rounded)).toEqual(styles(library,'[data-content-collapse]').map(rounded));
+      expect(film.querySelector('[data-section-bookmark]')).not.toBeNull();
+      expect(library.querySelector('[data-section-bookmark]')).toBeNull();
     }
   });
 });

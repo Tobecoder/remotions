@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'section-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'card-entrance' | 'focus-layer' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'document-window' | 'highlight-box' | 'collapsing-title';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'scene-thumbnail' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'tethered-motion' | 'rising-curve' | 'card-entrance' | 'focus-layer' | 'constraint-release' | 'preparation-cards' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'document-window' | 'highlight-box' | 'collapsing-title';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -80,12 +80,13 @@ export const catalog: CatalogItem[] = [
 <ConstraintRelease time={frame / fps} content={<YourContent />}
   tags={['必须一步一步 …','禁止使用 …','严格按照模板 …','每一帧都要 …','不允许 …','只能用 …']}
   badge="惊喜" />`},
-  {id:'section-collapse',category:'layouts',name:'小节收束',component:'SectionCollapse',description:'讲解画面缩进顶部摘要条，保留已讲完的小节',usage:'观点收尾 · 内容归档',durationInFrames:150,posterFrame:45,code:`import {SectionCollapse} from '@remotions/animations';
+  {id:'content-collapse',category:'layouts',name:'内容收拢',component:'ContentCollapse',description:'任意内容移动缩小到指定位置，进度与显隐独立控制',usage:'画面收拢 · 内容归档',durationInFrames:150,posterFrame:45,code:`import {ContentCollapse} from '@remotions/animations';
 
-// 将背景和底部字幕放在组件外；画布为 800 × 450。
-<SectionCollapse progress={progress} label="没有标准答案" number="1">
-  <YourExplanation />
-</SectionCollapse>`},
+// 800 × 450 设计坐标；编号、摘要条及字幕由调用方绘制。
+<ContentCollapse progress={progress}
+  from={{x:0,y:0,scale:1}} to={{x:60,y:45,scale:0.3}}>
+  <YourContent />
+</ContentCollapse>`},
   {id:'audio-pulse-badge',category:'overlays',name:'音效脉冲徽章',component:'AudioPulseBadge',description:'圆形波形图标与淡淡扩散的细圆环',usage:'音效说明 · 章节配图',durationInFrames:150,posterFrame:30,code:`import {AudioPulseBadge} from '@remotions/animations';
 
 // 装饰图标，不读取音频；800 × 450 设计坐标。

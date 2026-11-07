@@ -35,7 +35,7 @@ node examples/reference-opening/render.mjs
 
 连续二十秒预览为 http://localhost:3004/Reference-Opening-20s 。续段新增「信息叠加 → 音效脉冲徽章」「叙事动画 → 章节卡总览」「叙事动画 → 多路径演示」三项素材。目录卡片用原创配图；案例使用观察截图中的 11 张小卡静态贴图（约 25 KB），没有使用整屏视频代替代码动画。
 
-第一点完整预览为 http://localhost:3004/Reference-First-Point 。补全路线光点到达结果、“启发 · 灵感”标签，最后使用新增「版式转场 → 小节收束」组件归档为顶部条目，停留到 25 秒。
+第一点完整预览为 http://localhost:3004/Reference-First-Point 。补全路线光点到达结果、“启发 · 灵感”标签，最后由案例内 `SectionCollapse` 调用「版式转场 → 内容收拢」，归档为顶部条目，停留到 25 秒。
 
 第二点的独立预览为 http://localhost:3004/Reference-Before-Work 。第二点新增六项组件；早期使用的两张角色静态图现已更换为原创毛绒小熊的 16 帧图集，位移、绳索和序列帧均由代码控制。五张文档小图仍由 `prepare-second-point-assets.py` 提取，运行时不依赖原片页面。
 
@@ -49,8 +49,9 @@ node examples/reference-opening/render.mjs
 - [进度对比](./compositions/ProgressRace.tsx) 编排两条 `ProgressRow` 的快慢、转圈和计数。`eyebrow/countTo/phrases` 为案例配置。
 - [卡片强调镜头](./compositions/SpotlightSequence.tsx) 计算放大、停留和缩回进度，调用 `CardSpotlight`，并在组件外绘制提示标签。保留原有成片节奏及标签位置。
 - [文档聚焦镜头](./compositions/DocumentFocusGallery.tsx) 安排五张文档的布局、逐张入场、说明出现及聚焦时刻，调用 `CardEntrance/FocusLayer`；引文与提示标签由案例提供。
+- [小节收束](./compositions/SectionCollapse.tsx) 使用 `ContentCollapse` 收拢内容，并安排编号、摘要条及显隐。保持缩放终点 `0.06`，第一点在 23.65–24.4 秒收至 `(49,47)`，第二点在 50.3–51 秒收至 `(208,47)`；条目尺寸、文案和淡出进度属于案例配置。
 
-这些编排由 `ScriptScene` 在本工程内导入，不属于素材目录及组件包公开 API。移到其他视频时可参考其代码，也可直接使用独立动作重新编排。
+这些编排由 `ScriptScene`、`ContinuationScene`、`SecondPointScene` 在本工程内导入，不属于素材目录及组件包公开 API。移到其他视频时可参考其代码，也可直接使用独立动作重新编排。
 
 ## 验证边界
 

@@ -11,6 +11,6 @@
 
 工程拟合：光点沿现有选中曲线的两个三次贝塞尔段计算，19–20.9 秒前进；21.15–21.55 秒显现结果标签。23.65–24.4 秒用 `SectionCollapse` 缩进摘要条，24.4–25 秒保持。上述为拟合的工程时间，不声称来自原工程关键帧。
 
-复用并完善 `BranchingPaths`，新增可替换 `resultLabel`；小节收束单独封装为 `SectionCollapse`，收进“版式转场”。目录与案例共用组件、默认运动和收束布局，只替换内容并平移整体时间。
+复用并完善 `BranchingPaths`，新增可替换 `resultLabel`。收拢动作以 `ContentCollapse` 收进“版式转场”，任意内容、起终点、进度和显隐可独立传入；小节编号、摘要条及既有时间线由案例内 `SectionCollapse` 编排，退出素材目录和公开入口。
 
 本版 Composition：`Reference-First-Point`，1920×1080、30 FPS、750 帧，25 秒，无声。保留原有十秒和二十秒 Composition，不制作第二点。

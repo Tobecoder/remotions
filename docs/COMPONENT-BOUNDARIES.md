@@ -24,7 +24,7 @@
 - 固定业务组合及其专属类型留在案例工程，退出素材目录及 `packages/animations/src/index.ts`、`packages/animations/src/reference-opening/index.ts` 两处入口；不通过库入口提供兼容别名。
 - 组件库和素材站不反向依赖案例中的组合代码。案例从组件库调用独立动作。
 
-当前示例中的 `ScriptDocumentGuide`、`ProgressRace`、`SpotlightSequence`、`DocumentFocusGallery` 位于 `examples/reference-opening/compositions/`，分别编排文档讲解、快慢进度对比、卡片强调镜头及五卡文档聚焦；它们不属于素材目录或组件包公开 API。
+当前示例中的 `ScriptDocumentGuide`、`ProgressRace`、`SpotlightSequence`、`DocumentFocusGallery`、`SectionCollapse` 位于 `examples/reference-opening/compositions/`，分别编排文档讲解、快慢进度对比、卡片强调镜头、五卡文档聚焦及小节摘要收束；它们不属于素材目录或组件包公开 API。
 
 ## 修改与迁移
 

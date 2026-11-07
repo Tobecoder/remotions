@@ -47,3 +47,21 @@ describe('foreground focus example',()=>{
     expect(scene.querySelector('[data-focus-background], [data-card-entrance]')).toBeNull();
   });
 });
+
+describe('content collapse example',()=>{
+  it('shows a standalone card that stays visible after shrinking without case-specific paths or bookmarks',()=>{
+    const stages=[45,90].map(frame=>{
+      clock.frame=frame;
+      return new DOMParser().parseFromString(renderToStaticMarkup(<MaterialDemo id="content-collapse"/>),'text/html');
+    });
+    for(const scene of stages){
+      const content=scene.querySelector<HTMLElement>('[data-content-collapse]')!;
+      expect(content.style.opacity).toBe('1');
+      expect(content.textContent).toContain('任意内容，收拢到指定位置');
+      expect(scene.querySelector('[data-section-bookmark], [data-path-card]')).toBeNull();
+      expect(scene.body.textContent).not.toContain('没有标准答案');
+    }
+    expect(stages[0].querySelector<HTMLElement>('[data-content-collapse]')!.style.transform).toBe('translate(0px,0px) scale(1)');
+    expect(stages[1].querySelector<HTMLElement>('[data-content-collapse]')!.style.transform).toBe('translate(60px,45px) scale(0.30000000000000004)');
+  });
+});

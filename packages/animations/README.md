@@ -13,7 +13,7 @@ Remotion 可复用动画组件，当前公开导出 **25 个**。旧组件及归
 | 信息叠加 | `AudioPulseBadge` | 装饰波形图标及扩散细圆环 |
 | 叙事动画 | `ChapterCardRow` | 章节缩略卡上移、放大并排为总览 |
 | 叙事动画 | `BranchingPaths` | 多条素材路径、否定标签和选路强调 |
-| 版式转场 | `SectionCollapse` | 完整讲解画面缩进顶部已完成条目 |
+| 版式转场 | `ContentCollapse` | 任意内容移动缩小到指定位置，显隐独立控制 |
 | 叙事动画 | `TargetReticle` | 偏心落点、准星归位及靶面移到侧边 |
 | 叙事动画 | `ConstraintSwitches` | 约束开关依次关闭、文字划线 |
 | 叙事动画 | `TetheredMotion` | 可替换对象前进、被绳索牵回并切换姿态 |
@@ -68,7 +68,13 @@ const Gallery = () => {
 
 三条基础路线按“上 → 下 → 中”交替起笔，分别从 0、0.35、0.7 秒开始，单条绘制仍为 0.65 秒。卡片入场及后续选路不随此错峰调整而改变。
 
-`SectionCollapse` 接收 `children`、`progress`、`label`，可选 `number`（默认 `1`）及 `target={x,y,width,height}`（默认 `{x:49,y:47,width:150,height:37}`）。将讲解主体放在组件内部，纸底、字幕和其他导航放在外部；整个主体向摘要条缩小并淡去，保留已完成的小节名称。素材库和第一点案例均使用 0.75 秒的收束进度。
+`ContentCollapse` 接收任意 `children`、`progress`（0–1）和目标 `to={x,y,scale}`；可选起点 `from`（默认 `{x:0,y:0,scale:1}`）及 `opacity`（默认 `1`）。坐标以内容容器左上角为原点，位置和缩放随进度插值；没有内置淡出、编号、文案或摘要条，显隐由调用方独立控制。支持 `style/className` 等容器属性。原 `SectionCollapse` 及其专属类型已退出公开入口，编号与摘要条组合保存在案例工程。
+
+```tsx
+<ContentCollapse progress={progress} to={{x:60,y:45,scale:0.3}}>
+  <YourContent />
+</ContentCollapse>
+```
 
 `TargetReticle`、`ConstraintSwitches`、`TetheredMotion`、`ConstraintRelease` 均接收 `time`（秒）和可选 `startAt`。靶心可替换 `shotLabel/aimLabel/color`；约束开关默认两行，可替换 `heading/labels/offLabel`，默认先后关闭时刻为相对 5.1、7.3 秒；目录演示整体提前 2.2 秒。
 
