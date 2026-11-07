@@ -128,6 +128,8 @@ const Gallery = () => {
 
 `CollapsingTitle` 接收 `title`、`progress`、起终点 `from/to`（均指标题正文左上角）及 `fontSize/compactFontSize`，同一标题持续显示并移动缩小。可传 `lead/description/compactDescription`，配合收拢切换说明；组件没有固定章节编号或业务文案，颜色可由标题 React 内容自行设置。
 
+文档窗口、区域高亮与标题收拢共享 [脚本文档讲解完整范例](../../examples/component-examples/script-document/README.md)：沿用原案例的章节衔接、文档滚动、高亮和两条摘要编排。素材站三个对应卡片均可打开同一份 12 秒预览；正文、标题和说明可替换，原组合继续位于案例工程。
+
 固定讲解顺序、计数节奏和业务文案由视频工程编排。仓库原有的脚本文档讲解、快慢进度对比、五卡文档聚焦、小节摘要、章节缩略卡和四卡素材准备代码已迁入 `examples/reference-opening/compositions/`，不属于本包的导出或素材目录；可参考案例组合上述独立动作。`SceneThumbnail`、`PreparationCards` 及其专属类型已退出公开入口，案例使用独立动作配合底板、编号和文案完成原有效果。
 
 `CardEntrance` 接收单张卡片的 `children`、`progress`（0–1）、`x/y/width/height`。`offset` 为入场前相对目标位置的偏移，默认 `{x:0,y:12}`；`fromScale` 控制起始缩放并随入场回到 `1`，默认 `1` 保持原有大小不变。`rotation/background/borderRadius/boxShadow` 可调整样式。调用方可映射任意数量卡片，并逐张传入位置和进度；组件没有五卡布局或固定入场间隔。

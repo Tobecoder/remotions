@@ -26,7 +26,22 @@ describe('full examples associated with a standalone material',()=>{
     expect(container.querySelector('video')).toBeNull();
   });
   it('does not show another component an unrelated example',()=>{
-    const {container}=render(<MaterialExamples materialId="document-window"/>);
+    const {container}=render(<MaterialExamples materialId="perspective-panel"/>);
     expect(container.querySelector('button,video')).toBeNull();
+  });
+  it('opens the same complete document explanation from each of its linked materials',()=>{
+    const {container,rerender}=render(<MaterialExamples materialId="document-window"/>);
+    for(const materialId of ['document-window','highlight-box','collapsing-title'] as const){
+      rerender(<MaterialExamples materialId={materialId}/>);
+      expect(container.querySelectorAll('[data-material-example]')).toHaveLength(1);
+      const toggle=screen.getByRole('button',{name:'查看完整范例 · 脚本文档讲解'});
+      fireEvent.click(toggle);
+      const panel=screen.getByRole('region',{name:'脚本文档讲解完整范例'});
+      expect(panel.querySelector('video')!.getAttribute('src')).toBe('/examples/script-document-guide.mp4');
+      expect(panel.querySelector('code')!.textContent).toContain('component={ScriptDocumentExample}');
+      expect(panel.textContent).toContain('12 秒');expect(panel.textContent).toContain('可以替换');
+      fireEvent.click(toggle);
+      expect(container.querySelector('video')).toBeNull();
+    }
   });
 });

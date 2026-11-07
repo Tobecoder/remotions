@@ -1,0 +1,56 @@
+{
+  "id": "script-document-guide",
+  "materialIds": ["document-window", "highlight-box", "collapsing-title"],
+  "name": "脚本文档讲解",
+  "description": "章节标题切换为逐字稿，文档入场并滚动，再高亮正文区域，将提示与说明收为两条要点。",
+  "useCases": ["脚本结构讲解", "教程文档展示", "正文与画面备注说明"],
+  "replaceable": ["章节标题与短说明", "文档正文或自定义文档内容", "提示说明与收拢后的总结", "文档标题与滚动距离"],
+  "preserve": ["左侧标题与右侧文档的布局", "标题衔接、文档入场、滚动、高亮和收拢的顺序", "正文停止滚动后再强调的节奏", "同一段标题文字连续缩小归位的效果"],
+  "reviewStatus": "pending",
+  "composition": {"id": "Example-ScriptDocument-Guide", "width": 1280, "height": 720, "fps": 30, "durationInFrames": 360, "posterFrame": 270},
+  "source": {
+    "entry": "examples/component-examples/script-document/index.tsx",
+    "component": "examples/component-examples/script-document/Example.tsx",
+    "exportName": "ScriptDocumentExample",
+    "implementation": "examples/reference-opening/compositions/ScriptDocumentGuide.tsx",
+    "guide": "examples/component-examples/script-document/README.md"
+  },
+  "preview": {
+    "video": "/examples/script-document-guide.mp4",
+    "poster": "/examples/script-document-guide.jpg",
+    "guide": "/examples/script-document-guide.md"
+  },
+  "defaultProps": {
+    "eyebrow": "01 · 脚本里写什么",
+    "chapterFrom": {"number": "CHAPTER 01 / 06", "title": "脚本", "description": "逐字稿 · 素材备注 · 动画备注"},
+    "scrollDistance": 233,
+    "copy": {
+      "narrationTitle": "逐字稿",
+      "narrationDescription": "旁白念的每一句",
+      "instructionLead": "画面里展示的",
+      "instructionTitle": "提示词 · 说明",
+      "instructionDescription": "旁白不念，但要出现在画面里",
+      "compactDescription": "要在画面里展示的内容",
+      "summary": "都要写进脚本",
+      "documentTitle": "脚本示例 · 内容与画面说明"
+    },
+    "paragraphs": [
+      "旁白：先提出一个具体问题，让观众知道这一段要讲什么。",
+      "画面：主标题先出现，文档随后从右侧进入。",
+      "旁白：讲解脚本里，需要写下准备说出的每一句话。",
+      "画面：把旁白正文放进文档，按顺序展示。",
+      "素材：记录需要使用的图片、资料和演示内容。",
+      "旁白：一段话对应一个清楚的意思，方便安排镜头。",
+      "画面：正文缓慢滚动，给观众留下阅读时间。",
+      "备注：滚动在区域高亮前结束，保持文字稳定。",
+      "旁白：有些说明不需要念出来，但要出现在画面里。",
+      "画面：用高亮框圈出这一段说明所在的区域。",
+      "备注：写清标题、提示词与需要强调的内容。",
+      "旁白：旁白与画面备注共同构成完整的讲解脚本。",
+      "画面：将左侧说明缩小，收成第二条摘要。",
+      "素材：文档内容可以替换为你的教程或实际资料。",
+      "备注：沿用现有的入场、滚动、高亮和收拢顺序。",
+      "总结：先把内容写清楚，再让画面准确地表达。"
+    ]
+  }
+}

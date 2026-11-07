@@ -1,6 +1,6 @@
 {
   "id": "progress-row-comparison",
-  "materialId": "progress-row",
+  "materialIds": ["progress-row"],
   "name": "进度对比",
   "description": "两条进度依次入场，展示快速完成与持续等待的对照，保留徽章、转圈和连续计数。",
   "useCases": ["两种方案对比", "处理效率示意", "任务完成节奏讲解"],

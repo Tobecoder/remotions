@@ -5,5 +5,8 @@
 | 动作 | 完整效果 | 说明与代码入口 | 新范例验收状态 |
 | --- | --- | --- | --- |
 | `ProgressRow` · 单条进度 | 进度对比 | [使用说明](./progress-row/README.md) · [入口](./progress-row/index.tsx) | 待用户确认 |
+| `DocumentWindow` / `HighlightBox` / `CollapsingTitle` · 文档窗口、区域高亮、标题收拢 | 脚本文档讲解 | [使用说明](./script-document/README.md) · [入口](./script-document/index.tsx) | 待用户确认 |
 
 本站完整范例预览产物位于 `apps/catalog/public/examples/`，由对应案例的导出脚本生成。素材站仅引用范例元数据和预览文件，不另写案例动画，也不将固定组合重新导出为通用组件。
+
+多个动作可共享同一份完整范例，例如文档窗口、区域高亮、标题收拢都关联到脚本文档讲解。各目录的 `render.mjs` 使用共享的 `render-example.mjs` 导出流程，保持尺寸、帧数及解码检查一致。
