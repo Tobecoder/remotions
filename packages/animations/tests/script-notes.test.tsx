@@ -6,6 +6,8 @@ const clock=vi.hoisted(()=>({frame:0}));
 vi.mock('remotion',()=>({useCurrentFrame:()=>clock.frame,useVideoConfig:()=>({fps:30,width:1920,height:1080}),staticFile:(file:string)=>file,AbsoluteFill:({children,style}:{children:ReactNode;style:CSSProperties})=><div style={style}>{children}</div>,Img:({src,style}:{src:string;style:CSSProperties})=><img src={src} style={style}/>}));
 import {ScriptNotesFilm} from '../../../examples/reference-opening/ScriptNotesScene';
 import {ScriptFilm} from '../../../examples/reference-opening/ScriptScene';
+import {SectionCollapse} from '../../../examples/reference-opening/compositions/SectionCollapse';
+import {during} from '../src/reference-opening/motion';
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
 const at=(seconds:number)=>{clock.frame=Math.round(seconds*30);return dom(<ScriptNotesFilm/>);};
 const style=(doc:Document,selector:string)=>doc.querySelector<HTMLElement>(selector)!.style;
@@ -18,10 +20,21 @@ describe('script notes continuation to the second question',()=>{
     expect(second.querySelector('[data-question-summary="0"]')!.getAttribute('data-question-state')).toBe('complete');
     expect(second.querySelector('[data-question-summary="1"]')!.getAttribute('data-question-state')).toBe('active');
     expect(style(second,'[data-question-summary="1"]').borderColor).toBe('rgb(213, 155, 137)');
-    expect(style(second,'[data-question-summary="0"]').background).toBe('rgb(255, 255, 255)');
-    expect(style(second,'[data-question-summary="0"] [data-question-number]').background).toBe('rgb(220, 115, 81)');
-    expect(style(second,'[data-question-summary="0"] [data-question-number]').color).toBe('rgb(255, 255, 255)');
+    expect(style(second,'[data-question-summary="0"]').opacity).toBe('0');
+    expect(style(second,'[data-section-bookmark]').opacity).toBe('1');
+    expect(style(second,'[data-section-bookmark] span').background).toBe('rgb(217, 106, 72)');
+    expect(style(second,'[data-section-bookmark] span').color).toBe('rgb(255, 255, 255)');
     expect(style(second,'[data-question-summary="1"] [data-question-number]').color).toBe('rgb(220, 115, 81)');
+  });
+  it('reuses the earlier SectionCollapse motion and bookmark through the whole return, including backward seeks',()=>{
+    for(const frame of [3750,3756,3762,3768,3774,3780,3786,3789,3840,3762]){
+      clock.frame=frame;
+      const actual=dom(<ScriptNotesFilm/>),expected=dom(<SectionCollapse progress={during(frame/30-96,29.2,30.3)} label="要备注：段落下标注可用素材" target={{x:49,y:43,width:260,height:38}}>{null}</SectionCollapse>);
+      expect(actual.querySelector('[data-section-collapse-scene]')!.getAttribute('style')).toBe(expected.querySelector('[data-section-collapse-scene]')!.getAttribute('style'));
+      expect(actual.querySelector('[data-section-bookmark]')!.outerHTML).toBe(expected.querySelector('[data-section-bookmark]')!.outerHTML);
+      expect(actual.querySelector('[data-section-collapse-scene] [data-notes-document]')).not.toBeNull();
+      expect(actual.querySelector('[data-section-collapse-scene] [data-notes-matches]')).not.toBeNull();
+    }
   });
   it('shows the two reference thumbnails and connects the shots before revealing their planning note',()=>{
     const cards=at(100);
@@ -49,9 +62,9 @@ describe('script notes continuation to the second question',()=>{
   });
   it('ends with the first summary and the exact requested subtitle, without entering the following document',()=>{
     const end=at(128.9666666667);
-    expect(style(end,'[data-notes-phase="explanation"]').opacity).toBe('0');
+    expect(style(end,'[data-section-collapse-scene]').opacity).toBe('0');
     expect(style(end,'[data-notes-phase="next-question"]').opacity).toBe('1');
-    expect(end.querySelector('[data-question-summary="0"]')!.textContent).toContain('要备注：段落下标注可用素材');
+    expect(end.querySelector('[data-section-bookmark]')!.textContent).toContain('要备注：段落下标注可用素材');
     expect(end.querySelector('[data-script-notes-scene]')!.lastElementChild!.textContent).toBe('接下来要不要规划分段的脚本');
     expect(end.body.innerHTML).not.toMatch(/NaN|Infinity/);
   });
