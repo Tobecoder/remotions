@@ -10,6 +10,19 @@ const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup
 const at=(seconds:number)=>{clock.frame=Math.round(seconds*30);return dom(<ScriptNotesFilm/>);};
 const style=(doc:Document,selector:string)=>doc.querySelector<HTMLElement>(selector)!.style;
 describe('script notes continuation to the second question',()=>{
+  it('hides the summary during question cards and hands the active outline to question two after the first conclusion',()=>{
+    expect(style(at(100),'[data-question-summary="0"]').opacity).toBe('0');
+    const first=at(120),second=at(128.9666666667);
+    expect(first.querySelector('[data-question-summary="0"]')!.getAttribute('data-question-state')).toBe('active');
+    expect(first.querySelector('[data-question-summary="1"]')!.getAttribute('data-question-state')).toBe('upcoming');
+    expect(second.querySelector('[data-question-summary="0"]')!.getAttribute('data-question-state')).toBe('complete');
+    expect(second.querySelector('[data-question-summary="1"]')!.getAttribute('data-question-state')).toBe('active');
+    expect(style(second,'[data-question-summary="1"]').borderColor).toBe('rgb(213, 155, 137)');
+    expect(style(second,'[data-question-summary="0"]').background).toBe('rgb(255, 255, 255)');
+    expect(style(second,'[data-question-summary="0"] [data-question-number]').background).toBe('rgb(220, 115, 81)');
+    expect(style(second,'[data-question-summary="0"] [data-question-number]').color).toBe('rgb(255, 255, 255)');
+    expect(style(second,'[data-question-summary="1"] [data-question-number]').color).toBe('rgb(220, 115, 81)');
+  });
   it('shows the two reference thumbnails and connects the shots before revealing their planning note',()=>{
     const cards=at(100);
     const left=cards.querySelector('[data-question-visual="0"]')!,right=cards.querySelector('[data-question-visual="1"]')!;
