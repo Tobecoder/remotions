@@ -1,6 +1,10 @@
-# 原片开头到 1:36 · Remotion 复原候选
+# 原片开头到 2:09 · Remotion 复原候选
 
-最新入口为 http://localhost:3004/Reference-Script-96s ，96 秒、2880 帧。58 秒前直接复用既有成片，续段见 [脚本章节拆解](SCRIPT-SHOTPLAN.md)。新增「版式转场 → 脚本文档标注、卡片放大回位」「文字特效 → 打字对照」「数据图表 → 进度对比」，共二十二项。停止在“还是重点聊两个大家比较关心的问题”，不进入后面的两个问题。
+最新入口：[Reference-Script-129s](http://localhost:3004/Reference-Script-129s)，129 秒、3870 帧。96 秒前直接调用既有 `ScriptFilm`，新段落补到“接下来要不要规划分段的脚本”，停在第二问的标题及说明，不进入后续文档。见[素材备注续段](SCRIPT-NOTES-SHOTPLAN.md)。
+
+导出：`node examples/reference-opening/render.mjs --script-notes --video-only`，输出 `.verification/reference-opening/reference-script-129s.mp4` 和 `report-script-notes.json`。原 96 秒入口与导出方式继续保留。
+
+此前入口为 http://localhost:3004/Reference-Script-96s ，96 秒、2880 帧。58 秒前直接复用既有成片，续段见 [脚本章节拆解](SCRIPT-SHOTPLAN.md)。此版本停止在“还是重点聊两个大家比较关心的问题”。
 
 导出：`node examples/reference-opening/render.mjs --script --video-only`，文件 `.verification/reference-opening/reference-script-96s.mp4`、报告 `report-script.json`。新段落只增加两张静态文档正文，共 53,257 字节；正文标注、打字、卡片放大回位、神经元和计数、进度快慢全部由代码实现。模型对比复原原片观点，仅是动画示意，不是独立实测。
 
