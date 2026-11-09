@@ -9,7 +9,7 @@ const local=(path:string)=>fileURLToPath(new URL(path,repository));
 
 describe('complete example registry',()=>{
   it('links a real material to its original composition, copy settings and usage guide',()=>{
-    expect(materialExamples).toHaveLength(7);
+    expect(materialExamples).toHaveLength(8);
     expect(new Set(materialExamples.map(example=>example.id)).size).toBe(materialExamples.length);
     for(const example of materialExamples){
       expect(example.materialIds.length).toBeGreaterThan(0);
@@ -38,6 +38,7 @@ describe('complete example registry',()=>{
     expect(getMaterialExamples('card-entrance').map(example=>example.id)).toEqual(['document-focus-gallery','preparation-cards']);
     expect(getMaterialExamples('focus-layer').map(example=>example.id)).toEqual(['document-focus-gallery']);
     expect(getMaterialExamples('agent-pipeline').map(example=>example.id)).toEqual(['preparation-cards']);
+    expect(getMaterialExamples('typewriter-comparison').map(example=>example.id)).toEqual(['writing-comparison']);
     expect(getMaterialExamples('perspective-panel')).toEqual([]);
   });
   it('ships the example preview and guide used by the material card',()=>{

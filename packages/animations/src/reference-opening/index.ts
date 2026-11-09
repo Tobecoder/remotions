@@ -32,7 +32,7 @@ export type {ConstraintReleaseProps} from './ConstraintRelease';
 export {AgentPipeline} from './AgentPipeline';
 export type {AgentPipelineProps} from './AgentPipeline';
 export {TypewriterComparison} from './TypewriterComparison';
-export type {TypewriterComparisonProps} from './TypewriterComparison';
+export type {TypewriterComparisonProps,TypewriterSide,TypewriterCheck,TypewriterDim,ComparisonPhase} from './TypewriterComparison';
 export {CardSpotlight} from './CardSpotlight';
 export type {CardSpotlightProps,SpotlightRect} from './CardSpotlight';
 export {ProgressRow} from './ProgressRow';

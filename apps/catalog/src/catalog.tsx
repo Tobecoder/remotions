@@ -30,9 +30,14 @@ export const catalog: CatalogItem[] = [
 <CollapsingTitle progress={progress} title="核心概念" lead="接下来说明"
   description="先展开讲清楚" compactDescription="归纳为一条要点"
   from={{x:140,y:220}} to={{x:100,y:120}} />`},
-  {id:'typewriter-comparison',category:'text-effects',name:'打字对照',component:'TypewriterComparison',description:'两段文案先后输入、校验和淡化，再收为左右栏',usage:'文案对照 · 观点表达',durationInFrames:210,posterFrame:115,code:`import {TypewriterComparison} from '@remotions/animations';
+  {id:'typewriter-comparison',category:'text-effects',name:'打字对照',component:'TypewriterComparison',description:'两段内容先后输入并收为左右栏，提示、淡化和收拢均可选',usage:'文案对照 · 方案比较',durationInFrames:210,posterFrame:115,code:`import {TypewriterComparison} from '@remotions/animations';
 
-<TypewriterComparison time={frame / fps} ownText={ownText} aiText={aiText} />`},
+<TypewriterComparison time={frame / fps} heading="两种方案，对照来看"
+  left={{text:leftText,label:'方案 A',columnTitle:'方案 A',compactTitle:'问题出发'}}
+  right={{text:rightText,label:'方案 B',columnTitle:'方案 B',compactTitle:'案例出发'}}
+  check={false} dim={false} compact={{startAt:4.9,duration:0.6}} />
+
+// 保持展开：compact={false}；可为 left/right.typing 指定输入时间。`},
   {id:'card-spotlight',category:'layouts',name:'卡片放大回位',component:'CardSpotlight',description:'用进度控制卡片在起终点间放大与回位，可替换内容和目标区域',usage:'案例展示 · 重点讲解',durationInFrames:150,posterFrame:72,code:`import {CardSpotlight} from '@remotions/animations';
 
 // progress：0 在原位，1 在目标位置，回到 0 即归位。

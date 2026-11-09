@@ -48,6 +48,19 @@ describe('foreground focus example',()=>{
   });
 });
 
+describe('neutral typing comparison demo',()=>{
+  it('shows neutral alternatives and preserves the original expand-to-columns geometry',()=>{
+    for(const frame of [105,180]){
+      clock.frame=frame;
+      const scene=new DOMParser().parseFromString(renderToStaticMarkup(<MaterialDemo id="typewriter-comparison"/>),'text/html');
+      expect(scene.body.textContent).toContain('方案 A');expect(scene.body.textContent).toContain('方案 B');
+      for(const text of ['没有体感','AI 校验','我自己写','交给 AI','Vibe'])expect(scene.body.textContent).not.toContain(text);
+      expect(scene.querySelector('[data-writing-check]')).toBeNull();
+      expect(scene.querySelector<HTMLElement>('[data-writing-own]')!.style.height).toBe(frame===105?'176px':'66px');
+    }
+  });
+});
+
 describe('content collapse example',()=>{
   it('shows a standalone card that stays visible after shrinking without case-specific paths or bookmarks',()=>{
     const stages=[45,90].map(frame=>{

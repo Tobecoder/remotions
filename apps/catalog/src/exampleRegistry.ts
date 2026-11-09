@@ -5,10 +5,11 @@ import documentFocus from '../../../examples/component-examples/document-focus/e
 import sectionCollapse from '../../../examples/component-examples/content-collapse/example.json';
 import sceneThumbnail from '../../../examples/component-examples/scene-thumbnail/example.json';
 import preparationCards from '../../../examples/component-examples/preparation-cards/example.json';
+import writingComparison from '../../../examples/component-examples/writing-comparison/example.json';
 import type {MaterialId} from './catalog';
 
 export type MaterialExample=Omit<typeof progressComparison,'defaultProps'> & {defaultProps:Readonly<Record<string,unknown>>};
-export const materialExamples:readonly MaterialExample[]=[progressComparison,scriptDocument,cardSpotlight,documentFocus,sectionCollapse,sceneThumbnail,preparationCards];
+export const materialExamples:readonly MaterialExample[]=[progressComparison,scriptDocument,cardSpotlight,documentFocus,sectionCollapse,sceneThumbnail,preparationCards,writingComparison];
 export const getMaterialExamples=(materialId:MaterialId)=>materialExamples.filter(example=>example.materialIds.includes(materialId));
 
 export const getExampleUsage=(example:MaterialExample)=>`import {Composition} from 'remotion';

@@ -6,6 +6,18 @@ import {MaterialExamples} from './MaterialExamples';
 afterEach(cleanup);
 
 describe('full examples associated with a standalone material',()=>{
+  it('opens and unloads the original writing comparison with its replacement guide',()=>{
+    const {container}=render(<MaterialExamples materialId="typewriter-comparison"/>);
+    const toggle=screen.getByRole('button',{name:'查看完整范例 · 自己写与 AI 写'});
+    expect(container.querySelector('video')).toBeNull();fireEvent.click(toggle);
+    const panel=screen.getByRole('region',{name:'自己写与 AI 写完整范例'});
+    expect(panel.querySelector('video')!.getAttribute('src')).toBe('/examples/writing-comparison.mp4');
+    expect(panel.querySelector('video')!.getAttribute('poster')).toBe('/examples/writing-comparison.jpg');
+    expect(panel.textContent).toContain('7 秒');expect(panel.textContent).toContain('待确认');
+    expect(panel.querySelector('code')!.textContent).toContain('component={WritingComparisonExample}');
+    expect(panel.querySelector('.example-guide')!.getAttribute('href')).toBe('/examples/writing-comparison.md');
+    fireEvent.click(toggle);expect(container.querySelector('video')).toBeNull();
+  });
   it('opens the linked comparison and unloads its video when closed',()=>{
     const {container}=render(<MaterialExamples materialId="progress-row"/>);
     const toggle=screen.getByRole('button',{name:'查看完整范例 · 进度对比'});

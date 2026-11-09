@@ -2,7 +2,7 @@ import type {ReactNode} from 'react';
 import {AbsoluteFill,useCurrentFrame,useVideoConfig} from 'remotion';
 import {SpotlightSequence} from '../../reference-opening/compositions/SpotlightSequence';
 import {NeuronPreview} from '../../../packages/animations/src/reference-opening/NeuronPreview';
-import {getAiComparisonThumbnailRect} from '../../../packages/animations/src/reference-opening/TypewriterComparison';
+import {getAiComparisonThumbnailRect} from '../../reference-opening/compositions/WritingComparison';
 import example from './example.json';
 
 export type SpotlightExampleContext={time:number;expanded:number};

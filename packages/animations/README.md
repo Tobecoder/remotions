@@ -87,7 +87,7 @@ const Gallery = () => {
 - 每条自定义路线的 `enterAt` 默认按列表顺序相隔 `0.35` 秒，绘制 `duration` 默认 `0.65` 秒，可独立配置。`positions={stamp:{x,y},routeLabel:{x,y},resultLabel:{x,y}}` 可覆盖提示的左上角位置；省略时随起终点布局调整。标题和结果文案仍需保持原来的短句长度，其他布局自行验收。
 - 显式空路线列表不会补回原路线，也不显示盖章提示；无效 SVG、多子路径、重合起终点、端点不一致、重复 id、无效选路或缺失卡片引用会明确报错。非有限时序回退默认值，负绘制/行进时长按零处理。
 
-[多路径演示与小节收束完整范例](../../examples/component-examples/content-collapse/README.md) 复用现有的 11 秒镜头：多路径讲解结束后收成摘要。两个动作入口共享同一份预览，完整范例数量仍为七份。
+[多路径演示与小节收束完整范例](../../examples/component-examples/content-collapse/README.md) 复用现有的 11 秒镜头：多路径讲解结束后收成摘要。两个动作入口共享同一份预览。
 
 `ContentCollapse` 接收任意 `children`、`progress`（0–1）和目标 `to={x,y,scale}`；可选起点 `from`（默认 `{x:0,y:0,scale:1}`）及 `opacity`（默认 `1`）。坐标以内容容器左上角为原点，位置和缩放随进度插值；没有内置淡出、编号、文案或摘要条，显隐由调用方独立控制。支持 `style/className` 等容器属性。原 `SectionCollapse` 及其专属类型已退出公开入口，编号与摘要条组合保存在案例工程。
 
@@ -128,7 +128,28 @@ const Gallery = () => {
 
 `AgentPipeline` 接收 `time/startAt/output`，以及可选的 `agentLabel/toolLabel`，先显现 Agent，再展开右侧输出窗口。目录独立演示该流程；素材卡入场及汇聚由案例使用 `CardEntrance/ContentCollapse` 编排。
 
-`TypewriterComparison` 接收 `time/startAt`、`ownText/aiText` 及可选缩略图，先输入两段内容再收成两栏。
+`TypewriterComparison` 保留两段内容先后打字、展示和收成左右栏的完整动作，内容改由 `left/right` 提供。每侧的 `text` 为必填正文；`label` 为卡片内身份，`columnTitle` 为收拢后的栏标题，`thumbnail` 为缩略图，`compactTitle/compactDescription` 为收拢后的名称和说明，均可替换。`heading` 为展开时的总标题。省略的标签与说明不会补入业务文案；`compactTitle` 未传时依次沿用 `columnTitle/label`，显式 `null` 或空字符串则不显示。
+
+```tsx
+<TypewriterComparison time={frame/fps}
+  heading="两种方案，对照来看"
+  left={{text:'先提出问题。\n再给出例子。',label:'方案 A',columnTitle:'方案 A',compactTitle:'问题出发'}}
+  right={{text:'先展示案例。\n再解释原理。',label:'方案 B',columnTitle:'方案 B',compactTitle:'案例出发'}}
+  check={false} dim={false} compact={{startAt:4.9,duration:0.6}}
+/>
+```
+
+`time/startAt` 单位为秒，下面的阶段时刻均相对于 `startAt`。每侧的 `typing` 可设置 `startAt/duration`；默认左侧 0.15–2.7 秒，右侧 2.3–3.5 秒，各卡片随其输入开始时刻淡入。打字按 Unicode 码点推进。固定的 800×450 设计画布中，展开卡为 318×176 与 268×176；新正文建议不超过三行、每行 16 个汉字，超出时需重新排版确认。
+
+| 阶段 | 默认及可配置内容 |
+| --- | --- |
+| `check` | 默认关闭；传 `{label:'已核实'}` 显示调用方提供的提示，默认 1.7–2 秒渐显。可设置 `startAt/duration`，左文下划线由独立的 `underlineAt` 控制，默认从 1.8 秒后出现；`underlineAt:false` 不加下划线。组件不执行内容校验或生成建议数量。 |
+| `dim` | 默认关闭；传 `{opacity:0.4,badge:'备注'}` 淡化右文，可用 `startAt/duration` 调整默认 3.5–4.4 秒时段，默认最终透明度 0.36。`badge` 可省略或置空，若提供则从淡化开始时刻起在最多 0.3 秒内显现。 |
+| `compact` | 默认在 4.9–5.5 秒将原卡片连续收为 66px 高的左右栏，到位后保持。可设置 `startAt/duration`；`false` 则保持展开状态。缩略图区域为 54×42 设计像素。 |
+
+阶段 `duration=0` 为即时切换，负时长按 0 处理，非有限阶段参数回退默认值；淡化透明度限制在 0–1。所有动画由当前时间计算，支持倒序跳帧；动态缩略图由调用方提供统一时钟。
+
+旧的 `ownText/aiText/ownThumbnail/aiThumbnail` 现改用 `left/right` 对象。原视频的专用命名及“自己写与 AI 写”文案继续保存在案例 `WritingComparison` 中，[完整范例](../../examples/component-examples/writing-comparison/README.md) 直接复用该案例，提供 7 秒输入、提示、淡化和收拢预览。原成片同样调用此案例，后续缩略图放大衔接保持原时钟。
 
 `CardSpotlight` 由调用方提供 `progress`（0–1）、`from` 和 `to` 两个矩形（`x/y/width/height`）：0 在起点、1 在终点，进度从 1 降回 0 即归位。`from` 应匹配被放大内容的实际区域，例如卡片内的小缩略图；`to` 指定放大后的位置和尺寸。`fromRadius/toRadius` 默认为 10，可调整两端圆角；`dimColor/dimOpacity` 配置背景淡化，默认 `#f5f6ef` / `0.88`，透明度设为 0 可关闭。
 

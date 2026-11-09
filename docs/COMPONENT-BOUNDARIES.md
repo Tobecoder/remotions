@@ -31,7 +31,7 @@
 - 固定业务组合及其专属类型留在案例工程，退出独立动作列表及 `packages/animations/src/index.ts`、`packages/animations/src/reference-opening/index.ts` 两处入口；通过完整范例保留选用入口，不通过库入口提供兼容别名。
 - 组件库和素材站的动作实现不反向依赖案例组合代码。案例从组件库调用独立动作；素材站可读取范例元数据并展示由案例代码生成的预览产物。
 
-当前示例中的 `ScriptDocumentGuide`、`ProgressRace`、`SpotlightSequence`、`DocumentFocusGallery`、`SectionCollapse`、`SceneThumbnail`、`PreparationCards` 位于 `examples/reference-opening/compositions/`，分别编排文档讲解、快慢进度对比、卡片强调镜头、五卡文档聚焦、小节摘要收束、章节缩略卡及四卡素材准备；它们不作为独立动作登记或导出，可通过完整范例关联到对应动作。
+当前示例中的 `ScriptDocumentGuide`、`ProgressRace`、`SpotlightSequence`、`DocumentFocusGallery`、`SectionCollapse`、`SceneThumbnail`、`PreparationCards`、`WritingComparison` 位于 `examples/reference-opening/compositions/`，分别编排文档讲解、快慢进度对比、卡片强调镜头、五卡文档聚焦、小节摘要收束、章节缩略卡、四卡素材准备及原版写作对照；它们不作为独立动作登记或导出，可通过完整范例关联到对应动作。
 
 ## 修改与迁移
 

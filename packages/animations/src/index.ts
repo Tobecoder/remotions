@@ -30,7 +30,7 @@ export type {ConstraintReleaseProps} from './reference-opening/ConstraintRelease
 export {AgentPipeline} from './reference-opening/AgentPipeline';
 export type {AgentPipelineProps} from './reference-opening/AgentPipeline';
 export {TypewriterComparison} from './reference-opening/TypewriterComparison';
-export type {TypewriterComparisonProps} from './reference-opening/TypewriterComparison';
+export type {TypewriterComparisonProps,TypewriterSide,TypewriterCheck,TypewriterDim,ComparisonPhase} from './reference-opening/TypewriterComparison';
 export {CardSpotlight} from './reference-opening/CardSpotlight';
 export type {CardSpotlightProps,SpotlightRect} from './reference-opening/CardSpotlight';
 export {ProgressRow} from './reference-opening/ProgressRow';

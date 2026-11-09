@@ -7,7 +7,7 @@ const clock=vi.hoisted(()=>({frame:0}));
 vi.mock('remotion',()=>({useCurrentFrame:()=>clock.frame,useVideoConfig:()=>({fps:30,width:1280,height:720}),AbsoluteFill:({children,style}:{children:ReactNode;style:CSSProperties})=><div style={style}>{children}</div>}));
 import {CardSpotlightExample} from '../../../examples/component-examples/card-spotlight/Example';
 import {SpotlightSequence} from '../../../examples/reference-opening/compositions/SpotlightSequence';
-import {getAiComparisonThumbnailRect} from '../src/reference-opening/TypewriterComparison';
+import {getAiComparisonThumbnailRect} from '../../../examples/reference-opening/compositions/WritingComparison';
 import example from '../../../examples/component-examples/card-spotlight/example.json';
 
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');

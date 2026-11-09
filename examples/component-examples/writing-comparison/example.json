@@ -1,0 +1,27 @@
+{
+  "id": "writing-comparison",
+  "materialIds": ["typewriter-comparison"],
+  "name": "自己写与 AI 写",
+  "description": "沿用原案例的两段输入、校验提示、点评淡化和双栏收拢，保留连续的缩略图画面。",
+  "useCases": ["讲解脚本的表达对照", "两段文案的逐步比较", "展开后收为两栏的内容归纳"],
+  "replaceable": ["两段正文", "标题、身份和点评文案", "收拢后的名称与说明", "左右缩略图内容"],
+  "preserve": ["两段输入的先后顺序与阅读停顿", "校验、点评淡化和收拢的原时刻", "前后使用同一张卡片连续变形", "右侧缩略图与后续放大共用位置计算"],
+  "reviewStatus": "pending",
+  "composition": {"id": "Example-Writing-Comparison", "width": 1280, "height": 720, "fps": 30, "durationInFrames": 210, "posterFrame": 115},
+  "source": {
+    "entry": "examples/component-examples/writing-comparison/index.tsx",
+    "component": "examples/component-examples/writing-comparison/Example.tsx",
+    "exportName": "WritingComparisonExample",
+    "implementation": "examples/reference-opening/compositions/WritingComparison.tsx",
+    "guide": "examples/component-examples/writing-comparison/README.md"
+  },
+  "preview": {
+    "video": "/examples/writing-comparison.mp4",
+    "poster": "/examples/writing-comparison.jpg",
+    "guide": "/examples/writing-comparison.md"
+  },
+  "defaultProps": {
+    "ownText": "我上期那条 16 分钟的讲解视频，\n是怎么从脚本到成片的？\n这期就拿它来复盘，\n继续聊聊用 Remotion 制作视频的方法。",
+    "aiText": "在当今快速发展的时代，\n值得注意的是，\n这不仅仅是……更是……\n赋能 · 闭环 · 抓手\n让我们一起探索吧！"
+  }
+}
