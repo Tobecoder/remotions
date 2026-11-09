@@ -10,6 +10,15 @@ const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup
 const at=(seconds:number)=>{clock.frame=Math.round(seconds*30);return dom(<ScriptNotesFilm/>);};
 const style=(doc:Document,selector:string)=>doc.querySelector<HTMLElement>(selector)!.style;
 describe('script notes continuation to the second question',()=>{
+  it('shows the two reference thumbnails and connects the shots before revealing their planning note',()=>{
+    const cards=at(100);
+    const left=cards.querySelector('[data-question-visual="0"]')!,right=cards.querySelector('[data-question-visual="1"]')!;
+    expect(left).not.toBeNull();expect(right).not.toBeNull();
+    expect(left.querySelectorAll('[data-question-thumbnail] img')).toHaveLength(2);
+    expect(right.querySelectorAll('[data-shot-arrow]')).toHaveLength(2);
+    expect(style(cards,'[data-shot-planning-note]').opacity).toBe('0');
+    expect(style(at(101.2),'[data-shot-planning-note]').opacity).toBe('1');
+  });
   it('preserves the existing 96-second film before the new boundary',()=>{
     for(const frame of [0,299,1739,1887,2211,2380,2484,2790,2879]){
       clock.frame=frame;const next=renderToStaticMarkup(<ScriptNotesFilm/>);

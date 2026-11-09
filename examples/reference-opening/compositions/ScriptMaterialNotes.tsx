@@ -1,10 +1,10 @@
 import type {ReactNode} from 'react';
 import {CardEntrance,DocumentWindow,HighlightBox} from '../../../packages/animations/src';
 import {during,mix} from '../../../packages/animations/src/reference-opening/motion';
+import {ScriptQuestionCards} from './ScriptQuestionCards';
 
 export type ScriptMaterialNotesProps={time:number;assets:readonly ReactNode[]};
 const orange='#dc7351';
-const Marker=({number}:{number:number})=><span style={{display:'inline-flex',width:25,height:25,borderRadius:'50%',alignItems:'center',justifyContent:'center',background:orange,color:'#fff',marginRight:8,fontSize:15}}>{number}</span>;
 
 /** Case choreography: question overview, evidence grid, annotation and Agent confirmation. */
 export const ScriptMaterialNotes=({time:t,assets}:ScriptMaterialNotesProps)=>{
@@ -14,11 +14,7 @@ export const ScriptMaterialNotes=({time:t,assets}:ScriptMaterialNotesProps)=>{
   return <div data-script-material-notes style={{position:'absolute',inset:0,color:'#292c33'}}>
     {[0,1].map(i=><div key={i} data-question-summary={i} style={{position:'absolute',left:49+i*270,top:43,width:260,height:38,borderRadius:9,border:`1px solid ${i?'#bbbdb6':'#d59b89'}`,boxSizing:'border-box',padding:'8px 9px',fontSize:11,fontWeight:700,background:i===0?`rgba(255,255,255,${exit})`:'transparent'}}><span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:18,height:18,borderRadius:'50%',border:`1px solid ${i?'#92968e':orange}`,color:i?'#92968e':orange,marginRight:7}}> {i+1} </span>{i===0&&<span style={{opacity:exit}}>要备注：段落下标注可用素材</span>}</div>)}
     <div data-notes-phase="overview" style={{position:'absolute',inset:0,opacity:overview}}>
-      {[0,1].map(i=><CardEntrance key={i} progress={during(t,.3+i*1.7,1+i*1.7)} x={49+i*348} y={115} width={327} height={204} borderRadius={12} offset={{x:0,y:20}}>
-        <div style={{margin:20,height:133,background:'#f7f7f3',padding:14,boxSizing:'border-box'}}>
-          {i===0?<><div style={{width:150}}>{[140,125,150,104].map((w,n)=><div key={n} style={{height:5,width:w,background:'#d8dbd5',marginBottom:7}}/>)}</div><div style={{fontFamily:'monospace',fontSize:9,background:'#f6e9e2',padding:7,color:'#b3684c'}}>› 可用素材：demo.mp4、2.png</div></>:<><div style={{display:'flex',gap:8}}>{['#f5e0d5','#e3e1f4','#dceee3'].map((c,n)=><div key={c} style={{width:75,height:55,background:c,border:'4px solid white',fontSize:7,color:'#999'}}>SHOT 0{n+1}</div>)}</div><div style={{fontSize:9,marginTop:14,color:'#b3684c'}}>› 动画规划：分屏、依次出现、对比标记……</div></>}
-        </div><div style={{position:'absolute',left:17,bottom:10,fontSize:18,fontWeight:800}}><Marker number={i+1}/>{i===0?'要不要备注对应素材？':'要不要写每一段的动画要求？'}</div>
-      </CardEntrance>)}
+      <ScriptQuestionCards time={t} thumbnails={[assets[3],assets[1]]}/>
     </div>
     <div data-notes-phase="explanation" style={{position:'absolute',inset:0,opacity:1-exit}}>
       <div style={{position:'absolute',left:49,top:105,opacity:headingOpacity}}>
