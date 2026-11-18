@@ -10,15 +10,24 @@ const rgb=(from:readonly number[],to:readonly number[],progress:number)=>`rgb(${
 
 /** Case choreography: question overview, evidence grid, annotation and Agent confirmation. */
 export const ScriptMaterialNotes=({time:t,assets,nextQuestionOpacity=1}:ScriptMaterialNotesProps)=>{
-  const overview=1-during(t,5.7,6.2),gather=during(t,15,16),lift=during(t,20,21),exit=during(t,29.2,30.3),confirm=during(t,26,27);
+  const overview=1-during(t,5.7,6.2),gather=during(t,15,16),lift=during(t,20,21),confirm=during(t,26,27);
+  const exit=during(t,29.66,30.18);
+  const contentOpacity=1-during(t,29.76,30.1);
+  const bookmarkOpacity=during(t,29.94,30.2);
+  const nextQuestion=during(t,30.42,30.63);
   const headingOpacity=during(t,6,6.5)*(1-during(t,19.5,20.5));
   const note=(text:string,at:number)=><div style={{height:20,margin:'4px 0',paddingLeft:8,borderLeft:`2px solid ${orange}`,background:'#f7ece6',color:'#a5563d',fontFamily:'monospace',fontSize:8,opacity:during(t,at,at+.6)}}>{text}</div>;
   return <div data-script-material-notes style={{position:'absolute',inset:0,color:'#292c33'}}>
-    {[0,1].map(i=><div key={i} data-question-summary={i} data-question-state={i===0?(exit===1?'complete':'active'):(exit===0?'upcoming':'active')} style={{position:'absolute',left:49+i*270,top:43,width:260,height:38,borderRadius:9,border:`1px solid ${i?rgb([187,189,182],[213,155,137],exit):'#d59b89'}`,boxSizing:'border-box',padding:'8px 9px',fontSize:11,fontWeight:700,opacity:during(t,5.8,6.2)*(i===0?1-exit:1)}}><span data-question-number style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:18,height:18,borderRadius:'50%',border:`1px solid ${i?rgb([146,150,142],[220,115,81],exit):orange}`,color:i?rgb([146,150,142],[220,115,81],exit):orange,marginRight:7}}> {i+1} </span></div>)}
+    {[0,1].map(i=><div key={i} data-question-summary={i} data-question-state={i===0?(bookmarkOpacity===1?'complete':'active'):(nextQuestion===0?'upcoming':'active')} style={{position:'absolute',left:49+i*270,top:43,width:260,height:38,borderRadius:9,border:`1px solid ${i?rgb([187,189,182],[213,155,137],nextQuestion):'#d59b89'}`,boxSizing:'border-box',padding:'8px 9px',fontSize:11,fontWeight:700,opacity:during(t,5.8,6.2)*(i===0?1-bookmarkOpacity:1)}}><span data-question-number style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:18,height:18,borderRadius:'50%',border:`1px solid ${i?rgb([146,150,142],[220,115,81],nextQuestion):orange}`,color:i?rgb([146,150,142],[220,115,81],nextQuestion):orange,marginRight:7}}> {i+1} </span></div>)}
     <div data-notes-phase="overview" style={{position:'absolute',inset:0,opacity:overview}}>
       <ScriptQuestionCards time={t} thumbnails={[assets[3],assets[1]]}/>
     </div>
-    <SectionCollapse progress={exit} label="要备注：段落下标注可用素材" target={{x:49,y:43,width:260,height:38}}>
+    <SectionCollapse
+      progress={exit}
+      label="要备注：段落下标注可用素材"
+      target={{x:49,y:43,width:260,height:38}}
+      transition={{contentTarget:{x:-40,y:-100,scale:.3},contentOpacity,bookmarkOpacity}}
+    >
     <div data-notes-phase="explanation" style={{position:'absolute',inset:0}}>
       <div style={{position:'absolute',left:49,top:105,opacity:headingOpacity}}>
         <div style={{fontSize:9,letterSpacing:2,color:orange,opacity:gather}}>我的建议</div>
@@ -51,6 +60,6 @@ export const ScriptMaterialNotes=({time:t,assets,nextQuestionOpacity=1}:ScriptMa
       </svg>
     </div>
     </SectionCollapse>
-    <div data-notes-phase="next-question" style={{position:'absolute',left:49,top:105,opacity:during(t,30,30.6)*nextQuestionOpacity}}><div style={{fontSize:24,fontWeight:800}}>分段的动画要求？</div><div style={{fontSize:19,fontWeight:700,color:'#92968f',marginTop:7}}>几乎不写，只在个别地方备注</div></div>
+    <div data-notes-phase="next-question" style={{position:'absolute',left:49,top:105,opacity:during(t,30.62,30.94)*nextQuestionOpacity}}><div style={{fontSize:24,fontWeight:800}}>分段的动画要求？</div><div style={{fontSize:19,fontWeight:700,color:'#92968f',marginTop:7}}>几乎不写，只在个别地方备注</div></div>
   </div>;
 };

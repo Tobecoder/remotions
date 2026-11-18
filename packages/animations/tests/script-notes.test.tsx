@@ -6,8 +6,6 @@ const clock=vi.hoisted(()=>({frame:0}));
 vi.mock('remotion',()=>({useCurrentFrame:()=>clock.frame,useVideoConfig:()=>({fps:30,width:1920,height:1080}),staticFile:(file:string)=>file,AbsoluteFill:({children,style}:{children:ReactNode;style:CSSProperties})=><div style={style}>{children}</div>,Img:({src,style}:{src:string;style:CSSProperties})=><img src={src} style={style}/>}));
 import {ScriptNotesFilm} from '../../../examples/reference-opening/ScriptNotesScene';
 import {ScriptFilm} from '../../../examples/reference-opening/ScriptScene';
-import {SectionCollapse} from '../../../examples/reference-opening/compositions/SectionCollapse';
-import {during} from '../src/reference-opening/motion';
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
 const at=(seconds:number)=>{clock.frame=Math.round(seconds*30);return dom(<ScriptNotesFilm/>);};
 const style=(doc:Document,selector:string)=>doc.querySelector<HTMLElement>(selector)!.style;
@@ -26,15 +24,30 @@ describe('script notes continuation to the second question',()=>{
     expect(style(second,'[data-section-bookmark] span').color).toBe('rgb(255, 255, 255)');
     expect(style(second,'[data-question-summary="1"] [data-question-number]').color).toBe('rgb(220, 115, 81)');
   });
-  it('reuses the earlier SectionCollapse motion and bookmark through the whole return, including backward seeks',()=>{
-    for(const frame of [3750,3756,3762,3768,3774,3780,3786,3789,3840,3762]){
-      clock.frame=frame;
-      const actual=dom(<ScriptNotesFilm/>),expected=dom(<SectionCollapse progress={during(frame/30-96,29.2,30.3)} label="要备注：段落下标注可用素材" target={{x:49,y:43,width:260,height:38}}>{null}</SectionCollapse>);
-      expect(actual.querySelector('[data-section-collapse-scene]')!.getAttribute('style')).toBe(expected.querySelector('[data-section-collapse-scene]')!.getAttribute('style'));
-      expect(actual.querySelector('[data-section-bookmark]')!.outerHTML).toBe(expected.querySelector('[data-section-bookmark]')!.outerHTML);
-      expect(actual.querySelector('[data-section-collapse-scene] [data-notes-document]')).not.toBeNull();
-      expect(actual.querySelector('[data-section-collapse-scene] [data-notes-matches]')).not.toBeNull();
-    }
+  it('moves the whole group up and left before the bookmark takes over',()=>{
+    const group='[data-section-collapse-scene][data-content-collapse]';
+    const bookmark='[data-section-bookmark]';
+    const second='[data-question-summary="1"]';
+    const start=at(125.5),moving=at(125.8),fading=at(125.97),held=at(126.27);
+    expect(style(start,group).transform).toBe('translate(0px,0px) scale(1)');
+    const pose=(doc:Document)=>style(doc,group).transform.match(/-?[\d.]+/g)!.map(Number);
+    const [x,y,scale]=pose(moving);
+    const [nextX,nextY,nextScale]=pose(fading);
+    expect(x).toBeLessThan(0);
+    expect(y).toBeLessThan(0);
+    expect(scale).toBeLessThan(1);
+    expect(nextX).toBeLessThan(x);
+    expect(nextY).toBeLessThan(y);
+    expect(nextScale).toBeLessThan(scale);
+    expect(moving.querySelector(group+' [data-notes-document]')).not.toBeNull();
+    expect(moving.querySelector(group+' [data-notes-matches]')).not.toBeNull();
+    expect(style(moving,bookmark).opacity).toBe('0');
+    expect(Number(style(fading,group).opacity)).toBeLessThan(Number(style(moving,group).opacity));
+    expect(style(held,group).opacity).toBe('0');
+    expect(style(held,bookmark).opacity).toBe('1');
+    expect(style(held,second).borderColor).toBe(style(start,second).borderColor);
+    expect(style(held,'[data-notes-phase="next-question"]').opacity).toBe('0');
+    expect(style(at(125.8),group).transform).toBe(style(moving,group).transform);
   });
   it('shows the two reference thumbnails and connects the shots before revealing their planning note',()=>{
     const cards=at(100);
