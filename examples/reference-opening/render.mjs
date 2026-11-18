@@ -14,8 +14,9 @@ const out=path.join(root,'.verification/reference-opening');
 const planning=process.argv.includes('--script-planning'),notes=process.argv.includes('--script-notes'),script=process.argv.includes('--script'),preparation=process.argv.includes('--preparation'),beforeWork=process.argv.includes('--before-work'),firstPoint=process.argv.includes('--first-point'),extended=process.argv.includes('--20s');
 const comparison=process.argv.includes('--model-comparison');
 const modelClip=process.argv.includes('--model-clip');
-const duration=modelClip?5:comparison?139.5:planning?134:notes?129:script?96:preparation?58:beforeWork?52.5:firstPoint?25:extended?20:10,totalFrames=duration*30;
-const compositionId=modelClip?'Model-Comparison-Clip':comparison?'Reference-Script-139-5s':planning?'Reference-Script-134s':notes?'Reference-Script-129s':script?'Reference-Script-96s':preparation?'Reference-Preparation':beforeWork?'Reference-Before-Work':firstPoint?'Reference-First-Point':extended?'Reference-Opening-20s':'Reference-Opening-10s';
+const pitfalls=process.argv.includes('--script-pitfalls');
+const duration=pitfalls?153:modelClip?5:comparison?139.5:planning?134:notes?129:script?96:preparation?58:beforeWork?52.5:firstPoint?25:extended?20:10,totalFrames=duration*30;
+const compositionId=pitfalls?'Reference-Script-153s':modelClip?'Model-Comparison-Clip':comparison?'Reference-Script-139-5s':planning?'Reference-Script-134s':notes?'Reference-Script-129s':script?'Reference-Script-96s':preparation?'Reference-Preparation':beforeWork?'Reference-Before-Work':firstPoint?'Reference-First-Point':extended?'Reference-Opening-20s':'Reference-Opening-10s';
 await mkdir(out,{recursive:true});
 const serveUrl=await bundle({entryPoint:path.join(episode,'index.tsx'),publicDir:path.join(episode,'public'),outDir:path.join(out,'bundle')});
 const browserExecutable=process.env.REMOTION_BROWSER_EXECUTABLE||path.join(root,'.verification/browser/chrome-headless-shell.exe');
@@ -28,7 +29,7 @@ try {
   const composition=compositions.find(item=>item.id===compositionId);
   assert(composition);assert.equal(composition.durationInFrames,totalFrames);assert.equal(composition.fps,30);
   const {width,height}=composition;
-  const frames=process.argv.includes('--video-only')?[]:modelClip?[0,18,44,72,110,144]:comparison?[3765,3774,3784,3788,3792,3808,3869,3894,3930,3962,3965,3975,4019,4020,4035,4044,4077,4110,4143,4184]:planning?[3869,3894,3930,3962,3965,3975,3990,4019]:notes?[2879,2880,2970,3060,3210,3360,3510,3630,3720,3765,3774,3784,3788,3792,3808,3869]:preparation?[1547,1548,1560,1575,1590,1620,1650,1665,1680,1695,1739]:process.argv.includes('--quick')?(beforeWork?[780,960,1305,1574]:firstPoint?[599,630,720,749]:extended?[299,335,375,599]:[12,99,191,285]):beforeWork?[749,750,780,810,900,960,1020,1065,1155,1230,1305,1410,1470,1515,1530,1563,1574]:firstPoint?[299,314,385,510,548,599,615,630,660,690,711,720,732,749]:extended?[299,300,315,330,345,360,385,405,450,480,520,550,575,599]:[0,12,72,84,96,108,135,150,165,180,191,240,255,263,270,285,299,96];
+  const frames=process.argv.includes('--video-only')?[]:pitfalls?[4184,4185,4192,4215,4280,4347,4416,4468,4500,4556,4589]:modelClip?[0,18,44,72,110,144]:comparison?[3765,3774,3784,3788,3792,3808,3869,3894,3930,3962,3965,3975,4019,4020,4035,4044,4077,4110,4143,4184]:planning?[3869,3894,3930,3962,3965,3975,3990,4019]:notes?[2879,2880,2970,3060,3210,3360,3510,3630,3720,3765,3774,3784,3788,3792,3808,3869]:preparation?[1547,1548,1560,1575,1590,1620,1650,1665,1680,1695,1739]:process.argv.includes('--quick')?(beforeWork?[780,960,1305,1574]:firstPoint?[599,630,720,749]:extended?[299,335,375,599]:[12,99,191,285]):beforeWork?[749,750,780,810,900,960,1020,1065,1155,1230,1305,1410,1470,1515,1530,1563,1574]:firstPoint?[299,314,385,510,548,599,615,630,660,690,711,720,732,749]:extended?[299,300,315,330,345,360,385,405,450,480,520,550,575,599]:[0,12,72,84,96,108,135,150,165,180,191,240,255,263,270,285,299,96];
   const reports=[];let repeat;
   for(let i=0;i<frames.length;i++){
     const frame=frames[i],file=path.join(out,`${modelClip?'model-clip-frame':'frame'}-${frame}${i===frames.length-1&&frame===96?'-repeat':''}.png`);
@@ -41,7 +42,7 @@ try {
   }
   let media;
   if(!process.argv.includes('--stills')){
-    const video=path.join(out,modelClip?'model-comparison-clip.mp4':comparison?'reference-script-139-5s.mp4':planning?'reference-script-134s.mp4':notes?'reference-script-129s.mp4':script?'reference-script-96s.mp4':preparation?'reference-preparation.mp4':beforeWork?'reference-before-work.mp4':firstPoint?'reference-first-point.mp4':`reference-opening-${duration}s.mp4`);
+    const video=path.join(out,pitfalls?'reference-script-153s.mp4':modelClip?'model-comparison-clip.mp4':comparison?'reference-script-139-5s.mp4':planning?'reference-script-134s.mp4':notes?'reference-script-129s.mp4':script?'reference-script-96s.mp4':preparation?'reference-preparation.mp4':beforeWork?'reference-before-work.mp4':firstPoint?'reference-first-point.mp4':`reference-opening-${duration}s.mp4`);
     await renderMedia({...shared,composition,codec:'h264',crf:18,pixelFormat:'yuv420p',outputLocation:video,concurrency:3,onProgress:({progress})=>{if(progress===1)console.log('MP4 rendered');}});
     const ffprobe=path.join(root,'node_modules/@remotion/compositor-win32-x64-msvc/ffprobe.exe');
     media=JSON.parse(execFileSync(ffprobe,['-v','error','-count_frames','-show_entries','stream=codec_name,width,height,r_frame_rate,nb_read_frames,duration','-show_entries','format=duration,size','-of','json',video],{encoding:'utf8'}));
@@ -51,5 +52,5 @@ try {
     if(modelClip)await copyFile(video,path.join(episode,'public/model-comparison/demo.mp4'));
   }
   assert.equal(errors.length,0,errors.join('\n'));
-  await writeFile(path.join(out,modelClip?'report-model-clip.json':comparison?'report-model-comparison.json':planning?'report-script-planning.json':notes?'report-script-notes.json':script?'report-script.json':preparation?'report-preparation.json':beforeWork?'report-before-work.json':firstPoint?'report-first-point.json':extended?'report-20s.json':'report.json'),JSON.stringify({duration,width,height,fps:30,errors,media,frames:reports},null,2));
+  await writeFile(path.join(out,pitfalls?'report-script-pitfalls.json':modelClip?'report-model-clip.json':comparison?'report-model-comparison.json':planning?'report-script-planning.json':notes?'report-script-notes.json':script?'report-script.json':preparation?'report-preparation.json':beforeWork?'report-before-work.json':firstPoint?'report-first-point.json':extended?'report-20s.json':'report.json'),JSON.stringify({duration,width,height,fps:30,errors,media,frames:reports},null,2));
 }finally{await browser.close({silent:true});}

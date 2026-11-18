@@ -1,12 +1,16 @@
-# 原片开头到 2:14 · Remotion 复原候选
+# 原片开头到 2:33 · Remotion 复原候选
 
-最新入口：[Reference-Script-139-5s](http://localhost:3004/Reference-Script-139-5s)，139.5 秒、4185 帧。134 秒起，高亮文档缩到左侧，右侧接入玩偶演示，三个名称按顺序出现。见[模型对照镜头](MODEL-COMPARISON-SHOTPLAN.md)。
+最新入口：[Reference-Script-153s](http://localhost:3004/Reference-Script-153s)，153 秒、4590 帧。139.5 秒接入「踩过的坑」，两张提示词卡归到左侧，右侧展示成片对照。见[提示词被略过镜头](SCRIPT-PITFALLS-SHOTPLAN.md)。
+
+运行 `node examples/reference-opening/render.mjs --script-pitfalls --video-only` 导出主片，输出 `.verification/reference-opening/reference-script-153s.mp4` 和 `report-script-pitfalls.json`。
+
+此前入口：[Reference-Script-139-5s](http://localhost:3004/Reference-Script-139-5s)，139.5 秒、4185 帧。134 秒起，高亮文档缩到左侧，右侧接入玩偶演示，三个名称按顺序出现。见[模型对照镜头](MODEL-COMPARISON-SHOTPLAN.md)。
 
 右侧玩偶短片可单独预览。[Model-Comparison-Clip](http://localhost:3004/Model-Comparison-Clip)
 
 运行 `node examples/reference-opening/render.mjs --model-clip` 可更新右侧短片源文件。运行 `node examples/reference-opening/render.mjs --model-comparison --video-only` 导出主片，输出 `.verification/reference-opening/reference-script-139-5s.mp4` 和 `report-model-comparison.json`。
 
-此前入口：[Reference-Script-134s](http://localhost:3004/Reference-Script-134s)，134 秒、4020 帧，包含脚本文档入场、滚动和备注高亮。见[分段动画要求文档镜头](SCRIPT-PLANNING-SHOTPLAN.md)。
+此前入口：[Reference-Script-134s](http://localhost:3004/Reference-Script-134s)，134 秒、4020 帧，包含脚本文档入场、分开收拢和备注高亮。见[分段动画要求文档镜头](SCRIPT-PLANNING-SHOTPLAN.md)。
 
 导出：`node examples/reference-opening/render.mjs --script-planning --video-only`，输出 `.verification/reference-opening/reference-script-134s.mp4` 和 `report-script-planning.json`。不加 `--video-only` 可同时生成本段关键帧；`--stills` 仅导出关键帧。
 

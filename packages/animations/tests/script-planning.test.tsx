@@ -11,8 +11,10 @@ vi.mock('remotion',()=>({
   Img:({src,style}:{src:string;style:CSSProperties})=><img src={src} style={style}/>,
   Sequence:({children,from}:{children:ReactNode;from:number})=>clock.frame>=from?children:null,
   OffthreadVideo:({src,muted}:{src:string;muted:boolean})=><video src={src} muted={muted}/>,
+  Freeze:({frame,children}:{frame:number;children:ReactNode})=><div data-frozen-frame={frame}>{children}</div>,
 }));
 import {ScriptModelComparisonFilm,ScriptPlanningFilm} from '../../../examples/reference-opening/ScriptPlanningScene';
+import {ScriptPitfallsFilm} from '../../../examples/reference-opening/ScriptPitfallsScene';
 import {ScriptNotesFilm} from '../../../examples/reference-opening/ScriptNotesScene';
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
 const at=(frame:number)=>{clock.frame=frame;return dom(<ScriptPlanningFilm/>);};
@@ -67,6 +69,36 @@ describe('planning document excerpt through the next shot boundary',()=>{
     expect(end.body.innerHTML).not.toMatch(/NaN|Infinity/);
     const prior=at(3915).querySelector('[data-planning-excerpt]')!.outerHTML;at(4019);
     expect(at(3915).querySelector('[data-planning-excerpt]')!.outerHTML).toBe(prior);
+  });
+});
+
+describe('skipped script prompts',()=>{
+  const atPitfall=(frame:number)=>{clock.frame=frame;return dom(<ScriptPitfallsFilm/>);};
+  const prompt=(id:string)=>`[data-pitfall-prompt="${id}"]`;
+  it('continues the existing film and holds the final comparison frame through the fade',()=>{
+    for(const frame of [0,3774,3962,4143,4184]){
+      clock.frame=frame;
+      expect(renderToStaticMarkup(<ScriptPitfallsFilm/>)).toBe(renderToStaticMarkup(<ScriptModelComparisonFilm/>));
+    }
+    const start=atPitfall(4185);
+    expect(start.querySelector('[data-pitfall-outgoing] [data-frozen-frame]')?.getAttribute('data-frozen-frame')).toBe('4184');
+    expect(style(start,'[data-pitfall-heading]').opacity).toBe('0');
+    expect(atPitfall(4200).querySelector('[data-pitfall-outgoing]')).toBeNull();
+  });
+  it('parks the two prompts separately before showing the inset and its second phase',()=>{
+    const environment=prompt('environment'),project=prompt('project');
+    const first=atPitfall(4280),second=atPitfall(4350),parked=atPitfall(4416);
+    expect(style(first,environment).transform).toBe('translate(79px,117px) scale(1)');
+    expect(style(first,project+' [data-card-entrance]').opacity).toBe('0');
+    expect(style(second,environment).transform).toMatch(/^translate\(47px,158px\) scale\(0\.407/);
+    expect(style(second,project).transform).toBe('translate(231px,86px) scale(1)');
+    expect(style(parked,project).transform).toMatch(/^translate\(79px,270px\) scale\(0\.45/);
+    expect(style(parked,'[data-pitfall-result]').opacity).toBe('0');
+    expect(style(atPitfall(4500),'[data-pitfall-result-phase="environment"]').opacity).toBe('1');
+    const end=atPitfall(4589);
+    expect(style(end,'[data-pitfall-result-phase="project"]').opacity).toBe('1');
+    expect(style(end,'[data-pitfall-skipped]').opacity).toBe('1');
+    expect(style(end,'[data-pitfall-result-note]').opacity).toBe('1');
   });
 });
 
