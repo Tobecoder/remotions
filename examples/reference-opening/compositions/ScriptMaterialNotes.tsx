@@ -7,26 +7,34 @@ import {SectionCollapse} from './SectionCollapse';
 export type ScriptMaterialNotesProps={time:number;assets:readonly ReactNode[];nextQuestionOpacity?:number};
 const orange='#dc7351';
 const rgb=(from:readonly number[],to:readonly number[],progress:number)=>`rgb(${from.map((value,index)=>Math.round(mix(value,to[index],progress))).join(',')})`;
+const firstSummary={x:49,y:43,width:260,height:38};
+// The stage group spans the document on the left and all six rows of assets on the right.
+const groupCenter={x:(49+753)/2,y:(105+405)/2};
+const dockScale=.09;
+const dockPose={
+  x:firstSummary.x+firstSummary.width/2-groupCenter.x*dockScale,
+  y:firstSummary.y+firstSummary.height/2-groupCenter.y*dockScale,
+  scale:dockScale,
+};
 
 /** Case choreography: question overview, evidence grid, annotation and Agent confirmation. */
 export const ScriptMaterialNotes=({time:t,assets,nextQuestionOpacity=1}:ScriptMaterialNotesProps)=>{
   const overview=1-during(t,5.7,6.2),gather=during(t,15,16),lift=during(t,20,21),confirm=during(t,26,27);
-  const exit=during(t,29.66,30.18);
-  const contentOpacity=1-during(t,29.76,30.1);
-  const bookmarkOpacity=during(t,29.94,30.2);
+  const exit=during(t,29.66,30.1);
+  const bookmarkOpacity=during(t,30.17,30.38);
   const nextQuestion=during(t,30.42,30.63);
   const headingOpacity=during(t,6,6.5)*(1-during(t,19.5,20.5));
   const note=(text:string,at:number)=><div style={{height:20,margin:'4px 0',paddingLeft:8,borderLeft:`2px solid ${orange}`,background:'#f7ece6',color:'#a5563d',fontFamily:'monospace',fontSize:8,opacity:during(t,at,at+.6)}}>{text}</div>;
   return <div data-script-material-notes style={{position:'absolute',inset:0,color:'#292c33'}}>
-    {[0,1].map(i=><div key={i} data-question-summary={i} data-question-state={i===0?(bookmarkOpacity===1?'complete':'active'):(nextQuestion===0?'upcoming':'active')} style={{position:'absolute',left:49+i*270,top:43,width:260,height:38,borderRadius:9,border:`1px solid ${i?rgb([187,189,182],[213,155,137],nextQuestion):'#d59b89'}`,boxSizing:'border-box',padding:'8px 9px',fontSize:11,fontWeight:700,opacity:during(t,5.8,6.2)*(i===0?1-bookmarkOpacity:1)}}><span data-question-number style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:18,height:18,borderRadius:'50%',border:`1px solid ${i?rgb([146,150,142],[220,115,81],nextQuestion):orange}`,color:i?rgb([146,150,142],[220,115,81],nextQuestion):orange,marginRight:7}}> {i+1} </span></div>)}
+    {[0,1].map(i=><div key={i} data-question-summary={i} data-question-state={i===0?(bookmarkOpacity===1?'complete':'active'):(nextQuestion===0?'upcoming':'active')} style={{position:'absolute',left:firstSummary.x+i*(firstSummary.width+10),top:firstSummary.y,width:firstSummary.width,height:firstSummary.height,borderRadius:9,border:`1px solid ${i?rgb([187,189,182],[213,155,137],nextQuestion):'#d59b89'}`,boxSizing:'border-box',padding:'8px 9px',fontSize:11,fontWeight:700,opacity:during(t,5.8,6.2)*(i===0?1-bookmarkOpacity:1)}}><span data-question-number style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:18,height:18,borderRadius:'50%',border:`1px solid ${i?rgb([146,150,142],[220,115,81],nextQuestion):orange}`,color:i?rgb([146,150,142],[220,115,81],nextQuestion):orange,marginRight:7}}> {i+1} </span></div>)}
     <div data-notes-phase="overview" style={{position:'absolute',inset:0,opacity:overview}}>
       <ScriptQuestionCards time={t} thumbnails={[assets[3],assets[1]]}/>
     </div>
     <SectionCollapse
       progress={exit}
       label="要备注：段落下标注可用素材"
-      target={{x:49,y:43,width:260,height:38}}
-      transition={{contentTarget:{x:-40,y:-100,scale:.3},contentOpacity,bookmarkOpacity}}
+      target={firstSummary}
+      transition={{contentTarget:dockPose,contentOpacity:1-bookmarkOpacity,bookmarkOpacity}}
     >
     <div data-notes-phase="explanation" style={{position:'absolute',inset:0}}>
       <div style={{position:'absolute',left:49,top:105,opacity:headingOpacity}}>

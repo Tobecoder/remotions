@@ -24,30 +24,37 @@ describe('script notes continuation to the second question',()=>{
     expect(style(second,'[data-section-bookmark] span').color).toBe('rgb(255, 255, 255)');
     expect(style(second,'[data-question-summary="1"] [data-question-number]').color).toBe('rgb(220, 115, 81)');
   });
-  it('moves the whole group up and left before the bookmark takes over',()=>{
+  it('docks the whole group inside title one before the bookmark takes over',()=>{
     const group='[data-section-collapse-scene][data-content-collapse]';
     const bookmark='[data-section-bookmark]';
     const second='[data-question-summary="1"]';
-    const start=at(125.5),moving=at(125.8),fading=at(125.97),held=at(126.27);
+    const start=at(125.5),moving=at(125.83),docked=at(126.13),fading=at(126.27),held=at(126.4);
     expect(style(start,group).transform).toBe('translate(0px,0px) scale(1)');
     const pose=(doc:Document)=>style(doc,group).transform.match(/-?[\d.]+/g)!.map(Number);
     const [x,y,scale]=pose(moving);
-    const [nextX,nextY,nextScale]=pose(fading);
-    expect(x).toBeLessThan(0);
-    expect(y).toBeLessThan(0);
+    expect(x+401*scale).toBeLessThan(401);
+    expect(y+255*scale).toBeLessThan(255);
     expect(scale).toBeLessThan(1);
-    expect(nextX).toBeLessThan(x);
-    expect(nextY).toBeLessThan(y);
-    expect(nextScale).toBeLessThan(scale);
     expect(moving.querySelector(group+' [data-notes-document]')).not.toBeNull();
     expect(moving.querySelector(group+' [data-notes-matches]')).not.toBeNull();
     expect(style(moving,bookmark).opacity).toBe('0');
-    expect(Number(style(fading,group).opacity)).toBeLessThan(Number(style(moving,group).opacity));
+    const [dockX,dockY,dockScale]=pose(docked);
+    const box=style(docked,'[data-question-summary="0"]');
+    const [left,top,width,height]=[box.left,box.top,box.width,box.height].map(value=>parseFloat(value));
+    expect(dockX+49*dockScale).toBeGreaterThan(left);
+    expect(dockY+105*dockScale).toBeGreaterThan(top);
+    expect(dockX+753*dockScale).toBeLessThan(left+width);
+    expect(dockY+405*dockScale).toBeLessThan(top+height);
+    expect(style(docked,group).opacity).toBe('1');
+    expect(style(docked,bookmark).opacity).toBe('0');
+    expect(pose(fading)).toEqual(pose(docked));
+    expect(Number(style(fading,group).opacity)).toBeLessThan(1);
+    expect(Number(style(fading,bookmark).opacity)).toBeGreaterThan(0);
     expect(style(held,group).opacity).toBe('0');
     expect(style(held,bookmark).opacity).toBe('1');
     expect(style(held,second).borderColor).toBe(style(start,second).borderColor);
     expect(style(held,'[data-notes-phase="next-question"]').opacity).toBe('0');
-    expect(style(at(125.8),group).transform).toBe(style(moving,group).transform);
+    expect(style(at(125.83),group).transform).toBe(style(moving,group).transform);
   });
   it('shows the two reference thumbnails and connects the shots before revealing their planning note',()=>{
     const cards=at(100);
