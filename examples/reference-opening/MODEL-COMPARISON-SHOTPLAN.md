@@ -11,7 +11,7 @@
 
 文档收缩和窗口入场调用已有动作组件。案例通过 `ModelComparisonPanel` 的内容插槽播放独立 MP4，可替换为同规格的演示素材。作者在原片 3:46–4:34 演示了绿幕生图、视频模型生成和去绿幕的角色素材流程。本项目使用新生成的透明底立体玩偶图，由 `ModelComparisonClip` 逐帧合成动画，角色姿态与轨迹按观测重建。
 
-玩偶图源为 `public/model-comparison/toys.png`。运行 `node examples/reference-opening/render.mjs --model-clip` 可重新生成 `public/model-comparison/demo.mp4`（960×540、30 fps、5 秒），再用 `--model-comparison` 渲染主片。主片预览从 134 秒接入该段，供人工核对。
+玩偶图源为 `public/model-comparison/toys.png`。运行 `node examples/reference-opening/render.mjs --model-clip` 可重新生成 `public/model-comparison/demo.mp4`（960×540、30 fps、5 秒）。在 Studio 的 `09-Model-Comparison` 内可独立查看这 5.5 秒，也可用 `--segment 09-Model-Comparison` 导出。
 
 <details>
 <summary>立体玩偶生图提示词</summary>

@@ -1,20 +1,27 @@
+import type {ReactNode} from 'react';
 import {OffthreadVideo,Sequence,staticFile,useCurrentFrame,useVideoConfig} from 'remotion';
 import {ScriptNotesFilm,ScriptNotesScene} from './ScriptNotesScene';
 import {ScriptPlanningExcerpt,planningQuestionFade} from './compositions/ScriptPlanningExcerpt';
 import {ModelComparisonPanel,modelComparisonClipOffset} from './compositions/ModelComparisonPanel';
 
-export const ScriptPlanningLayers=({time,compareAt}:{time:number;compareAt?:number})=>{
+const comparisonStart=134;
+export const comparisonVideoStart=comparisonStart+modelComparisonClipOffset;
+
+export const ModelComparisonVideo=({trimBefore}:{trimBefore?:number}={})=>(
+  <OffthreadVideo
+    src={staticFile('model-comparison/demo.mp4')}
+    trimBefore={trimBefore}
+    muted
+    style={{display:'block',width:'100%',height:'100%',objectFit:'cover'}}
+  />
+);
+
+export const ScriptPlanningLayers=({time,compareAt,video}:{time:number;compareAt?:number;video?:ReactNode})=>{
   const {fps}=useVideoConfig();
   return <>
     <ScriptPlanningExcerpt time={time} compareAt={compareAt}/>
     {compareAt!==undefined&&<ModelComparisonPanel time={compareAt}>
-      <Sequence from={Math.round((134+modelComparisonClipOffset)*fps)} layout="none">
-        <OffthreadVideo
-          src={staticFile('model-comparison/demo.mp4')}
-          muted
-          style={{display:'block',width:'100%',height:'100%',objectFit:'cover'}}
-        />
-      </Sequence>
+      {video??<Sequence from={Math.round(comparisonVideoStart*fps)} layout="none"><ModelComparisonVideo/></Sequence>}
     </ModelComparisonPanel>}
   </>;
 };
@@ -31,7 +38,7 @@ export const ScriptPlanningScene=({compareAt}:{compareAt?:number}={})=>{
 };
 export const ScriptModelComparisonFilm=()=>{
   const frame=useCurrentFrame(),{fps}=useVideoConfig();
-  const compareAt=frame/fps-134;
+  const compareAt=frame/fps-comparisonStart;
   return compareAt<0?<ScriptPlanningFilm/>:<ScriptPlanningScene compareAt={compareAt}/>;
 };
 export const ScriptPlanningFilm=()=>{

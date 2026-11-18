@@ -10,8 +10,8 @@ vi.mock('remotion',()=>({
   AbsoluteFill:({children,style}:{children:ReactNode;style:CSSProperties})=><div style={style}>{children}</div>,
   Img:({src,style}:{src:string;style:CSSProperties})=><img src={src} style={style}/>,
   Sequence:({children,from}:{children:ReactNode;from:number})=>clock.frame>=from?children:null,
-  OffthreadVideo:({src,muted}:{src:string;muted:boolean})=><video src={src} muted={muted}/>,
-  Freeze:({frame,children}:{frame:number;children:ReactNode})=><div data-frozen-frame={frame}>{children}</div>,
+  OffthreadVideo:({src,muted,trimBefore}:{src:string;muted:boolean;trimBefore?:number})=><video src={src} muted={muted} data-source-frame={trimBefore}/>,
+  Loop:({durationInFrames,children}:{durationInFrames:number;children:ReactNode})=><div data-loop-duration={durationInFrames}>{children}</div>,
 }));
 import {ScriptModelComparisonFilm,ScriptPlanningFilm} from '../../../examples/reference-opening/ScriptPlanningScene';
 import {ScriptPitfallsFilm} from '../../../examples/reference-opening/ScriptPitfallsScene';
@@ -81,7 +81,7 @@ describe('skipped script prompts',()=>{
       expect(renderToStaticMarkup(<ScriptPitfallsFilm/>)).toBe(renderToStaticMarkup(<ScriptModelComparisonFilm/>));
     }
     const start=atPitfall(4185);
-    expect(start.querySelector('[data-pitfall-outgoing] [data-frozen-frame]')?.getAttribute('data-frozen-frame')).toBe('4184');
+    expect(start.querySelector('[data-pitfall-outgoing] [data-loop-duration="1"] video')?.getAttribute('data-source-frame')).toBe('145');
     expect(style(start,'[data-pitfall-heading]').opacity).toBe('0');
     expect(atPitfall(4200).querySelector('[data-pitfall-outgoing]')).toBeNull();
   });

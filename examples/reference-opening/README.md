@@ -1,61 +1,31 @@
-# 原片开头到 2:33 · Remotion 复原候选
+# 原片开头到 2:33 · Remotion 分段预览
 
-最新入口：[Reference-Script-153s](http://localhost:3004/Reference-Script-153s)，153 秒、4590 帧。139.5 秒接入「踩过的坑」，两张提示词卡归到左侧，右侧展示成片对照。见[提示词被略过镜头](SCRIPT-PITFALLS-SHOTPLAN.md)。
+[打开 Studio](http://localhost:3004/01-Opening)。每段在自己的时间轴上从第 0 秒开始，原片区间用来定位对应画面。分段沿用相同的成片实现和切点。
 
-运行 `node examples/reference-opening/render.mjs --script-pitfalls --video-only` 导出主片，输出 `.verification/reference-opening/reference-script-153s.mp4` 和 `report-script-pitfalls.json`。
+| 分段 | 对应原片区间 | 时长 |
+| --- | --- | --- |
+| [01 片头与分层](http://localhost:3004/01-Opening) | 0:00–0:10 | 10 秒 |
+| [02 章节总览](http://localhost:3004/02-Chapter-Overview) | 0:10–0:20 | 10 秒 |
+| [03 第一条原则](http://localhost:3004/03-First-Point) | 0:20–0:25 | 5 秒 |
+| [04 第二条原则](http://localhost:3004/04-Second-Point) | 0:25–0:52.5 | 27.5 秒 |
+| [05 素材准备](http://localhost:3004/05-Preparation) | 0:52.5–0:58 | 5.5 秒 |
+| [06 脚本章节](http://localhost:3004/06-Script) | 0:58–1:36 | 38 秒 |
+| [07 素材备注](http://localhost:3004/07-Material-Notes) | 1:36–2:09 | 33 秒 |
+| [08 分段规划文档](http://localhost:3004/08-Planning-Cards) | 2:09–2:14 | 5 秒 |
+| [09 模型对照](http://localhost:3004/09-Model-Comparison) | 2:14–2:19.5 | 5.5 秒 |
+| [10 提示词被略过](http://localhost:3004/10-Skipped-Prompts) | 2:19.5–2:33 | 13.5 秒 |
 
-此前入口：[Reference-Script-139-5s](http://localhost:3004/Reference-Script-139-5s)，139.5 秒、4185 帧。134 秒起，高亮文档缩到左侧，右侧接入玩偶演示，三个名称按顺序出现。见[模型对照镜头](MODEL-COMPARISON-SHOTPLAN.md)。
-
-右侧玩偶短片可单独预览。[Model-Comparison-Clip](http://localhost:3004/Model-Comparison-Clip)
-
-运行 `node examples/reference-opening/render.mjs --model-clip` 可更新右侧短片源文件。运行 `node examples/reference-opening/render.mjs --model-comparison --video-only` 导出主片，输出 `.verification/reference-opening/reference-script-139-5s.mp4` 和 `report-model-comparison.json`。
-
-此前入口：[Reference-Script-134s](http://localhost:3004/Reference-Script-134s)，134 秒、4020 帧，包含脚本文档入场、分开收拢和备注高亮。见[分段动画要求文档镜头](SCRIPT-PLANNING-SHOTPLAN.md)。
-
-导出：`node examples/reference-opening/render.mjs --script-planning --video-only`，输出 `.verification/reference-opening/reference-script-134s.mp4` 和 `report-script-planning.json`。不加 `--video-only` 可同时生成本段关键帧；`--stills` 仅导出关键帧。
-
-此前入口：[Reference-Script-129s](http://localhost:3004/Reference-Script-129s)，129 秒、3870 帧。96 秒前直接调用既有 `ScriptFilm`，新段落补到“接下来要不要规划分段的脚本”，停在第二问的标题及说明。见[素材备注续段](SCRIPT-NOTES-SHOTPLAN.md)。
-
-导出：`node examples/reference-opening/render.mjs --script-notes --video-only`，输出 `.verification/reference-opening/reference-script-129s.mp4` 和 `report-script-notes.json`。原 96 秒入口与导出方式继续保留。
-
-此前入口为 http://localhost:3004/Reference-Script-96s ，96 秒、2880 帧。58 秒前直接复用既有成片，续段见 [脚本章节拆解](SCRIPT-SHOTPLAN.md)。此版本停止在“还是重点聊两个大家比较关心的问题”。
-
-导出：`node examples/reference-opening/render.mjs --script --video-only`，文件 `.verification/reference-opening/reference-script-96s.mp4`、报告 `report-script.json`。新段落只增加两张静态文档正文，共 53,257 字节；正文标注、打字、卡片放大回位、神经元和计数、进度快慢全部由代码实现。模型对比复原原片观点，仅是动画示意，不是独立实测。
-
-此前入口 http://localhost:3004/Reference-Preparation 为 58 秒、1740 帧，素材准备阶段结束；原有五个 Composition 均保留。此前动作见 [素材准备拆解](PREPARATION-SHOTPLAN.md)。
-
-导出：`node examples/reference-opening/render.mjs --preparation --video-only`，文件 `.verification/reference-opening/reference-preparation.mp4`、报告 `report-preparation.json`。案例仅新增四张小图标贴图，共 21,247 字节；卡片、Agent、连接和窗口均为代码动画，目录演示用原创 SVG 图标。毛绒小熊已由新生成的 16 帧图集替代早期两张参考角色图。
-
-入口 `index.tsx`，1920×1080、30 FPS，无声。保留 `Reference-Opening-10s`（300 帧），新增 `Reference-Opening-20s`（600 帧）。前十秒动作与时间点见 [SHOTPLAN.md](./SHOTPLAN.md)，后续见 [11–20 秒拆解](./CONTINUATION-SHOTPLAN.md)。
-
-第一点已补到收束：`Reference-First-Point`（25 秒、750 帧），在第二点之前结束，后续工作暂停。结尾动作见 [第一点结尾拆解](./FIRST-POINT-SHOTPLAN.md)。
-
-按后续指示继续补完第二点：新增 `Reference-Before-Work`（52.5 秒、1575 帧），停在“开工之前 / 我会先准备这些素材”标题页，不展开后续素材卡。参考动作见 [第二点拆解](./SECOND-POINT-SHOTPLAN.md)。原有三种时长继续保留。
+单段导出示例：
 
 ```powershell
-npx remotion studio examples/reference-opening/index.tsx --public-dir=examples/reference-opening/public --port=3004
-node examples/reference-opening/render.mjs
+node examples/reference-opening/render.mjs --segment 10-Skipped-Prompts
 ```
 
-只导出视频、跳过关键帧截图：`node examples/reference-opening/render.mjs --video-only`。
+用 `--segments` 批量导出十段，输出到 `.verification/reference-opening/segments/`。默认同时对照每段首帧、中间帧、末帧与原时间线。加 `--stills` 只核对图片，加 `--video-only` 只导出视频。需要整片时，可用原有 `--script-pitfalls --video-only` 导出 153 秒版本。
 
-导出完整二十秒：`node examples/reference-opening/render.mjs --20s --video-only`；视频为 `.verification/reference-opening/reference-opening-20s.mp4`，独立报告为 `report-20s.json`，不会覆盖十秒视频。
+右侧的[玩偶短片](http://localhost:3004/Model-Comparison-Clip) 单独放在 Studio 的 Media 文件夹，仍可用 `--model-clip` 更新源文件。成片镜头说明见[片头](SHOTPLAN.md)、[章节总览](CONTINUATION-SHOTPLAN.md)、[素材准备](PREPARATION-SHOTPLAN.md)、[脚本章节](SCRIPT-SHOTPLAN.md)、[素材备注](SCRIPT-NOTES-SHOTPLAN.md)、[分段规划文档](SCRIPT-PLANNING-SHOTPLAN.md)、[模型对照](MODEL-COMPARISON-SHOTPLAN.md)和[提示词被略过](SCRIPT-PITFALLS-SHOTPLAN.md)。
 
-导出第一点完整版本：`node examples/reference-opening/render.mjs --first-point --video-only`；视频为 `.verification/reference-opening/reference-first-point.mp4`，报告为 `report-first-point.json`。
-
-导出之前的第二点版本：`node examples/reference-opening/render.mjs --before-work --video-only`；视频为 `.verification/reference-opening/reference-before-work.mp4`，报告为 `report-before-work.json`。
-
-输出 `.verification/reference-opening/reference-opening-10s.mp4` 及关键帧。先生成截图可加 `--stills`，快速四帧检查可再加 `--quick`。
-
-可复用组件位于 `packages/animations/src/reference-opening/`，包入口当前公开导出二十三个组件及类型。目录独立演示与本场景复用同一套独立动作；当前视频的固定组合编排位于本工程的 `compositions/`。
-
-预览服务启动后打开 http://localhost:3004/Reference-Opening-10s 。
-
-连续二十秒预览为 http://localhost:3004/Reference-Opening-20s 。续段新增「信息叠加 → 音效脉冲徽章」「叙事动画 → 章节卡总览」「叙事动画 → 多路径演示」三项素材。目录卡片用原创配图；案例使用观察截图中的 11 张小卡静态贴图（约 25 KB），没有使用整屏视频代替代码动画。
-
-第一点完整预览为 http://localhost:3004/Reference-First-Point 。补全路线光点到达结果、“启发 · 灵感”标签，最后由案例内 `SectionCollapse` 调用「版式转场 → 内容收拢」，归档为顶部条目，停留到 25 秒。
-
-第二点的独立预览为 http://localhost:3004/Reference-Before-Work 。第二点新增六项组件；早期使用的两张角色静态图现已更换为原创毛绒小熊的 16 帧图集，位移、绳索和序列帧均由代码控制。五张文档小图仍由 `prepare-second-point-assets.py` 提取，运行时不依赖原片页面。
+可复用组件位于 `packages/animations/src/reference-opening/`，发布目录与本场景共用独立动作，案例编排位于本工程的 `compositions/`。
 
 `ExplodedLayers` 的 `layers` 数组配置每层内容、标签、进入时间；`screen` 可传入任意 React 内容。`PerspectivePanel` 的姿态、`ContentCollapse` 的收拢位置与比例，以及 `FanCardDeck` 的图片、文案、角度和间距均可替换。动画不依赖进入时间或播放历史，逐帧与随机跳帧一致。
 

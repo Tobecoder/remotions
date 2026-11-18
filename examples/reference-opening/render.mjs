@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {existsSync} from 'node:fs';
-import {copyFile,mkdir,readFile,writeFile} from 'node:fs/promises';
+import {copyFile,mkdir,readFile,unlink,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {bundle} from '@remotion/bundler';
@@ -11,6 +11,11 @@ import {PNG} from 'pngjs';
 const episode=path.dirname(fileURLToPath(import.meta.url));
 const root=path.resolve(episode,'../..');
 const out=path.join(root,'.verification/reference-opening');
+const segmentOptions=JSON.parse(await readFile(path.join(episode,'segments.json'),'utf8'));
+const segmentArg=process.argv.indexOf('--segment');
+const segmentId=segmentArg===-1?null:process.argv[segmentArg+1];
+const exportSegments=segmentArg!==-1||process.argv.includes('--segments');
+if(segmentArg!==-1)assert(segmentOptions.some(segment=>segment.id===segmentId),`Unknown segment: ${segmentId}. Available: ${segmentOptions.map(segment=>segment.id).join(', ')}`);
 const planning=process.argv.includes('--script-planning'),notes=process.argv.includes('--script-notes'),script=process.argv.includes('--script'),preparation=process.argv.includes('--preparation'),beforeWork=process.argv.includes('--before-work'),firstPoint=process.argv.includes('--first-point'),extended=process.argv.includes('--20s');
 const comparison=process.argv.includes('--model-comparison');
 const modelClip=process.argv.includes('--model-clip');
@@ -18,14 +23,67 @@ const pitfalls=process.argv.includes('--script-pitfalls');
 const duration=pitfalls?153:modelClip?5:comparison?139.5:planning?134:notes?129:script?96:preparation?58:beforeWork?52.5:firstPoint?25:extended?20:10,totalFrames=duration*30;
 const compositionId=pitfalls?'Reference-Script-153s':modelClip?'Model-Comparison-Clip':comparison?'Reference-Script-139-5s':planning?'Reference-Script-134s':notes?'Reference-Script-129s':script?'Reference-Script-96s':preparation?'Reference-Preparation':beforeWork?'Reference-Before-Work':firstPoint?'Reference-First-Point':extended?'Reference-Opening-20s':'Reference-Opening-10s';
 await mkdir(out,{recursive:true});
-const serveUrl=await bundle({entryPoint:path.join(episode,'index.tsx'),publicDir:path.join(episode,'public'),outDir:path.join(out,'bundle')});
+const serveUrl=await bundle({entryPoint:path.join(episode,'render-root.tsx'),publicDir:path.join(episode,'public'),outDir:path.join(out,'bundle')});
 const browserExecutable=process.env.REMOTION_BROWSER_EXECUTABLE||path.join(root,'.verification/browser/chrome-headless-shell.exe');
 assert(existsSync(browserExecutable));
 const browser=await openBrowser('chrome',{browserExecutable});
 const errors=[];
 const shared={serveUrl,puppeteerInstance:browser,browserExecutable,port:3368,onBrowserLog:log=>{if(log.type==='error')errors.push(log.text);}};
-try {
-  const compositions=await getCompositions(serveUrl,{puppeteerInstance:browser,port:3368});
+const renderVideo=async(composition,video)=>{
+  await renderMedia({...shared,composition,codec:'h264',crf:18,pixelFormat:'yuv420p',outputLocation:video,concurrency:3});
+  const ffprobe=path.join(root,'node_modules/@remotion/compositor-win32-x64-msvc/ffprobe.exe');
+  const media=JSON.parse(execFileSync(ffprobe,['-v','error','-count_frames','-show_entries','stream=codec_name,width,height,r_frame_rate,nb_read_frames,duration','-show_entries','format=duration,size','-of','json',video],{encoding:'utf8'}));
+  assert.equal(Number(media.format.duration),composition.durationInFrames/composition.fps);
+  assert.equal(Number(media.streams[0].nb_read_frames),composition.durationInFrames);
+  assert.equal(media.streams[0].width,composition.width);
+  assert.equal(media.streams[0].height,composition.height);
+  assert.equal(errors.length,0,errors.join('\n'));
+  console.log(`Rendered ${path.basename(video)}`);
+  return media;
+};
+
+const renderSegments=async(compositions)=>{
+  const segmentOut=path.join(out,'segments');
+  await mkdir(segmentOut,{recursive:true});
+  const original=compositions.find(item=>item.id==='Reference-Script-153s');
+  assert(original);
+  const report=[];
+  const baselinePath=path.join(segmentOut,'source-check.png');
+  try {
+    for(const [index,{id,endFrame}] of segmentOptions.entries()){
+      if(segmentId&&id!==segmentId)continue;
+      const startFrame=segmentOptions[index-1]?.endFrame??0;
+      const composition=compositions.find(item=>item.id===id);
+      assert(composition);
+      assert.equal(composition.fps,original.fps);
+      assert.equal(composition.durationInFrames,endFrame-startFrame);
+      const checkpoints=[];
+      if(!process.argv.includes('--video-only')){
+        for(const frame of [0,Math.floor(composition.durationInFrames/2),composition.durationInFrames-1]){
+          const sourceFrame=startFrame+frame;
+          const segmentPath=path.join(segmentOut,`${id}-frame-${frame}.png`);
+          await renderStill({...shared,composition,frame,output:segmentPath,imageFormat:'png'});
+          await renderStill({...shared,composition:original,frame:sourceFrame,output:baselinePath,imageFormat:'png'});
+          const local=PNG.sync.read(await readFile(segmentPath));
+          const baseline=PNG.sync.read(await readFile(baselinePath));
+          assert.equal(local.width,baseline.width);
+          assert.equal(local.height,baseline.height);
+          assert(local.data.equals(baseline.data),`${id} frame ${frame} differs from source frame ${sourceFrame}`);
+          checkpoints.push({frame,sourceFrame});
+        }
+      }
+      const media=process.argv.includes('--stills')?undefined:await renderVideo(composition,path.join(segmentOut,`${id}.mp4`));
+      report.push({id,startFrame,endFrame,durationInFrames:composition.durationInFrames,checkpoints,media});
+      console.log(`Verified ${id}: ${composition.durationInFrames} frames, ${checkpoints.length} matched stills`);
+    }
+    assert.equal(errors.length,0,errors.join('\n'));
+    await writeFile(path.join(segmentOut,segmentId?`report-${segmentId}.json`:'report.json'),JSON.stringify({fps:original.fps,errors,segments:report},null,2));
+  } finally {
+    if(existsSync(baselinePath))await unlink(baselinePath);
+  }
+};
+
+const renderLegacy=async(compositions)=>{
   const composition=compositions.find(item=>item.id===compositionId);
   assert(composition);assert.equal(composition.durationInFrames,totalFrames);assert.equal(composition.fps,30);
   const {width,height}=composition;
@@ -43,14 +101,15 @@ try {
   let media;
   if(!process.argv.includes('--stills')){
     const video=path.join(out,pitfalls?'reference-script-153s.mp4':modelClip?'model-comparison-clip.mp4':comparison?'reference-script-139-5s.mp4':planning?'reference-script-134s.mp4':notes?'reference-script-129s.mp4':script?'reference-script-96s.mp4':preparation?'reference-preparation.mp4':beforeWork?'reference-before-work.mp4':firstPoint?'reference-first-point.mp4':`reference-opening-${duration}s.mp4`);
-    await renderMedia({...shared,composition,codec:'h264',crf:18,pixelFormat:'yuv420p',outputLocation:video,concurrency:3,onProgress:({progress})=>{if(progress===1)console.log('MP4 rendered');}});
-    const ffprobe=path.join(root,'node_modules/@remotion/compositor-win32-x64-msvc/ffprobe.exe');
-    media=JSON.parse(execFileSync(ffprobe,['-v','error','-count_frames','-show_entries','stream=codec_name,width,height,r_frame_rate,nb_read_frames,duration','-show_entries','format=duration,size','-of','json',video],{encoding:'utf8'}));
-    assert.equal(Number(media.format.duration),duration);assert.equal(Number(media.streams[0].nb_read_frames),totalFrames);
-    assert.equal(media.streams[0].width,width);assert.equal(media.streams[0].height,height);
-    assert.equal(errors.length,0,errors.join('\n'));
+    media=await renderVideo(composition,video);
     if(modelClip)await copyFile(video,path.join(episode,'public/model-comparison/demo.mp4'));
   }
   assert.equal(errors.length,0,errors.join('\n'));
   await writeFile(path.join(out,pitfalls?'report-script-pitfalls.json':modelClip?'report-model-clip.json':comparison?'report-model-comparison.json':planning?'report-script-planning.json':notes?'report-script-notes.json':script?'report-script.json':preparation?'report-preparation.json':beforeWork?'report-before-work.json':firstPoint?'report-first-point.json':extended?'report-20s.json':'report.json'),JSON.stringify({duration,width,height,fps:30,errors,media,frames:reports},null,2));
+};
+
+try {
+  const compositions=await getCompositions(serveUrl,{puppeteerInstance:browser,port:3368});
+  if(exportSegments)await renderSegments(compositions);
+  else await renderLegacy(compositions);
 }finally{await browser.close({silent:true});}

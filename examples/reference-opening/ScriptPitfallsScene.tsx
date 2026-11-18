@@ -1,7 +1,7 @@
-import {Freeze,useCurrentFrame,useVideoConfig} from 'remotion';
+import {Loop,Sequence,useCurrentFrame,useVideoConfig} from 'remotion';
 import {during} from '../../packages/animations/src/reference-opening/motion';
 import {ScriptNotesScene} from './ScriptNotesScene';
-import {ScriptModelComparisonFilm,ScriptPlanningLayers} from './ScriptPlanningScene';
+import {ModelComparisonVideo,ScriptModelComparisonFilm,ScriptPlanningLayers,comparisonVideoStart} from './ScriptPlanningScene';
 import {ScriptPitfalls} from './compositions/ScriptPitfalls';
 
 const comparisonEnd=139.5;
@@ -19,16 +19,21 @@ export const ScriptPitfallsFilm=()=>{
   const frame=useCurrentFrame(),{fps}=useVideoConfig(),time=frame/fps;
   if(time<comparisonEnd)return <ScriptModelComparisonFilm/>;
 
-  const lastComparisonFrame=Math.round(comparisonEnd*fps)-1;
+  const handoffFrame=Math.round(comparisonEnd*fps);
+  const lastComparisonFrame=handoffFrame-1;
   const lastComparisonTime=lastComparisonFrame/fps;
   const outgoing=1-during(time,139.5,139.98);
   let subtitle:string=subtitles[0][1];
   for(const [at,text] of subtitles)if(time>=at)subtitle=text;
   return <ScriptNotesScene questionHeadingOpacity={0} subtitle={subtitle}>
     {outgoing>0&&<div data-pitfall-outgoing style={{position:'absolute',inset:0,opacity:outgoing}}>
-      <Freeze frame={lastComparisonFrame}>
-        <ScriptPlanningLayers time={lastComparisonTime} compareAt={lastComparisonTime-134}/>
-      </Freeze>
+      <ScriptPlanningLayers time={lastComparisonTime} compareAt={lastComparisonTime-134}
+        video={<Sequence from={handoffFrame} layout="none" showInTimeline={false}>
+          <Loop durationInFrames={1} layout="none" showInTimeline={false}>
+            <ModelComparisonVideo trimBefore={lastComparisonFrame-Math.round(comparisonVideoStart*fps)}/>
+          </Loop>
+        </Sequence>}
+      />
     </div>}
     <ScriptPitfalls time={time}/>
   </ScriptNotesScene>;

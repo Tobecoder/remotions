@@ -13,4 +13,4 @@
 
 卡片入场沿用 `CardEntrance`，缩小与平移沿用 `ContentCollapse`。`ScriptPlanningExcerpt` 负责三张文档的内容、左右落点与出场时间。布局按 800×450 的设计尺寸计算，两张折叠预览分别落在 (46, 198) 和 (409, 212)。
 
-同一份修正用于 `Reference-Script-134s` 和 `Reference-Script-139-5s` 两个入口。画面时间根据原片观察近似取值，最终观感由预览确认。
+在 Studio 的 `08-Planning-Cards` 内可独立查看这 5 秒。画面时间根据原片观察近似取值，最终观感由预览确认。
