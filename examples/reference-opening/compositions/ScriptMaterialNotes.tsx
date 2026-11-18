@@ -4,12 +4,12 @@ import {during,mix} from '../../../packages/animations/src/reference-opening/mot
 import {ScriptQuestionCards} from './ScriptQuestionCards';
 import {SectionCollapse} from './SectionCollapse';
 
-export type ScriptMaterialNotesProps={time:number;assets:readonly ReactNode[]};
+export type ScriptMaterialNotesProps={time:number;assets:readonly ReactNode[];nextQuestionOpacity?:number};
 const orange='#dc7351';
 const rgb=(from:readonly number[],to:readonly number[],progress:number)=>`rgb(${from.map((value,index)=>Math.round(mix(value,to[index],progress))).join(',')})`;
 
 /** Case choreography: question overview, evidence grid, annotation and Agent confirmation. */
-export const ScriptMaterialNotes=({time:t,assets}:ScriptMaterialNotesProps)=>{
+export const ScriptMaterialNotes=({time:t,assets,nextQuestionOpacity=1}:ScriptMaterialNotesProps)=>{
   const overview=1-during(t,5.7,6.2),gather=during(t,15,16),lift=during(t,20,21),exit=during(t,29.2,30.3),confirm=during(t,26,27);
   const headingOpacity=during(t,6,6.5)*(1-during(t,19.5,20.5));
   const note=(text:string,at:number)=><div style={{height:20,margin:'4px 0',paddingLeft:8,borderLeft:`2px solid ${orange}`,background:'#f7ece6',color:'#a5563d',fontFamily:'monospace',fontSize:8,opacity:during(t,at,at+.6)}}>{text}</div>;
@@ -51,6 +51,6 @@ export const ScriptMaterialNotes=({time:t,assets}:ScriptMaterialNotesProps)=>{
       </svg>
     </div>
     </SectionCollapse>
-    <div data-notes-phase="next-question" style={{position:'absolute',left:49,top:105,opacity:during(t,30,30.6)}}><div style={{fontSize:24,fontWeight:800}}>分段的动画要求？</div><div style={{fontSize:19,fontWeight:700,color:'#92968f',marginTop:7}}>几乎不写，只在个别地方备注</div></div>
+    <div data-notes-phase="next-question" style={{position:'absolute',left:49,top:105,opacity:during(t,30,30.6)*nextQuestionOpacity}}><div style={{fontSize:24,fontWeight:800}}>分段的动画要求？</div><div style={{fontSize:19,fontWeight:700,color:'#92968f',marginTop:7}}>几乎不写，只在个别地方备注</div></div>
   </div>;
 };

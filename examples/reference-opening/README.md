@@ -1,6 +1,10 @@
-# 原片开头到 2:09 · Remotion 复原候选
+# 原片开头到 2:14 · Remotion 复原候选
 
-最新入口：[Reference-Script-129s](http://localhost:3004/Reference-Script-129s)，129 秒、3870 帧。96 秒前直接调用既有 `ScriptFilm`，新段落补到“接下来要不要规划分段的脚本”，停在第二问的标题及说明，不进入后续文档。见[素材备注续段](SCRIPT-NOTES-SHOTPLAN.md)。
+最新入口：[Reference-Script-134s](http://localhost:3004/Reference-Script-134s)，134 秒、4020 帧。129 秒前直接复用已确认的 `ScriptNotesFilm`；本次续接第二问的脚本文档入场、滚动和备注高亮，到右侧视频对照展开前停止。见[分段动画要求文档镜头](SCRIPT-PLANNING-SHOTPLAN.md)。
+
+导出：`node examples/reference-opening/render.mjs --script-planning --video-only`，输出 `.verification/reference-opening/reference-script-134s.mp4` 和 `report-script-planning.json`。不加 `--video-only` 可同时生成本段关键帧；`--stills` 仅导出关键帧。
+
+此前入口：[Reference-Script-129s](http://localhost:3004/Reference-Script-129s)，129 秒、3870 帧。96 秒前直接调用既有 `ScriptFilm`，新段落补到“接下来要不要规划分段的脚本”，停在第二问的标题及说明。见[素材备注续段](SCRIPT-NOTES-SHOTPLAN.md)。
 
 导出：`node examples/reference-opening/render.mjs --script-notes --video-only`，输出 `.verification/reference-opening/reference-script-129s.mp4` 和 `report-script-notes.json`。原 96 秒入口与导出方式继续保留。
 

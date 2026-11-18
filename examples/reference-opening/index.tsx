@@ -5,6 +5,7 @@ import {BeforeWorkScene} from './SecondPointScene';
 import {PreparationFilm} from './PreparationScene';
 import {ScriptFilm} from './ScriptScene';
 import {ScriptNotesFilm} from './ScriptNotesScene';
+import {ScriptPlanningFilm} from './ScriptPlanningScene';
 
 registerRoot(()=> <>
   <Composition id="Reference-Opening-10s" component={OpeningScene} width={1920} height={1080} fps={30} durationInFrames={300}/>
@@ -14,4 +15,5 @@ registerRoot(()=> <>
   <Composition id="Reference-Preparation" component={PreparationFilm} width={1920} height={1080} fps={30} durationInFrames={1740}/>
   <Composition id="Reference-Script-96s" component={ScriptFilm} width={1920} height={1080} fps={30} durationInFrames={2880}/>
   <Composition id="Reference-Script-129s" component={ScriptNotesFilm} width={1920} height={1080} fps={30} durationInFrames={3870}/>
+  <Composition id="Reference-Script-134s" component={ScriptPlanningFilm} width={1920} height={1080} fps={30} durationInFrames={4020}/>
 </>);
