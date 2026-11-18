@@ -4,7 +4,7 @@ import {renderToStaticMarkup} from 'react-dom/server';
 import {describe,expect,it,vi} from 'vitest';
 const clock=vi.hoisted(()=>({frame:0}));
 vi.mock('remotion',()=>({useCurrentFrame:()=>clock.frame,useVideoConfig:()=>({fps:30,width:1920,height:1080}),staticFile:(file:string)=>file,AbsoluteFill:({children,style}:{children:ReactNode;style:CSSProperties})=><div style={style}>{children}</div>,Img:({src,style}:{src:string;style:CSSProperties})=><img src={src} style={style}/>}));
-import {ScriptPlanningFilm} from '../../../examples/reference-opening/ScriptPlanningScene';
+import {ScriptModelComparisonFilm,ScriptPlanningFilm} from '../../../examples/reference-opening/ScriptPlanningScene';
 import {ScriptNotesFilm} from '../../../examples/reference-opening/ScriptNotesScene';
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
 const at=(frame:number)=>{clock.frame=frame;return dom(<ScriptPlanningFilm/>);};
@@ -43,5 +43,33 @@ describe('planning document excerpt through the next shot boundary',()=>{
     expect(end.body.innerHTML).not.toMatch(/NaN|Infinity/);
     const prior=at(3915).querySelector('[data-planning-excerpt]')!.outerHTML;at(4019);
     expect(at(3915).querySelector('[data-planning-excerpt]')!.outerHTML).toBe(prior);
+  });
+});
+
+describe('model comparison handoff',()=>{
+  it('starts after the existing highlight and shrinks the same document',()=>{
+    for(const frame of [0,3869,3870,3990,4019]){
+      clock.frame=frame;
+      expect(renderToStaticMarkup(<ScriptModelComparisonFilm/>)).toBe(renderToStaticMarkup(<ScriptPlanningFilm/>));
+    }
+    clock.frame=4020;
+    const start=dom(<ScriptModelComparisonFilm/>);
+    expect(style(start,'[data-planning-document-collapse]').transform).toBe('translate(0px,0px) scale(1)');
+    expect(style(start,'[data-model-comparison-window]').opacity).toBe('0');
+    clock.frame=4050;
+    const moved=dom(<ScriptModelComparisonFilm/>);
+    expect(style(moved,'[data-planning-document-collapse]').transform).toContain(`scale(${336/598})`);
+    expect(style(moved,'[data-planning-highlight]').width).toBe('100%');
+    expect(style(moved,'[data-model-comparison-window]').opacity).toBe('1');
+  });
+
+  it('reveals the model names in order through the final frame',()=>{
+    for(const [frame,visible] of [[4070,1],[4105,2],[4140,3],[4184,3]] as const){
+      clock.frame=frame;
+      const doc=dom(<ScriptModelComparisonFilm/>);
+      const names=Array.from(doc.querySelectorAll<HTMLElement>('[data-comparison-model]'));
+      expect(names.filter(name=>name.style.opacity==='1').map(name=>name.textContent))
+        .toEqual(['Claude','Codex','DeepSeek'].slice(0,visible));
+    }
   });
 });
