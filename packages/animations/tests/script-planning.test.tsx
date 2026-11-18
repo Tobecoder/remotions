@@ -18,24 +18,40 @@ const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup
 const at=(frame:number)=>{clock.frame=frame;return dom(<ScriptPlanningFilm/>);};
 const style=(doc:Document,selector:string)=>doc.querySelector<HTMLElement>(selector)!.style;
 describe('planning document excerpt through the next shot boundary',()=>{
-  it('delegates the entire accepted 129-second prefix to the existing film',()=>{
-    for(const frame of [0,299,749,1548,1887,2211,2400,2790,2879,2880,3000,3300,3756,3774,3789,3840,3869]){
+  it('uses the existing film until the next subtitle cue',()=>{
+    for(const frame of [0,299,749,1548,1887,2211,2400,2790,2879,2880,3000,3300,3756,3774,3789,3840,3867]){
       clock.frame=frame;
       expect(renderToStaticMarkup(<ScriptPlanningFilm/>)).toBe(renderToStaticMarkup(<ScriptNotesFilm/>));
     }
   });
-  it('slides the document in and scrolls through the observed excerpts before highlighting the model note',()=>{
-    expect(style(at(3870),'[data-planning-document]').opacity).toBe('0');
-    const first=at(3891),middle=at(3930),last=at(4019);
-    expect(style(first,'[data-planning-document]').height).toBe('292px');
-    expect(style(first,'[data-planning-scroll]').transform).toBe('translateY(0px)');
-    expect(style(middle,'[data-planning-scroll]').transform).toBe('translateY(-320px)');
+  it('keeps the first card after returning it left, then returns the second card right',()=>{
+    const cue=at(3869),first=at(3894),middle=at(3930),paired=at(3962);
+    const left='[data-planning-preview="video-models"]';
+    const right='[data-planning-preview="motion-library"]';
+    const scale=346/598;
+    expect(cue.querySelector('[data-script-notes-scene]')!.lastElementChild!.textContent).toContain('只在个别地方做了备注');
+    expect(style(first,left).transform).toBe('translate(102px,106px) scale(1)');
+    expect(first.querySelector(right)).toBeNull();
+    expect(style(middle,left).transform).toBe(`translate(46px,198px) scale(${scale})`);
+    expect(style(middle,right).transform).toBe('translate(102px,136px) scale(1)');
+    expect(style(middle,right+' [data-planning-highlight]').width).not.toBe('100%');
+    expect(style(paired,left).opacity).toBe('1');
+    expect(style(paired,right).opacity).toBe('1');
+    expect(style(paired,right).transform).toBe(`translate(409px,212px) scale(${scale})`);
+    expect(style(paired,right+' [data-planning-highlight]').width).toBe('100%');
+    const fading=at(3965);
+    expect(style(fading,left).opacity).toBe(style(fading,right).opacity);
+    expect(Number(style(fading,left).opacity)).toBeLessThan(1);
+  });
+  it('opens the third card separately and highlights its note after the two previews clear',()=>{
+    const model=at(3975),last=at(4019);
+    expect(model.querySelector('[data-planning-preview]')).toBeNull();
+    expect(style(model,'[data-planning-document]').opacity).toBe('1');
+    expect(style(model,'[data-planning-highlight]').width).toBe('0%');
     expect(style(last,'[data-planning-document]').top).toBe('139px');
     expect(style(last,'[data-planning-document]').height).toBe('210px');
-    expect(style(last,'[data-planning-scroll]').transform).toBe('translateY(-640px)');
-    expect(style(first,'[data-planning-highlight]').width).toBe('0%');
     expect(style(last,'[data-planning-highlight]').width).toBe('100%');
-    expect(last.querySelectorAll('[data-planning-page]')).toHaveLength(3);
+    expect(last.querySelectorAll('[data-planning-page]')).toHaveLength(1);
   });
   it('keeps the first conclusion and active second outline in their accepted positions',()=>{
     const before=at(3869),after=at(4019);
