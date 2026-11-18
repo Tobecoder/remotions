@@ -10,10 +10,12 @@ const rgb=(from:readonly number[],to:readonly number[],progress:number)=>`rgb(${
 const firstSummary={x:49,y:43,width:260,height:38};
 // The stage group spans the document on the left and all six rows of assets on the right.
 const groupCenter={x:(49+753)/2,y:(105+405)/2};
-const dockScale=.09;
+// Match the number circle in SectionCollapse: 9px left padding and 19px diameter.
+const firstBadgeCenter={x:firstSummary.x+9+19/2,y:firstSummary.y+firstSummary.height/2};
+const dockScale=.023;
 const dockPose={
-  x:firstSummary.x+firstSummary.width/2-groupCenter.x*dockScale,
-  y:firstSummary.y+firstSummary.height/2-groupCenter.y*dockScale,
+  x:firstBadgeCenter.x-groupCenter.x*dockScale,
+  y:firstBadgeCenter.y-groupCenter.y*dockScale,
   scale:dockScale,
 };
 

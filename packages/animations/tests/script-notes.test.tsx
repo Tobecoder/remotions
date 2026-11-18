@@ -24,7 +24,7 @@ describe('script notes continuation to the second question',()=>{
     expect(style(second,'[data-section-bookmark] span').color).toBe('rgb(255, 255, 255)');
     expect(style(second,'[data-question-summary="1"] [data-question-number]').color).toBe('rgb(220, 115, 81)');
   });
-  it('docks the whole group inside title one before the bookmark takes over',()=>{
+  it('docks the whole group inside the number one circle before the bookmark takes over',()=>{
     const group='[data-section-collapse-scene][data-content-collapse]';
     const bookmark='[data-section-bookmark]';
     const second='[data-question-summary="1"]';
@@ -39,12 +39,15 @@ describe('script notes continuation to the second question',()=>{
     expect(moving.querySelector(group+' [data-notes-matches]')).not.toBeNull();
     expect(style(moving,bookmark).opacity).toBe('0');
     const [dockX,dockY,dockScale]=pose(docked);
-    const box=style(docked,'[data-question-summary="0"]');
-    const [left,top,width,height]=[box.left,box.top,box.width,box.height].map(value=>parseFloat(value));
-    expect(dockX+49*dockScale).toBeGreaterThan(left);
-    expect(dockY+105*dockScale).toBeGreaterThan(top);
-    expect(dockX+753*dockScale).toBeLessThan(left+width);
-    expect(dockY+405*dockScale).toBeLessThan(top+height);
+    const box=style(docked,bookmark);
+    const radius=parseFloat(style(docked,bookmark+' > span').width)/2;
+    const badgeX=parseFloat(box.left)+parseFloat(box.paddingLeft)+radius;
+    const badgeY=parseFloat(box.top)+parseFloat(box.height)/2;
+    expect(dockX+401*dockScale).toBeCloseTo(badgeX);
+    expect(dockY+255*dockScale).toBeCloseTo(badgeY);
+    for(const [cornerX,cornerY] of [[49,105],[49,405],[753,105],[753,405]]){
+      expect(Math.hypot(dockX+cornerX*dockScale-badgeX,dockY+cornerY*dockScale-badgeY)).toBeLessThan(radius);
+    }
     expect(style(docked,group).opacity).toBe('1');
     expect(style(docked,bookmark).opacity).toBe('0');
     expect(pose(fading)).toEqual(pose(docked));
