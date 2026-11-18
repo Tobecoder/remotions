@@ -2,7 +2,9 @@
 
 最新入口：[Reference-Script-139-5s](http://localhost:3004/Reference-Script-139-5s)，139.5 秒、4185 帧。134 秒起，高亮文档缩到左侧，右侧接入玩偶演示，三个名称按顺序出现。见[模型对照镜头](MODEL-COMPARISON-SHOTPLAN.md)。
 
-导出：`node examples/reference-opening/render.mjs --model-comparison --video-only`，输出 `.verification/reference-opening/reference-script-139-5s.mp4` 和 `report-model-comparison.json`。
+右侧玩偶短片可单独预览。[Model-Comparison-Clip](http://localhost:3004/Model-Comparison-Clip)
+
+运行 `node examples/reference-opening/render.mjs --model-clip` 可更新右侧短片源文件。运行 `node examples/reference-opening/render.mjs --model-comparison --video-only` 导出主片，输出 `.verification/reference-opening/reference-script-139-5s.mp4` 和 `report-model-comparison.json`。
 
 此前入口：[Reference-Script-134s](http://localhost:3004/Reference-Script-134s)，134 秒、4020 帧，包含脚本文档入场、滚动和备注高亮。见[分段动画要求文档镜头](SCRIPT-PLANNING-SHOTPLAN.md)。
 

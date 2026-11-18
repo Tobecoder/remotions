@@ -6,6 +6,7 @@ import {PreparationFilm} from './PreparationScene';
 import {ScriptFilm} from './ScriptScene';
 import {ScriptNotesFilm} from './ScriptNotesScene';
 import {ScriptModelComparisonFilm,ScriptPlanningFilm} from './ScriptPlanningScene';
+import {ModelComparisonClip} from './ModelComparisonClip';
 
 registerRoot(()=> <>
   <Composition id="Reference-Opening-10s" component={OpeningScene} width={1920} height={1080} fps={30} durationInFrames={300}/>
@@ -17,4 +18,5 @@ registerRoot(()=> <>
   <Composition id="Reference-Script-129s" component={ScriptNotesFilm} width={1920} height={1080} fps={30} durationInFrames={3870}/>
   <Composition id="Reference-Script-134s" component={ScriptPlanningFilm} width={1920} height={1080} fps={30} durationInFrames={4020}/>
   <Composition id="Reference-Script-139-5s" component={ScriptModelComparisonFilm} width={1920} height={1080} fps={30} durationInFrames={4185}/>
+  <Composition id="Model-Comparison-Clip" component={ModelComparisonClip} width={960} height={540} fps={30} durationInFrames={150}/>
 </>);

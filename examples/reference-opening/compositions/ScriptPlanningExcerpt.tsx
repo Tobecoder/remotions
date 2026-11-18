@@ -37,7 +37,7 @@ export const ScriptPlanningExcerpt=({time:t,compareAt}:{time:number;compareAt?:n
     <div data-planning-example-label style={{position:'absolute',left:49,top:105,fontSize:9,letterSpacing:1,color:'#cc7254',opacity:during(t,2.75,3.15)}}>例如：对比三个模型能力那段</div>
     {compareAt===undefined?document:<ContentCollapse
       data-planning-document-collapse
-      progress={during(compareAt,.08,.82)}
+      progress={during(compareAt,.06,.46)}
       to={{x:49-documentX*scale,y:documentY*(1-scale),scale}}
     >{document}</ContentCollapse>}
   </div>;

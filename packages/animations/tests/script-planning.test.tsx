@@ -3,7 +3,15 @@ import type {CSSProperties,ReactNode} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {describe,expect,it,vi} from 'vitest';
 const clock=vi.hoisted(()=>({frame:0}));
-vi.mock('remotion',()=>({useCurrentFrame:()=>clock.frame,useVideoConfig:()=>({fps:30,width:1920,height:1080}),staticFile:(file:string)=>file,AbsoluteFill:({children,style}:{children:ReactNode;style:CSSProperties})=><div style={style}>{children}</div>,Img:({src,style}:{src:string;style:CSSProperties})=><img src={src} style={style}/>}));
+vi.mock('remotion',()=>({
+  useCurrentFrame:()=>clock.frame,
+  useVideoConfig:()=>({fps:30,width:1920,height:1080}),
+  staticFile:(file:string)=>file,
+  AbsoluteFill:({children,style}:{children:ReactNode;style:CSSProperties})=><div style={style}>{children}</div>,
+  Img:({src,style}:{src:string;style:CSSProperties})=><img src={src} style={style}/>,
+  Sequence:({children,from}:{children:ReactNode;from:number})=>clock.frame>=from?children:null,
+  OffthreadVideo:({src,muted}:{src:string;muted:boolean})=><video src={src} muted={muted}/>,
+}));
 import {ScriptModelComparisonFilm,ScriptPlanningFilm} from '../../../examples/reference-opening/ScriptPlanningScene';
 import {ScriptNotesFilm} from '../../../examples/reference-opening/ScriptNotesScene';
 const dom=(node:ReactNode)=>new DOMParser().parseFromString(renderToStaticMarkup(node),'text/html');
@@ -56,15 +64,18 @@ describe('model comparison handoff',()=>{
     const start=dom(<ScriptModelComparisonFilm/>);
     expect(style(start,'[data-planning-document-collapse]').transform).toBe('translate(0px,0px) scale(1)');
     expect(style(start,'[data-model-comparison-window]').opacity).toBe('0');
+    clock.frame=4038;
+    expect(dom(<ScriptModelComparisonFilm/>).querySelector('[data-model-comparison-window] video')).toBeNull();
     clock.frame=4050;
     const moved=dom(<ScriptModelComparisonFilm/>);
     expect(style(moved,'[data-planning-document-collapse]').transform).toContain(`scale(${336/598})`);
     expect(style(moved,'[data-planning-highlight]').width).toBe('100%');
     expect(style(moved,'[data-model-comparison-window]').opacity).toBe('1');
+    expect(moved.querySelector('[data-model-comparison-window] video')?.getAttribute('src')).toBe('model-comparison/demo.mp4');
   });
 
   it('reveals the model names in order through the final frame',()=>{
-    for(const [frame,visible] of [[4070,1],[4105,2],[4140,3],[4184,3]] as const){
+    for(const [frame,visible] of [[4077,1],[4110,2],[4143,3],[4184,3]] as const){
       clock.frame=frame;
       const doc=dom(<ScriptModelComparisonFilm/>);
       const names=Array.from(doc.querySelectorAll<HTMLElement>('[data-comparison-model]'));
