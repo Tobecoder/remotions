@@ -35,6 +35,8 @@ export {CardSpotlight} from './reference-opening/CardSpotlight';
 export type {CardSpotlightProps,SpotlightRect} from './reference-opening/CardSpotlight';
 export {ProgressRow} from './reference-opening/ProgressRow';
 export type {ProgressRowProps} from './reference-opening/ProgressRow';
+export {UsageMeter} from './reference-opening/UsageMeter';
+export type {UsageMeterProps,UsageIndicator} from './reference-opening/UsageMeter';
 export {DocumentWindow} from './reference-opening/DocumentWindow';
 export type {DocumentWindowProps} from './reference-opening/DocumentWindow';
 export {HighlightBox} from './reference-opening/HighlightBox';

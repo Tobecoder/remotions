@@ -1,12 +1,11 @@
 [
-  {"id":"01-Opening","endFrame":300},
-  {"id":"02-Chapter-Overview","endFrame":600},
-  {"id":"03-First-Point","endFrame":750},
-  {"id":"04-Second-Point","endFrame":1575},
-  {"id":"05-Preparation","endFrame":1740},
-  {"id":"06-Script","endFrame":2880},
-  {"id":"07-Material-Notes","endFrame":3870},
-  {"id":"08-Planning-Cards","endFrame":4020},
-  {"id":"09-Model-Comparison","endFrame":4185},
-  {"id":"10-Skipped-Prompts","endFrame":4590}
+  {"id":"01-Opening-Principle","endFrame":750},
+  {"id":"02-Principles-Preparation","endFrame":1740},
+  {"id":"03-Script-Chapter","endFrame":2880},
+  {"id":"04-Material-Notes","endFrame":3870},
+  {"id":"05-Planning-Pitfalls","endFrame":4785},
+  {"id":"06-Planning-Conclusion","endFrame":5400},
+  {"id":"07-Material-Collection","endFrame":6090},
+  {"id":"08-Material-Quality","endFrame":6706},
+  {"id":"09-Green-Screen","endFrame":7333}
 ]

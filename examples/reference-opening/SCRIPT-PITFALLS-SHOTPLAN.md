@@ -12,4 +12,4 @@
 
 使用 `CardEntrance`、`ContentCollapse` 和 `HighlightBox` 编排。两张卡内容与时序留在案例中，右侧演示用代码重建。镜头衔接保留 139.5 秒之前的原有组合，出场时短暂保留前一镜末帧。原片按钮、进度条与悬浮缩略图属于播放器界面。
 
-在 Studio 的 `10-Skipped-Prompts` 内可独立查看这 13.5 秒，也可用 `--segment 10-Skipped-Prompts` 导出。
+这 13.5 秒镜头已与分段文档、模型对照和原则要求一起并入 Studio 的 `05-Planning-Pitfalls`（129–159.5 秒、30.5 秒），用 `--segment 05-Planning-Pitfalls` 导出。

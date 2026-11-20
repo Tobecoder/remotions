@@ -9,7 +9,7 @@ const local=(path:string)=>fileURLToPath(new URL(path,repository));
 
 describe('complete example registry',()=>{
   it('links a real material to its original composition, copy settings and usage guide',()=>{
-    expect(materialExamples).toHaveLength(8);
+    expect(materialExamples).toHaveLength(10);
     expect(new Set(materialExamples.map(example=>example.id)).size).toBe(materialExamples.length);
     for(const example of materialExamples){
       expect(example.materialIds.length).toBeGreaterThan(0);
@@ -32,10 +32,10 @@ describe('complete example registry',()=>{
     }
     expect(getMaterialExamples('progress-row').map(example=>example.id)).toEqual(['progress-row-comparison']);
     expect(getMaterialExamples('card-spotlight').map(example=>example.id)).toEqual(['card-spotlight-return']);
-    expect(getMaterialExamples('content-collapse').map(example=>example.id)).toEqual(['section-collapse','scene-thumbnail','preparation-cards']);
+    expect(getMaterialExamples('content-collapse').map(example=>example.id)).toEqual(['section-collapse','scene-thumbnail','preparation-cards','three-step-flow']);
     expect(getMaterialExamples('branching-paths').map(example=>example.id)).toEqual(['section-collapse']);
     expect(getMaterialExamples('chapter-heading').map(example=>example.id)).toEqual(['scene-thumbnail']);
-    expect(getMaterialExamples('card-entrance').map(example=>example.id)).toEqual(['document-focus-gallery','preparation-cards']);
+    expect(getMaterialExamples('card-entrance').map(example=>example.id)).toEqual(['document-focus-gallery','preparation-cards','three-step-flow']);
     expect(getMaterialExamples('focus-layer').map(example=>example.id)).toEqual(['document-focus-gallery']);
     expect(getMaterialExamples('agent-pipeline').map(example=>example.id)).toEqual(['preparation-cards']);
     expect(getMaterialExamples('typewriter-comparison').map(example=>example.id)).toEqual(['writing-comparison']);

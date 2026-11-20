@@ -1,0 +1,14 @@
+{
+ "id":"three-step-flow",
+ "materialIds":["card-entrance","content-collapse"],
+ "name":"三步流程与角落摘要",
+ "description":"三张内容卡依次浮入，虚线串起步骤，说明与结论出现后，整排缩到左上角继续播放。",
+ "useCases":["三步操作讲解","图片到动画的制作流程","结果对照后转入详细演示"],
+ "replaceable":["三张卡片的图片或动态内容","步骤标签","标题、说明、结论与角落摘要"],
+ "preserve":["三列横向布局与编号","先步骤一、步骤二、解释，再步骤三和结论","卡片、标签与连线一起收拢到左上角","收拢时卡内动态内容保持连续"],
+ "reviewStatus":"pending",
+ "composition":{"id":"Example-Three-Step-Flow","width":1280,"height":720,"fps":30,"durationInFrames":480,"posterFrame":335},
+ "source":{"entry":"examples/component-examples/three-step-flow/index.tsx","component":"examples/component-examples/three-step-flow/Example.tsx","exportName":"ThreeStepFlowExample","implementation":"examples/reference-opening/compositions/ThreeStepFlow.tsx","guide":"examples/component-examples/three-step-flow/README.md"},
+ "preview":{"video":"/examples/three-step-flow.mp4","poster":"/examples/three-step-flow.jpg","guide":"/examples/three-step-flow.md"},
+ "defaultProps":{"copy":{"eyebrow":"从一张图片到可复用的动画","title":"三步做出透明底小动画"}}
+}

@@ -67,7 +67,7 @@ describe('full examples associated with a standalone material',()=>{
     const {container,rerender}=render(<MaterialExamples materialId="content-collapse"/>);
     for(const materialId of ['content-collapse','chapter-heading'] as const){
       rerender(<MaterialExamples materialId={materialId}/>);
-      expect(container.querySelectorAll('[data-material-example]')).toHaveLength(materialId==='content-collapse'?3:1);
+      expect(container.querySelectorAll('[data-material-example]')).toHaveLength(materialId==='content-collapse'?4:1);
       const toggle=screen.getByRole('button',{name:'查看完整范例 · 章节缩略卡'});
       fireEvent.click(toggle);
       const panel=screen.getByRole('region',{name:'章节缩略卡完整范例'});

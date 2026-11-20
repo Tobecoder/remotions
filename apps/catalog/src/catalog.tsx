@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'card-entrance' | 'focus-layer' | 'tethered-motion' | 'rising-curve' | 'constraint-release' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'document-window' | 'highlight-box' | 'collapsing-title';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'card-entrance' | 'focus-layer' | 'tethered-motion' | 'rising-curve' | 'constraint-release' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'usage-meter' | 'document-window' | 'highlight-box' | 'collapsing-title';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -16,6 +16,12 @@ export const categories: CatalogCategory[] = [
 ];
 
 export const catalog: CatalogItem[] = [
+  {id:'usage-meter',category:'charts',name:'计数与分格电量',component:'UsageMeter',description:'数值、分格指示条和中间插图独立控制，可做用量或资源消耗示意',usage:'用量计数 · 资源消耗',durationInFrames:180,posterFrame:100,code:`import {UsageMeter} from '@remotions/animations';
+
+<UsageMeter x={145} y={135} time={frame / fps} value={Math.round(progress * 100000)} label="用量"
+  indicators={[{id:'remaining',x:275,y:80,segments:5,progress,color:'#3b9f79'}]}>
+  <YourArtwork />
+</UsageMeter>`},
   {id:'document-window',category:'layouts',name:'文档窗口',component:'DocumentWindow',description:'文档独立入场、滚动与停留，内容和进度由你提供',usage:'文档展示 · 教程演示',durationInFrames:180,posterFrame:105,code:`import {DocumentWindow} from '@remotions/animations';
 
 <DocumentWindow title="操作指南" scrollProgress={progress} scrollDistance={240}>

@@ -1,27 +1,34 @@
-# 原片开头到 2:33 · Remotion 分段预览
+# 原片开头到 4:04.433 · Remotion 分段预览
 
-[打开 Studio](http://localhost:3004/01-Opening)。每段在自己的时间轴上从第 0 秒开始，原片区间用来定位对应画面。分段沿用相同的成片实现和切点。
+[打开 Studio](http://localhost:3004/01-Opening-Principle)。每段从自己的第 0 秒开始。每段至少 20 秒，超过 20 秒后在完整的讲解或章节节点结束；相邻短镜头合并，保留原有画面和节奏，不用停帧或重复画面凑时长。
 
-| 分段 | 对应原片区间 | 时长 |
-| --- | --- | --- |
-| [01 片头与分层](http://localhost:3004/01-Opening) | 0:00–0:10 | 10 秒 |
-| [02 章节总览](http://localhost:3004/02-Chapter-Overview) | 0:10–0:20 | 10 秒 |
-| [03 第一条原则](http://localhost:3004/03-First-Point) | 0:20–0:25 | 5 秒 |
-| [04 第二条原则](http://localhost:3004/04-Second-Point) | 0:25–0:52.5 | 27.5 秒 |
-| [05 素材准备](http://localhost:3004/05-Preparation) | 0:52.5–0:58 | 5.5 秒 |
-| [06 脚本章节](http://localhost:3004/06-Script) | 0:58–1:36 | 38 秒 |
-| [07 素材备注](http://localhost:3004/07-Material-Notes) | 1:36–2:09 | 33 秒 |
-| [08 分段规划文档](http://localhost:3004/08-Planning-Cards) | 2:09–2:14 | 5 秒 |
-| [09 模型对照](http://localhost:3004/09-Model-Comparison) | 2:14–2:19.5 | 5.5 秒 |
-| [10 提示词被略过](http://localhost:3004/10-Skipped-Prompts) | 2:19.5–2:33 | 13.5 秒 |
+| 分段 | 对应原片区间 | 时长 | 结束节点 |
+| --- | --- | --- | --- |
+| [01 片头与第一条原则](http://localhost:3004/01-Opening-Principle) | 0:00–0:25 | 25 秒 | 第一条原则收束 |
+| [02 第二条原则与素材准备](http://localhost:3004/02-Principles-Preparation) | 0:25–0:58 | 33 秒 | 准备完成，进入脚本章节 |
+| [03 脚本章节](http://localhost:3004/03-Script-Chapter) | 0:58–1:36 | 38 秒 | 脚本与画面说明完成 |
+| [04 素材备注](http://localhost:3004/04-Material-Notes) | 1:36–2:09 | 33 秒 | 第一问收束、转入第二问 |
+| [05 分段文档、踩坑与原则要求](http://localhost:3004/05-Planning-Pitfalls) | 2:09–2:39.5 | 30.5 秒 | 原则要求收成第二条摘要 |
+| [06 是否逐段规划与章节结尾](http://localhost:3004/06-Planning-Conclusion) | 2:39.5–3:00 | 20.5 秒 | 结束控制效果的提问，提示后面的制作章节 |
+| [07 素材收集与技术可行性](http://localhost:3004/07-Material-Collection) | 3:00–3:23 | 23 秒 | MCP / Computer Use 接入，技术可行结论 |
+| [08 素材整理边界与旧视频玩偶](http://127.0.0.1:3004/08-Material-Quality) | 3:23–3:43.533 | 20.533 秒 | “这些是老演员了”完整结束 |
+| [09 常用素材与透明底动画](http://127.0.0.1:3004/09-Green-Screen) | 3:43.533–4:04.433 | 20.9 秒 | Agent 处理的透明底演示结束，下一方法进入前 |
 
 单段导出示例：
 
 ```powershell
-node examples/reference-opening/render.mjs --segment 10-Skipped-Prompts
+node examples/reference-opening/render.mjs --segment 09-Green-Screen --video-only
 ```
 
-用 `--segments` 批量导出十段，输出到 `.verification/reference-opening/segments/`。默认同时对照每段首帧、中间帧、末帧与原时间线。加 `--stills` 只核对图片，加 `--video-only` 只导出视频。需要整片时，可用原有 `--script-pitfalls --video-only` 导出 153 秒版本。
+用 `--segments` 批量导出以上九段，输出到 `.verification/reference-opening/segments/`。默认逐段对照首帧、中间帧、末帧与累计时间线对应帧；加 `--stills` 只核对图片，加 `--video-only` 只导出视频。此前 11 个短段的切点已合并，Studio 不再逐条显示；历史导出文件保留。累计时间线为 `render-root.tsx` 的 `Reference-Green-Screen`；`--material-collection --video-only` 仍导出 203 秒版本，其他较短整片入口保留。当前严格逐像素对照仍有字体边缘渲染差异，详见验证记录。
+
+新增镜头见[原则性的要求](SCRIPT-PRINCIPLES-SHOTPLAN.md)、[是否逐段规划与章节结尾](SCRIPT-CLOSING-SHOTPLAN.md)和[素材收集与技术可行性](MATERIAL-COLLECTION-SHOTPLAN.md)。
+
+第 08 段见[素材整理的边界与旧视频玩偶](MATERIAL-QUALITY-SHOTPLAN.md)，[逐帧对照](http://127.0.0.1:3006/continuation-review/)支持每次 1 帧及慢放。原片与当前导出帧保存在 `.verification/reference-opening/continuation-review/`，新组件的完整范例见 `examples/component-examples/usage-meter/`。预览仍待用户确认。
+
+第 09 段见[常用素材与透明底动画三步流程](GREEN-SCREEN-SHOTPLAN.md)，[逐帧对照](http://127.0.0.1:3006/green-screen-review/)支持每次 1 帧及慢放；[三步流程完整范例](../component-examples/three-step-flow/README.md) 可替换三张内容卡、步骤、解释与角落摘要，原片和范例共用实现。预览仍待用户确认。
+
+第 07 段的[原片逐帧对照](http://localhost:3005/)支持前后 1 帧、10 帧与慢放；[当前 23 秒视频](http://localhost:3005/current.mp4)同步更新。对照文件位于 `.verification/reference-opening/frame-review/`，本地服务关闭后可从该目录重新启动静态服务。2026-11-19 已修正文件夹遮挡、人物姿态和字幕切点；仍待视觉确认，具体差异见分镜说明。
 
 右侧的[玩偶短片](http://localhost:3004/Model-Comparison-Clip) 单独放在 Studio 的 Media 文件夹，仍可用 `--model-clip` 更新源文件。成片镜头说明见[片头](SHOTPLAN.md)、[章节总览](CONTINUATION-SHOTPLAN.md)、[素材准备](PREPARATION-SHOTPLAN.md)、[脚本章节](SCRIPT-SHOTPLAN.md)、[素材备注](SCRIPT-NOTES-SHOTPLAN.md)、[分段规划文档](SCRIPT-PLANNING-SHOTPLAN.md)、[模型对照](MODEL-COMPARISON-SHOTPLAN.md)和[提示词被略过](SCRIPT-PITFALLS-SHOTPLAN.md)。
 
@@ -47,7 +54,7 @@ node examples/reference-opening/render.mjs --segment 10-Skipped-Prompts
 
 ## 验证边界
 
-`render.mjs` 生成包含转场的 18 个截图检查点（含一次倒序跳帧重渲染），检查输出尺寸、非空画面及逐帧确定性；导出后使用 ffprobe 读取全部 300 帧并确认 10 秒。报告保存在 `.verification/reference-opening/report.json`。
+`render.mjs --segments` 会逐段核对首帧、中间帧、末帧，与当前整片的对应帧严格比较，并检查 MP4 的尺寸、时长、帧数与渲染日志。批量报告为 `.verification/reference-opening/segments/report.json`，单段报告为 `report-<分段ID>.json`。本次素材段对应 `report-07-Material-Collection.json`，此前六段导出及报告保留；`--material-collection --stills` 包含新段转场、文件夹、三窗口锁定与解锁的关键帧。旧整片入口仍使用各自原有检查点和报告。
 
 截图检查和机械验证分别记录：它们不等于逐像素一致，也不代替你对还原效果的验收。面板内部的上期视频目前用截图序列表示，未获取其完整原视频或原工程；中间图层的内容为可替换的代码绘制示例。
 

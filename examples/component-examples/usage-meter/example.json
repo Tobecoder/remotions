@@ -1,0 +1,14 @@
+{
+  "id":"usage-meter-comparison",
+  "materialIds":["usage-meter"],
+  "name":"用量与电量切换",
+  "description":"各块错峰亮暗闪动，计数先快后慢，红色五格向下退出，绿色单格从上方落下。",
+  "useCases":["资源消耗示意","两阶段用量对照"],
+  "replaceable":["数值标签","快慢阶段的终值","中间插图或角色"],
+  "preserve":["左上计数、中间插图、右侧电量的布局","各块错峰亮暗闪动","计数连续且先快后慢","红条向下退出、绿条从上方落下的先后重叠"],
+  "reviewStatus":"pending",
+  "composition":{"id":"Example-UsageMeter-Comparison","width":1280,"height":720,"fps":30,"durationInFrames":195,"posterFrame":105},
+  "source":{"entry":"examples/component-examples/usage-meter/index.tsx","component":"examples/component-examples/usage-meter/Example.tsx","exportName":"UsageMeterExample","implementation":"examples/reference-opening/compositions/UsageComparison.tsx","guide":"examples/component-examples/usage-meter/README.md"},
+  "preview":{"video":"/examples/usage-meter-comparison.mp4","poster":"/examples/usage-meter-comparison.jpg","guide":"/examples/usage-meter-comparison.md"},
+  "defaultProps":{"label":"用量","peakValue":75600,"finalValue":100000}
+}

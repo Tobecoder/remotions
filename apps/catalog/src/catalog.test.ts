@@ -3,9 +3,9 @@ import {catalog, categories} from './catalog';
 import {draftMaterials} from './draftReview';
 
 describe('curated catalog', () => {
-  it('registers the twenty-three standalone materials under their matching categories', () => {
-    expect(catalog).toHaveLength(23);
-    expect(new Set(catalog.map(item=>item.id)).size).toBe(23);
+  it('registers the twenty-four standalone materials under their matching categories', () => {
+    expect(catalog).toHaveLength(24);
+    expect(new Set(catalog.map(item=>item.id)).size).toBe(24);
     expect(catalog.filter(item=>item.category==='layouts').map(item=>item.component).sort()).toEqual(['PerspectivePanel','FanCardDeck','ContentCollapse','CardSpotlight','DocumentWindow','CardEntrance','FocusLayer'].sort());
     expect(catalog.some(item=>['ScriptDocumentGuide','ProgressRace','DocumentFocusGallery','SectionCollapse','SceneThumbnail','PreparationCards'].includes(item.component))).toBe(false);
     expect(catalog.find(item=>item.component==='ExplodedLayers')?.category).toBe('storytelling');

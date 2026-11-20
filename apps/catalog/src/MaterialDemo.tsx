@@ -3,7 +3,7 @@ import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, Chapter
 import {pathCardLayout} from '../../../packages/animations/src/reference-opening/continuation-motion';
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
-import {AgentPipeline,TypewriterComparison,CardSpotlight,ProgressRow,DocumentWindow,HighlightBox,CollapsingTitle} from '../../../packages/animations/src';
+import {AgentPipeline,TypewriterComparison,CardSpotlight,ProgressRow,UsageMeter,DocumentWindow,HighlightBox,CollapsingTitle} from '../../../packages/animations/src';
 import {PreparationArtwork} from '../../../packages/animations/src/reference-opening/PreparationArtwork';
 import {PanelScroll,LiveWaveform,LiveTimeline,LiveCaptionLines} from '../../../packages/animations/src/reference-opening/LivePanelContent';
 import {NeuronPreview} from '../../../packages/animations/src/reference-opening/NeuronPreview';
@@ -67,6 +67,7 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
     case 'tethered-motion':content=<TetheredMotion time={time} spriteSrc="/characters/runner-v2.png"/>;break;
     case 'rising-curve':content=<RisingCurve progress={during(time,.2,1.8)}/>;break;
     case 'card-entrance':content=<CardEntranceDemo time={time}/>;break;
+    case 'usage-meter':content=<UsageMeter x={220} y={120} time={time} value={Math.round(during(time,0,5)*100000)} label="用量" color="#3b9f79" indicators={[{id:'level',x:275,y:80,progress:during(time,0,5),color:'#3b9f79'}]}><div style={{position:'absolute',left:160,top:80,width:80,height:80,borderRadius:16,background:'#dcebe6',border:'2px solid #6da68f',display:'grid',placeItems:'center',fontSize:30,color:'#3b9f79'}}>↗</div></UsageMeter>;break;
     case 'focus-layer':content=<FocusLayer progress={during(time,.6,1.4)} rect={{x:105,y:168,width:600,height:183}} foreground={<GalleryQuote/>}/>;break;
     case 'constraint-release':content=<><div style={{position:'absolute',left:49,top:116,fontSize:36,fontWeight:900,color:'#272a30'}}>减少限制，释放画面</div><ConstraintRelease time={time} content={<GalleryDocument index={0}/>}/></>;break;
     case 'content-collapse':content=<ContentCollapse progress={during(time,1.65,2.4)} to={{x:60,y:45,scale:.3}}><div style={{position:'absolute',left:160,top:100,width:480,height:250,borderRadius:12,overflow:'hidden',boxShadow:'0 8px 20px #30343e18'}}><DemoDocument title="任意内容，收拢到指定位置"/></div></ContentCollapse>;break;
