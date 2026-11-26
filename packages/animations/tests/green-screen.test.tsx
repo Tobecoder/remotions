@@ -23,7 +23,7 @@ describe('green-screen workflow continuation',()=>{
    clock.frame=frame;expect(renderToStaticMarkup(<GreenScreenFilm/>)).toBe(renderToStaticMarkup(<MaterialQualityFilm/>));
   }
   expect(segments.slice(0,8).map(s=>s.endFrame)).toEqual([750,1740,2880,3870,4785,5400,6090,6706]);
-  expect(segments.at(-1)).toEqual({id:'09-Green-Screen',endFrame:7333});
+  expect(segments.find(s=>s.id==='09-Green-Screen')).toEqual({id:'09-Green-Screen',endFrame:7333});
   expect(7333-6706).toBeGreaterThanOrEqual(600);
  });
  it('continues the old inset clock while crossfading and staggers five stock cards',()=>{

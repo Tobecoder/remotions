@@ -1,12 +1,12 @@
 import {Composition,Sequence} from 'remotion';
-import {GreenScreenFilm} from './GreenScreenScene';
+import {EditorWalkthroughFilm} from './EditorWalkthroughScene';
 import segments from './segments.json';
 
 type SegmentProps={startFrame:number;endFrame:number};
 
 const ReferenceSegment=({startFrame,endFrame}:SegmentProps)=>(
   <Sequence layout="none" showInTimeline={false} trimBefore={startFrame} durationInFrames={endFrame-startFrame}>
-    <GreenScreenFilm/>
+    <EditorWalkthroughFilm/>
   </Sequence>
 );
 

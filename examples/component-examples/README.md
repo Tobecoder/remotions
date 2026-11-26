@@ -14,8 +14,9 @@
 | `TypewriterComparison` · 打字对照 | 自己写与 AI 写 | [使用说明](./writing-comparison/README.md) · [入口](./writing-comparison/index.tsx) | 待用户确认 |
 | `UsageMeter` · 计数与分格电量 | 用量与电量切换 | [使用说明](./usage-meter/README.md) · [入口](./usage-meter/index.tsx) | 待用户确认 |
 | `CardEntrance` / `ContentCollapse` · 卡片入场、内容收拢 | 三步流程与角落摘要 | [使用说明](./three-step-flow/README.md) · [入口](./three-step-flow/index.tsx) | 待用户确认 |
+| `CardEntrance` · 卡片入场 | 方法切换与操作步骤 | [使用说明](./tutorial-walkthrough/README.md) · [入口](./tutorial-walkthrough/index.tsx) | 待用户确认 |
 
-当前十份完整范例均具备独立入口、完整预览和替换说明；新范例的视觉验收状态仍以上表为准。
+当前十一份完整范例均具备独立入口、完整预览和替换说明；新范例的视觉验收状态仍以上表为准。
 
 本站完整范例预览产物位于 `apps/catalog/public/examples/`，由对应案例的导出脚本生成。素材站仅引用范例元数据和预览文件，不另写案例动画，也不将固定组合重新导出为通用组件。
 

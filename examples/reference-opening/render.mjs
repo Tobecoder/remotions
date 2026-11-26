@@ -48,7 +48,7 @@ const renderVideo=async(composition,video)=>{
 const renderSegments=async(compositions)=>{
   const segmentOut=path.join(out,'segments');
   await mkdir(segmentOut,{recursive:true});
-  const original=compositions.find(item=>item.id==='Reference-Green-Screen');
+  const original=compositions.find(item=>item.id==='Reference-Editor-Walkthrough');
   assert(original);
   const report=[];
   const baselinePath=path.join(segmentOut,'source-check.png');

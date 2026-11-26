@@ -12,6 +12,12 @@ const popScale=(frame:number)=>{
  for(let i=1;i<points.length;i++)if(frame<=points[i][0])return points[i-1][1]+(points[i][1]-points[i-1][1])*(frame-points[i-1][0])/(points[i][0]-points[i-1][0]);
  return 1;
 };
+/** Same flow and clip clocks across chapter cuts; only this case's inset media vary. */
+export const GreenScreenFlow=({time,endFrame=7333,mediaDir='green-screen'}:{time:number;endFrame?:number;mediaDir?:string})=><ThreeStepFlow time={time} startAt={6787/30} steps={[
+ {id:'image',label:'AI 生成绿幕图片',content:still('green-still')},
+ {id:'motion',label:'视频模型生成动画',content:<Sequence from={6918} durationInFrames={endFrame-6918} layout="none"><OffthreadVideo muted src={staticFile(`${mediaDir}/green-motion.mp4`)} style={imageStyle}/></Sequence>},
+ {id:'alpha',label:'抠成透明底',content:<Sequence from={7077} durationInFrames={endFrame-7077} layout="none"><OffthreadVideo muted src={staticFile(`${mediaDir}/transparent-motion.mp4`)} style={imageStyle}/></Sequence>},
+]}/>;
 export const GreenScreenMaterials=({time}:{time:number})=>{
  const frame=time*30;
  return <div data-green-screen-materials style={{position:'absolute',inset:0}}>
@@ -26,11 +32,7 @@ export const GreenScreenMaterials=({time}:{time:number})=>{
     </CardEntrance>;
    })}
   </div>}
-  {frame>=6787&&<ThreeStepFlow time={time} startAt={6787/30} steps={[
-   {id:'image',label:'AI 生成绿幕图片',content:still('green-still')},
-   {id:'motion',label:'视频模型生成动画',content:<Sequence from={6918} durationInFrames={415} layout="none"><OffthreadVideo muted src={staticFile('green-screen/green-motion.mp4')} style={imageStyle}/></Sequence>},
-   {id:'alpha',label:'抠成透明底',content:<Sequence from={7077} durationInFrames={256} layout="none"><OffthreadVideo muted src={staticFile('green-screen/transparent-motion.mp4')} style={imageStyle}/></Sequence>},
-  ]}/>}
+  {frame>=6787&&<GreenScreenFlow time={time}/>}
   {frame>=7260&&<div data-agent-alpha style={{position:'absolute',inset:0}}>
    <CardEntrance progress={1-(1-clamp((frame-7260+1)/8))**3} x={46} y={148} width={200} height={58} offset={{x:0,y:6}} borderRadius={9} background="#ffffffd9" boxShadow="0 3px 6px #30343e11" style={{border:'1.2px solid #bf5441',boxSizing:'border-box',padding:'10px 11px',color:'#292b34'}}>
     <div style={{fontSize:15,fontWeight:800}}><span style={{color:'#bd513d',marginRight:5}}>A</span>丢给 Agent 处理</div><div style={{fontSize:10,color:'#929498',marginTop:4}}>一句话，导出带 Alpha 的视频</div>

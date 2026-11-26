@@ -1,4 +1,4 @@
-# 原片开头到 4:04.433 · Remotion 分段预览
+# 原片开头到 4:28.2 · Remotion 分段预览
 
 [打开 Studio](http://localhost:3004/01-Opening-Principle)。每段从自己的第 0 秒开始。每段至少 20 秒，超过 20 秒后在完整的讲解或章节节点结束；相邻短镜头合并，保留原有画面和节奏，不用停帧或重复画面凑时长。
 
@@ -13,20 +13,23 @@
 | [07 素材收集与技术可行性](http://localhost:3004/07-Material-Collection) | 3:00–3:23 | 23 秒 | MCP / Computer Use 接入，技术可行结论 |
 | [08 素材整理边界与旧视频玩偶](http://127.0.0.1:3004/08-Material-Quality) | 3:23–3:43.533 | 20.533 秒 | “这些是老演员了”完整结束 |
 | [09 常用素材与透明底动画](http://127.0.0.1:3004/09-Green-Screen) | 3:43.533–4:04.433 | 20.9 秒 | Agent 处理的透明底演示结束，下一方法进入前 |
+| [10 剪辑软件五步处理](http://127.0.0.1:3004/10-Editor-Walkthrough) | 4:04.433–4:28.2 | 23.767 秒 | 透明底素材导出说明结束，下一提问前 |
 
 单段导出示例：
 
 ```powershell
-node examples/reference-opening/render.mjs --segment 09-Green-Screen --video-only
+node examples/reference-opening/render.mjs --segment 10-Editor-Walkthrough --video-only
 ```
 
-用 `--segments` 批量导出以上九段，输出到 `.verification/reference-opening/segments/`。默认逐段对照首帧、中间帧、末帧与累计时间线对应帧；加 `--stills` 只核对图片，加 `--video-only` 只导出视频。此前 11 个短段的切点已合并，Studio 不再逐条显示；历史导出文件保留。累计时间线为 `render-root.tsx` 的 `Reference-Green-Screen`；`--material-collection --video-only` 仍导出 203 秒版本，其他较短整片入口保留。当前严格逐像素对照仍有字体边缘渲染差异，详见验证记录。
+用 `--segments` 批量导出以上十段，输出到 `.verification/reference-opening/segments/`。默认逐段对照首帧、中间帧、末帧与累计时间线对应帧；加 `--stills` 只核对图片，加 `--video-only` 只导出视频。此前 11 个短段的切点已合并，Studio 不再逐条显示；历史导出文件保留。累计时间线为 `render-root.tsx` 的 `Reference-Editor-Walkthrough`；`--material-collection --video-only` 仍导出 203 秒版本，其他较短整片入口保留。当前严格逐像素对照仍有文字边缘与阴影像素差异，详见验证记录。
 
 新增镜头见[原则性的要求](SCRIPT-PRINCIPLES-SHOTPLAN.md)、[是否逐段规划与章节结尾](SCRIPT-CLOSING-SHOTPLAN.md)和[素材收集与技术可行性](MATERIAL-COLLECTION-SHOTPLAN.md)。
 
 第 08 段见[素材整理的边界与旧视频玩偶](MATERIAL-QUALITY-SHOTPLAN.md)，[逐帧对照](http://127.0.0.1:3006/continuation-review/)支持每次 1 帧及慢放。原片与当前导出帧保存在 `.verification/reference-opening/continuation-review/`，新组件的完整范例见 `examples/component-examples/usage-meter/`。预览仍待用户确认。
 
 第 09 段见[常用素材与透明底动画三步流程](GREEN-SCREEN-SHOTPLAN.md)，[逐帧对照](http://127.0.0.1:3006/green-screen-review/)支持每次 1 帧及慢放；[三步流程完整范例](../component-examples/three-step-flow/README.md) 可替换三张内容卡、步骤、解释与角落摘要，原片和范例共用实现。预览仍待用户确认。
+
+第 10 段见[剪辑软件五步处理](EDITOR-WALKTHROUGH-SHOTPLAN.md)，[逐帧对照](http://127.0.0.1:3006/editor-review/)覆盖窗口交接和五步提示。[方法切换与操作步骤完整范例](../component-examples/tutorial-walkthrough/README.md) 可替换方法卡、录屏内容、步骤文字及切换时刻；视觉状态待用户确认。
 
 第 07 段的[原片逐帧对照](http://localhost:3005/)支持前后 1 帧、10 帧与慢放；[当前 23 秒视频](http://localhost:3005/current.mp4)同步更新。对照文件位于 `.verification/reference-opening/frame-review/`，本地服务关闭后可从该目录重新启动静态服务。2026-11-19 已修正文件夹遮挡、人物姿态和字幕切点；仍待视觉确认，具体差异见分镜说明。
 

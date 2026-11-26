@@ -1,0 +1,14 @@
+{
+ "id":"tutorial-walkthrough",
+ "materialIds":["card-entrance"],
+ "name":"方法切换与操作步骤",
+ "description":"上一做法淡化，新方法卡与操作窗口进入；录屏持续播放，窗口下的编号步骤随讲解更新。",
+ "useCases":["软件操作教程","两种方法的交接","连续录屏配分步说明"],
+ "replaceable":["前后两种方法的名称与描述","操作窗口的录屏或动态内容","步骤文案和各自的切换时刻"],
+ "preserve":["左侧方法卡与右侧操作窗口的布局","前一做法退为背景，新做法突出显示","切换步骤时同一操作窗口保持连续播放","编号步骤固定在窗口下方"],
+ "reviewStatus":"pending",
+ "composition":{"id":"Example-Tutorial-Walkthrough","width":1280,"height":720,"fps":30,"durationInFrames":720,"posterFrame":440},
+ "source":{"entry":"examples/component-examples/tutorial-walkthrough/index.tsx","component":"examples/component-examples/tutorial-walkthrough/Example.tsx","exportName":"TutorialWalkthroughExample","implementation":"examples/reference-opening/compositions/TutorialWalkthrough.tsx","guide":"examples/component-examples/tutorial-walkthrough/README.md"},
+ "preview":{"video":"/examples/tutorial-walkthrough.mp4","poster":"/examples/tutorial-walkthrough.jpg","guide":"/examples/tutorial-walkthrough.md"},
+ "defaultProps":{}
+}
