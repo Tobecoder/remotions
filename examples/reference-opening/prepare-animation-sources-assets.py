@@ -19,6 +19,12 @@ for name,start,end,opaque,last,rect in clips:
  writer.release();subprocess.run(['ffmpeg','-hide_banner','-loglevel','error','-y','-i',str(temp),'-an','-c:v','libx264','-preset','fast','-crf','18',str(out/f'{name}.mp4')],check=True);temp.unlink()
 cap.release();print('Prepared four isolated clips and one platform icon.')
 
+# Freeze the three gallery insets for the next chapter's transition.
+for i in range(3):
+ name=f'gallery-{i}'
+ subprocess.run(['ffmpeg','-hide_banner','-loglevel','error','-y','-sseof','-0.04',
+  '-i',str(out/f'{name}.mp4'),'-vf','reverse','-frames:v','1','-update','1',str(out/f'{name}-last.png')],check=True)
+
 # Hold only each existing inset's last decoded frame; layout and copy remain shared code.
 for name in ['editor-screen','green-motion','transparent-motion']:
  inset=cv2.VideoCapture(str(episode/'public/editor-walkthrough'/f'{name}.mp4'))

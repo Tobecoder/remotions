@@ -21,7 +21,7 @@ npm run dev
 
 此前的 24 项清单尚未完成逐项动作核实，不能作为已确认的复刻清单。见[核实更正记录](docs/reference-effects/README.md)。
 
-可看[参考片开头复原](examples/reference-opening/README.md)，原有各时长版本保留；最新连续时间线到 291.1 秒，停在动画素材来源与三张素材展示结束处。场景与素材库共用组件实现，原片观察及复原边界见该示例目录。
+最新连续时间线到 5:29.233，停在配音工具说明结束、字幕生成开始前。场景与素材库共用组件实现，原片观察及分段预览见[参考片开头复原](examples/reference-opening/README.md)。
 
 ## 检查
 

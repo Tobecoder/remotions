@@ -12,6 +12,21 @@ export const animationSourcesSubtitles:readonly [number,string][]=[
 ];
 const insetStyle={width:'100%',height:'100%',display:'block',objectFit:'cover' as const};
 const enterAt=(f:number,start:number,length=10)=>f<start?0:1-(1-clamp((f-start+1)/length))**3;
+export const AnimationSourcesGallery=({frame:f,holdLastFrame=false}:{frame:number;holdLastFrame?:boolean})=><div data-sources-gallery style={{position:'absolute',inset:0}}><div style={{position:'absolute',left:0,right:0,top:68,fontSize:24,fontWeight:800,textAlign:'center',color:'#292b34',opacity:during(f,8549,8558)}}>薅点小积分，<span style={{color:'#b84a32'}}>做点小素材</span></div>
+  {['Claude Code 炸 Codex','DeepSeek 砸 WorkBuddy','豆包打哈欠'].map((label,i)=>{
+    const start=[8553,8575,8597][i],p=enterAt(f,start),contentAt=[8557,8582,8618][i];
+    return <div key={i} data-sources-gallery-item={i}>
+      <CardEntrance progress={p} x={46+i*245} y={136} width={220} height={165} offset={{x:0,y:16}} borderRadius={12} style={{padding:3,boxSizing:'border-box'}}>
+        <div style={{width:'100%',height:'100%',opacity:enterAt(f,contentAt,5)}}>
+          {holdLastFrame
+            ? <Img src={staticFile('animation-sources/gallery-'+i+'-last.png')} style={insetStyle}/>
+            : <Sequence from={start} durationInFrames={8733-start} layout="none"><OffthreadVideo muted src={staticFile('animation-sources/gallery-'+i+'.mp4')} style={insetStyle}/></Sequence>}
+        </div>
+      </CardEntrance>
+      <div style={{position:'absolute',left:46+i*245,top:313+mix(16,0,p),width:220,fontSize:12,fontWeight:800,textAlign:'center',color:'#292b34',opacity:p,transform:'translateZ(0)'}}>{label}</div>
+    </div>;
+  })}
+</div>;
 const FlatToy=({time}:{time:number})=><svg viewBox="0 0 260 146" style={{width:'100%',height:'100%'}}><ellipse cx="130" cy="132" rx="37" ry="5" fill="#e1e2df"/><g fill="#727aeb"><rect x="90" y="20" width="80" height="84" rx="30"/><rect x="104" y="96" width="14" height="28" rx="4"/><rect x="142" y="96" width="14" height="28" rx="4"/><rect x="77" y={71+Math.sin(time*8)*8} width="23" height="9" rx="4"/><rect x="160" y={71-Math.sin(time*8)*8} width="23" height="9" rx="4"/></g><path d="M113 56L125 65 113 74M137 73H147" fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 const AnimationSources=({time}:{time:number})=>{
  const {width,height}=useVideoConfig(),f=Math.round(time*30),compareExit=(1-during(f,8240,8248))**2,creditsExit=(1-during(f,8549,8558))**2;
@@ -23,12 +38,7 @@ const AnimationSources=({time}:{time:number})=>{
    <CardEntrance data-sources-video progress={enterAt(f,8157)} x={417} y={179} width={276} height={176} offset={{x:0,y:20}} borderRadius={13}><div style={{position:'absolute',left:10,top:10,fontSize:9,fontWeight:800,letterSpacing:1,color:'#c45c40'}}>视频模型 · 流畅自然</div><div style={{position:'absolute',left:5,top:24,width:266,height:146}}><Sequence from={8157} durationInFrames={95} layout="none"><OffthreadVideo muted src={staticFile('animation-sources/comparison.mp4')} style={insetStyle}/></Sequence></div></CardEntrance>
   </div>}
   {f>=8241&&f<8558&&<div data-sources-credits style={{position:'absolute',inset:0,opacity:creditsExit}}><ResourceCredits time={time} startAt={8241/30} copy={{eyebrow:'其实更主要的是',title:'到处领平台的「鸡蛋」',platform:'千问',description:'之前薅得最开心',dailyLabel:'每天领',changedLabel:'现在没那么大方了'}} icon={<Img src={staticFile('animation-sources/platform.jpg')} style={insetStyle}/>}/></div>}
-  {f>=8549&&<div data-sources-gallery style={{position:'absolute',inset:0}}><div style={{position:'absolute',left:0,right:0,top:68,fontSize:24,fontWeight:800,textAlign:'center',color:'#292b34',opacity:during(f,8549,8558)}}>薅点小积分，<span style={{color:'#b84a32'}}>做点小素材</span></div>
-   {['Claude Code 炸 Codex','DeepSeek 砸 WorkBuddy','豆包打哈欠'].map((label,i)=>{
-    const start=[8553,8575,8597][i],p=enterAt(f,start),contentAt=[8557,8582,8618][i];
-    return <div key={i} data-sources-gallery-item={i}><CardEntrance progress={p} x={46+i*245} y={136} width={220} height={165} offset={{x:0,y:16}} borderRadius={12} style={{padding:3,boxSizing:'border-box'}}><div style={{width:'100%',height:'100%',opacity:enterAt(f,contentAt,5)}}><Sequence from={start} durationInFrames={8733-start} layout="none"><OffthreadVideo muted src={staticFile(`animation-sources/gallery-${i}.mp4`)} style={insetStyle}/></Sequence></div></CardEntrance><div style={{position:'absolute',left:46+i*245,top:313+mix(16,0,p),width:220,fontSize:12,fontWeight:800,textAlign:'center',color:'#292b34',opacity:p,transform:'translateZ(0)'}}>{label}</div></div>;
-   })}
-  </div>}
+  {f>=8549&&<AnimationSourcesGallery frame={f}/>}
  </div>;
 };
 export const AnimationSourcesFilm=()=>{

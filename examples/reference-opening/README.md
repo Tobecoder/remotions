@@ -1,4 +1,4 @@
-# 原片开头到 4:51.1 · Remotion 分段预览
+# 原片开头到 5:29.233 · Remotion 分段预览
 
 [打开 Studio](http://localhost:3004/01-Opening-Principle)。每段从自己的第 0 秒开始。每段至少 20 秒，超过 20 秒后在完整的讲解或章节节点结束；相邻短镜头合并，保留原有画面和节奏，不用停帧或重复画面凑时长。
 
@@ -14,16 +14,16 @@
 | [08 素材整理边界与旧视频玩偶](http://127.0.0.1:3004/08-Material-Quality) | 3:23–3:43.533 | 20.533 秒 | “这些是老演员了”完整结束 |
 | [09 常用素材与透明底动画](http://127.0.0.1:3004/09-Green-Screen) | 3:43.533–4:04.433 | 20.9 秒 | Agent 处理的透明底演示结束，下一方法进入前 |
 | [10 剪辑软件五步处理](http://127.0.0.1:3004/10-Editor-Walkthrough) | 4:04.433–4:28.2 | 23.767 秒 | 透明底素材导出说明结束，下一提问前 |
-
 | [11 动画素材来源](http://127.0.0.1:3004/11-Animation-Sources) | 4:28.2–4:51.1 | 22.9 秒 | 三张素材展示结束，下一旁白章节前 |
+| [12 旁白和 SRT · 配音工具](http://127.0.0.1:3004/12-Narration) | 4:51.1–5:29.233 | 38.133 秒 | 配音工具介绍结束，字幕生成开始前 |
 
 单段导出示例：
 
 ```powershell
-node examples/reference-opening/render.mjs --segment 11-Animation-Sources
+node examples/reference-opening/render.mjs --segment 12-Narration
 ```
 
-用 `--segments` 批量导出以上十一段，输出到 `.verification/reference-opening/segments/`。默认逐段对照首帧、中间帧、末帧与累计时间线对应帧；加 `--stills` 只核对图片，加 `--video-only` 只导出视频。此前 11 个短段的切点已合并，Studio 不再逐条显示；历史导出文件保留。累计时间线为 `render-root.tsx` 的 `Reference-Animation-Sources`；`--material-collection --video-only` 仍导出 203 秒版本，其他较短整片入口保留。当前严格逐像素对照仍有文字边缘与阴影像素差异，详见验证记录。
+用 `--segments` 批量导出以上十二段，输出到 `.verification/reference-opening/segments/`。默认逐段对照首帧、中间帧、末帧与累计时间线对应帧。加 `--stills` 只核对图片，加 `--video-only` 只导出视频。最新累计时间线是 `Reference-Narration`。原有整片入口仍可使用，例如 `--material-collection --video-only` 导出 203 秒版本。各段验证情况见验证记录。
 
 新增镜头见[原则性的要求](SCRIPT-PRINCIPLES-SHOTPLAN.md)、[是否逐段规划与章节结尾](SCRIPT-CLOSING-SHOTPLAN.md)和[素材收集与技术可行性](MATERIAL-COLLECTION-SHOTPLAN.md)。
 
@@ -70,3 +70,5 @@ node examples/reference-opening/render.mjs --segment 11-Animation-Sources
 背景使用独立的 `BlurredCollage`：纸纹静止、虚化拼贴向左下漂移并在 3–4.25 秒淡出。目录卡片与案例只替换图片内容，使用相同的漂移、模糊与退场参数；见「背景特效 → 虚化拼贴漂移」。
 
 第 11 段见[动画素材来源](ANIMATION-SOURCES-SHOTPLAN.md)，[逐帧慢放对照](http://127.0.0.1:3006/animation-sources-review/)。新增 `TokenBowl` 独立动作及[落篮收集完整范例](../component-examples/resource-credits/README.md)，原片与范例调用同一组合。10 / 2 积分是原片历史文案；预览待用户确认。
+
+第 12 段见[配音与语音合成](NARRATION-SHOTPLAN.md)及[逐帧慢放对照](http://127.0.0.1:3006/narration-review/)。配音提问、效果处理、Agent 和工具卡依照原片顺序进入，波形使用按帧绘制的示意。预览待用户确认。
