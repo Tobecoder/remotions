@@ -3,7 +3,7 @@ import {CardEntrance, ChapterHeading, PerspectivePanel} from '../../packages/ani
 import {during, mix} from '../../packages/animations/src/reference-opening/motion';
 import {AnimationSourcesFilm, AnimationSourcesGallery} from './AnimationSourcesScene';
 import {PaperBackground, ScreenContent, Subtitle, VoicePage} from './OpeningScene';
-import {NarrationAgent, NarrationTools, NarrationWaveform} from './compositions/NarrationTools';
+import {NarrationAgent, NarrationTools, NarrationWaveform, RecordingMicrophone} from './compositions/NarrationTools';
 
 const startFrame = 8733;
 const narrationSubtitles: ReadonlyArray<readonly [number, string]> = [
@@ -70,16 +70,11 @@ const Microphone = ({frame}: {frame: number}) => {
   const x = mix(400, 178, move);
   const fade = during(frame, 8786, 8804) * (1 - during(frame, 9862, 9876));
   const angle = microphoneWobbleAngles[frame - microphoneWobbleStart] ?? 0;
-  return <svg data-narration-microphone width={height * .5} height={height} viewBox="0 0 80 162" aria-label="麦克风"
+  return <RecordingMicrophone data-narration-microphone width={height * .5} height={height}
     style={{
       position: 'absolute', left: x - height / 4, top: 332 - height, opacity: fade, overflow: 'visible',
       transformOrigin: '50% 95.7%', transform: angle === 0 ? undefined : 'rotate(' + angle + 'deg)',
-    }}>
-    <rect x="15" width="50" height="94" rx="25" fill="#252934"/>
-    {[17, 29, 41, 53, 65, 77].map(y => <path key={y} d={'M21 ' + y + 'H59'} stroke="#424653" strokeWidth="3.3" strokeLinecap="round"/>)}
-    <path d="M3 61C3 101 17 120 40 120S77 101 77 61M40 120V153" fill="none" stroke="#3e4350" strokeWidth="6" strokeLinecap="round"/>
-    <ellipse cx="40" cy="155" rx="33.6" ry="6.7" fill="#3e4350"/>
-  </svg>;
+    }}/>;
 };
 
 const questions = [

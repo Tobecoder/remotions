@@ -16,11 +16,13 @@ import {GreenScreenFilm} from './GreenScreenScene';
 import {EditorWalkthroughFilm} from './EditorWalkthroughScene';
 import {AnimationSourcesFilm} from './AnimationSourcesScene';
 import {NarrationFilm} from './NarrationScene';
+import {SrtFilm} from './SrtScene';
 import {ReferenceSegments} from './ReferenceSegments';
 
 registerRoot(()=>(
   <>
     <ReferenceSegments/>
+    <Composition id="Reference-Srt-Sync" component={SrtFilm} width={1920} height={1080} fps={30} durationInFrames={10754}/>
     <Composition id="Reference-Narration" component={NarrationFilm} width={1920} height={1080} fps={30} durationInFrames={9877}/>
     <Composition id="Reference-Animation-Sources" component={AnimationSourcesFilm} width={1920} height={1080} fps={30} durationInFrames={8733}/>
     <Composition id="Reference-Editor-Walkthrough" component={EditorWalkthroughFilm} width={1920} height={1080} fps={30} durationInFrames={8046}/>

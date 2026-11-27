@@ -1,6 +1,14 @@
+import type {SVGProps} from 'react';
 import {CardEntrance} from '../../../packages/animations/src';
 import {clamp, during, mix} from '../../../packages/animations/src/reference-opening/motion';
 import {MaterialAgent} from './MaterialCollection';
+
+export const RecordingMicrophone = (props: SVGProps<SVGSVGElement>) => <svg {...props} viewBox="0 0 80 162" aria-label="麦克风">
+  <rect x="15" width="50" height="94" rx="25" fill="#252934"/>
+  {[17, 29, 41, 53, 65, 77].map(y => <path key={y} d={'M21 ' + y + 'H59'} stroke="#424653" strokeWidth="3.3" strokeLinecap="round"/>)}
+  <path d="M3 61C3 101 17 120 40 120S77 101 77 61M40 120V153" fill="none" stroke="#3e4350" strokeWidth="6" strokeLinecap="round"/>
+  <ellipse cx="40" cy="155" rx="33.6" ry="6.7" fill="#3e4350"/>
+</svg>;
 
 // The recording is silent. These strokes depict the original rhythm without sampling audio.
 export const NarrationWaveform = ({width, height, color, progress = 1, offset = 0, step = 3.6}: {

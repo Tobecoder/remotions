@@ -48,7 +48,7 @@ const renderVideo=async(composition,video)=>{
 const renderSegments=async(compositions)=>{
   const segmentOut=path.join(out,'segments');
   await mkdir(segmentOut,{recursive:true});
-  const original=compositions.find(item=>item.id==='Reference-Narration');
+  const original=compositions.find(item=>item.id==='Reference-Srt-Sync');
   assert(original);
   const report=[];
   const baselinePath=path.join(segmentOut,'source-check.png');
