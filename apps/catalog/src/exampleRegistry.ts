@@ -9,10 +9,11 @@ import writingComparison from '../../../examples/component-examples/writing-comp
 import usageComparison from '../../../examples/component-examples/usage-meter/example.json';
 import threeStepFlow from '../../../examples/component-examples/three-step-flow/example.json';
 import tutorialWalkthrough from '../../../examples/component-examples/tutorial-walkthrough/example.json';
+import resourceCredits from '../../../examples/component-examples/resource-credits/example.json';
 import type {MaterialId} from './catalog';
 
 export type MaterialExample=Omit<typeof progressComparison,'defaultProps'> & {defaultProps:Readonly<Record<string,unknown>>};
-export const materialExamples:readonly MaterialExample[]=[progressComparison,scriptDocument,cardSpotlight,documentFocus,sectionCollapse,sceneThumbnail,preparationCards,writingComparison,usageComparison,threeStepFlow,tutorialWalkthrough];
+export const materialExamples:readonly MaterialExample[]=[progressComparison,scriptDocument,cardSpotlight,documentFocus,sectionCollapse,sceneThumbnail,preparationCards,writingComparison,usageComparison,threeStepFlow,tutorialWalkthrough,resourceCredits];
 export const getMaterialExamples=(materialId:MaterialId)=>materialExamples.filter(example=>example.materialIds.includes(materialId));
 
 export const getExampleUsage=(example:MaterialExample)=>`import {Composition} from 'remotion';

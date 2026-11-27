@@ -1,4 +1,4 @@
-# 原片开头到 4:28.2 · Remotion 分段预览
+# 原片开头到 4:51.1 · Remotion 分段预览
 
 [打开 Studio](http://localhost:3004/01-Opening-Principle)。每段从自己的第 0 秒开始。每段至少 20 秒，超过 20 秒后在完整的讲解或章节节点结束；相邻短镜头合并，保留原有画面和节奏，不用停帧或重复画面凑时长。
 
@@ -15,13 +15,15 @@
 | [09 常用素材与透明底动画](http://127.0.0.1:3004/09-Green-Screen) | 3:43.533–4:04.433 | 20.9 秒 | Agent 处理的透明底演示结束，下一方法进入前 |
 | [10 剪辑软件五步处理](http://127.0.0.1:3004/10-Editor-Walkthrough) | 4:04.433–4:28.2 | 23.767 秒 | 透明底素材导出说明结束，下一提问前 |
 
+| [11 动画素材来源](http://127.0.0.1:3004/11-Animation-Sources) | 4:28.2–4:51.1 | 22.9 秒 | 三张素材展示结束，下一旁白章节前 |
+
 单段导出示例：
 
 ```powershell
-node examples/reference-opening/render.mjs --segment 10-Editor-Walkthrough --video-only
+node examples/reference-opening/render.mjs --segment 11-Animation-Sources
 ```
 
-用 `--segments` 批量导出以上十段，输出到 `.verification/reference-opening/segments/`。默认逐段对照首帧、中间帧、末帧与累计时间线对应帧；加 `--stills` 只核对图片，加 `--video-only` 只导出视频。此前 11 个短段的切点已合并，Studio 不再逐条显示；历史导出文件保留。累计时间线为 `render-root.tsx` 的 `Reference-Editor-Walkthrough`；`--material-collection --video-only` 仍导出 203 秒版本，其他较短整片入口保留。当前严格逐像素对照仍有文字边缘与阴影像素差异，详见验证记录。
+用 `--segments` 批量导出以上十一段，输出到 `.verification/reference-opening/segments/`。默认逐段对照首帧、中间帧、末帧与累计时间线对应帧；加 `--stills` 只核对图片，加 `--video-only` 只导出视频。此前 11 个短段的切点已合并，Studio 不再逐条显示；历史导出文件保留。累计时间线为 `render-root.tsx` 的 `Reference-Animation-Sources`；`--material-collection --video-only` 仍导出 203 秒版本，其他较短整片入口保留。当前严格逐像素对照仍有文字边缘与阴影像素差异，详见验证记录。
 
 新增镜头见[原则性的要求](SCRIPT-PRINCIPLES-SHOTPLAN.md)、[是否逐段规划与章节结尾](SCRIPT-CLOSING-SHOTPLAN.md)和[素材收集与技术可行性](MATERIAL-COLLECTION-SHOTPLAN.md)。
 
@@ -66,3 +68,5 @@ node examples/reference-opening/render.mjs --segment 10-Editor-Walkthrough --vid
 分层展开以素材库组件的默认效果为准。案例仅传入 `startAt={2.1}`、图片文案和画面位置，不再单独设置各层时间、旋转进度或透明度模式。底层在 2.5–3.3 秒完成透视，中间层从 3.9 秒起每隔 0.5 秒入场、每层 0.55 秒；这些值由组件的同一套默认时间线产生。顶部截图始终只有一张可见。
 
 背景使用独立的 `BlurredCollage`：纸纹静止、虚化拼贴向左下漂移并在 3–4.25 秒淡出。目录卡片与案例只替换图片内容，使用相同的漂移、模糊与退场参数；见「背景特效 → 虚化拼贴漂移」。
+
+第 11 段见[动画素材来源](ANIMATION-SOURCES-SHOTPLAN.md)，[逐帧慢放对照](http://127.0.0.1:3006/animation-sources-review/)。新增 `TokenBowl` 独立动作及[落篮收集完整范例](../component-examples/resource-credits/README.md)，原片与范例调用同一组合。10 / 2 积分是原片历史文案；预览待用户确认。

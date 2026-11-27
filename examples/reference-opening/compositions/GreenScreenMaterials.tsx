@@ -13,10 +13,10 @@ const popScale=(frame:number)=>{
  return 1;
 };
 /** Same flow and clip clocks across chapter cuts; only this case's inset media vary. */
-export const GreenScreenFlow=({time,endFrame=7333,mediaDir='green-screen'}:{time:number;endFrame?:number;mediaDir?:string})=><ThreeStepFlow time={time} startAt={6787/30} steps={[
+export const GreenScreenFlow=({time,endFrame=7333,mediaDir='green-screen',frozen=false}:{time:number;endFrame?:number;mediaDir?:string;frozen?:boolean})=><ThreeStepFlow time={time} startAt={6787/30} steps={[
  {id:'image',label:'AI 生成绿幕图片',content:still('green-still')},
- {id:'motion',label:'视频模型生成动画',content:<Sequence from={6918} durationInFrames={endFrame-6918} layout="none"><OffthreadVideo muted src={staticFile(`${mediaDir}/green-motion.mp4`)} style={imageStyle}/></Sequence>},
- {id:'alpha',label:'抠成透明底',content:<Sequence from={7077} durationInFrames={endFrame-7077} layout="none"><OffthreadVideo muted src={staticFile(`${mediaDir}/transparent-motion.mp4`)} style={imageStyle}/></Sequence>},
+ {id:'motion',label:'视频模型生成动画',content:frozen?<Img src={staticFile('animation-sources/green-motion-last.png')} style={imageStyle}/>:<Sequence from={6918} durationInFrames={endFrame-6918} layout="none"><OffthreadVideo muted src={staticFile(`${mediaDir}/green-motion.mp4`)} style={imageStyle}/></Sequence>},
+ {id:'alpha',label:'抠成透明底',content:frozen?<Img src={staticFile('animation-sources/transparent-motion-last.png')} style={imageStyle}/>:<Sequence from={7077} durationInFrames={endFrame-7077} layout="none"><OffthreadVideo muted src={staticFile(`${mediaDir}/transparent-motion.mp4`)} style={imageStyle}/></Sequence>},
 ]}/>;
 export const GreenScreenMaterials=({time}:{time:number})=>{
  const frame=time*30;

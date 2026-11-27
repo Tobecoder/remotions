@@ -1,9 +1,10 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **24 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **25 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
+| 叙事动画 | `TokenBowl` | 可替换物件错峰下落、堆积及容器前沿遮挡 |
 | 版式转场 | `PerspectivePanel` | 任意内容的透视投影与姿态过渡 |
 | 叙事动画 | `ExplodedLayers` | 多层内容拆解与引线标注 |
 | 版式转场 | `FanCardDeck` | 图片、文档等卡片的扇形展开 |
@@ -216,3 +217,5 @@ const Gallery = () => {
 [文档聚焦完整范例](../../examples/component-examples/document-focus/README.md) 由原 `DocumentFocusGallery` 组合 `CardEntrance/FocusLayer`，展示资料卡逐张入场、背景淡化虚化和前景要点显现的 6 秒完整镜头。资料、说明及前景内容可替换，两个动作卡片共享同一份范例。
 
 `ConstraintRelease` 接收 `content`、默认六条 `tags` 和 `badge`；先展开标签，再掉落标签，2.3–2.8 秒显示窗口内容，3.3–3.8 秒放大窗口。内容均由调用方提供，不内置原片图片。
+
+[落篮收集与额度说明完整范例](../../examples/component-examples/resource-credits/README.md) 提供同源组合、视频与内容替换说明，待用户确认。

@@ -14,11 +14,13 @@ import {MaterialCollectionFilm} from './MaterialCollectionScene';
 import {MaterialQualityFilm} from './MaterialQualityScene';
 import {GreenScreenFilm} from './GreenScreenScene';
 import {EditorWalkthroughFilm} from './EditorWalkthroughScene';
+import {AnimationSourcesFilm} from './AnimationSourcesScene';
 import {ReferenceSegments} from './ReferenceSegments';
 
 registerRoot(()=>(
   <>
     <ReferenceSegments/>
+    <Composition id="Reference-Animation-Sources" component={AnimationSourcesFilm} width={1920} height={1080} fps={30} durationInFrames={8733}/>
     <Composition id="Reference-Editor-Walkthrough" component={EditorWalkthroughFilm} width={1920} height={1080} fps={30} durationInFrames={8046}/>
     <Composition id="Reference-Green-Screen" component={GreenScreenFilm} width={1920} height={1080} fps={30} durationInFrames={7333}/>
     <Composition id="Reference-Material-Quality" component={MaterialQualityFilm} width={1920} height={1080} fps={30} durationInFrames={6706}/>

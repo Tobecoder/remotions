@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'card-entrance' | 'focus-layer' | 'tethered-motion' | 'rising-curve' | 'constraint-release' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'usage-meter' | 'document-window' | 'highlight-box' | 'collapsing-title';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'card-entrance' | 'focus-layer' | 'tethered-motion' | 'rising-curve' | 'constraint-release' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'usage-meter' | 'token-bowl' | 'document-window' | 'highlight-box' | 'collapsing-title';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -16,6 +16,10 @@ export const categories: CatalogCategory[] = [
 ];
 
 export const catalog: CatalogItem[] = [
+  {id:'token-bowl',category:'storytelling',name:'落篮收集',component:'TokenBowl',description:'物件错峰下落、落稳并被容器前沿遮挡；时间、数量、节奏和物件内容可替换',usage:'资源积累 · 收集入篮',durationInFrames:150,posterFrame:100,code:`import {TokenBowl} from '@remotions/animations';
+
+<TokenBowl time={frame / fps} startAt={0.3} count={20}
+  x={260} y={110} width={280} interval={0.09} fallDuration={0.55} />`},
   {id:'usage-meter',category:'charts',name:'计数与分格电量',component:'UsageMeter',description:'数值、分格指示条和中间插图独立控制，可做用量或资源消耗示意',usage:'用量计数 · 资源消耗',durationInFrames:180,posterFrame:100,code:`import {UsageMeter} from '@remotions/animations';
 
 <UsageMeter x={145} y={135} time={frame / fps} value={Math.round(progress * 100000)} label="用量"

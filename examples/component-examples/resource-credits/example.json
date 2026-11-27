@@ -1,0 +1,14 @@
+{
+ "id":"resource-credits",
+ "materialIds":["token-bowl","card-entrance"],
+ "name":"落篮收集与额度说明",
+ "description":"物件错峰落入容器并堆积，额度卡、领取与消耗逐项出现，旧额度划线后给出变化提示。",
+ "useCases":["资源积累","历史额度说明","收集结果配数据卡"],
+ "replaceable":["收集物件数量","标题、平台名称与图标","额度、消耗数值及变更提示"],
+ "preserve":["左侧落篮、右侧额度卡的布局","物件在容器前沿后方落稳","卡片先出现，再依次展示领取和消耗","旧数值划线后显示变化提示"],
+ "reviewStatus":"pending",
+ "composition":{"id":"Example-Resource-Credits","width":1280,"height":720,"fps":30,"durationInFrames":330,"posterFrame":290},
+ "source":{"entry":"examples/component-examples/resource-credits/index.tsx","component":"examples/component-examples/resource-credits/Example.tsx","exportName":"ResourceCreditsExample","implementation":"examples/reference-opening/compositions/ResourceCredits.tsx","guide":"examples/component-examples/resource-credits/README.md"},
+ "preview":{"video":"/examples/resource-credits.mp4","poster":"/examples/resource-credits.jpg","guide":"/examples/resource-credits.md"},
+ "defaultProps":{}
+}

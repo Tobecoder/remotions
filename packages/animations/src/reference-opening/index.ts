@@ -38,6 +38,8 @@ export type {CardSpotlightProps,SpotlightRect} from './CardSpotlight';
 export {ProgressRow} from './ProgressRow';
 export type {ProgressRowProps} from './ProgressRow';
 export {UsageMeter} from './UsageMeter';
+export {TokenBowl} from './TokenBowl';
+export type {TokenBowlProps} from './TokenBowl';
 export type {UsageMeterProps,UsageIndicator} from './UsageMeter';
 export {DocumentWindow} from './DocumentWindow';
 export type {DocumentWindowProps} from './DocumentWindow';

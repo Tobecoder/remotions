@@ -22,7 +22,7 @@ describe('editor walkthrough and reusable method handoff',()=>{
  it('preserves the earlier film and all existing cut points',()=>{
   for(const frame of [0,6090,6706,7159,7265,7332]){clock.frame=frame;expect(renderToStaticMarkup(<EditorWalkthroughFilm/>)).toBe(renderToStaticMarkup(<GreenScreenFilm/>));}
   expect(segments.slice(0,9).map(s=>s.endFrame)).toEqual([750,1740,2880,3870,4785,5400,6090,6706,7333]);
-  expect(segments.at(-1)).toEqual({id:'10-Editor-Walkthrough',endFrame:8046});
+  expect(segments.find(s=>s.id==='10-Editor-Walkthrough')).toEqual({id:'10-Editor-Walkthrough',endFrame:8046});
   expect(8046-7333).toBe(713);
  });
  it('crossfades the old stage while highlighting the new method and keeps one continuous recording',()=>{
