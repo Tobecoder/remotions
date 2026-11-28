@@ -55,5 +55,7 @@ export {DropCard} from './DropCard';
 export type {DropCardProps} from './DropCard';
 export {ImpactRecoil} from './ImpactRecoil';
 export type {ImpactRecoilProps} from './ImpactRecoil';
+export {TextFlip} from './TextFlip';
+export type {TextFlipProps} from './TextFlip';
 export {FocusLayer} from './FocusLayer';
 export type {FocusLayerProps} from './FocusLayer';

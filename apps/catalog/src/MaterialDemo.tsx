@@ -3,7 +3,7 @@ import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, Chapter
 import {pathCardLayout} from '../../../packages/animations/src/reference-opening/continuation-motion';
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
-import {AgentPipeline,TypewriterComparison,CardSpotlight,ProgressRow,UsageMeter,TokenBowl,FileIntoContainer,DocumentWindow,HighlightBox,CollapsingTitle} from '../../../packages/animations/src';
+import {AgentPipeline,TypewriterComparison,TextFlip,CardSpotlight,ProgressRow,UsageMeter,TokenBowl,FileIntoContainer,DocumentWindow,HighlightBox,CollapsingTitle} from '../../../packages/animations/src';
 import {PreparationArtwork} from '../../../packages/animations/src/reference-opening/PreparationArtwork';
 import {PanelScroll,LiveWaveform,LiveTimeline,LiveCaptionLines} from '../../../packages/animations/src/reference-opening/LivePanelContent';
 import {NeuronPreview} from '../../../packages/animations/src/reference-opening/NeuronPreview';
@@ -103,6 +103,13 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
   const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig(),time=frame/fps;
   let content;
   switch(id){
+    case 'text-flip':content=<CardEntrance x={154} y={156} width={492} height={138} progress={1} borderRadius={16} background="#fffefa">
+      <div style={{height:'100%',display:'grid',placeItems:'center',fontSize:40,fontWeight:850,color:'#282b35'}}>
+        <div>根据<TextFlip frame={(frame-54)/3} before="实践戳" after="时间戳" beforeScale={1+.11*during(frame,24,35)}
+          beforeStyle={{color:'#bd4658',textDecoration:'underline wavy',textDecorationThickness:'3px',textUnderlineOffset:'5px'}}
+          afterStyle={{color:'#369870'}}/>安排字幕</div>
+      </div>
+    </CardEntrance>;break;
     case 'impact-recoil':content=<ImpactRecoilDemo frame={frame}/>;break;
     case 'drop-card':content=<DropCardDemo frame={frame}/>;break;
     case 'file-into-container':content=<FilingDemo time={time}/>;break;

@@ -1,4 +1,4 @@
-# 原片开头到 5:58.467 · Remotion 分段预览
+# 原片开头到 6:35.667 · Remotion 分段预览
 
 [打开 Studio](http://localhost:3004/01-Opening-Principle)。每段从自己的第 0 秒开始。每段至少 20 秒，超过 20 秒后在完整的讲解或章节节点结束；相邻短镜头合并，保留原有画面和节奏，不用停帧或重复画面凑时长。
 
@@ -17,11 +17,12 @@
 | [11 动画素材来源](http://127.0.0.1:3004/11-Animation-Sources) | 4:28.2–4:51.1 | 22.9 秒 | 三张素材展示结束，下一旁白章节前 |
 | [12 旁白和 SRT · 配音工具](http://127.0.0.1:3004/12-Narration) | 4:51.1–5:29.233 | 38.133 秒 | 配音工具介绍结束，字幕生成开始前 |
 | [13 生成 SRT 与字幕同步](http://127.0.0.1:3004/13-Srt-Sync) | 5:29.233–5:58.467 | 29.233 秒 | 语音识别工具说明结束，Whisper 出场前 |
+| [14 本地 Whisper 与 SRT 校准](http://127.0.0.1:3004/14-Whisper-Srt) | 5:58.467–6:35.667 | 37.2 秒 | 字幕宽度示例结束，下一张时间线前 |
 
 单段导出示例：
 
 ```powershell
-node examples/reference-opening/render.mjs --segment 13-Srt-Sync
+node examples/reference-opening/render.mjs --segment 14-Whisper-Srt
 ```
 
 用 `--segments` 批量导出以上十三段，输出到 `.verification/reference-opening/segments/`。默认逐段对照首帧、中间帧、末帧与累计时间线对应帧。加 `--stills` 只核对图片，加 `--video-only` 只导出视频。最新累计时间线是 `Reference-Srt-Sync`。原有整片入口仍可使用，例如 `--material-collection --video-only` 导出 203 秒版本。各段验证情况见验证记录。
@@ -75,3 +76,5 @@ node examples/reference-opening/render.mjs --segment 13-Srt-Sync
 第 12 段见[配音与语音合成](NARRATION-SHOTPLAN.md)及[逐帧慢放对照](http://127.0.0.1:3006/narration-review/)。配音提问、效果处理、Agent 和工具卡依照原片顺序进入，波形使用按帧绘制的示意。预览待用户确认。
 
 第 13 段见[生成 SRT 与字幕同步](SRT-SHOTPLAN.md)及[逐帧慢放对照](http://127.0.0.1:3006/srt-review/)，覆盖分句计时、预览与 SRT 行同步，以及接入识别工具后模型接收文字的过程。
+
+第 14 段见[本地 Whisper 与 SRT 校准](WHISPER-SHOTPLAN.md)，覆盖笔记本入场、模型表、配置终端、脚本校准和双行字幕示例。

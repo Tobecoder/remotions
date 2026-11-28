@@ -15,10 +15,11 @@ import dropCards from '../../../examples/component-examples/drop-cards/example.j
 import impactRecoil from '../../../examples/component-examples/impact-recoil/example.json';
 import srtSync from '../../../examples/component-examples/srt-sync/example.json';
 import transcriptRouting from '../../../examples/component-examples/transcript-routing/example.json';
+import scriptCorrection from '../../../examples/component-examples/script-correction/example.json';
 import type {MaterialId} from './catalog';
 
 export type MaterialExample=Omit<typeof progressComparison,'defaultProps'> & {defaultProps:Readonly<Record<string,unknown>>};
-export const materialExamples:readonly MaterialExample[]=[progressComparison,scriptDocument,cardSpotlight,documentFocus,sectionCollapse,sceneThumbnail,preparationCards,writingComparison,usageComparison,threeStepFlow,tutorialWalkthrough,resourceCredits,materialFiling,dropCards,impactRecoil,srtSync,transcriptRouting];
+export const materialExamples:readonly MaterialExample[]=[progressComparison,scriptDocument,cardSpotlight,documentFocus,sectionCollapse,sceneThumbnail,preparationCards,writingComparison,usageComparison,threeStepFlow,tutorialWalkthrough,resourceCredits,materialFiling,dropCards,impactRecoil,srtSync,transcriptRouting,scriptCorrection];
 export const getMaterialExamples=(materialId:MaterialId)=>materialExamples.filter(example=>example.materialIds.includes(materialId));
 
 export const getExampleUsage=(example:MaterialExample)=>`import {Composition} from 'remotion';

@@ -4,7 +4,7 @@ import {draftMaterials} from './draftReview';
 
 describe('curated catalog', () => {
   it('registers the standalone materials under their matching categories', () => {
-    expect(catalog).toHaveLength(28);
+    expect(catalog).toHaveLength(29);
     expect(new Set(catalog.map(item=>item.id)).size).toBe(catalog.length);
     expect(catalog.filter(item=>item.category==='layouts').map(item=>item.component).sort()).toEqual(['PerspectivePanel','FanCardDeck','ContentCollapse','CardSpotlight','DocumentWindow','CardEntrance','DropCard','FocusLayer'].sort());
     expect(catalog.some(item=>['ScriptDocumentGuide','ProgressRace','DocumentFocusGallery','SectionCollapse','SceneThumbnail','PreparationCards'].includes(item.component))).toBe(false);
@@ -18,6 +18,7 @@ describe('curated catalog', () => {
     expect(catalog.find(item=>item.component==='ProgressRow')?.category).toBe('charts');
     expect(catalog.find(item=>item.component==='HighlightBox')?.category).toBe('overlays');
     expect(catalog.find(item=>item.component==='CollapsingTitle')?.category).toBe('text-effects');
+    expect(catalog.find(item=>item.component==='TextFlip')?.category).toBe('text-effects');
     for(const item of catalog){
       expect(categories.some(category=>category.id===item.category)).toBe(true);
       expect(item.posterFrame).toBeGreaterThan(0);

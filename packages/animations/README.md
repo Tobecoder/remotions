@@ -1,6 +1,6 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **28 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **29 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
@@ -25,6 +25,7 @@ Remotion 可复用动画组件，当前公开导出 **28 个**。旧组件及归
 | 版式转场 | `FocusLayer` | 独立突出任意前景，可选背景虚化淡化 |
 | 叙事动画 | `AgentPipeline` | Agent 显现，连接工具与成片窗口 |
 | 文字特效 | `TypewriterComparison` | 两段文字逐字输入，再缩成左右栏 |
+| 文字特效 | `TextFlip` | 行内文字纵向压扁，替换后展开 |
 | 版式转场 | `CardSpotlight` | 进度控制卡片放大与归位 |
 | 数据图表 | `ProgressRow` | 独立进度、状态及附加内容，供自定义组合 |
 | 数据图表 | `UsageMeter` | 独立数值与分格指示条，位置、颜色及填充由调用方提供 |
@@ -56,6 +57,8 @@ const Gallery = () => {
 `DropCard` 通过相对入场时刻的 `frame` 驱动落卡，负帧隐藏，落稳后保持在 `x/y`。可用 `durationInFrames` 调整时长，`tilt` 调整初始倾角，`offsets` 替换逐帧的竖向轨迹。多张卡各自传入相对帧数即可错峰播放。完整布局和计数节奏见[三张工具卡错峰落位](../../examples/component-examples/drop-cards/README.md)。
 
 `ImpactRecoil` 接收相对于触发时刻的 `frame`，用渲染函数传回带正负号的回摆量，触发前和结束后均为 0。可用 `strength` 设强度与方向，`durationInFrames` 调整时长，`samples` 替换逐帧轨迹。用法见[三路波形撞击与回摆](../../examples/component-examples/impact-recoil/README.md)。
+
+`TextFlip` 接收 `before`、`after` 和相对于替换时刻的 `frame`。第 0 帧切到后文案。可用 `beforeStyle`、`afterStyle` 设置前后样式，`beforeScale` 设置旧文字的缩放，`firstAfterScale` 设置新文字首帧的纵向缩放。完整编排见[脚本扫过与三处错词校正](../../examples/component-examples/script-correction/README.md)。
 
 `ChapterHeading` 也可以接收片头内容：`intro={{eyebrow, title, description}}`（`title` 支持 React 内容，例如两行标题及彩色强调），并传入 `introProgress`。同一进度控制片头退场与章节入场，无需另外写两个淡入淡出动画；`progress` 仍用于后续章节之间的切换。不传 `intro` 时保留普通章节切换行为。
 

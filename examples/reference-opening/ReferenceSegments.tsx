@@ -1,12 +1,12 @@
 import {Composition,Sequence} from 'remotion';
-import {SrtFilm} from './SrtScene';
+import {WhisperFilm} from './WhisperScene';
 import segments from './segments.json';
 
 type SegmentProps={startFrame:number;endFrame:number};
 
 const ReferenceSegment=({startFrame,endFrame}:SegmentProps)=>(
   <Sequence layout="none" showInTimeline={false} trimBefore={startFrame} durationInFrames={endFrame-startFrame}>
-    <SrtFilm/>
+    <WhisperFilm/>
   </Sequence>
 );
 

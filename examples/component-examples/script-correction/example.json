@@ -1,0 +1,20 @@
+{
+  "id": "script-correction",
+  "materialIds": ["text-flip"],
+  "name": "脚本扫过与三处错词校正",
+  "description": "三处错词连同波浪线依次放大，脚本纸页从左向右扫过，红字压扁后依次翻成绿字。",
+  "useCases": ["字幕校准", "校对流程说明", "对照展示识别错误"],
+  "replaceable": ["三张卡的时间戳与前后文", "每处错词与正确词"],
+  "preserve": ["三张卡从上到下依次出现并放大红字", "纸页从左向右扫动", "红字压扁后依次翻成绿字"],
+  "reviewStatus": "pending",
+  "composition": {"id":"Example-Script-Correction","width":1280,"height":720,"fps":30,"durationInFrames":252,"posterFrame":197},
+  "source": {
+    "entry":"examples/component-examples/script-correction/index.tsx",
+    "component":"examples/component-examples/script-correction/Example.tsx",
+    "exportName":"ScriptCorrectionExample",
+    "implementation":"examples/reference-opening/compositions/WhisperPrompt.tsx",
+    "guide":"examples/component-examples/script-correction/README.md"
+  },
+  "preview": {"video":"/examples/script-correction.mp4","poster":"/examples/script-correction.jpg","guide":"/examples/script-correction.md"},
+  "defaultProps": {}
+}

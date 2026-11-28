@@ -9,7 +9,7 @@ const local=(path:string)=>fileURLToPath(new URL(path,repository));
 
 describe('complete example registry',()=>{
   it('links a real material to its original composition, copy settings and usage guide',()=>{
-    expect(materialExamples).toHaveLength(17);
+    expect(materialExamples).toHaveLength(18);
     expect(new Set(materialExamples.map(example=>example.id)).size).toBe(materialExamples.length);
     for(const example of materialExamples){
       expect(example.materialIds.length).toBeGreaterThan(0);
@@ -40,6 +40,7 @@ describe('complete example registry',()=>{
     expect(getMaterialExamples('focus-layer').map(example=>example.id)).toEqual(['document-focus-gallery']);
     expect(getMaterialExamples('agent-pipeline').map(example=>example.id)).toEqual(['preparation-cards']);
     expect(getMaterialExamples('typewriter-comparison').map(example=>example.id)).toEqual(['writing-comparison']);
+    expect(getMaterialExamples('text-flip').map(example=>example.id)).toEqual(['script-correction']);
     expect(getMaterialExamples('file-into-container').map(example=>example.id)).toEqual(['material-filing']);
     expect(getMaterialExamples('drop-card').map(example=>example.id)).toEqual(['drop-cards']);
     expect(getMaterialExamples('impact-recoil').map(example=>example.id)).toEqual(['impact-recoil']);

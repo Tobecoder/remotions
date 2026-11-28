@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'card-entrance' | 'drop-card' | 'impact-recoil' | 'focus-layer' | 'tethered-motion' | 'rising-curve' | 'constraint-release' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'usage-meter' | 'token-bowl' | 'file-into-container' | 'document-window' | 'highlight-box' | 'collapsing-title';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'card-entrance' | 'drop-card' | 'impact-recoil' | 'focus-layer' | 'tethered-motion' | 'rising-curve' | 'constraint-release' | 'agent-pipeline' | 'typewriter-comparison' | 'text-flip' | 'card-spotlight' | 'progress-row' | 'usage-meter' | 'token-bowl' | 'file-into-container' | 'document-window' | 'highlight-box' | 'collapsing-title';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -16,6 +16,13 @@ export const categories: CatalogCategory[] = [
 ];
 
 export const catalog: CatalogItem[] = [
+  {id:'text-flip',category:'text-effects',name:'文字翻转替换',component:'TextFlip',description:'原文字纵向压扁，替换后展开。可设置替换时刻、前后内容和样式',usage:'错字校准 · 行内文字更新',durationInFrames:105,posterFrame:42,code:`import {TextFlip} from '@remotions/animations';
+
+<p>根据<TextFlip frame={(frame - 54) / 3}
+  before="实践戳" after="时间戳"
+  beforeStyle={{color:'#bd4658', textDecoration:'underline wavy'}}
+  afterStyle={{color:'#369870'}}
+/>安排字幕</p>`},
   {id:'impact-recoil',category:'effects',name:'撞击后回摆',component:'ImpactRecoil',description:'受撞时先弹开，再逐渐回摆归位。可用作横向位移、绕支点旋转或其他方向的反馈',usage:'撞击反馈 · 物件摆动',durationInFrames:105,posterFrame:26,code:`import {ImpactRecoil} from '@remotions/animations';
 
 <>

@@ -4,8 +4,10 @@ import {renderToStaticMarkup} from 'react-dom/server';
 import {describe, expect, it, vi} from 'vitest';
 import {NarrationFilm} from '../../../examples/reference-opening/NarrationScene';
 import {SrtFilm} from '../../../examples/reference-opening/SrtScene';
+import {WhisperFilm, whisperStartFrame, whisperEndFrame} from '../../../examples/reference-opening/WhisperScene';
 import {SrtSyncExample} from '../../../examples/reference-opening/compositions/SrtSynchronization';
 import {TranscriptRoutingExample} from '../../../examples/component-examples/transcript-routing/Example';
+import {ScriptCorrectionExample} from '../../../examples/component-examples/script-correction/Example';
 import segments from '../../../examples/reference-opening/segments.json';
 
 const clock = vi.hoisted(() => ({frame: 0}));
@@ -13,6 +15,12 @@ vi.mock('remotion', () => ({
   useCurrentFrame: () => clock.frame,
   useVideoConfig: () => ({fps: 30, width: 1920, height: 1080}),
   staticFile: (file: string) => file,
+  interpolate: (value: number, input: readonly number[], output: readonly number[]) => {
+    const next = input.findIndex(frame => value < frame);
+    if (next <= 0) return next === 0 ? output[0] : output[output.length - 1];
+    const fraction = (value - input[next - 1]) / (input[next] - input[next - 1]);
+    return output[next - 1] + (output[next] - output[next - 1]) * fraction;
+  },
   AbsoluteFill: ({children, style}: {children: ReactNode; style: CSSProperties}) => <div style={style}>{children}</div>,
   Img: ({src, style}: {src: string; style: CSSProperties}) => <img src={src} style={style}/>,
   OffthreadVideo: ({src}: {src: string}) => <video src={src}/>,
@@ -128,5 +136,73 @@ describe('SRT continuation', () => {
     expect(statusAt(86)).toEqual(['accepted', 'rejected', 'rejected']);
     expect(statusAt(92)).toEqual(['accepted', 'accepted', 'rejected']);
     expect(statusAt(98)).toEqual(['accepted', 'accepted', 'accepted']);
+  });
+});
+
+describe('Whisper continuation', () => {
+  const atWhisper = (frame: number) => {
+    clock.frame = frame;
+    return new DOMParser().parseFromString(renderToStaticMarkup(<WhisperFilm/>), 'text/html');
+  };
+
+  it('preserves the previous cut and hands the recognizer off to the laptop, models, and terminal', () => {
+    clock.frame = whisperStartFrame - 1;
+    expect(renderToStaticMarkup(<WhisperFilm/>)).toBe(renderToStaticMarkup(<SrtFilm/>));
+    expect(segments.at(-1)).toEqual({id: '14-Whisper-Srt', endFrame: whisperEndFrame});
+    expect(whisperEndFrame - whisperStartFrame).toBe(1116);
+    expect(atWhisper(10754).querySelector('[data-whisper-outgoing]')).not.toBeNull();
+    expect(atWhisper(10763).querySelector('[data-whisper-outgoing]')).toBeNull();
+    expect(atWhisper(10970).querySelectorAll('[data-whisper-model]')).toHaveLength(6);
+    expect(atWhisper(11175).querySelector('[data-whisper-table]')).not.toBeNull();
+    expect(atWhisper(11318).querySelector('[data-whisper-terminal]')?.textContent).toContain('旁白.srt');
+    expect(atWhisper(11330).querySelector('[data-whisper-setup]')).toBeNull();
+  });
+
+  it('corrects the three cards as the script crosses and switches the inset to one line before the cut', () => {
+    const corrected = (frame: number) => atWhisper(frame).querySelectorAll('[data-whisper-correction="corrected"]').length;
+    expect([11629, 11630, 11639, 11649].map(corrected)).toEqual([0, 1, 2, 3]);
+    expect(atWhisper(11639).querySelector('[data-whisper-script-sheet]')).not.toBeNull();
+    expect(atWhisper(11835).querySelector('[data-whisper-caption-lines="2"]')).not.toBeNull();
+    const last = atWhisper(whisperEndFrame - 1);
+    expect(last.querySelector('[data-whisper-caption-lines="1"]')).not.toBeNull();
+    expect(last.body.textContent).toContain('导致视频出现两行字幕');
+  });
+
+  it('emphasizes the red words in sequence and closes then opens their vertical flip', () => {
+    const word = (frame: number, index: number) =>
+      atWhisper(frame).querySelectorAll<HTMLElement>('[data-whisper-correction-word]')[index];
+    expect(word(11470, 0).textContent).toBe('瑞');
+    expect(word(11522, 0).style.transform).toBe('scale(1,1)');
+    expect(word(11530, 0).style.transform).toBe('scale(1.11,1.11)');
+    expect(word(11530, 1).style.transform).toBe('scale(1,1)');
+    expect(word(11545, 1).style.transform).toBe('scale(1.11,1.11)');
+    expect(word(11545, 2).style.transform).toBe('scale(1,1)');
+    expect(word(11576, 2).style.transform).toBe('scale(1.11,1.11)');
+    const folded = word(11638, 1);
+    expect(folded.textContent).toBe('欧帕斯');
+    expect(Number(folded.style.transform.split(',')[1].replace(')', ''))).toBeLessThan(.1);
+    expect(word(11639, 1).textContent).toBe('Opus');
+    expect(word(11639, 1).style.transform).toBe('scaleY(0.28)');
+    expect(word(11641, 1).style.transform).toBe('scaleY(1)');
+    expect(atWhisper(11645).querySelector('[data-whisper-script-sheet]')).not.toBeNull();
+    expect(atWhisper(11646).querySelector('[data-whisper-script-sheet]')).toBeNull();
+  });
+
+  it('switches the replacement copy in the complete correction example', () => {
+    const exampleAt = (frame: number) => {
+      clock.frame = frame;
+      return new DOMParser().parseFromString(renderToStaticMarkup(<ScriptCorrectionExample correctionCopy={[
+        {time:'00:00:02,100',before:'Use ',error:'Motion',correct:'Remotion',after:' to render'},
+        {time:'00:00:05,200',before:'Set ',error:'ratioo',correct:'ratio',after:' first'},
+        {time:'00:00:08,300',before:'Add ',error:'captionn',correct:'caption',after:' last'},
+      ]}/>), 'text/html');
+    };
+    const original = exampleAt(181);
+    expect(original.querySelector('[data-whisper-correction-word]')?.textContent).toBe('Motion');
+    const first = exampleAt(182);
+    expect(first.querySelector('[data-whisper-correction-word]')?.textContent).toBe('Remotion');
+    expect(first.querySelector('[data-whisper-correction]')?.textContent).toContain('Use Remotion to render');
+    expect(Array.from(exampleAt(201).querySelectorAll('[data-whisper-correction-word]'), word => word.textContent))
+      .toEqual(['Remotion','ratio','caption']);
   });
 });

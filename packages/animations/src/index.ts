@@ -53,5 +53,7 @@ export {DropCard} from './reference-opening/DropCard';
 export type {DropCardProps} from './reference-opening/DropCard';
 export {ImpactRecoil} from './reference-opening/ImpactRecoil';
 export type {ImpactRecoilProps} from './reference-opening/ImpactRecoil';
+export {TextFlip} from './reference-opening/TextFlip';
+export type {TextFlipProps} from './reference-opening/TextFlip';
 export {FocusLayer} from './reference-opening/FocusLayer';
 export type {FocusLayerProps} from './reference-opening/FocusLayer';

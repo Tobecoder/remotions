@@ -21,8 +21,9 @@
 | `ImpactRecoil` · 撞击后回摆 | 三路波形撞击与回摆 | [使用说明](./impact-recoil/README.md) · [入口](./impact-recoil/index.tsx) | 待用户确认 |
 | `HighlightBox` / `CardEntrance` · 区域高亮、卡片入场 | SRT 字幕与时间线同步 | [使用说明](./srt-sync/README.md) · [入口](./srt-sync/index.tsx) | 待用户确认 |
 | `CardEntrance` · 卡片入场 | 文字三路入卡 | [使用说明](./transcript-routing/README.md) · [入口](./transcript-routing/index.tsx) | 待用户确认 |
+| `TextFlip` · 文字翻转替换 | 脚本扫过与三处错词校正 | [使用说明](./script-correction/README.md) · [入口](./script-correction/index.tsx) | 待用户确认 |
 
-当前十七份完整范例均具备独立入口、完整预览和替换说明；新范例的视觉验收状态仍以上表为准。
+当前十八份完整范例均具备独立入口、完整预览和替换说明；新范例的视觉验收状态仍以上表为准。
 
 本站完整范例预览产物位于 `apps/catalog/public/examples/`，由对应案例的导出脚本生成。素材站仅引用范例元数据和预览文件，不另写案例动画，也不将固定组合重新导出为通用组件。
 
