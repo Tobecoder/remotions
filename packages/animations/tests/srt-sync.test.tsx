@@ -4,6 +4,8 @@ import {renderToStaticMarkup} from 'react-dom/server';
 import {describe, expect, it, vi} from 'vitest';
 import {NarrationFilm} from '../../../examples/reference-opening/NarrationScene';
 import {SrtFilm} from '../../../examples/reference-opening/SrtScene';
+import {SrtSyncExample} from '../../../examples/reference-opening/compositions/SrtSynchronization';
+import {TranscriptRoutingExample} from '../../../examples/component-examples/transcript-routing/Example';
 import segments from '../../../examples/reference-opening/segments.json';
 
 const clock = vi.hoisted(() => ({frame: 0}));
@@ -52,6 +54,28 @@ describe('SRT continuation', () => {
     expect(late.querySelector('[data-srt-tutorial-timeline] rect[fill="#ca4935"]')?.getAttribute('x')).toBe('172');
   });
 
+  it('uses replacement cue starts and ends for the caption, active row, and playhead', () => {
+    const customAt = (frame: number) => {
+      clock.frame = frame;
+      return new DOMParser().parseFromString(renderToStaticMarkup(<SrtSyncExample frame={frame} playback={{
+        previewSrc: 'replacement.mp4',
+        cues: [{startMs: 0, endMs: 500, text: 'First'}, {startMs: 1000, endMs: 2000, text: 'Second'}],
+      }}/>), 'text/html');
+    };
+    const first = customAt(10095), gap = customAt(10110), second = customAt(10125), done = customAt(10155);
+    expect(first.querySelector('[data-srt-preview-caption]')?.textContent).toBe('First');
+    expect(first.querySelector('[data-srt-tutorial-preview] video')?.getAttribute('src')).toBe('replacement.mp4');
+    expect(gap.querySelector('[data-srt-preview-caption]')).toBeNull();
+    expect(gap.querySelector('[data-srt-timeline-cue][fill="#ca4935"]')).toBeNull();
+    expect(gap.querySelector('[data-srt-timeline-playhead]')?.getAttribute('x1')).toBe('152.5');
+    expect(second.querySelector('[data-srt-preview-caption]')?.textContent).toBe('Second');
+    expect(second.querySelector('[data-srt-active-cue]')?.getAttribute('data-srt-active-cue')).toBe('2');
+    expect(second.querySelector('[data-srt-cue="2"]')?.textContent).toContain('00:00:01,000 --> 00:00:02,000');
+    expect(second.querySelector('[data-srt-timeline-cue="2"]')?.getAttribute('fill')).toBe('#ca4935');
+    expect(done.querySelector('[data-srt-preview-caption]')).toBeNull();
+    expect(done.querySelector('[data-srt-timeline-playhead]')?.getAttribute('x1')).toBe('448');
+  });
+
   it('shows rejection before the recognizer and accepts the transcribed text in order', () => {
     const statuses = (frame: number) => Array.from(at(frame).querySelectorAll('[data-srt-status]'), item => item.getAttribute('data-srt-status'));
     expect(statuses(10514)).toEqual(['rejected', 'rejected', 'rejected']);
@@ -83,5 +107,26 @@ describe('SRT continuation', () => {
       expect(parseFloat(position(start + 16, name)!.left)).toBeGreaterThan(568);
       expect(position(start + 20, name)).toBeUndefined();
     }
+  });
+
+  it('uses the replacement names, accents, and text in the standalone routing example', () => {
+    const cards = [
+      {name: 'Preview', color: '#365997', transcript: 'Generate preview'},
+      {name: 'Caption', color: '#50967b', transcript: 'Generate captions'},
+      {name: 'Archive', color: '#956297', transcript: 'Save result'},
+    ] as const;
+    const exampleAt = (frame: number) => {
+      clock.frame = frame;
+      return new DOMParser().parseFromString(renderToStaticMarkup(<TranscriptRoutingExample cards={cards}/>), 'text/html');
+    };
+    const traveling = exampleAt(84);
+    const packets = Array.from(traveling.querySelectorAll<HTMLElement>('[data-srt-transcript-packet]'));
+    expect(packets.map(packet => packet.textContent)).toEqual(cards.map(card => card.transcript));
+    expect(packets.map(packet => packet.dataset.srtTranscriptPacket)).toEqual(cards.map(card => card.name));
+    expect(traveling.querySelector<HTMLElement>('[data-srt-model="Preview"] > div')?.style.background).toBe('rgb(54, 89, 151)');
+    const statusAt = (frame: number) => Array.from(exampleAt(frame).querySelectorAll('[data-srt-status]'), node => node.getAttribute('data-srt-status'));
+    expect(statusAt(86)).toEqual(['accepted', 'rejected', 'rejected']);
+    expect(statusAt(92)).toEqual(['accepted', 'accepted', 'rejected']);
+    expect(statusAt(98)).toEqual(['accepted', 'accepted', 'accepted']);
   });
 });

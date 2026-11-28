@@ -1,0 +1,20 @@
+{
+  "id": "transcript-routing",
+  "materialIds": ["card-entrance"],
+  "name": "文字三路入卡",
+  "description": "识别节点从同一出口错峰发出三条文字。文字分别向右上、正右、右下进入三张卡，红叉依次切为绿勾。",
+  "useCases": ["识别流程演示", "一份输入分发到多个接收方"],
+  "replaceable": ["三条飞行文字", "三张卡的名称和强调色"],
+  "preserve": ["三条文字从同一位置出发", "上、中、下三路飞行方向", "每条文字到达时，对应卡片切换为绿勾"],
+  "reviewStatus": "pending",
+  "composition": {"id":"Example-Transcript-Routing","width":1280,"height":720,"fps":30,"durationInFrames":120,"posterFrame":84},
+  "source": {
+    "entry":"examples/component-examples/transcript-routing/index.tsx",
+    "component":"examples/component-examples/transcript-routing/Example.tsx",
+    "exportName":"TranscriptRoutingExample",
+    "implementation":"examples/reference-opening/compositions/SpeechRecognition.tsx",
+    "guide":"examples/component-examples/transcript-routing/README.md"
+  },
+  "preview": {"video":"/examples/transcript-routing.mp4","poster":"/examples/transcript-routing.jpg","guide":"/examples/transcript-routing.md"},
+  "defaultProps": {}
+}

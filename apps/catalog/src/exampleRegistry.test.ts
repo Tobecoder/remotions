@@ -9,7 +9,7 @@ const local=(path:string)=>fileURLToPath(new URL(path,repository));
 
 describe('complete example registry',()=>{
   it('links a real material to its original composition, copy settings and usage guide',()=>{
-    expect(materialExamples).toHaveLength(12);
+    expect(materialExamples).toHaveLength(17);
     expect(new Set(materialExamples.map(example=>example.id)).size).toBe(materialExamples.length);
     for(const example of materialExamples){
       expect(example.materialIds.length).toBeGreaterThan(0);
@@ -27,18 +27,22 @@ describe('complete example registry',()=>{
     }
   });
   it('shares one document explanation across its three standalone actions',()=>{
-    for(const materialId of ['document-window','highlight-box','collapsing-title'] as const){
+    for(const materialId of ['document-window','collapsing-title'] as const){
       expect(getMaterialExamples(materialId).map(example=>example.id)).toEqual(['script-document-guide']);
     }
+    expect(getMaterialExamples('highlight-box').map(example=>example.id)).toEqual(['script-document-guide','srt-sync']);
     expect(getMaterialExamples('progress-row').map(example=>example.id)).toEqual(['progress-row-comparison']);
     expect(getMaterialExamples('card-spotlight').map(example=>example.id)).toEqual(['card-spotlight-return']);
     expect(getMaterialExamples('content-collapse').map(example=>example.id)).toEqual(['section-collapse','scene-thumbnail','preparation-cards','three-step-flow']);
     expect(getMaterialExamples('branching-paths').map(example=>example.id)).toEqual(['section-collapse']);
     expect(getMaterialExamples('chapter-heading').map(example=>example.id)).toEqual(['scene-thumbnail']);
-    expect(getMaterialExamples('card-entrance').map(example=>example.id)).toEqual(['document-focus-gallery','preparation-cards','three-step-flow','tutorial-walkthrough','resource-credits']);
+    expect(getMaterialExamples('card-entrance').map(example=>example.id)).toEqual(['document-focus-gallery','preparation-cards','three-step-flow','tutorial-walkthrough','resource-credits','srt-sync','transcript-routing']);
     expect(getMaterialExamples('focus-layer').map(example=>example.id)).toEqual(['document-focus-gallery']);
     expect(getMaterialExamples('agent-pipeline').map(example=>example.id)).toEqual(['preparation-cards']);
     expect(getMaterialExamples('typewriter-comparison').map(example=>example.id)).toEqual(['writing-comparison']);
+    expect(getMaterialExamples('file-into-container').map(example=>example.id)).toEqual(['material-filing']);
+    expect(getMaterialExamples('drop-card').map(example=>example.id)).toEqual(['drop-cards']);
+    expect(getMaterialExamples('impact-recoil').map(example=>example.id)).toEqual(['impact-recoil']);
     expect(getMaterialExamples('perspective-panel')).toEqual([]);
   });
   it('ships the example preview and guide used by the material card',()=>{

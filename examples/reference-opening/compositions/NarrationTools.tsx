@@ -1,5 +1,5 @@
 import type {SVGProps} from 'react';
-import {CardEntrance} from '../../../packages/animations/src';
+import {DropCard} from '../../../packages/animations/src';
 import {clamp, during, mix} from '../../../packages/animations/src/reference-opening/motion';
 import {MaterialAgent} from './MaterialCollection';
 
@@ -27,25 +27,26 @@ export const NarrationWaveform = ({width, height, color, progress = 1, offset = 
   </svg>;
 };
 
-const tools = [
+export type VoiceTool = {title: string; color: string; stars: number; notes: string; tags: readonly string[]};
+export type VoiceTools = readonly [VoiceTool, VoiceTool, VoiceTool];
+
+const defaultTools: VoiceTools = [
   {title: 'GPT-SoVITS', color: '#429d7b', stars: 64.1, notes: '用参考音频克隆声音，以及少样本微调音色', tags: ['中文', '英语', '日语', '韩语', '粤语']},
   {title: 'VoxCPM2', color: '#7961c7', stars: 40.8, notes: '可用参考音频克隆声音，也能通过文字描述设计全新音色', tags: ['30 种语言', '9 种中文方言']},
   {title: 'IndexTTS-2.5', color: '#4b78ba', stars: 24.8, notes: '用参考音频克隆声音，可精细控制情绪、语速和发音', tags: ['中文', '英语', '日语', '西班牙语', '阿拉伯语']},
-] as const;
+];
 
 const cardWidth = 155;
 const cardHeight = 251;
 const lefts = [266, 434, 601];
 // Measured at 30 FPS from first visible pose to the return to the slot.
 const toolCardEntrances = [
-  {start: 9408, countStart: 9413, countDuration: 25, lean: -1,
-    offsets: [-151, -110, -76, -49, -29, -13, -2, 5, 9, 11, 10, 8, 3, 1, 0]},
-  {start: 9415, countStart: 9419, countDuration: 25, lean: 0,
+  {start: 9408, countStart: 9413, countDuration: 25, tilt: -8.5},
+  {start: 9415, countStart: 9419, countDuration: 25, tilt: 0,
     offsets: [-159, -114, -74, -44, -21, -3, 4, 9, 11, 10, 8, 5, 2, 1, 0]},
-  {start: 9421, countStart: 9426, countDuration: 24, lean: 1,
+  {start: 9421, countStart: 9426, countDuration: 24, tilt: 8.5,
     offsets: [-153, -115, -80, -55, -33, -15, -3, 6, 10, 12, 11, 9, 6, 3, 1, 0]},
 ];
-const dropAngles = [8.5, 6.5, 4.7, 2.9, 1.8, .9, .1, 0, -.5, -.8, -.6, -.4, -.2];
 const cables = [
   [[140, 291], [218, 362], [344, 388], [344, 309]],
   [[140, 291], [235, 373], [502, 381], [512, 309]],
@@ -62,12 +63,11 @@ const pointOnCable = (points: typeof cables[number], progress: number) => {
   ];
 };
 
-const VoiceToolCard = ({frame, index, highlight}: {frame: number; index: number; highlight: number}) => {
-  const tool = tools[index], entrance = toolCardEntrances[index];
+const VoiceToolCard = ({frame, index, highlight, tool}: {
+  frame: number; index: number; highlight: number; tool: VoiceTool;
+}) => {
+  const entrance = toolCardEntrances[index];
   const end = 9832 + index * 4, exit = during(frame, end, end + 11);
-  const dropFrame = frame - entrance.start;
-  const dropY = entrance.offsets[dropFrame] ?? 0;
-  const dropAngle = entrance.lean * (dropAngles[dropFrame] ?? 0);
   const waveformAt = [9510, 9526, 9542][index];
   const command = '温柔的女声，语速稍慢，带一点笑意';
   const typing = during(frame, 9629, 9664);
@@ -83,14 +83,15 @@ const VoiceToolCard = ({frame, index, highlight}: {frame: number; index: number;
       position: 'absolute', left: lefts[index], top: 58 + y, width: cardWidth, height: cardHeight,
       transform: 'perspective(610px) rotateY(' + (74 * exit) + 'deg) scale(' + (index === 1 ? 1 + .07 * highlight : 1) + ')',
     }}>
-      <CardEntrance progress={1} x={0} y={dropY} rotation={dropAngle} width={cardWidth} height={cardHeight}
+      <DropCard frame={frame - entrance.start} x={0} y={0} tilt={entrance.tilt} offsets={entrance.offsets}
+        width={cardWidth} height={cardHeight}
         background="#fcfcf5" borderRadius={11} boxShadow="0 9px 18px #30343e20">
         <div style={{position: 'absolute', top: 12, left: 12, width: 29, height: 3, borderRadius: 4, background: tool.color}}/>
         <div style={{position: 'absolute', top: 23, left: 12, fontSize: 19, fontWeight: 900, color: '#272932', letterSpacing: -.46}}>{tool.title}</div>
         <div data-voice-tool-stars style={{position: 'absolute', top: 48, left: 12, fontFamily: 'monospace', fontSize: 13, fontWeight: 800, color: tool.color}}>★ {count}k</div>
         <div style={{position: 'absolute', top: 72, left: 12, right: 12, fontSize: 10.3, lineHeight: '15.5px', fontWeight: 500, color: '#464851'}}>{tool.notes}</div>
         <div style={{position: 'absolute', top: 122, left: 12, right: 11, display: 'flex', flexWrap: 'wrap', gap: 3}}>
-          {tool.tags.map(tag => <span key={tag} style={{padding: '2px 5px', borderRadius: 10, background: '#ededeb', color: '#494b51', fontSize: 8.9, lineHeight: '13px', fontWeight: 700}}>{tag}</span>)}
+          {tool.tags.map((tag, index) => <span key={index} style={{padding: '2px 5px', borderRadius: 10, background: '#ededeb', color: '#494b51', fontSize: 8.9, lineHeight: '13px', fontWeight: 700}}>{tag}</span>)}
         </div>
         {showCommand && <div data-voice-command style={{
           position: 'absolute', left: 12, right: 12, top: 159, minHeight: 25, padding: '4px 6px', boxSizing: 'border-box',
@@ -103,7 +104,7 @@ const VoiceToolCard = ({frame, index, highlight}: {frame: number; index: number;
           <NarrationWaveform width={129} height={35} step={2.8} color={tool.color}
             offset={index * 37 + (index === 1 ? 34 * during(frame, 9663, 9681) : 0)} progress={during(frame, waveformAt, waveformAt + 17)}/>
         </div>
-      </CardEntrance>
+      </DropCard>
     </div>
   </div>;
 };
@@ -118,7 +119,7 @@ const documentFlight = [
   [.982, 244, -9], [.995, 248, -9], [1, 249, -9],
 ] as const;
 
-const VoiceToolDocuments = ({frame}: {frame: number}) => <>
+const VoiceToolDocuments = ({frame, tools}: {frame: number; tools: VoiceTools}) => <>
   {tools.map((tool, index) => {
     const launch = documentLaunches[index];
     if (frame < launch.frame) return null;
@@ -130,7 +131,7 @@ const VoiceToolDocuments = ({frame}: {frame: number}) => <>
     const [travel, y, angle] = pose;
     const x = mix(lefts[index] + 70, 111, travel);
     const scale = mix(1, .66, travel);
-    return <div key={tool.title} data-voice-tool-document={tool.title} aria-hidden="true" style={{
+    return <div key={index} data-voice-tool-document={tool.title} aria-hidden="true" style={{
       position: 'absolute', zIndex: 3, left: x - 15, top: y - 8, width: 44, height: 53,
       borderRadius: 2, background: '#fdfdf9', boxShadow: '0 3px 8px #30343e23',
       transformOrigin: '15px 8px', transform: `rotate(${angle}deg) scale(${scale})`,
@@ -142,7 +143,7 @@ const VoiceToolDocuments = ({frame}: {frame: number}) => <>
   })}
 </>;
 
-export const NarrationTools = ({frame}: {frame: number}) => {
+export const NarrationTools = ({frame, tools = defaultTools}: {frame: number; tools?: VoiceTools}) => {
   const highlight = during(frame, 9580, 9595) * (1 - during(frame, 9686, 9701));
   const fade = 1 - during(frame, 9855, 9876);
   return <div data-narration-tools style={{position: 'absolute', inset: 0, opacity: fade}}>
@@ -152,7 +153,7 @@ export const NarrationTools = ({frame}: {frame: number}) => {
         const pulseAt = 9491 + index * 10;
         const pulse = clamp((frame - pulseAt) / 25);
         const [pulseX, pulseY] = pointOnCable(points, pulse);
-        return <g key={tools[index].title}>
+        return <g key={index}>
           <path d={cablePath(points)} pathLength="1" strokeDasharray="1" strokeDashoffset={1 - p} fill="none"
             stroke={tools[index].color} strokeWidth="2.2" opacity=".77" strokeLinecap="round"/>
           {frame >= pulseAt && frame < pulseAt + 26 && <g transform={'translate(' + (pulseX - 16) + ' ' + (pulseY - 8) + ')'}>
@@ -165,12 +166,12 @@ export const NarrationTools = ({frame}: {frame: number}) => {
     {tools.map((tool, index) => {
       const {start} = toolCardEntrances[index];
       const slot = during(frame, 9327 + index * 6, 9331 + index * 6) * (1 - during(frame, start + 3, start + 8));
-      return <div key={tool.title}>
+      return <div key={index}>
         <div style={{position: 'absolute', left: lefts[index], top: 58, width: cardWidth, height: cardHeight, border: '1px dashed #b6b7b1', borderRadius: 11, boxSizing: 'border-box', opacity: slot}}/>
-        {frame >= start && frame <= 9843 + index * 4 && <VoiceToolCard frame={frame} index={index} highlight={highlight}/>}
+        {frame >= start && frame <= 9843 + index * 4 && <VoiceToolCard frame={frame} index={index} highlight={highlight} tool={tool}/>}
       </div>;
     })}
-    <VoiceToolDocuments frame={frame}/>
+    <VoiceToolDocuments frame={frame} tools={tools}/>
   </div>;
 };
 

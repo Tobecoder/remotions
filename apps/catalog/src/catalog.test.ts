@@ -3,16 +3,17 @@ import {catalog, categories} from './catalog';
 import {draftMaterials} from './draftReview';
 
 describe('curated catalog', () => {
-  it('registers the twenty-five standalone materials under their matching categories', () => {
-    expect(catalog).toHaveLength(25);
-    expect(new Set(catalog.map(item=>item.id)).size).toBe(25);
-    expect(catalog.filter(item=>item.category==='layouts').map(item=>item.component).sort()).toEqual(['PerspectivePanel','FanCardDeck','ContentCollapse','CardSpotlight','DocumentWindow','CardEntrance','FocusLayer'].sort());
+  it('registers the standalone materials under their matching categories', () => {
+    expect(catalog).toHaveLength(28);
+    expect(new Set(catalog.map(item=>item.id)).size).toBe(catalog.length);
+    expect(catalog.filter(item=>item.category==='layouts').map(item=>item.component).sort()).toEqual(['PerspectivePanel','FanCardDeck','ContentCollapse','CardSpotlight','DocumentWindow','CardEntrance','DropCard','FocusLayer'].sort());
     expect(catalog.some(item=>['ScriptDocumentGuide','ProgressRace','DocumentFocusGallery','SectionCollapse','SceneThumbnail','PreparationCards'].includes(item.component))).toBe(false);
     expect(catalog.find(item=>item.component==='ExplodedLayers')?.category).toBe('storytelling');
     expect(catalog.find(item=>item.component==='ChapterHeading')?.category).toBe('text-effects');
     expect(catalog.find(item=>item.component==='BlurredCollage')?.category).toBe('backgrounds');
     expect(catalog.find(item=>item.component==='AudioPulseBadge')?.category).toBe('overlays');
-    expect(catalog.filter(item=>item.category==='storytelling').map(item=>item.component).sort()).toEqual(['ExplodedLayers','ChapterCardRow','BranchingPaths','TargetReticle','ConstraintSwitches','TetheredMotion','ConstraintRelease','AgentPipeline','TokenBowl'].sort());
+    expect(catalog.find(item=>item.component==='ImpactRecoil')?.category).toBe('effects');
+    expect(catalog.filter(item=>item.category==='storytelling').map(item=>item.component).sort()).toEqual(['ExplodedLayers','ChapterCardRow','BranchingPaths','TargetReticle','ConstraintSwitches','TetheredMotion','ConstraintRelease','AgentPipeline','TokenBowl','FileIntoContainer'].sort());
     expect(catalog.find(item=>item.component==='RisingCurve')?.category).toBe('charts');
     expect(catalog.find(item=>item.component==='ProgressRow')?.category).toBe('charts');
     expect(catalog.find(item=>item.component==='HighlightBox')?.category).toBe('overlays');

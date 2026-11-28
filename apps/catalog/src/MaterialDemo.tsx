@@ -1,9 +1,9 @@
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
-import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, ChapterHeading, ConstraintRelease, ConstraintSwitches, CardEntrance, FocusLayer, ExplodedLayers, FanCardDeck, PerspectivePanel, RisingCurve, ContentCollapse, TargetReticle, TetheredMotion} from '../../../packages/animations/src';
+import {AudioPulseBadge, BlurredCollage, BranchingPaths, ChapterCardRow, ChapterHeading, ConstraintRelease, ConstraintSwitches, CardEntrance, DropCard, ImpactRecoil, FocusLayer, ExplodedLayers, FanCardDeck, PerspectivePanel, RisingCurve, ContentCollapse, TargetReticle, TetheredMotion} from '../../../packages/animations/src';
 import {pathCardLayout} from '../../../packages/animations/src/reference-opening/continuation-motion';
 import {during, tiltedPose} from '../../../packages/animations/src/reference-opening/motion';
 import type {MaterialId} from './catalog';
-import {AgentPipeline,TypewriterComparison,CardSpotlight,ProgressRow,UsageMeter,TokenBowl,DocumentWindow,HighlightBox,CollapsingTitle} from '../../../packages/animations/src';
+import {AgentPipeline,TypewriterComparison,CardSpotlight,ProgressRow,UsageMeter,TokenBowl,FileIntoContainer,DocumentWindow,HighlightBox,CollapsingTitle} from '../../../packages/animations/src';
 import {PreparationArtwork} from '../../../packages/animations/src/reference-opening/PreparationArtwork';
 import {PanelScroll,LiveWaveform,LiveTimeline,LiveCaptionLines} from '../../../packages/animations/src/reference-opening/LivePanelContent';
 import {NeuronPreview} from '../../../packages/animations/src/reference-opening/NeuronPreview';
@@ -32,6 +32,54 @@ const PerspectiveDemo=({time}:{time:number})=><PerspectivePanel from={{x:220,y:1
 
 const CardEntranceDemo=({time}:{time:number})=><>{Array.from({length:6},(_,i)=><CardEntrance key={i} progress={during(time,.15+i*.2,.6+i*.2)} x={60+(i%3)*240} y={65+Math.floor(i/3)*180} width={200} height={150} rotation={[-2,1,-1,2,-1,1][i]}><GalleryDocument index={i}/></CardEntrance>)}</>;
 
+const DropCardDemo=({frame}:{frame:number})=><>
+  {[-8.5,0,8.5].map((tilt,index)=>{
+    const age=frame-(16+index*8), x=128+index*198;
+    return <div key={index}>
+      <div style={{position:'absolute',left:x,top:170,width:148,height:164,border:'1px dashed #aeb5b2',boxSizing:'border-box',borderRadius:8,opacity:1-during(age,5,12)}}/>
+      <DropCard frame={age} durationInFrames={22} x={x} y={170} width={148} height={164} tilt={tilt} borderRadius={8}>
+        <GalleryDocument index={index}/>
+      </DropCard>
+    </div>;
+  })}
+</>;
+
+const ImpactRecoilDemo=({frame}:{frame:number})=>{
+  const travel=during(frame,8,26);
+  return <>
+    <div aria-hidden style={{position:'absolute',left:84+117*travel,top:207,width:15,height:15,borderRadius:'50%',
+      background:'#cf704f',opacity:during(frame,8,12)*(1-during(frame,26,32))}}/>
+    <ImpactRecoil frame={frame-26} strength={20}>
+      {offset=><CardEntrance x={214+offset} y={172} width={196} height={85} progress={1} borderRadius={10}>
+        <div style={{display:'grid',height:'100%',placeItems:'center',fontSize:25,fontWeight:750,color:'#30343e'}}>横向位移</div>
+      </CardEntrance>}
+    </ImpactRecoil>
+    <ImpactRecoil frame={frame-35} strength={16}>
+      {angle=><CardEntrance x={523} y={130} width={112} height={174} progress={1} rotation={angle} borderRadius={13}
+        style={{transformOrigin:'50% 100%'}}>
+        <div style={{display:'grid',height:'100%',placeItems:'center',fontSize:24,fontWeight:750,color:'#405c81'}}>绕底部<br/>回摆</div>
+      </CardEntrance>}
+    </ImpactRecoil>
+    <div aria-hidden style={{position:'absolute',left:504,top:307,width:150,height:3,borderRadius:2,background:'#405c8144'}}/>
+  </>;
+};
+
+const FilingDemo=({time}:{time:number})=><>
+  {[{x:110,y:150},{x:315,y:62},{x:539,y:133}].map(({x,y},index)=>{
+    const start=.55+index*.65;
+    return <FileIntoContainer key={x} progress={(time-start)/.82} from={{x,y,width:150}}
+      to={{x:400,y:309}} liftHeight={115}>
+      <CardEntrance x={0} y={0} width={150} height={85} progress={1} borderRadius={6}>
+        <PathArtwork index={index}/>
+      </CardEntrance>
+    </FileIntoContainer>;
+  })}
+  <svg width="156" height="121" viewBox="0 0 156 121" style={{position:'absolute',left:322,top:263}} aria-label="文件夹">
+    <path d="M2 19Q2 11 10 11H55L65 22H144Q154 22 154 32V108H2Z" fill="#58a9e8"/>
+    <rect x="2" y="39" width="152" height="69" rx="7" fill="#81bff0"/>
+  </svg>
+</>;
+
 const SpotlightDemo=({time}:{time:number})=>{
   const from=getComparisonThumbnailRect('right',time+5.4),progress=during(time,0,.4)*(1-during(time,3,3.5));
   return <>
@@ -55,6 +103,9 @@ export const MaterialDemo=({id}:{id:MaterialId})=>{
   const frame=useCurrentFrame(),{fps,width,height}=useVideoConfig(),time=frame/fps;
   let content;
   switch(id){
+    case 'impact-recoil':content=<ImpactRecoilDemo frame={frame}/>;break;
+    case 'drop-card':content=<DropCardDemo frame={frame}/>;break;
+    case 'file-into-container':content=<FilingDemo time={time}/>;break;
     case 'token-bowl':content=<TokenBowl time={time} startAt={.3} count={20} x={260} y={110} width={280}/>;break;
     case 'document-window':content=<DocumentWindow x={200} y={80} width={400} height={290} title="操作指南" enterProgress={during(time,0,.4)} scrollProgress={during(time,.8,4.4)} scrollDistance={240}><div style={{padding:'12px 24px',fontSize:10,lineHeight:'18px',color:'#484d55'}}><div style={{fontSize:15,fontWeight:700,marginBottom:10}}>把操作步骤整理清楚</div>{Array.from({length:20},(_,i)=><p key={i} style={{margin:'0 0 4px'}}>第 {i+1} 步：准备内容，核对信息，再展示当前要完成的操作。</p>)}</div></DocumentWindow>;break;
     case 'highlight-box':content=<><div style={{position:'absolute',left:200,top:80,width:400,height:280,borderRadius:10,overflow:'hidden',boxShadow:'0 8px 17px #33363c1d'}}><DemoDocument title="需要关注的区域"/></div><HighlightBox progress={during(time,.5,1.2)} x={220} y={174} width={350} height={94} color="#409eff" shadowColor="#409eff22"/></>;break;

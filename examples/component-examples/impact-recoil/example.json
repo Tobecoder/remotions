@@ -1,0 +1,20 @@
+{
+  "id": "impact-recoil",
+  "materialIds": ["impact-recoil"],
+  "name": "三路波形撞击与回摆",
+  "description": "三路波形各自撞到右侧卡片，卡片先向右弹，再左右回摆归位，红叉依次出现。",
+  "useCases": ["撞击反馈", "一对多事件演示", "输入未被接收的提示"],
+  "replaceable": ["三张卡的名称", "各卡左侧标记色"],
+  "preserve": ["波形依次从左向右飞行", "每张卡在自身的碰撞帧开始回摆", "卡片先向右弹，再衰减归位", "各卡的红叉分别在撞击后出现"],
+  "reviewStatus": "pending",
+  "composition": {"id":"Example-Impact-Recoil","width":1280,"height":720,"fps":30,"durationInFrames":120,"posterFrame":96},
+  "source": {
+    "entry":"examples/component-examples/impact-recoil/index.tsx",
+    "component":"examples/component-examples/impact-recoil/Example.tsx",
+    "exportName":"ImpactRecoilExample",
+    "implementation":"examples/reference-opening/compositions/SpeechRecognition.tsx",
+    "guide":"examples/component-examples/impact-recoil/README.md"
+  },
+  "preview": {"video":"/examples/impact-recoil.mp4","poster":"/examples/impact-recoil.jpg","guide":"/examples/impact-recoil.md"},
+  "defaultProps": {}
+}

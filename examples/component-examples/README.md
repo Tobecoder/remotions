@@ -15,10 +15,14 @@
 | `UsageMeter` · 计数与分格电量 | 用量与电量切换 | [使用说明](./usage-meter/README.md) · [入口](./usage-meter/index.tsx) | 待用户确认 |
 | `CardEntrance` / `ContentCollapse` · 卡片入场、内容收拢 | 三步流程与角落摘要 | [使用说明](./three-step-flow/README.md) · [入口](./three-step-flow/index.tsx) | 待用户确认 |
 | `CardEntrance` · 卡片入场 | 方法切换与操作步骤 | [使用说明](./tutorial-walkthrough/README.md) · [入口](./tutorial-walkthrough/index.tsx) | 待用户确认 |
-
 | `TokenBowl` / `CardEntrance` · 落篮收集、卡片入场 | 落篮收集与额度说明 | [使用说明](./resource-credits/README.md) · [入口](./resource-credits/index.tsx) | 待用户确认 |
+| `FileIntoContainer` · 素材飞入容器 | 素材墙与网页缩略图归档 | [使用说明](./material-filing/README.md) · [入口](./material-filing/index.tsx) | 待用户确认 |
+| `DropCard` · 错峰落卡回弹 | 三张工具卡错峰落位 | [使用说明](./drop-cards/README.md) · [入口](./drop-cards/index.tsx) | 待用户确认 |
+| `ImpactRecoil` · 撞击后回摆 | 三路波形撞击与回摆 | [使用说明](./impact-recoil/README.md) · [入口](./impact-recoil/index.tsx) | 待用户确认 |
+| `HighlightBox` / `CardEntrance` · 区域高亮、卡片入场 | SRT 字幕与时间线同步 | [使用说明](./srt-sync/README.md) · [入口](./srt-sync/index.tsx) | 待用户确认 |
+| `CardEntrance` · 卡片入场 | 文字三路入卡 | [使用说明](./transcript-routing/README.md) · [入口](./transcript-routing/index.tsx) | 待用户确认 |
 
-当前十二份完整范例均具备独立入口、完整预览和替换说明；新范例的视觉验收状态仍以上表为准。
+当前十七份完整范例均具备独立入口、完整预览和替换说明；新范例的视觉验收状态仍以上表为准。
 
 本站完整范例预览产物位于 `apps/catalog/public/examples/`，由对应案例的导出脚本生成。素材站仅引用范例元数据和预览文件，不另写案例动画，也不将固定组合重新导出为通用组件。
 

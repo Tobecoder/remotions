@@ -18,7 +18,7 @@
 
 `MaterialCollectionFilm` 在 180 秒前直接复用 `ScriptClosingFilm`，背景继续原全局时钟。新增 `07-Material-Collection` 为独立 23 秒、690 帧片段，符合每段至少 20 秒并在完整节点结束的要求。
 
-镜头实现保存在案例组合 `MaterialCollection`，复用 `CardEntrance`、`ContentCollapse`、`HighlightBox`、`ChapterHeading`，没有新增公开动作或素材站条目。`prepare-material-assets.py` 从原片分别校正卡片内容、窗口内容及正向、左向、持平板三个透明人物姿态，保存至案例专属 `public/material-collection/`；运行时不使用整幅原片替代组合。图表与工作台被其他窗口挡住的窄角有局部补齐，非原始无损素材。旧模型对照使用的图集不改。
+镜头实现保存在案例组合 `MaterialCollection`，复用 `CardEntrance`、`ContentCollapse`、`HighlightBox`、`ChapterHeading` 和 `FileIntoContainer`。本地卡的抬升和落入由 `FileIntoContainer` 计算，镜头坐标换算、入夹顺序和文件夹的前后遮挡由案例编排。[素材墙与网页缩略图归档](../component-examples/material-filing/README.md) 使用同一组合。`prepare-material-assets.py` 从原片分别校正卡片内容、窗口内容及正向、左向、持平板三个透明人物姿态，保存至案例专属 `public/material-collection/`；运行时不使用整幅原片替代组合。图表与工作台被其他窗口挡住的窄角有局部补齐，非原始无损素材。旧模型对照使用的图集不改。
 
 **仍有明确差异，待用户确认：**原片人物是连续立体动作，本例通过三个分离姿态、旋转、位移和压缩近似表达；转身不再只用镜像，平板和笔沿用持物姿态，煎蛋热气仍为代码覆盖。脚本是单独文档截图的代码滚动；剪辑窗口是绿幕/黑底两张内容截图切换，不是完整原录屏。素材墙推近、层间位移与入夹路径依据逐帧观测拟合，仍不是原工程曲线。Computer Use 截图仅为原片示例素材，不表示当前产品页面。
 

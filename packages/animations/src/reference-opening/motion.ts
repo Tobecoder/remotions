@@ -2,6 +2,11 @@ export type PlanePose = {x: number; y: number; ax: number; ay: number; bx: numbe
 
 export const clamp = (value: number) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
 export const mix = (a: number, b: number, t: number) => a + (b - a) * t;
+export const sampleFrames = (values: readonly number[], frame: number) => {
+  if (!Number.isFinite(frame) || frame < 0 || frame >= values.length) return 0;
+  const index = Math.floor(frame);
+  return mix(values[index] ?? 0, values[index + 1] ?? 0, frame - index);
+};
 export const ease = (value: number) => {const t = clamp(value); return t * t * (3 - 2 * t);};
 export const during = (time: number, start: number, end: number) => ease((time - start) / Math.max(0.001, end - start));
 

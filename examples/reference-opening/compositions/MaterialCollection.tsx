@@ -1,6 +1,6 @@
 import type {ReactNode} from 'react';
 import {Img,staticFile} from 'remotion';
-import {CardEntrance,ChapterHeading,ContentCollapse,HighlightBox} from '../../../packages/animations/src';
+import {CardEntrance,ChapterHeading,ContentCollapse,FileIntoContainer,HighlightBox} from '../../../packages/animations/src';
 import {clamp,during,mix} from '../../../packages/animations/src/reference-opening/motion';
 
 const MaterialImage=({name}:{name:string})=><Img src={staticFile(`material-collection/${name}.jpg`)} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>;
@@ -46,19 +46,17 @@ const archiveItems=[
   ...collage.map(item=>({...item,title:undefined as string|undefined,enterEnd:item.enterAt+.23})),
   {id:'script-recording',title:'脚本录屏.mov',x:177,y:155,width:233,height:150,rotation:-2.5,enterAt:180.7,enterEnd:180.94},
   {id:'editor-recording',title:'抠像演示.mov',x:410,y:135,width:217,height:142,rotation:3,enterAt:180.84,enterEnd:181.07},
-];
+] as const;
 const archiveStarts:Record<string,number>={chart:188.1,history:188.23,desk:188.36,workspace:188.5,voice:188.63,neurons:188.76,'script-recording':189.1,'editor-recording':189.33};
 
-// The reference first lifts a reduced card above the mouth, then drops it inside.
-// This path belongs to this shot; ContentCollapse still owns the shared transform.
-const filingPose=(progress:number,x:number,y:number,width:number,height:number,folderX:number,folderY:number)=>{
-  const lift=during(progress,0,.57),drop=during(progress,.57,1);
-  const scale=mix(mix(1,.5,lift),.025,drop);
-  const mouthX=folderX+53;
-  const centerX=mix(x+width/2,mouthX,lift);
-  const top=mix(mix(y,folderY-80,lift),folderY+48,drop);
-  return {x:centerX-width*scale/2,y:top,scale};
+export type MaterialFilingOverrides={
+  localCards?: Partial<Record<typeof collage[number]['id']|'script-recording'|'editor-recording',ReactNode>>;
+  webCards?: readonly ReactNode[];
+  folderLabel?: string;
+  folderRows?: readonly (readonly [string,string])[];
 };
+
+const defaultFolderRows=[['截图/','12'],['录屏/','3'],['参考图/','6']] as const;
 
 const Lock=({open,opacity}:{open:number;opacity:number})=><svg data-material-lock data-unlock={open} width="42" height="50" viewBox="0 0 42 50" style={{position:'absolute',left:94,top:52,opacity,overflow:'visible',filter:'drop-shadow(0 3px 3px #6663)'}} aria-label={open===1?'已解锁':'锁定'}>
   {/* Lift the free left end; the open shackle leans above the body's right side. */}
@@ -72,7 +70,9 @@ const DesignApp=()=><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gr
 const ComputerUse=()=> <div data-material-computer-use style={{height:'100%'}}><MaterialImage name="computer-use"/></div>;
 
 /** Reference-owned sequence; all timings, arrangement and app content stay in the case. */
-export const MaterialCollection=({time,showAgent=true}:{time:number;showAgent?:boolean})=>{
+export const MaterialCollection=({time,showAgent=true,filing}:{
+  time:number;showAgent?:boolean;filing?:MaterialFilingOverrides;
+})=>{
   const webExit=during(time,193.2,194.4);
   const appsEnter=during(time,193.3,194.5);
   const ready=during(time,201.5,201.9);
@@ -92,6 +92,8 @@ export const MaterialCollection=({time,showAgent=true}:{time:number;showAgent?:b
   const folderOpacity=during(time,187.53,187.8);
   const cameraScale=1+.12*during(time,182.6,185.4)*(1-during(time,188.05,189.8));
   const cameraX=-14*during(time,182.6,185.4)*(1-during(time,188.05,189.8));
+  const folderRows=filing?.folderRows??defaultFolderRows;
+  const webCard=(index:number)=>filing?.webCards?.[index]??<MaterialImage name={`web-${index}`}/>;
   return <div data-material-collection style={{position:'absolute',inset:0}}>
     <div data-material-chapter style={{position:'absolute',inset:0,opacity:1-during(time,180.5,180.73)}}>
       <ChapterHeading from={{number:'CHAPTER 02 / 05',title:'素材',description:'截图 / 录屏 / 小动画'}} to={{number:'CHAPTER 02 / 05',title:'素材',description:'截图 / 录屏 / 小动画'}} progress={0} x={60} y={128}/>
@@ -102,20 +104,19 @@ export const MaterialCollection=({time,showAgent=true}:{time:number;showAgent?:b
         {archiveItems.map(({id,title,x,y,width,height,rotation,enterAt,enterEnd})=>{
           const start=archiveStarts[id];
           const progress=clamp((time-start)/(id==='script-recording'?.36:.3));
-          if(progress===1)return null;
           const parallax=during(time,182.6,185.4)*(1-during(time,188.05,189.8));
           const dy=({history:-5,desk:-4,workspace:-8,neurons:-12,voice:-16,'script-recording':-8,'editor-recording':-6} as Record<string,number>)[id]??0;
           const dx=id==='script-recording'?6:id==='editor-recording'?-4:0;
           // Convert the mouth from stage space into the moving collage's space.
-          const mouthX=400+(folderX+53-400-cameraX)/cameraScale-53;
+          const mouthX=400+(folderX+53-400-cameraX)/cameraScale;
           const mouthY=225+(folderY-225)/cameraScale;
-          return <ContentCollapse key={id} data-material-archive={id} data-archive-progress={progress}
-            progress={1} to={filingPose(progress,x+dx*parallax,y+dy*parallax,width,height,mouthX,mouthY)}
+          return <FileIntoContainer key={id} data-material-archive={id} data-archive-progress={progress}
+            progress={progress} from={{x:x+dx*parallax,y:y+dy*parallax,width}} to={{x:mouthX,y:mouthY+48}}
           >
             <WindowCard id={id} title={title} x={0} y={0} width={width} height={height} rotation={mix(rotation,0,progress)} progress={during(time,enterAt,enterEnd)}>
-              {id==='script-recording'?<ScriptRecording time={time}/>:id==='editor-recording'?<EditorRecording time={time}/>:<MaterialImage name={id}/>}
+              {filing?.localCards?.[id]??(id==='script-recording'?<ScriptRecording time={time}/>:id==='editor-recording'?<EditorRecording time={time}/>:<MaterialImage name={id}/>)}
             </WindowCard>
-          </ContentCollapse>;
+          </FileIntoContainer>;
         })}
       </div>
       {/* Reference depth: the complete folder silhouette covers cards even before filing. */}
@@ -123,23 +124,23 @@ export const MaterialCollection=({time,showAgent=true}:{time:number;showAgent?:b
         <path d="M3 19Q3 13 9 13H41L48 20H96Q102 20 102 26V86H3Z" fill="#58a9e8"/>
       </svg>
       <svg data-material-folder width="106" height="104" viewBox="0 0 106 104" style={{position:'absolute',left:folderX,top:folderY,opacity:folderOpacity}} aria-label="素材文件夹">
-        <rect x="3" y="31" width="99" height="57" rx="5" fill="#81bff0"/><text x="53" y="103" textAnchor="middle" fontWeight="700" fontSize="9" fill="#34373b">素材/</text>
+        <rect x="3" y="31" width="99" height="57" rx="5" fill="#81bff0"/><text x="53" y="103" textAnchor="middle" fontWeight="700" fontSize="9" fill="#34373b">{filing?.folderLabel??'素材/'}</text>
       </svg>
       <div data-material-folder-list style={{position:'absolute',left:285,top:218,width:117,padding:'4px 7px',boxSizing:'border-box',borderRadius:5,background:'#ffffffed',boxShadow:'0 5px 10px #31343c18',fontSize:9,fontWeight:700,opacity:during(time,191.4,191.8)}}>
-        {[['截图/','12'],['录屏/','3'],['参考图/','6']].map(([label,count],index)=><div key={label} style={{display:'flex',justifyContent:'space-between',padding:'4px 0',opacity:during(time,191.4+index*.18,191.6+index*.18),borderBottom:label==='参考图/'?'none':'1px solid #e2e2de'}}><span>{label}</span><span style={{fontWeight:400,color:'#8b8f96'}}>{count}</span></div>)}
+        {folderRows.map(([label,count],index)=><div key={index} style={{display:'flex',justifyContent:'space-between',padding:'4px 0',opacity:during(time,191.4+index*.18,191.6+index*.18),borderBottom:index===folderRows.length-1?'none':'1px solid #e2e2de'}}><span>{label}</span><span style={{fontWeight:400,color:'#8b8f96'}}>{count}</span></div>)}
       </div>
     </ContentCollapse>
 
     <ContentCollapse data-material-web-stage progress={webExit} to={{x:-660,y:0,scale:1}} opacity={1-during(time,193.6,194)}>
       <WindowCard id="web-gallery" title="https://…" x={509} y={55} width={226} height={133} progress={during(time,189.6,189.95)}>
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:4,height:'100%'}}>
-          {Array.from({length:6},(_,index)=><div key={index} style={{overflow:'hidden',borderRadius:3,opacity:index<3?1-.92*during(time,190.5+index*.22,190.6+index*.22):1}}><MaterialImage name={`web-${index}`}/></div>)}
+          {Array.from({length:6},(_,index)=><div key={index} style={{overflow:'hidden',borderRadius:3,opacity:index<3?1-.92*during(time,190.5+index*.22,190.6+index*.22):1}}>{webCard(index)}</div>)}
         </div>
       </WindowCard>
       {[0,1,2].map(index=>{
         const start=190.5+index*.22,p=clamp((time-start)/.55);
         if(p===0||p===1)return null;
-        return <ContentCollapse key={index} data-material-web-capture={index} progress={p} from={{x:514+index*73,y:74,scale:1}} to={{x:folderX+48,y:folderY+33,scale:.06}}><div style={{width:68,height:48,overflow:'hidden',border:'2px solid white',borderRadius:3}}><MaterialImage name={`web-${index}`}/></div></ContentCollapse>;
+        return <ContentCollapse key={index} data-material-web-capture={index} progress={p} from={{x:514+index*73,y:74,scale:1}} to={{x:folderX+48,y:folderY+33,scale:.06}}><div style={{width:68,height:48,overflow:'hidden',border:'2px solid white',borderRadius:3}}>{webCard(index)}</div></ContentCollapse>;
       })}
     </ContentCollapse>
 

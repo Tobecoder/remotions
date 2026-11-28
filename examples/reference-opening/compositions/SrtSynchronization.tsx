@@ -1,4 +1,5 @@
 import {Img, OffthreadVideo, Sequence, staticFile} from 'remotion';
+import type {CSSProperties} from 'react';
 import {CardEntrance, HighlightBox} from '../../../packages/animations/src';
 import {clamp, during, mix} from '../../../packages/animations/src/reference-opening/motion';
 
@@ -66,40 +67,76 @@ const tutorialCues = [
 const lineHeight = 19.15;
 const srtPanel = {x: 491, y: 51, width: 272, height: 315};
 const tickPositions = [54, 108, 141, 180, 251, 330, 370, 426, 448];
+export const srtSyncStartFrame = 10061;
+const previewStart = 10095;
+const mediaStyle = {width: '100%', height: '100%', display: 'block'} satisfies CSSProperties;
 
-export const SrtSyncExample = ({frame}: {frame: number}) => {
+export type SrtCue = {startMs: number; endMs: number; text: string};
+export type SrtPlayback = {cues: readonly SrtCue[]; previewSrc: string};
+
+const referenceTracks = tickPositions.slice(0, -1).map((x, i) => ({x, endX: tickPositions[i + 1]}));
+const referenceState = (frame: number) => {
   const active = tutorialCues.reduce((index, cue, i) => frame >= cue.from ? i : index, -1);
   const scroll = tutorialCues.slice(1).reduce((offset, cue) =>
     offset + 4 * lineHeight * during(frame, cue.from + 5, cue.from + 40), 0);
-  const outline = during(frame, 10205, 10219);
-  const timeline = during(frame, 10243, 10266);
   const cueIndex = Math.max(active, 0);
   const cueStart = tutorialCues[cueIndex].from;
   const nextCue = tutorialCues[cueIndex + 1]?.from ?? cueStart + 74;
   const head = mix(tickPositions[cueIndex], tickPositions[cueIndex + 1], clamp((frame - cueStart) / (nextCue - cueStart)));
+  return {active, scroll, head, tracks: referenceTracks, rows: tutorialCues};
+};
+
+const formatSrtTime = (ms: number) => {
+  const time = Math.floor(ms);
+  const pad = (value: number, minimum = 2) => String(value).padStart(minimum, '0');
+  return pad(Math.floor(time / 3600000)) + ':' + pad(Math.floor(time / 60000) % 60) + ':' +
+    pad(Math.floor(time / 1000) % 60) + ',' + pad(time % 1000, 3);
+};
+
+const playbackState = (frame: number, cues: readonly SrtCue[]) => {
+  const time = (frame - previewStart) * 1000 / 30;
+  const started = cues.reduce((index, cue, i) => cue.startMs <= time ? i : index, -1);
+  const active = started >= 0 && time < cues[started].endMs ? started : -1;
+  const furthest = cues.reduce((end, cue) => Math.max(end, cue.endMs), 1);
+  const toX = (ms: number) => mix(54, 448, clamp(ms / furthest));
+  const scroll = cues.slice(1).reduce((offset, cue) =>
+    offset + 4 * lineHeight * during(time, cue.startMs, cue.startMs + 350), 0);
+  const minScroll = Math.max(0, (4 * started + 3) * lineHeight - srtPanel.height);
+  const maxScroll = Math.max(0, cues.length * 4 * lineHeight - srtPanel.height);
+  return {
+    active, scroll: Math.min(maxScroll, Math.max(scroll, minScroll)), head: toX(time),
+    tracks: cues.map(cue => ({x: toX(cue.startMs), endX: toX(cue.endMs)})),
+    rows: cues.map(cue => ({start: formatSrtTime(cue.startMs), end: formatSrtTime(cue.endMs), text: cue.text})),
+  };
+};
+
+export const SrtSyncExample = ({frame, playback}: {frame: number; playback?: SrtPlayback}) => {
+  const {active, scroll, head, tracks, rows} = playback ? playbackState(frame, playback.cues) : referenceState(frame);
+  const outline = during(frame, 10205, 10219);
+  const timeline = playback ? during(frame, 10090, previewStart) : during(frame, 10243, 10266);
   return <div data-srt-sync-example data-srt-active-cue={active + 1} style={{
-    position: 'absolute', inset: 0, opacity: 1 - during(frame, 10372, 10385),
+    position: 'absolute', inset: 0, opacity: playback ? 1 : 1 - during(frame, 10372, 10385),
   }}>
-    <CardEntrance progress={during(frame, 10061, 10072)} {...srtPanel} offset={{x: 59, y: 0}}
+    <CardEntrance progress={during(frame, srtSyncStartFrame, 10072)} {...srtPanel} offset={{x: 59, y: 0}}
       borderRadius={10} background="#fffefa" boxShadow="0 7px 13px #30343e20">
       <div data-srt-lines style={{
         position: 'absolute', left: 0, right: 0, top: 0, transform: `translate3d(0,${-scroll}px,0)`,
         fontFamily: 'Consolas, "Microsoft YaHei", monospace', fontSize: 10.8, lineHeight: lineHeight + 'px', color: '#2c272b',
       }}>
-        {tutorialCues.map((cue, i) => <div key={cue.from}>
+        {rows.map((cue, i) => <div key={i}>
           <div data-srt-cue={i + 1} style={{background: active === i ? '#f6dcd4' : undefined, boxShadow: active === i ? 'inset 2px 0 #d25138' : undefined}}>
             {[String(i + 1), cue.start + ' --> ' + cue.end, cue.text].map((line, j) => <div key={j} style={{
               display: 'grid', gridTemplateColumns: '30px 1fr', alignItems: 'center', padding: '0 6px', height: lineHeight,
             }}>
               <span style={{textAlign: 'right', paddingRight: 12, color: '#717174'}}>{i * 4 + j + 1}</span>
-              <span style={{whiteSpace: 'nowrap'}}>{line}</span>
+              <span style={playback && j === 2 ? {whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'} : {whiteSpace: 'nowrap'}}>{line}</span>
             </div>)}
           </div>
           <div style={{height: lineHeight, marginLeft: 6, width: 18, textAlign: 'right', color: '#717174'}}>{i * 4 + 4}</div>
         </div>)}
-        <div aria-hidden="true" style={{display: 'grid', gridTemplateColumns: '30px 1fr', padding: '0 6px'}}>
+        {!playback && <div aria-hidden="true" style={{display: 'grid', gridTemplateColumns: '30px 1fr', padding: '0 6px'}}>
           <span style={{textAlign: 'right', paddingRight: 12, color: '#717174'}}>29</span><span>8</span>
-        </div>
+        </div>}
       </div>
       <div aria-hidden="true" style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 18, background: 'linear-gradient(transparent, #fffefa)'}}/>
     </CardEntrance>
@@ -107,16 +144,22 @@ export const SrtSyncExample = ({frame}: {frame: number}) => {
     {frame >= 10090 && <CardEntrance data-srt-tutorial-preview progress={during(frame, 10090, 10096)}
       x={43} y={61} width={420} height={237} offset={{x: 0, y: 0}}
       borderRadius={8} background="#f2f1f8" boxShadow="0 7px 15px #2d303925">
-      {frame < 10374 ? <Sequence from={10095} durationInFrames={279} layout="none">
-        <OffthreadVideo muted src={staticFile('srt-sync/tutorial-preview.mp4')} style={{width: '100%', height: '100%', display: 'block'}}/>
-      </Sequence> : <Img src={staticFile('srt-sync/tutorial-last.png')} style={{width: '100%', height: '100%', display: 'block'}}/>}
+      {playback || frame < 10374 ? <Sequence from={previewStart} durationInFrames={playback ? undefined : 279} layout="none">
+        <OffthreadVideo muted src={playback?.previewSrc ?? staticFile('srt-sync/tutorial-preview.mp4')} style={mediaStyle}/>
+      </Sequence> : <Img src={staticFile('srt-sync/tutorial-last.png')} style={mediaStyle}/>}
+      {playback && active >= 0 && <div data-srt-preview-caption style={{
+        position: 'absolute', bottom: 10, left: '50%', transform: 'translateX(-50%)', width: 'max-content', maxWidth: '90%',
+        background: '#242a37e8', color: '#fff', padding: '3px 7px', borderRadius: 4, textAlign: 'center',
+        fontSize: 10, lineHeight: '14px', fontWeight: 700, whiteSpace: 'pre-line', overflowWrap: 'anywhere',
+      }}>{rows[active].text}</div>}
     </CardEntrance>}
     {timeline > 0 && <svg data-srt-tutorial-timeline width="800" height="450" style={{position: 'absolute', inset: 0, opacity: timeline}} aria-hidden="true">
-      {tickPositions.slice(0, -1).map((x, i) => <g key={x}>
-        <rect x={x - 8} y="317" width={tickPositions[i + 1] - x - 5} height="14" rx="3" fill={active === i ? coral : '#d1d3ce'}/>
+      {tracks.map(({x, endX}, i) => <g key={i}>
+        <rect data-srt-timeline-cue={i + 1} x={x - 8} y="317" width={playback ? Math.max(0, endX - x - 3) : endX - x - 5}
+          height="14" rx="3" fill={active === i ? coral : '#d1d3ce'}/>
         <rect x={x - 5.3} y="341" width="10.6" height="10.6" rx="1.5" transform={`rotate(45 ${x} 346.3)`} fill={x <= head ? '#292c36' : '#d5d7d1'}/>
       </g>)}
-      <line x1={head} x2={head} y1="313" y2="359" stroke={coral} strokeWidth="1.55"/>
+      <line data-srt-timeline-playhead x1={head} x2={head} y1="313" y2="359" stroke={coral} strokeWidth="1.55"/>
     </svg>}
   </div>;
 };

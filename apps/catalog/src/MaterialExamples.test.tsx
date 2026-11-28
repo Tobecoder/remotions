@@ -92,7 +92,7 @@ describe('full examples associated with a standalone material',()=>{
     const {container,rerender}=render(<MaterialExamples materialId="document-window"/>);
     for(const materialId of ['document-window','highlight-box','collapsing-title'] as const){
       rerender(<MaterialExamples materialId={materialId}/>);
-      expect(container.querySelectorAll('[data-material-example]')).toHaveLength(1);
+      expect(container.querySelectorAll('[data-material-example="script-document-guide"]')).toHaveLength(1);
       const toggle=screen.getByRole('button',{name:'查看完整范例 · 脚本文档讲解'});
       fireEvent.click(toggle);
       const panel=screen.getByRole('region',{name:'脚本文档讲解完整范例'});

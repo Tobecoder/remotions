@@ -1,0 +1,20 @@
+{
+  "id": "srt-sync",
+  "materialIds": ["highlight-box", "card-entrance"],
+  "name": "SRT 字幕与时间线同步",
+  "description": "左侧教程预览、右侧 SRT 文件和底部时间线同时演示字幕同步。替换预览时，一份字幕时间表驱动字幕、行高亮及播放头。",
+  "useCases": ["字幕制作教程", "演示按时间触发的动画", "语音字幕与画面对齐"],
+  "replaceable": ["预览视频", "字幕文案与起止时间"],
+  "preserve": ["左预览、右 SRT 文件、下方时间线的布局", "当前字幕、文档高亮与播放头共享进度", "切换字幕时，SRT 列表滚动以保持活动行可见"],
+  "reviewStatus": "pending",
+  "composition": {"id":"Example-Srt-Sync","width":1280,"height":720,"fps":30,"durationInFrames":312,"posterFrame":225},
+  "source": {
+    "entry":"examples/component-examples/srt-sync/index.tsx",
+    "component":"examples/component-examples/srt-sync/Example.tsx",
+    "exportName":"SrtSyncFullExample",
+    "implementation":"examples/reference-opening/compositions/SrtSynchronization.tsx",
+    "guide":"examples/component-examples/srt-sync/README.md"
+  },
+  "preview": {"video":"/examples/srt-sync.mp4","poster":"/examples/srt-sync.jpg","guide":"/examples/srt-sync.md"},
+  "defaultProps": {}
+}

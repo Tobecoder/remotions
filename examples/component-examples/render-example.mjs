@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {bundle} from '@remotion/bundler';
 import {getCompositions,openBrowser,renderMedia,renderStill} from '@remotion/renderer';
 
-export const renderExample=async(folderUrl)=>{
+export const renderExample=async(folderUrl,{publicDir,port}={})=>{
   const folder=fileURLToPath(folderUrl),root=path.resolve(folder,'../../..');
   const example=JSON.parse(await readFile(path.join(folder,'example.json'),'utf8'));
   const work=path.join(root,'.verification/component-examples',example.id),publicRoot=path.join(root,'apps/catalog/public');
@@ -22,15 +22,15 @@ export const renderExample=async(folderUrl)=>{
   await mkdir(path.dirname(video),{recursive:true});
   const browserExecutable=process.env.REMOTION_BROWSER_EXECUTABLE||path.join(root,'.verification/browser/chrome-headless-shell.exe');
   assert(existsSync(browserExecutable),'Set REMOTION_BROWSER_EXECUTABLE to the local headless Chrome executable');
-  const serveUrl=await bundle({entryPoint:path.join(folder,'index.tsx'),outDir:path.join(work,'bundle')});
+  const serveUrl=await bundle({entryPoint:path.join(folder,'index.tsx'),outDir:path.join(work,'bundle'),publicDir});
   const browser=await openBrowser('chrome',{browserExecutable});
   const errors=[];
   try{
-    const compositions=await getCompositions(serveUrl,{puppeteerInstance:browser});
+    const compositions=await getCompositions(serveUrl,{puppeteerInstance:browser,port});
     const composition=compositions.find(item=>item.id===example.composition.id);
     assert(composition);
     for(const key of ['width','height','fps','durationInFrames'])assert.equal(composition[key],example.composition[key]);
-    const shared={serveUrl,composition,puppeteerInstance:browser,browserExecutable,onBrowserLog:log=>{if(log.type==='error')errors.push(log.text);}};
+    const shared={serveUrl,composition,puppeteerInstance:browser,browserExecutable,port,onBrowserLog:log=>{if(log.type==='error')errors.push(log.text);}};
     await renderStill({...shared,frame:example.composition.posterFrame,output:poster,imageFormat:'jpeg',jpegQuality:90});
     let reported=-1;
     await renderMedia({...shared,outputLocation:video,codec:'h264',crf:20,pixelFormat:'yuv420p',concurrency:2,onProgress:({progress})=>{

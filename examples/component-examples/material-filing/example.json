@@ -1,0 +1,20 @@
+{
+  "id": "material-filing",
+  "materialIds": ["file-into-container"],
+  "name": "素材墙与网页缩略图归档",
+  "description": "文件夹先出现，素材墙里的截图和录屏依次抬起、落入，随后收进网页缩略图并显示目录。",
+  "useCases": ["素材整理", "文件归档", "展示多处素材汇集"],
+  "replaceable": ["八张本地素材卡的内容", "六张网页缩略图的内容", "文件夹名称和目录统计"],
+  "preserve": ["文件夹先出现并盖住素材", "本地卡先抬后落，错峰归档", "网页上排三张随后收入同一文件夹", "目录逐行出现并停留"],
+  "reviewStatus": "pending",
+  "composition": {"id":"Example-Material-Filing","width":1280,"height":720,"fps":30,"durationInFrames":180,"posterFrame":35},
+  "source": {
+    "entry":"examples/component-examples/material-filing/index.tsx",
+    "component":"examples/component-examples/material-filing/Example.tsx",
+    "exportName":"MaterialFilingExample",
+    "implementation":"examples/reference-opening/compositions/MaterialCollection.tsx",
+    "guide":"examples/component-examples/material-filing/README.md"
+  },
+  "preview": {"video":"/examples/material-filing.mp4","poster":"/examples/material-filing.jpg","guide":"/examples/material-filing.md"},
+  "defaultProps": {}
+}

@@ -1,7 +1,7 @@
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
 import {NarrationFilm} from './NarrationScene';
 import {PaperBackground, Subtitle} from './OpeningScene';
-import {SrtSyncExample, SrtWaveform} from './compositions/SrtSynchronization';
+import {SrtSyncExample, srtSyncStartFrame, SrtWaveform} from './compositions/SrtSynchronization';
 import {SpeechRecognition} from './compositions/SpeechRecognition';
 
 const srtStartFrame = 9877;
@@ -39,7 +39,7 @@ export const SrtFilm = () => {
     <div data-srt-scene style={{position: 'absolute', width: 800, height: 450, transformOrigin: '0 0', transform: `scale(${width / 800},${height / 450})`}}>
       <PaperBackground time={time}/>
       {frame < 10077 && <SrtWaveform frame={frame}/>}
-      {frame >= 10061 && frame < 10385 && <SrtSyncExample frame={frame}/>}
+      {frame >= srtSyncStartFrame && frame < 10385 && <SrtSyncExample frame={frame}/>}
       {frame >= 10379 && <SpeechRecognition frame={frame}/>}
       <div style={{position: 'absolute', inset: 0, transform: 'translateZ(0)'}}><Subtitle time={time} text={subtitle}/></div>
     </div>

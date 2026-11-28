@@ -1,6 +1,6 @@
 export type CategoryId = 'audio' | 'captions' | 'charts' | 'backgrounds' | 'effects' | 'layouts' | 'overlays' | 'storytelling' | 'text-effects';
 export type CatalogCategory = {id: CategoryId; name: string};
-export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'card-entrance' | 'focus-layer' | 'tethered-motion' | 'rising-curve' | 'constraint-release' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'usage-meter' | 'token-bowl' | 'document-window' | 'highlight-box' | 'collapsing-title';
+export type MaterialId = 'perspective-panel' | 'exploded-layers' | 'fan-card-deck' | 'chapter-heading' | 'blurred-collage' | 'audio-pulse-badge' | 'chapter-card-row' | 'branching-paths' | 'content-collapse' | 'target-reticle' | 'constraint-switches' | 'card-entrance' | 'drop-card' | 'impact-recoil' | 'focus-layer' | 'tethered-motion' | 'rising-curve' | 'constraint-release' | 'agent-pipeline' | 'typewriter-comparison' | 'card-spotlight' | 'progress-row' | 'usage-meter' | 'token-bowl' | 'file-into-container' | 'document-window' | 'highlight-box' | 'collapsing-title';
 export type CatalogItem = {id: MaterialId; category: CategoryId; name: string; component: string; description: string; usage: string; durationInFrames: number; posterFrame: number; code: string};
 
 export const categories: CatalogCategory[] = [
@@ -16,6 +16,35 @@ export const categories: CatalogCategory[] = [
 ];
 
 export const catalog: CatalogItem[] = [
+  {id:'impact-recoil',category:'effects',name:'撞击后回摆',component:'ImpactRecoil',description:'受撞时先弹开，再逐渐回摆归位。可用作横向位移、绕支点旋转或其他方向的反馈',usage:'撞击反馈 · 物件摆动',durationInFrames:105,posterFrame:26,code:`import {ImpactRecoil} from '@remotions/animations';
+
+<>
+  <ImpactRecoil frame={frame - hitFrame} strength={12}>
+    {x => <div style={{transform:'translateX(' + x + 'px)'}}>卡片内容</div>}
+  </ImpactRecoil>
+  <ImpactRecoil frame={frame - hitFrame} strength={9}>
+    {angle => <div style={{transformOrigin:'50% 100%',
+      transform:'rotate(' + angle + 'deg)'}}>有底座的物件</div>}
+  </ImpactRecoil>
+</>`},
+  {id:'drop-card',category:'layouts',name:'错峰落卡回弹',component:'DropCard',description:'卡片从上方落下、略过落点并回弹归位。各卡可独立排入场帧、时长和倾斜方向',usage:'工具对比 · 卡片入场',durationInFrames:105,posterFrame:34,code:`import {DropCard} from '@remotions/animations';
+
+{[-8.5, 0, 8.5].map((tilt, index) => (
+  <DropCard key={index} frame={frame - (16 + index * 8)} durationInFrames={22}
+    x={128 + index * 198} y={170} width={148} height={164} tilt={tilt}>
+    {cards[index]}
+  </DropCard>
+))}`},
+  {id:'file-into-container',category:'storytelling',name:'素材飞入容器',component:'FileIntoContainer',description:'素材缩小并抬到容器口上方，再向下落入。起点、落点、抬升高度与进度可调整',usage:'文件归档 · 素材整理',durationInFrames:108,posterFrame:45,code:`import {FileIntoContainer} from '@remotions/animations';
+
+<div style={{position:'relative',width:800,height:450}}>
+  <FileIntoContainer progress={progress}
+    from={{x:96,y:122,width:160}} to={{x:400,y:312}}>
+    <div style={{width:160,height:100}}>素材卡</div>
+  </FileIntoContainer>
+  <div style={{position:'absolute',left:320,top:279,width:160,height:85,
+    background:'#81bff0',borderRadius:8}} aria-label="容器前板" />
+</div>`},
   {id:'token-bowl',category:'storytelling',name:'落篮收集',component:'TokenBowl',description:'物件错峰下落、落稳并被容器前沿遮挡；时间、数量、节奏和物件内容可替换',usage:'资源积累 · 收集入篮',durationInFrames:150,posterFrame:100,code:`import {TokenBowl} from '@remotions/animations';
 
 <TokenBowl time={frame / fps} startAt={0.3} count={20}

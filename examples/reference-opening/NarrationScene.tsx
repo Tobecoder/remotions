@@ -1,5 +1,5 @@
 import {AbsoluteFill, useCurrentFrame, useVideoConfig} from 'remotion';
-import {CardEntrance, ChapterHeading, PerspectivePanel} from '../../packages/animations/src';
+import {CardEntrance, ChapterHeading, ImpactRecoil, PerspectivePanel} from '../../packages/animations/src';
 import {during, mix} from '../../packages/animations/src/reference-opening/motion';
 import {AnimationSourcesFilm, AnimationSourcesGallery} from './AnimationSourcesScene';
 import {PaperBackground, ScreenContent, Subtitle, VoicePage} from './OpeningScene';
@@ -64,17 +64,18 @@ const NarrationChapter = ({frame}: {frame: number}) => {
 const microphoneWobbleStart = 8979;
 const microphoneWobbleAngles = [9, -7.8, .8, 6.5, -1.1, -5.4, 1.1, 4, -1.1, -2.9, .8, 1.7, -.6, -.6];
 
-const Microphone = ({frame}: {frame: number}) => {
+export const NarrationMicrophone = ({frame}: {frame: number}) => {
   const move = during(frame, 9005, 9038);
   const height = mix(162, 105, move);
   const x = mix(400, 178, move);
   const fade = during(frame, 8786, 8804) * (1 - during(frame, 9862, 9876));
-  const angle = microphoneWobbleAngles[frame - microphoneWobbleStart] ?? 0;
-  return <RecordingMicrophone data-narration-microphone width={height * .5} height={height}
-    style={{
-      position: 'absolute', left: x - height / 4, top: 332 - height, opacity: fade, overflow: 'visible',
-      transformOrigin: '50% 95.7%', transform: angle === 0 ? undefined : 'rotate(' + angle + 'deg)',
-    }}/>;
+  return <ImpactRecoil frame={frame - microphoneWobbleStart} samples={microphoneWobbleAngles}>
+    {angle => <RecordingMicrophone data-narration-microphone width={height * .5} height={height}
+      style={{
+        position: 'absolute', left: x - height / 4, top: 332 - height, opacity: fade, overflow: 'visible',
+        transformOrigin: '50% 95.7%', transform: angle === 0 ? undefined : 'rotate(' + angle + 'deg)',
+      }}/>}
+  </ImpactRecoil>;
 };
 
 const questions = [
@@ -153,7 +154,7 @@ export const NarrationFilm = () => {
       }}><AnimationSourcesGallery frame={startFrame - 1} holdLastFrame/></div>}
       {frame < 8804 && <NarrationChapter frame={frame}/>}
       {frame >= 9013 && frame < 9317 && <RecordingChain frame={frame}/>}
-      {frame >= 8786 && <Microphone frame={frame}/>}
+      {frame >= 8786 && <NarrationMicrophone frame={frame}/>}
       {frame >= 8839 && frame < 9012 && <NarrationQuestions frame={frame}/>}
       {frame >= 9314 && <NarrationTools frame={frame}/>}
       {frame >= 9167 && frame < 9872 && <NarrationAgent frame={frame}/>}

@@ -1,10 +1,11 @@
 # @remotions/animations
 
-Remotion 可复用动画组件，当前公开导出 **25 个**。旧组件及归档实现已移除。
+Remotion 可复用动画组件，当前公开导出 **28 个**。旧组件及归档实现已移除。
 
 | 类别 | 组件 | 用途 |
 | --- | --- | --- |
 | 叙事动画 | `TokenBowl` | 可替换物件错峰下落、堆积及容器前沿遮挡 |
+| 叙事动画 | `FileIntoContainer` | 素材缩小并移到容器口上方，随后下落并收起 |
 | 版式转场 | `PerspectivePanel` | 任意内容的透视投影与姿态过渡 |
 | 叙事动画 | `ExplodedLayers` | 多层内容拆解与引线标注 |
 | 版式转场 | `FanCardDeck` | 图片、文档等卡片的扇形展开 |
@@ -19,6 +20,8 @@ Remotion 可复用动画组件，当前公开导出 **25 个**。旧组件及归
 | 叙事动画 | `TetheredMotion` | 可替换对象前进、被绳索牵回并切换姿态 |
 | 数据图表 | `RisingCurve` | 概念趋势曲线、面积和端点同步展开 |
 | 版式转场 | `CardEntrance` | 独立卡片入场，外部安排位置、数量和进度 |
+| 版式转场 | `DropCard` | 卡片从上方落下、越过卡槽并回弹归位 |
+| 视觉效果 | `ImpactRecoil` | 受撞后快速弹开、来回摆动再归位，可用于位移或旋转 |
 | 版式转场 | `FocusLayer` | 独立突出任意前景，可选背景虚化淡化 |
 | 叙事动画 | `AgentPipeline` | Agent 显现，连接工具与成片窗口 |
 | 文字特效 | `TypewriterComparison` | 两段文字逐字输入，再缩成左右栏 |
@@ -47,6 +50,12 @@ const Gallery = () => {
 ```
 
 组件使用 800×450 设计坐标；可通过组件的尺寸、姿态与位置参数调整，并用外层容器等比缩放到目标画布。内容均为 React 插槽，组件本身不内置参考视频截图，也不负责声音播放。动画进度由调用方的帧计算，适用于随机跳帧与视频渲染。
+
+`FileIntoContainer` 通过 `progress` 控制归档。 `from` 为素材起始左上角和宽度，`to` 为落点的水平中心和顶部位置，`liftHeight` 控制折返点距落点的高度。容器前板由调用方绘制在飞行素材上层，借此遮住落入的素材。错峰、遮挡及内容替换示例见[素材墙与网页缩略图归档](../../examples/component-examples/material-filing/README.md)。
+
+`DropCard` 通过相对入场时刻的 `frame` 驱动落卡，负帧隐藏，落稳后保持在 `x/y`。可用 `durationInFrames` 调整时长，`tilt` 调整初始倾角，`offsets` 替换逐帧的竖向轨迹。多张卡各自传入相对帧数即可错峰播放。完整布局和计数节奏见[三张工具卡错峰落位](../../examples/component-examples/drop-cards/README.md)。
+
+`ImpactRecoil` 接收相对于触发时刻的 `frame`，用渲染函数传回带正负号的回摆量，触发前和结束后均为 0。可用 `strength` 设强度与方向，`durationInFrames` 调整时长，`samples` 替换逐帧轨迹。用法见[三路波形撞击与回摆](../../examples/component-examples/impact-recoil/README.md)。
 
 `ChapterHeading` 也可以接收片头内容：`intro={{eyebrow, title, description}}`（`title` 支持 React 内容，例如两行标题及彩色强调），并传入 `introProgress`。同一进度控制片头退场与章节入场，无需另外写两个淡入淡出动画；`progress` 仍用于后续章节之间的切换。不传 `intro` 时保留普通章节切换行为。
 

@@ -1,0 +1,20 @@
+{
+  "id": "drop-cards",
+  "materialIds": ["drop-card"],
+  "name": "三张工具卡错峰落位",
+  "description": "三张卡依次从上方落入卡槽，左右卡带反向倾斜，经过回弹后归位。星标随后计满，底部波形依次展开。",
+  "useCases": ["工具对比", "多卡片展示", "带计数的结果揭示"],
+  "replaceable": ["三张卡的标题、说明与标签", "卡片强调色、星标终值"],
+  "preserve": ["按左、中、右顺序错峰落下", "左右卡反向倾斜，中卡直落", "各卡略过落点再回正", "星标从接近落位开始计数，随后展开底部波形"],
+  "reviewStatus": "pending",
+  "composition": {"id":"Example-Drop-Cards","width":1280,"height":720,"fps":30,"durationInFrames":210,"posterFrame":105},
+  "source": {
+    "entry":"examples/component-examples/drop-cards/index.tsx",
+    "component":"examples/component-examples/drop-cards/Example.tsx",
+    "exportName":"DropCardsExample",
+    "implementation":"examples/reference-opening/compositions/NarrationTools.tsx",
+    "guide":"examples/component-examples/drop-cards/README.md"
+  },
+  "preview": {"video":"/examples/drop-cards.mp4","poster":"/examples/drop-cards.jpg","guide":"/examples/drop-cards.md"},
+  "defaultProps": {}
+}
